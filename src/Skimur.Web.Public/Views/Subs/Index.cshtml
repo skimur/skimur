@@ -1,0 +1,66 @@
+﻿@model List<SubModel>
+@{
+    ViewBag.Title = "Index";
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#subQuerySearch").click(function (e) {
+            e.preventDefault();
+            var query = $("#subQuery").val();
+            if (query) {
+                window.location = "@Url.Subs()?query=" + query;
+            } else {
+                window.location = "@Url.Subs()";
+            }
+        });
+        $("#subQuery").enterKey(function (e) {
+            e.preventDefault();
+            $("#subQuerySearch").click();
+        });
+    });
+</script>
+
+<div class="form-inline">
+    <div class="form-group">
+        <input id="subQuery" type="text" class="form-control" value="@ViewBag.Query" />
+    </div>
+    <button id="subQuerySearch" type="submit" class="btn btn-default">Search</button>
+</div>
+
+<div>
+    @if (Model.Count == 0)
+    {
+        <p>
+            @("No subs were found")
+        </p>
+        
+    }
+    else
+    {
+        foreach (var sub in Model)
+        {
+            <div class="row">
+                <div class="col-lg-3">
+                    @if (sub.IsSubscribed)
+                    {
+                        <button type="button" onclick="return unsubscribe(this, '@sub.Name')" class="btn-xs btn-default btn-unsub">unsubscribe</button>
+                    }
+                    else
+                    {
+                        <button type="button" onclick="return unsubscribe(this, '@sub.Name')" class="btn-xs btn-default btn-unsub">unsubscribe</button>
+                    }
+                </div>
+                <div class="col-lg-9">
+                    <a href="@Url.Sub(sub.Name)">/s/@sub.Name</a>
+                    <p>
+                        @sub.Description
+                    </p>
+                </div>
+                
+            </div>
+        }
+    }
+</div>
+
+@Html.ActionLink("Create sub", "Create")

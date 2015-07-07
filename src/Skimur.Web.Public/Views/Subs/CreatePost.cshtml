@@ -1,0 +1,67 @@
+﻿@using Subs
+@model CreatePostViewModel
+@{
+    ViewBag.Title = "Create";
+}
+
+@using (Html.BeginForm("CreatePost", "Subs", FormMethod.Post, new { @class = "form form-createpost", role = "form" }))
+{
+    @Html.AntiForgeryToken()
+
+    <h4>Create a new post.</h4>
+    <hr />
+
+    @Html.ValidationSummary("", new { @class = "text-danger" })
+
+    <ul class="nav nav-tabs" role="tablist">
+        <li id="linkpost-tab" role="presentation" class="@(Model.PostType == PostType.Link ? "active" : "")"><a href="#linkpost" aria-controls="home" role="tab" data-toggle="tab">Link</a></li>
+        <li id="textpost-tab" role="presentation" class="@(Model.PostType == PostType.Text ? "active" : "")"><a href="#textpost" aria-controls="profile" role="tab" data-toggle="tab">Text</a></li>
+    </ul>
+
+    @Html.HiddenFor(m => m.PostType)
+    
+    <div class="form-group">
+        @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+    </div>
+
+    <div class="tab-content">
+        <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Link ? "active" : "")" id="linkpost">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Url, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+            </div>
+        </div>
+        <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Text ? "active" : "")" id="textpost">
+            <div class="form-group">
+                @Html.LabelFor(m => m.Content, new { @class = "control-label" })
+                @Html.TextAreaFor(m => m.Content, new { @class = "form-control" })
+            </div>
+        </div>
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.SubName, new { @class = "control-label" })
+        @Html.TextBoxFor(m => m.SubName, new { @class = "form-control" })
+    </div>
+
+    <div class="form-group">
+        @Html.CheckBoxFor(m => m.NotifyReplies)
+        @Html.LabelFor(m => m.NotifyReplies)
+    </div>
+
+    <div class="form-group">
+            <input type="submit" class="btn btn-default" value="Create" />
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#linkpost-tab").click(function (e) {
+            $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Link");
+        });
+        $("#textpost-tab").click(function (e) {
+            $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Text");
+        });
+    });
+</script>

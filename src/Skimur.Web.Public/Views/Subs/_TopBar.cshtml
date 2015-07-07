@@ -1,0 +1,22 @@
+﻿@model List<SubModel>
+
+<div class="layout-topbar">
+    <ul>
+        <li>
+            <a href="/">Front</a>
+        </li>
+        <li>
+            <a href="/s/all">All</a>
+        </li>
+        <li>
+            <a href="/s/random">Random</a>
+        </li>
+        @foreach (var sub in Model)
+        {
+            <li>
+                <a href="@Url.Sub(sub.Name)">@sub.Name</a>
+            </li>
+        }
+    </ul>
+    <a class="topbar-edit" href="@Url.Subs()">Edit</a>
+</div>
