@@ -26,8 +26,17 @@ This will initialize the source code locally.
 
 ```> vagrant up```
 
-This will be create and configure a virtual machine dynamically with all dependencies installed a configuired that are required to run skimur.
+This will be create and configure a virtual machine dynamically with all dependencies installed and configuired that are required to run skimur.
 
-**You are all set!** Now open the project up (```src/Skimur.sln```) and run it! Currently, VS2013+ is required.
+**You are all set!** Now open the project up (```src/Skimur.sln```) and run it! Currently, VS2013+ is required. Skimur is a distributed system. So, in order for the web application to fully function, every worker process (```*.Worker.Cons```) needs to be running.
 
 *NOTE:* All though we currently require you to develop with Visual Studio on Windows, future versions will support the new [.NET Core](https://github.com/dotnet/core) that will support Windows/Mac/Linux. At that time, development will take place using either Visual Studio (Windows), or [Visual Studio Code](https://www.visualstudio.com/en-us/products/code-vs.aspx) (Windows/Mac/Linux). This will also open up support for possible future [Docker](https://www.docker.com/) support also!
+
+## Dependencies
+
+Skimur uses .NET 4.5. Future versions will run on .NET Core (Windows/Mac/Linux).
+
+- Postgresql
+- Redis
+- RabbitMQ
+- TODO: Document source dependencies.
