@@ -1,2 +1,3 @@
-# skimur
-The code that runs skimur.com
+# Skimur
+
+<img src="resources/logo.jpg" align="right">
