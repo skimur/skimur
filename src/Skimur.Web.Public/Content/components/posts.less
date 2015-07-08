@@ -1,0 +1,112 @@
+﻿
+/*.post {
+    .post-voting {
+        .up, .votes, .down {
+            display: block !important;
+            margin-left:auto;
+            margin-right:auto;
+            text-align:center;
+        }
+
+        .up, .down {
+            .glyphicon;
+            cursor:pointer;
+        }
+
+        .up {
+            .glyphicon-arrow-up;
+        }
+
+        .down {
+            .glyphicon-arrow-down;
+        }
+    }
+
+    .post-body {
+        .post-title {
+            margin: 0;
+
+            .post-link {
+                font-size: @font-size-large;
+            }
+
+            .post-domain {
+                font-size: @font-size-small;
+                color: @gray;
+
+                &:hover,
+                &:focus {
+                    color: darken(@gray, 50%);
+                }
+            }
+        }
+
+        .post-meta {
+            margin: 0px;
+            font-size: @font-size-small;
+            color: @gray;
+        }
+
+        .post-links {
+        }
+    }
+}*/
+
+.post {
+    .post-voting {
+        float: left;
+        margin-right: 7px;
+        margin-left: 7px;
+        color:@gray;
+
+        .up, .votes, .down {
+            display: block !important;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .up, .down {
+            .glyphicon;
+            cursor: pointer;
+        }
+
+        .up {
+            .glyphicon-arrow-up;
+        }
+
+        .down {
+            .glyphicon-arrow-down;
+        }
+    }
+
+    .post-body {
+        overflow:hidden;
+        .post-title {
+            margin: 0;
+
+            .post-link {
+                font-size: @font-size-large;
+            }
+
+            .post-domain {
+                font-size: @font-size-small;
+                color: @gray;
+
+                &:hover,
+                &:focus {
+                    color: darken(@gray, 50%);
+                }
+            }
+        }
+
+        .post-meta {
+            margin: 0px;
+            font-size: @font-size-small;
+            color: @gray;
+        }
+
+        .post-links {
+        }
+    }
+}

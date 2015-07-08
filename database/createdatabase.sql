@@ -81,6 +81,7 @@ CREATE TABLE posts
   title text,
   content text,
   url text,
+  domain text,
   send_replies boolean,
   CONSTRAINT post_pkey PRIMARY KEY (id)
 );

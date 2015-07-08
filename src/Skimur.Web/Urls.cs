@@ -34,7 +34,12 @@ namespace Skimur.Web
 
         public static string User(this UrlHelper urlHelper, string userName)
         {
-            return urlHelper.RouteUrl("User", new {userName});
+            return urlHelper.RouteUrl("User", new { userName });
+        }
+
+        public static string Domain(this UrlHelper urlHelper, string domain)
+        {
+            return urlHelper.RouteUrl("Domain", new { domain });
         }
     }
 }

@@ -191,6 +191,8 @@ namespace Subs.Worker
                     return response;
                 }
 
+                string domain = null;
+
                 if (command.PostType == PostType.Link)
                 {
                     if (string.IsNullOrEmpty(command.Url))
@@ -200,23 +202,14 @@ namespace Subs.Worker
                     }
 
                     // todo: improve url validation
-                    command.Url = command.Url.ToLower();
-                    if (!command.Url.Contains("://"))
-                    {
-                        command.Url = "http://" + command.Url;
-                    }
-                    Uri uri;
-                    try
-                    {
-                        uri = new Uri(command.Url);
-                    }
-                    catch (Exception ex)
+                    string scheme;
+                    if (!UrlParser.TryParseUrl(command.Url, out domain, out scheme))
                     {
                         response.Error = "The url appears to be invalid.";
                         return response;
                     }
 
-                    switch (uri.Scheme)
+                    switch (scheme)
                     {
                         case "http":
                         case "https:":
@@ -229,6 +222,7 @@ namespace Subs.Worker
                     // todo: make sure the domain isn't banned
 
                     // todo: make sure the url wasn't already submitted
+
 
                 }else if (command.PostType == PostType.Text)
                 {
@@ -244,24 +238,27 @@ namespace Subs.Worker
                     throw new Exception("unknown post type " + command.PostType);
                 }
 
-                var post = new Post();
-                post.Id = GuidUtil.NewSequentialId();
-                post.DateCreated = Common.CurrentTime();
-                post.LastEditDate = null;
-                post.SubName = sub.Name;
-                post.UserName = user.UserName;
-                post.UserIp = command.IpAddress;
-                post.PostType = command.PostType;
-                post.Title = command.Title;
+                var post = new Post
+                {
+                    Id = GuidUtil.NewSequentialId(),
+                    DateCreated = Common.CurrentTime(),
+                    LastEditDate = null,
+                    SubName = sub.Name,
+                    UserName = user.UserName,
+                    UserIp = command.IpAddress,
+                    PostType = command.PostType,
+                    Title = command.Title,
+                    SendReplies = command.NotifyReplies
+                };
                 if (post.PostType == PostType.Link)
                 {
                     post.Url = command.Url;
+                    post.Domain = domain;
                 }
                 else
                 {
                     post.Content = command.Content;
                 }
-                post.SendReplies = command.NotifyReplies;
 
                 post.Slug = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
                 while (_postService.GetPostBySlug(post.Slug) != null)

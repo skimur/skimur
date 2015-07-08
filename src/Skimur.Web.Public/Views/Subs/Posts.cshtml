@@ -1,4 +1,5 @@
-﻿@model SubPosts
+﻿@using Subs
+@model SubPosts
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
 }
@@ -7,7 +8,26 @@
     <div class="col-lg-9 col-sm-8">
         @foreach (var post in Model.Posts)
         {
-            @post.Title
+            <div class="post row">
+                <div class="post-voting">
+                    <span class="up"></span>
+                    <span class="votes">234</span>
+                    <span class="down"></span>
+                </div>
+                <div class="post-body">
+                    <div>
+                        <p class="post-title">
+                            <a class="post-link" href="@PostUrl(post)">@post.Title</a> @(DomainLink(post))
+                        </p>
+                        <p class="post-meta">
+                            Posted 10 hours ago
+                        </p>
+                        <p class="post-links">
+                            <a href="@Url.Post(post.Slug, post.Title)">comments</a>
+                        </p>
+                    </div>
+                </div>
+            </div>
         }
     </div>
     <div class="col-lg-3 col-sm-4">
@@ -25,3 +45,28 @@
     </div>
 </div>
 
+@helper DomainLink(PostModel post)
+{
+    if (post.PostType == PostType.Link)
+    {
+        if (!string.IsNullOrEmpty(post.Domain))
+        {
+            <a class="post-domain" href="@Url.Domain(post.Domain)">(@post.Domain)</a>
+        }
+    }
+    else if (post.PostType == PostType.Text)
+    {
+        <a class="post-domain" href="@Url.Post(post.Slug, post.Title)">(self.@post.SubName)</a>
+    }
+}
+@helper PostUrl(PostModel post)
+{
+    if (post.PostType == PostType.Link)
+    {
+        @post.Url
+    }
+    else if(post.PostType == PostType.Text)
+    {
+        @Url.Post(post.Slug, post.Title)
+    }
+}

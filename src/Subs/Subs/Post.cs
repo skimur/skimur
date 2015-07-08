@@ -33,6 +33,8 @@ namespace Subs
 
         public string Url { get; set; }
 
+        public string Domain { get; set; }
+
         public bool SendReplies { get; set; }
 
         [Ignore]

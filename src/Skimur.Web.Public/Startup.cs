@@ -73,6 +73,11 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Users", action = "User" });
 
             routes.MapRoute(
+                name: "Domain",
+                url: "domain/{domain}",
+                defaults: new { controller = "Domains", action = "Domain" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
