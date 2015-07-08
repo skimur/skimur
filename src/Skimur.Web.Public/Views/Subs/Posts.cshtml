@@ -4,20 +4,18 @@
 }
 
 <div class="row">
-    <div class="col-lg-9">
+    <div class="col-lg-9 col-sm-8">
         @foreach (var post in Model.Posts)
         {
             @post.Title
         }
     </div>
-    <div class="col-lg-3">
+    <div class="col-lg-3 col-sm-4">
 
         <div class="panel">
             <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new link</a>
             <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new post</a>
         </div>
-
-
 
         @if (Model.Sub != null)
         {

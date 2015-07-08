@@ -266,6 +266,7 @@
     <Content Include="Content\bootstrap\utilities.less" />
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\wells.less" />
+    <Content Include="Content\img\logo.png" />
     <Content Include="Content\site.less" />
     <Content Include="Content\components\sidebar.less" />
     <Content Include="Content\components\layout.less" />

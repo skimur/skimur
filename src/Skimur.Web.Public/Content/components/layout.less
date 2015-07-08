@@ -22,7 +22,7 @@
 .layout-topbar {
     overflow: hidden;
     white-space: nowrap;
-
+    background:@gray-lighter;
     > ul {
         list-style-type: none;
         display: inline;
@@ -43,7 +43,7 @@
         position: absolute;
         top: 0;
         right: 0;
-        padding: 3px;
+        padding: 3px 10px;
         display: inline-block;
         background:white;
     }
@@ -52,6 +52,13 @@
 .layout-header {
     border-radius: 0;
     margin-bottom: 0px;
+    background: lighten(@gray-lighter, 3%);
+    .navbar-brand {
+        padding:4px 4px 4px 20px;
+        img {
+            height:42px;
+        }
+    }
 }
 
 .body-content {
