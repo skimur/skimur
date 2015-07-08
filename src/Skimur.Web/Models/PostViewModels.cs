@@ -2,7 +2,7 @@
 
 namespace Skimur.Web.Models
 {
-    public class CreatePostViewModel
+    public class CreatePostModel
     {
         public string Title { get; set; }
 
@@ -15,5 +15,10 @@ namespace Skimur.Web.Models
         public string SubName { get; set; }
 
         public bool NotifyReplies { get; set; }
+    }
+
+    public class PostModel : Post
+    {
+        
     }
 }

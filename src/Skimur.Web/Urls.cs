@@ -31,5 +31,10 @@ namespace Skimur.Web
         {
             return urlHelper.RouteUrl("Post", new { slug, title });
         }
+
+        public static string User(this UrlHelper urlHelper, string userName)
+        {
+            return urlHelper.RouteUrl("User", new {userName});
+        }
     }
 }

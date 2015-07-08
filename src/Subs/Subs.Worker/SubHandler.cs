@@ -84,7 +84,7 @@ namespace Subs.Worker
                 response.SubName = sub.Name;
 
                 _subService.SubscribeToSub(user.UserName, sub.Name);
-                _subService.AddAdminToSub(user.UserName, sub.Name);
+                _subService.AddModToSub(user.UserName, sub.Name);
             }
             catch (Exception ex)
             {
@@ -117,7 +117,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_subService.CanUserEditSub(user.UserName, sub.Name))
+                if (!_subService.CanUserModerateSub(user.UserName, sub.Name))
                 {
                     response.Error = "You are not allowed to modify this sub.";
                     return response;
@@ -267,7 +267,7 @@ namespace Subs.Worker
                 while (_postService.GetPostBySlug(post.Slug) != null)
                     post.Slug = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
 
-                //_postService.InsertPost(post);
+                _postService.InsertPost(post);
 
                 response.Title = command.Title;
                 response.Slug = post.Slug;

@@ -114,6 +114,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Identity\ApplicationSignInManager.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
     <Compile Include="ContextService.cs" />
@@ -125,8 +126,10 @@
     <Compile Include="IUserContext.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\ModerationSideBarModel.cs" />
     <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\SubViewModels.cs" />
+    <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="Identity\ApplicationIdentityMessageService.cs" />

@@ -1,4 +1,6 @@
-﻿namespace Subs.Services
+﻿using System.Collections.Generic;
+
+namespace Subs.Services
 {
     public interface IPostService
     {
@@ -7,5 +9,7 @@
         void UpdatePost(Post post);
 
         Post GetPostBySlug(string slug);
+
+        List<Post> GetPosts(List<string> subs = null);
     }
 }

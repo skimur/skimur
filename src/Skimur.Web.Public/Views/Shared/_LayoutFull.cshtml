@@ -1,0 +1,9 @@
+﻿@{
+    Layout = "~/Views/Shared/_Layout.cshtml";
+}
+<div class="body-content">
+    <div class="container-fluid">
+        @RenderBody()
+    </div>
+</div>
+@RenderSection("scripts", required: false)

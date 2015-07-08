@@ -107,16 +107,16 @@ namespace Subs
 
         public List<Sub> GetSubByNames(List<string> names)
         {
-            if(names == null || names.Count == 0)
+            if (names == null || names.Count == 0)
                 return new List<Sub>();
-          
+
             return _conn.Perform(conn =>
             {
                 return conn.Select(conn.From<Sub>().Where(x => names.Contains(x.Name)));
             });
         }
 
-        public bool CanUserEditSub(string userName, string subName)
+        public bool CanUserModerateSub(string userName, string subName)
         {
             return _conn.Perform(conn =>
             {
@@ -124,7 +124,16 @@ namespace Subs
             });
         }
 
-        public void AddAdminToSub(string userName, string subName, string addedBy = null)
+        public List<string> GetAllModsForSub(string subName)
+        {
+            return _conn.Perform(conn =>
+            {
+                return conn.Select(conn.From<SubAdmin>().Where(x => x.SubName == subName).Select(x => x.UserName))
+                    .Select(x => x.UserName).ToList();
+            });
+        }
+
+        public void AddModToSub(string userName, string subName, string addedBy = null)
         {
             _conn.Perform(conn =>
             {
@@ -145,7 +154,7 @@ namespace Subs
             });
         }
 
-        public void RemoveAdminFromSub(string userName, string subName)
+        public void RemoveModFromSub(string userName, string subName)
         {
             _conn.Perform(conn =>
             {

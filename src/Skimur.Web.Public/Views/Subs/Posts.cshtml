@@ -1,4 +1,29 @@
 ﻿@model SubPosts
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+}
 
-<a href="@Url.EditSub(Model.Sub.Name)">Sub settings</a>
-<a href="@Url.CreatePost()">Create a post</a>
+<div class="row">
+    <div class="col-lg-9">
+        @foreach (var post in Model.Posts)
+        {
+            @post.Title
+        }
+    </div>
+    <div class="col-lg-3">
+
+        <div class="panel">
+            <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new link</a>
+            <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new post</a>
+        </div>
+
+
+
+        @if (Model.Sub != null)
+        {
+            @Html.Action("ModerationSideBar", new { subName = Model.Sub.Name })
+        }
+
+    </div>
+</div>
+

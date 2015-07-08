@@ -1,4 +1,6 @@
-﻿using System.Linq;
+﻿using System;
+using System.Collections.Generic;
+using System.Linq;
 using System.Web.Mvc;
 using Infrastructure;
 using Infrastructure.Messaging;
@@ -16,18 +18,21 @@ namespace Skimur.Web.Controllers
         private readonly IMapper _mapper;
         private readonly ICommandBus _commandBus;
         private readonly IUserContext _userContext;
+        private readonly IPostDao _postDao;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
             IMapper mapper,
             ICommandBus commandBus,
-            IUserContext userContext)
+            IUserContext userContext,
+            IPostDao postDao)
         {
             _contextService = contextService;
             _subDao = subDao;
             _mapper = mapper;
             _commandBus = commandBus;
             _userContext = userContext;
+            _postDao = postDao;
         }
 
         public ActionResult Index(string query)
@@ -61,6 +66,8 @@ namespace Skimur.Web.Controllers
             var model = new SubPosts();
             model.Sub = _mapper.Map<Sub, SubModel>(sub);
             model.Sub.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
+            // todo: implement paging
+            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }).Select(x => _mapper.Map<Post, PostModel>(x)));
 
             return View(model);
         }
@@ -68,6 +75,8 @@ namespace Skimur.Web.Controllers
         public ActionResult PostsAll()
         {
             var model = new SubPosts();
+            // todo: implement paging
+            model.Posts.AddRange(_postDao.GetPosts().Select(x => _mapper.Map<Post, PostModel>(x)));
             return View(model);
         }
 
@@ -161,13 +170,13 @@ namespace Skimur.Web.Controllers
         [Authorize]
         public ActionResult CreatePost()
         {
-            return View(new CreatePostViewModel());
+            return View(new CreatePostModel());
         }
 
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreatePost(CreatePostViewModel model)
+        public ActionResult CreatePost(CreatePostModel model)
         {
             var response = _commandBus.Send<CreatePost, CreatePostResponse>(new CreatePost
             {
@@ -214,6 +223,29 @@ namespace Skimur.Web.Controllers
             }).ToList();
 
             return PartialView("_TopBar", allSubs);
+        }
+
+        public ActionResult ModerationSideBar(string subName)
+        {
+            var sub = _subDao.GetSubByName(subName);
+
+            if(sub == null)
+                return new EmptyResult();
+
+            var model = new ModerationSideBarModel();
+            model.SubName = sub.Name;
+
+            if (_userContext.CurrentUser != null)
+            {
+                model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.UserName, sub.Name);
+            }
+            else
+            {
+                // we only show list of mods if the requesting user is not a mod of this sub
+                model.Moderators.AddRange(_subDao.GetAllModsForSub(sub.Name));
+            }
+
+            return PartialView("_ModerationSideBar", model);
         }
     }
 }

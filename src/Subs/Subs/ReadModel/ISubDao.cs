@@ -19,5 +19,9 @@ namespace Subs.ReadModel
         Sub GetSubByName(string name);
 
         List<Sub> GetSubByNames(List<string> names);
+
+        bool CanUserModerateSub(string userName, string subName);
+
+        List<string> GetAllModsForSub(string subName);
     }
 }

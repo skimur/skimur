@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 
 namespace Skimur.Web.Models
 {
@@ -26,6 +27,13 @@ namespace Skimur.Web.Models
 
     public class SubPosts
     {
+        public SubPosts()
+        {
+            Posts = new List<PostModel>();
+        }
+
         public SubModel Sub { get; set; }
+
+        public List<PostModel> Posts { get; set; }
     }
 }

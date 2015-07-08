@@ -28,10 +28,12 @@ namespace Subs
 
         List<Sub> GetSubByNames(List<string> names);
 
-        bool CanUserEditSub(string userName, string subName);
+        bool CanUserModerateSub(string userName, string subName);
 
-        void AddAdminToSub(string userName, string subName, string addedBy = null);
+        List<string> GetAllModsForSub(string subName);
 
-        void RemoveAdminFromSub(string userName, string subName);
+        void AddModToSub(string userName, string subName, string addedBy = null);
+
+        void RemoveModFromSub(string userName, string subName);
     }
 }
