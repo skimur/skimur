@@ -343,6 +343,7 @@
     <Content Include="fonts\glyphicons-halflings-regular.eot" />
     <Content Include="packages.config" />
     <Content Include="Content\components\createpost.less" />
+    <Content Include="Content\theme-variables.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
