@@ -18,6 +18,8 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<CreateSub, CreateSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<EditSub, EditSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, SubHandler>();
+            container.Register<ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>, SubHandler>();
+            container.Register<ICommandHandlerResponse<UnSubcribeToSub, UnSubcribeToSubResponse>, SubHandler>();
         }
 
         public int Order

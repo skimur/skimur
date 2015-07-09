@@ -95,6 +95,14 @@ namespace Subs
             });
         }
 
+        public void UnSubscribeToSub(string userName, string subName)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Delete<SubScription>(x => x.UserName.ToLower() == userName.ToLower() && x.SubName.ToLower() == subName.ToLower());
+            });
+        }
+
         public Sub GetSubByName(string name)
         {
             if (string.IsNullOrEmpty(name)) return null;

@@ -225,11 +225,61 @@ namespace Skimur.Web.Controllers
             return PartialView("_TopBar", allSubs);
         }
 
+        [HttpPost]
+        public JsonResult Subscribe(string subName)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in subscribe to a sub."
+                });
+            }
+
+            var response = _commandBus.Send<SubcribeToSub, SubcribeToSubResponse>(new SubcribeToSub
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                SubName = subName
+            });
+
+            return Json(new
+            {
+                success = response.Success,
+                error = response.Error
+            });
+        }
+
+        [HttpPost]
+        public JsonResult UnSubscribe(string subName)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in subscribe to a sub."
+                });
+            }
+
+            var response = _commandBus.Send<UnSubcribeToSub, UnSubcribeToSubResponse>(new UnSubcribeToSub
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                SubName = subName
+            });
+
+            return Json(new
+            {
+                success = response.Success,
+                error = response.Error
+            });
+        }
+
         public ActionResult ModerationSideBar(string subName)
         {
             var sub = _subDao.GetSubByName(subName);
 
-            if(sub == null)
+            if (sub == null)
                 return new EmptyResult();
 
             var model = new ModerationSideBarModel();

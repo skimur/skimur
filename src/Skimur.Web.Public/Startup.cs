@@ -78,6 +78,16 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Domains", action = "Domain" });
 
             routes.MapRoute(
+                name: "Subscribe",
+                url: "subscribe/{subName}",
+                defaults: new { controller = "Subs", action = "Subscribe", subName = UrlParameter.Optional /*not really optionally, but they could provide subName via ajax if they wish*/});
+
+            routes.MapRoute(
+                name: "UnSubscribe",
+                url: "unsubscribe/{subName}",
+                defaults: new { controller = "Subs", action = "UnSubscribe", subName= UrlParameter.Optional /*not really optionally, but they could provide subName via ajax if they wish*/ });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }
@@ -97,7 +107,8 @@ namespace Skimur.Web.Public
                 "~/Scripts/modernizr.js",
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js",
-                "~/Scripts/app.js");
+                "~/Scripts/app.js",
+                "~/Scripts/app.ui.js");
             var stylesBundle = new StyleBundle("~/bundles/styles").Include(
                 "~/Content/site.less");
 

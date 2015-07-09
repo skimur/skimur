@@ -24,6 +24,8 @@ namespace Subs
 
         void SubscribeToSub(string userName, string subName);
 
+        void UnSubscribeToSub(string userName, string subName);
+
         Sub GetSubByName(string name);
 
         List<Sub> GetSubByNames(List<string> names);

@@ -42,14 +42,7 @@
         {
             <div class="row">
                 <div class="col-lg-3">
-                    @if (sub.IsSubscribed)
-                    {
-                        <button type="button" onclick="return unsubscribe(this, '@sub.Name')" class="btn-xs btn-default btn-unsub">unsubscribe</button>
-                    }
-                    else
-                    {
-                        <button type="button" onclick="return unsubscribe(this, '@sub.Name')" class="btn-xs btn-default btn-unsub">unsubscribe</button>
-                    }
+                    <a onclick="javascript:skimurui.toggleSubscription(this, '@sub.Name');" class="btn btn-default btn-sub @(sub.IsSubscribed ? "subscribed" : "unsubscribed")">@(sub.IsSubscribed ? "subscribed" : "unsubscribed")</a>
                 </div>
                 <div class="col-lg-9">
                     <a href="@Url.Sub(sub.Name)">/s/@sub.Name</a>

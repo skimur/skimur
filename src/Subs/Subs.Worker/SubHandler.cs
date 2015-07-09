@@ -17,7 +17,9 @@ namespace Subs.Worker
     public class SubHandler : 
         ICommandHandlerResponse<CreateSub, CreateSubResponse>,
         ICommandHandlerResponse<EditSub, EditSubResponse>,
-        ICommandHandlerResponse<CreatePost, CreatePostResponse>
+        ICommandHandlerResponse<CreatePost, CreatePostResponse>,
+        ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>,
+        ICommandHandlerResponse<UnSubcribeToSub, UnSubcribeToSubResponse>
     {
         private readonly ISubService _subService;
         private readonly IMembershipService _membershipService;
@@ -273,6 +275,75 @@ namespace Subs.Worker
             {
                 // todo: log
                 response.Error = ex.Message;
+            }
+
+            return response;
+        }
+
+        public SubcribeToSubResponse Handle(SubcribeToSub command)
+        {
+            var response = new SubcribeToSubResponse();
+
+            try
+            {
+                var user = _membershipService.GetUserByUserName(command.UserName);
+
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                if (string.IsNullOrEmpty(command.SubName))
+                {
+                    response.Error = "You must provide a sub name.";
+                    return response;
+                }
+
+                var sub = _subService.GetSubByName(command.SubName);
+
+                if (sub == null)
+                {
+                    response.Error = "Invalid sub name.";
+                    return response;
+                }
+
+                // todo: check for private subs
+                // todo: check if the user is subcribed to too many subs
+
+                _subService.SubscribeToSub(user.UserName, sub.Name);
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Error = ex.Message;
+                return response;
+            }
+
+            return response;
+        }
+
+        public UnSubcribeToSubResponse Handle(UnSubcribeToSub command)
+        {
+            var response = new UnSubcribeToSubResponse();
+
+            try
+            {
+                if (string.IsNullOrEmpty(command.UserName) || string.IsNullOrEmpty(command.SubName))
+                {
+                    response.Error = "No user or sub specified.";
+                    return response;
+                }
+
+               _subService.UnSubscribeToSub(command.UserName, command.SubName);
+
+                response.Success = true;
+            }
+            catch (Exception ex)
+            {
+                response.Error = ex.Message;
+                return response;
             }
 
             return response;
