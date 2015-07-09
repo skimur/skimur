@@ -1,0 +1,23 @@
+﻿@model SubModel
+           
+<div class="sub">
+    <div class="sub-subunsub">
+        <a onclick="javascript:skimurui.toggleSubscription(this, '@Model.Name');" class="btn btn-default btn-sub @(Model.IsSubscribed ? "subscribed" : "unsubscribed")">@(Model.IsSubscribed ? "subscribed" : "unsubscribed")</a>
+    </div>
+    <div class="sub-body">
+        <div>
+            <p class="sub-title">
+                <a class="sub-link" href="@Url.Sub(Model.Name)">@Model.Name</a>
+            </p>
+            <p class="sub-description">
+                @Model.Description
+            </p>
+            <p class="sub-meta">
+                @Model.NumberOfSubscribers subscribers, a community for @Html.Age(Model.CreatedDate).
+            </p>
+            <p class="sub-links">
+
+            </p>
+        </div>
+    </div>
+</div>

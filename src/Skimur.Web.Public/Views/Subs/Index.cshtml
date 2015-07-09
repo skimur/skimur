@@ -1,62 +1,71 @@
 ﻿@model List<SubModel>
 @{
-    ViewBag.Title = "Index";
+    ViewBag.Title = "Subs";
 }
 
-<script type="text/javascript">
-    $(function () {
-        $("#subQuerySearch").click(function (e) {
-            e.preventDefault();
-            var query = $("#subQuery").val();
-            if (query) {
-                window.location = "@Url.Subs()?query=" + query;
-            } else {
-                window.location = "@Url.Subs()";
-            }
-        });
-        $("#subQuery").enterKey(function (e) {
-            e.preventDefault();
-            $("#subQuerySearch").click();
-        });
-    });
-</script>
+<div class="row">
 
-<div class="form-inline">
-    <div class="form-group">
-        <input id="subQuery" type="text" class="form-control" value="@ViewBag.Query" />
-    </div>
-    <button id="subQuerySearch" type="submit" class="btn btn-default">Search</button>
-</div>
+    <div class="col-lg-9 col-sm-8">
 
-<div>
-    @if (Model.Count == 0)
-    {
-        <p>
-            @("No subs were found")
-        </p>
-        
-    }
-    else
-    {
-        foreach (var sub in Model)
+        <h2>@ViewBag.Title</h2>
+        <hr />
+        @if (Model.Count == 0)
         {
-            <div class="row">
-                <div class="col-lg-3">
-                    <a onclick="javascript:skimurui.toggleSubscription(this, '@sub.Name');" class="btn btn-default btn-sub @(sub.IsSubscribed ? "subscribed" : "unsubscribed")">@(sub.IsSubscribed ? "subscribed" : "unsubscribed")</a>
-                </div>
-                <div class="col-lg-9">
-                    <a href="@Url.Sub(sub.Name)">/s/@sub.Name</a>
-                    <p>
-                        @sub.Description
-                    </p>
-                    <p>
-                        @sub.NumberOfSubscribers subscribers, a community for @Html.Age(sub.CreatedDate).
-                    </p>
-                </div>
-                
-            </div>
+            <p>
+                @("No subs were found")
+            </p>
         }
-    }
+        else
+        {
+            using (var enumerator = Model.GetEnumerator())
+            {
+                while (enumerator.MoveNext())
+                {
+                    <div class="row">
+                        <div class="col-md-6">@Html.Partial("_SubDetails", enumerator.Current)</div>
+                        @if (enumerator.MoveNext())
+                        {
+                            <div class="col-md-6">@Html.Partial("_SubDetails", enumerator.Current)</div>
+                        }
+                    </div>
+                }
+            }
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+
+        <div class="panel">
+            @Html.ActionLink("Create a sub", "Create", null, new { @class = "btn btn-primary btn-block" })
+        </div>
+
+        <div class="panel">
+            <div class="input-group">
+                <input id="subQuery" type="text" class="form-control" placeholder="Search..." value="@ViewBag.Query">
+                <span id="subQuerySearch" class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-search"></span></span>
+            </div>
+        </div>
+
+    </div>
+
 </div>
 
-@Html.ActionLink("Create sub", "Create")
+@section scripts
+{
+    <script type="text/javascript">
+        $(function () {
+            $("#subQuerySearch").click(function (e) {
+                e.preventDefault();
+                var query = $("#subQuery").val();
+                if (query) {
+                    window.location = "@Url.Subs()?query=" + query;
+                } else {
+                    window.location = "@Url.Subs()";
+                }
+            });
+            $("#subQuery").enterKey(function (e) {
+                e.preventDefault();
+                $("#subQuerySearch").click();
+            });
+        });
+    </script>
+}

@@ -34,7 +34,7 @@ namespace Subs.Services
                     case SubsSortBy.Relevance:
                         break; // let db do its thing
                     case SubsSortBy.Subscribers:
-                        query.OrderBy(x => x.NumberOfSubscribers);
+                        query.OrderByDescending(x => x.NumberOfSubscribers);
                         break;
                 }
 
