@@ -6,10 +6,12 @@ using System.Text;
 using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Infrastructure.Membership;
+using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
 using Skimur;
 using Subs.Commands;
+using Subs.Events;
 using Subs.Services;
 
 namespace Subs.Worker
@@ -24,14 +26,17 @@ namespace Subs.Worker
         private readonly ISubService _subService;
         private readonly IMembershipService _membershipService;
         private readonly IPostService _postService;
+        private readonly IEventBus _eventBus;
 
         public SubHandler(ISubService subService, 
             IMembershipService membershipService,
-            IPostService postService)
+            IPostService postService,
+            IEventBus eventBus)
         {
             _subService = subService;
             _membershipService = membershipService;
             _postService = postService;
+            _eventBus = eventBus;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -75,6 +80,7 @@ namespace Subs.Worker
                 var sub = new Sub
                 {
                     Id = GuidUtil.NewSequentialId(),
+                    CreatedDate = Common.CurrentTime(),
                     Name = command.Name,
                     Description = command.Description,
                     SidebarText = command.SidebarText
@@ -313,6 +319,13 @@ namespace Subs.Worker
 
                 _subService.SubscribeToSub(user.UserName, sub.Name);
 
+                _eventBus.Publish(new SubScriptionChanged
+                {
+                    Subcribed = true,
+                    UserName = user.UserName,
+                    SubName = sub.Name
+                });
+
                 response.Success = true;
             }
             catch (Exception ex)
@@ -337,6 +350,13 @@ namespace Subs.Worker
                 }
 
                _subService.UnSubscribeToSub(command.UserName, command.SubName);
+
+               _eventBus.Publish(new SubScriptionChanged
+               {
+                   Unsubscribed = true,
+                   UserName = command.UserName,
+                   SubName = command.SubName
+               });
 
                 response.Success = true;
             }

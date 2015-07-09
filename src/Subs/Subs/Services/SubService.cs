@@ -1,16 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure;
 using Infrastructure.Data;
 using Infrastructure.Utils;
 using ServiceStack.OrmLite;
-using ServiceStack.OrmLite.Dapper;
 using Skimur;
+using Subs.ReadModel;
 
-namespace Subs
+namespace Subs.Services
 {
     public class SubService : ISubService
     {
@@ -23,13 +21,24 @@ namespace Subs
             _mapper = mapper;
         }
 
-        public List<Sub> GetAllSubs(string searchText = null)
+        public List<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance)
         {
             return _conn.Perform(conn =>
             {
-                if (string.IsNullOrEmpty(searchText))
-                    return conn.Select(conn.From<Sub>().OrderBy(x => x.Name));
-                return conn.Select(conn.From<Sub>().Where(x => x.Name.Contains(searchText)).OrderBy(x => x.Name));
+                var query = conn.From<Sub>();
+                if (!string.IsNullOrEmpty(searchText))
+                    query.Where(x => x.Name.Contains(searchText)).OrderBy(x => x.Name);
+
+                switch (sortBy)
+                {
+                    case SubsSortBy.Relevance:
+                        break; // let db do its thing
+                    case SubsSortBy.Subscribers:
+                        query.OrderBy(x => x.NumberOfSubscribers);
+                        break;
+                }
+
+                return conn.Select(query);
             });
         }
 
@@ -168,6 +177,17 @@ namespace Subs
             {
                 conn.Delete<SubAdmin>(x => x.UserName == userName && x.SubName == subName);
             });
+        }
+
+        public void UpdateNumberOfSubscribers(string subName, out ulong totalNumber)
+        {
+            ulong temp = 0;
+            _conn.Perform(conn =>
+            {
+                temp = (ulong)conn.Count<SubScription>(x => x.SubName.ToLower() == subName.ToLower());
+                conn.Update<Sub>(new { NumberOfSubscribers = temp }, x => x.Name.ToLower() == subName.ToLower());
+            });
+            totalNumber = temp;
         }
     }
 }

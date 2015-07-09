@@ -38,7 +38,7 @@ namespace Skimur.Web.Controllers
         public ActionResult Index(string query)
         {
             var subscribedSubs = _contextService.GetSubscribedSubNames();
-            var allSubs = _subDao.GetAllSubs(query).Select(x =>
+            var allSubs = _subDao.GetAllSubs(query, !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers).Select(x =>
             {
                 var model = _mapper.Map<Sub, SubModel>(x);
 

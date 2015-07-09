@@ -13,6 +13,8 @@ namespace Subs
     {
         public virtual Guid Id { get; set; }
 
+        public DateTime CreatedDate { get; set; }
+
         public string Name { get; set; }
 
         public string SidebarText { get; set; }
@@ -20,5 +22,7 @@ namespace Subs
         public bool IsDefault { get; set; }
 
         public string Description { get; set; }
+
+        public int NumberOfSubscribers { get; set; }
     }
 }

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Subs.ReadModel;
 
-namespace Subs
+namespace Subs.Services
 {
     public interface ISubService
     {
-        List<Sub> GetAllSubs(string searchText = null);
+        List<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance);
 
         List<Sub> GetDefaultSubs();
 
@@ -37,5 +35,7 @@ namespace Subs
         void AddModToSub(string userName, string subName, string addedBy = null);
 
         void RemoveModFromSub(string userName, string subName);
+
+        void UpdateNumberOfSubscribers(string subName, out ulong totalNumber);
     }
 }

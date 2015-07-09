@@ -45,6 +45,7 @@
   <ItemGroup>
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />
+    <Compile Include="SubEventHandler.cs" />
     <Compile Include="SubHandler.cs" />
   </ItemGroup>
   <ItemGroup>

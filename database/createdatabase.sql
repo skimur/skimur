@@ -1,7 +1,7 @@
 CREATE TABLE users
 (
   id uuid NOT NULL,
-  created_date date NOT NULL,
+  created_date timestamp NOT NULL,
   user_name text NOT NULL,
   email text,
   email_confirmed boolean,
@@ -10,7 +10,7 @@ CREATE TABLE users
   phone_number text,
   phone_number_confirmed boolean,
   two_factor_enabled boolean,
-  lockout_end_date date,
+  lockout_end_date timestamp,
   lockout_enabled boolean,
   access_failed_count integer,
   security_question text,
@@ -43,10 +43,12 @@ CREATE TABLE user_logins
 CREATE TABLE subs
 (
   id uuid NOT NULL,
+  created_date timestamp NOT NULL,
   name text,
   description text,
   sidebar_text text,
   is_default boolean,
+  number_of_subscribers bigint,
   CONSTRAINT subs_pkey PRIMARY KEY (id)
 );
 
@@ -56,7 +58,7 @@ CREATE TABLE sub_admins
   user_name text,
   sub_name text,
   added_by text,
-  added_on date,
+  added_on timestamp,
   CONSTRAINT sub_admins_pkey PRIMARY KEY (id)
 );
 
@@ -71,8 +73,8 @@ CREATE TABLE sub_scriptions
 CREATE TABLE posts
 (
   id uuid NOT NULL,
-  date_created date,
-  last_edit_date date,
+  date_created timestamp,
+  last_edit_date timestamp,
   slug text,
   sub_name text,
   user_name text,

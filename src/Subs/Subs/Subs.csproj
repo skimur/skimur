@@ -64,7 +64,7 @@
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
-    <Compile Include="Handlers\SubHandler.cs" />
+    <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="ReadModel\IPostDai.cs" />
     <Compile Include="ReadModel\PostDao.cs" />
     <Compile Include="Services\IPostService.cs" />

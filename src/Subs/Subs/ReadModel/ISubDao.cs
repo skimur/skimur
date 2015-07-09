@@ -8,7 +8,7 @@ namespace Subs.ReadModel
 {
     public interface ISubDao
     {
-        List<Sub> GetAllSubs(string searchText = null);
+        List<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance);
 
         List<Sub> GetDefaultSubs();
 
@@ -23,5 +23,11 @@ namespace Subs.ReadModel
         bool CanUserModerateSub(string userName, string subName);
 
         List<string> GetAllModsForSub(string subName);
+    }
+
+    public enum SubsSortBy
+    {
+        Relevance,
+        Subscribers
     }
 }

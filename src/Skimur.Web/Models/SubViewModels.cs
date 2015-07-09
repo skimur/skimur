@@ -18,11 +18,15 @@ namespace Skimur.Web.Models
     {
         public Guid Id { get; set; }
 
+        public DateTime CreatedDate { get; set; }
+
         public string Name { get; set; }
 
         public string Description { get; set; }
 
         public bool IsSubscribed { get; set; }
+
+        public ulong NumberOfSubscribers { get; set; }
     }
 
     public class SubPosts

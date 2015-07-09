@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using Infrastructure;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
+using Subs.Services;
 
 namespace Subs.ReadModel
 {

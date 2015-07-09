@@ -8,6 +8,7 @@ using Infrastructure.Messaging.Handling;
 using SimpleInjector;
 using Skimur;
 using Subs.Commands;
+using Subs.Events;
 
 namespace Subs.Worker
 {
@@ -20,6 +21,8 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<UnSubcribeToSub, UnSubcribeToSubResponse>, SubHandler>();
+            
+            container.Register<IEventHandler<SubScriptionChanged>, SubEventHandler>();
         }
 
         public int Order
