@@ -23,6 +23,6 @@ namespace Subs
 
         public string Description { get; set; }
 
-        public int NumberOfSubscribers { get; set; }
+        public ulong NumberOfSubscribers { get; set; }
     }
 }
