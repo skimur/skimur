@@ -1,0 +1,55 @@
+{
+  "name": "locp-cassandra",
+  "version": "0.3.0",
+  "author": "locp",
+  "summary": "Install and manage Cassandra and DataStax Agent.",
+  "license": "Apache-2.0",
+  "source": "https://github.com/locp/cassandra",
+  "project_page": "https://github.com/locp/cassandra",
+  "issues_url": "https://github.com/locp/cassandra/issues",
+  "dependencies": [
+    {"name":"puppetlabs-apt","version_requirement":">= 2.1.0  <3.0.0"}
+  ],
+  "tags": [
+    "cassandra",
+    "datastax",
+    "datastax-agent"
+  ],
+  "operatingsystem_support": [
+    {
+      "operatingsystem": "CentOS",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "OracleLinux",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "RedHat",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Scientific",
+      "operatingsystemrelease": [
+        "6",
+        "7"
+      ]
+    },
+    {
+      "operatingsystem": "Ubuntu",
+      "operatingsystemrelease": [
+        "12.04",
+        "14.04"
+      ]
+    }
+  ]
+}

@@ -1,0 +1,23 @@
+{
+  "CHANGELOG.md": "3d7f17469fab5baf76403885d23746c8",
+  "CONTRIBUTING.md": "a06f64f4b87540c66c13021c1c07d01d",
+  "Gemfile": "1fa66f518106c54e17ebaecf987ecea8",
+  "LICENSE.md": "6bd297e79c1eb142b206cfbb5aabb3fb",
+  "README.md": "80fe8e16b1d1c7565e5b45ac70a31444",
+  "Rakefile": "f37e6131fe7de9a49b09d31596f5fbf1",
+  "manifests/config.pp": "9288de0f61ca0366cec179777b746f4c",
+  "manifests/init.pp": "34852e7d3ad7e21193d0484b14ee222d",
+  "manifests/install.pp": "7b60322cf649e08e8fb55b5e9105e90f",
+  "metadata.json": "a46987ccf06095ebe566bcfc35d826c4",
+  "spec/acceptance/cassandra_spec.rb": "497899f1a97e45bcd3ba5ca226f968f3",
+  "spec/acceptance/nodesets/centos-65-x64.yml": "a325fc9560cd71400e1ce98ab31bcf44",
+  "spec/acceptance/nodesets/centos-7-x64.yml": "91896d6f931f4226c9dea64f7c104029",
+  "spec/acceptance/nodesets/ubuntu-server-1204-x64.yml": "95b9f0a1819b7c62d5c33ce968df67d3",
+  "spec/acceptance/nodesets/ubuntu-server-1404-x64.yml": "b694aeab1ca117b59e980d508a5e4d52",
+  "spec/classes/cassandra_spec.rb": "686e0e874a2c8b3f9bd8ac7882725a92",
+  "spec/spec_helper.rb": "3ea886dd135e120afa31e0aab12e85b0",
+  "spec/spec_helper_acceptance.rb": "da8a331c2ec470d19155d3ba07231e9e",
+  "templates/cassandra.yaml.erb": "26797a445f178e2f7aa8ae7808fb3a33",
+  "templates/cassandra1.yaml.erb": "e22f84cfea4e7b400a6c041bfa0e0844",
+  "tests/init.pp": "8c6e832e1d13b1ccb5fb27e36c54c3d2"
+}
