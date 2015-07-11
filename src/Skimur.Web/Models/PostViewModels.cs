@@ -19,6 +19,6 @@ namespace Skimur.Web.Models
 
     public class PostModel : Post
     {
-        
+        public VoteType? CurrentVote { get; set; }
     }
 }

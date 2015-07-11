@@ -8,10 +8,10 @@
     <div class="col-lg-9 col-sm-8">
         @foreach (var post in Model.Posts)
         {
-            <div class="post row">
-                <div class="post-voting">
+            <div class="post row" data-postslug="@post.Slug">
+                <div class="post-voting @(post.CurrentVote != null ? post.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
                     <span class="up"></span>
-                    <span class="votes">234</span>
+                    <span class="votes">@(post.VoteUpCount - post.VoteDownCount)</span>
                     <span class="down"></span>
                 </div>
                 <div class="post-body">

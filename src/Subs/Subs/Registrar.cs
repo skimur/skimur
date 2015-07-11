@@ -17,6 +17,8 @@ namespace Subs
             container.RegisterSingle<ISubDao, SubDao>();
             container.RegisterSingle<IPostService, PostService>();
             container.RegisterSingle<IPostDao, PostDao>();
+            container.RegisterSingle<IVoteService, VoteService>();
+            container.RegisterSingle<IVoteDao, VoteDao>();
         }
 
         public int Order

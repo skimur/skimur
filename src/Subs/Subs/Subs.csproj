@@ -59,14 +59,18 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\CaseVote.cs" />
     <Compile Include="Commands\CreatePost.cs" />
     <Compile Include="Commands\CreateSub.cs" />
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
-    <Compile Include="ReadModel\IPostDai.cs" />
+    <Compile Include="Events\VoteCasted.cs" />
+    <Compile Include="ReadModel\IPostDao.cs" />
+    <Compile Include="ReadModel\IVoteDao.cs" />
     <Compile Include="ReadModel\PostDao.cs" />
+    <Compile Include="ReadModel\VoteDao.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ISubService.cs" />
     <Compile Include="Post.cs" />
@@ -74,11 +78,14 @@
     <Compile Include="ReadModel\ISubDao.cs" />
     <Compile Include="ReadModel\SubDao.cs" />
     <Compile Include="Registrar.cs" />
+    <Compile Include="Services\IVoteService.cs" />
     <Compile Include="Services\PostService.cs" />
+    <Compile Include="Services\VoteService.cs" />
     <Compile Include="Sub.cs" />
     <Compile Include="SubAdmin.cs" />
     <Compile Include="SubScription.cs" />
     <Compile Include="Services\SubService.cs" />
+    <Compile Include="Vote.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">

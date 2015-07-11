@@ -21,8 +21,12 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<UnSubcribeToSub, UnSubcribeToSubResponse>, SubHandler>();
-            
+
             container.Register<IEventHandler<SubScriptionChanged>, SubEventHandler>();
+
+            container.Register<ICommandHandler<CaseVote>, VoteCommandHandler>();
+
+            container.Register<IEventHandler<VoteCasted>, VoteEventHandler>();
         }
 
         public int Order

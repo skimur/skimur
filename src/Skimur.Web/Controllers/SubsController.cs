@@ -19,13 +19,15 @@ namespace Skimur.Web.Controllers
         private readonly ICommandBus _commandBus;
         private readonly IUserContext _userContext;
         private readonly IPostDao _postDao;
+        private readonly IVoteDao _voteDao;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
             IMapper mapper,
             ICommandBus commandBus,
             IUserContext userContext,
-            IPostDao postDao)
+            IPostDao postDao,
+            IVoteDao voteDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -33,6 +35,7 @@ namespace Skimur.Web.Controllers
             _commandBus = commandBus;
             _userContext = userContext;
             _postDao = postDao;
+            _voteDao = voteDao;
         }
 
         public ActionResult Index(string query)
@@ -67,7 +70,13 @@ namespace Skimur.Web.Controllers
             model.Sub = _mapper.Map<Sub, SubModel>(sub);
             model.Sub.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
             // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }).Select(x => _mapper.Map<Post, PostModel>(x)));
+            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }).Select(x =>
+            {
+                var post = _mapper.Map<Post, PostModel>(x);
+                if (_userContext.CurrentUser != null)
+                    post.CurrentVote = _voteDao.GetVoteForUserOnPost(_userContext.CurrentUser.UserName, post.Slug);
+                return post;
+            }));
 
             return View(model);
         }
@@ -272,6 +281,61 @@ namespace Skimur.Web.Controllers
             {
                 success = response.Success,
                 error = response.Error
+            });
+        }
+
+        [HttpPost]
+        public ActionResult Vote(string postSlug, VoteType type)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to vote for an item."
+                });
+            }
+
+           _commandBus.Send(new CaseVote
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                PostSlug = postSlug,
+                DateCasted = Common.CurrentTime(),
+                IpAddress = Request.UserHostAddress,
+                VoteType = type
+            });
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
+        public ActionResult UnVote(string postSlug)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to unvote for an item."
+                });
+            }
+
+            _commandBus.Send(new CaseVote
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                PostSlug = postSlug,
+                DateCasted = Common.CurrentTime(),
+                IpAddress = Request.UserHostAddress,
+                VoteType = null /*no vote*/
+            });
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
             });
         }
 

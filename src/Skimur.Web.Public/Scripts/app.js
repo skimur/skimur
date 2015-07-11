@@ -34,9 +34,47 @@
         });
     };
 
+    var vote = function (postSlug, voteType, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/vote",
+            data: { postSlug: postSlug, type : voteType },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var unvote = function(postSlug, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/unvote",
+            data: { postSlug: postSlug },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
-        unsubcribe: unsubcribe
+        unsubcribe: unsubcribe,
+        vote: vote,
+        upvote: function (postSlug, callback) { vote(postSlug, 1, callback); },
+        downvote: function (postSlug, callback) { vote(postSlug, 0, callback); },
+        unvote : unvote
     };
 
 })();

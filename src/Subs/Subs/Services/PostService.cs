@@ -1,4 +1,5 @@
-﻿using Infrastructure.Data;
+﻿using System.Dynamic;
+using Infrastructure.Data;
 using ServiceStack.OrmLite;
 
 namespace Subs.Services
@@ -41,6 +42,30 @@ namespace Subs.Services
 
                 return conn.Select(query);
             });
+        }
+
+        public void UpdatePostVotes(string postSlug, int? upVotes, int? downVotes)
+        {
+            if (downVotes.HasValue || upVotes.HasValue)
+            {
+                _conn.Perform(conn =>
+                {
+                    var post = conn.Single<Post>(x => x.Slug.ToLower() == postSlug.ToLower());
+                    if (post != null)
+                    {
+                        if (upVotes.HasValue && downVotes.HasValue)
+                        {
+                            conn.Update<Post>(new { VoteUpCount = upVotes.Value, VoteDownCount = downVotes.Value }, x => x.Id == post.Id);
+                        }else if (upVotes.HasValue)
+                        {
+                            conn.Update<Post>(new { VoteUpCount = upVotes.Value }, x => x.Id == post.Id);
+                        }else if (downVotes.HasValue)
+                        {
+                            conn.Update<Post>(new { VoteDownCount = downVotes.Value }, x => x.Id == post.Id);
+                        }
+                    }
+                });
+            }
         }
     }
 }

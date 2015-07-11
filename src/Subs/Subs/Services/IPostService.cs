@@ -11,5 +11,7 @@ namespace Subs.Services
         Post GetPostBySlug(string slug);
 
         List<Post> GetPosts(List<string> subs = null);
+
+        void UpdatePostVotes(string postSlug, int? upVotes, int? downVotes);
     }
 }

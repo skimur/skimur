@@ -85,5 +85,19 @@ CREATE TABLE posts
   url text,
   domain text,
   send_replies boolean,
+  vote_up_count integer,
+  vote_down_count integer,
   CONSTRAINT post_pkey PRIMARY KEY (id)
+);
+
+CREATE TABLE votes
+(
+  id uuid NOT NULL,
+  date_created timestamp,
+  user_name text,
+  post_slug text,
+  type integer,
+  date_casted timestamp,
+  ip_address text,
+  user_ip text
 );

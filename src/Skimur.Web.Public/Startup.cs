@@ -48,9 +48,14 @@ namespace Skimur.Web.Public
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-                name: "SubRandom",
-                url: "s/random",
-                defaults: new { controller = "Subs", action = "Random" });
+              name: "Vote",
+              url: "vote",
+              defaults: new { controller = "Subs", action = "Vote" });
+
+            routes.MapRoute(
+                name: "UnVote",
+                url: "unvote",
+                defaults: new { controller = "Subs", action = "UnVote" });
 
             routes.MapRoute(
                 name: "SubAll",

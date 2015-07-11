@@ -37,6 +37,10 @@ namespace Subs
 
         public bool SendReplies { get; set; }
 
+        public int VoteUpCount { get; set; }
+
+        public int VoteDownCount { get; set; }
+
         [Ignore]
         public PostType PostType
         {

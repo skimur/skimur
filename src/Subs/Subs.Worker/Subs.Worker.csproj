@@ -47,6 +47,8 @@
     <Compile Include="Registrar.cs" />
     <Compile Include="SubEventHandler.cs" />
     <Compile Include="SubHandler.cs" />
+    <Compile Include="VoteCommandHandler.cs" />
+    <Compile Include="VoteEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Membership\Infrastructure.Membership.csproj">

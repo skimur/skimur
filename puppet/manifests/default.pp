@@ -125,6 +125,14 @@ class skimur::postgres {
     require     => Exec['create database'],
   }
 
+  ::postgresql::server::table_grant { 'votes permission':
+    privilege => 'ALL',
+    table     => 'votes',
+    db        => 'skimur',
+    role      => 'db-user',
+    require     => Exec['create database'],
+  }
+
 }
 
 class skimur::rabbitmq {

@@ -1,9 +1,9 @@
 ﻿.post {
     .post-voting {
         float: left;
-        margin-right: 7px;
-        margin-left: 7px;
-        color:@gray;
+        color: @gray-light;
+        font-size: ceil((@font-size-base * 1.2));
+        width: 45px;
 
         .up, .votes, .down {
             display: block !important;
@@ -17,6 +17,10 @@
             cursor: pointer;
         }
 
+        .votes {
+            cursor: default;
+        }
+
         .up {
             .glyphicon-arrow-up;
         }
@@ -24,10 +28,23 @@
         .down {
             .glyphicon-arrow-down;
         }
+
+        &.voted-up {
+            .up, .votes {
+                color: @brand-success;
+            }
+        }
+
+        &.voted-down {
+            .down, .votes {
+                color: @brand-danger;
+            }
+        }
     }
 
     .post-body {
-        overflow:hidden;
+        overflow: hidden;
+
         .post-title {
             margin: 0;
 
