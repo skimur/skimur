@@ -38,7 +38,7 @@ $(function() {
 
     $(".post").each(function (index, element) {
 
-        var $postVoting = $(".post-voting");
+        var $postVoting = $(".post-voting", element);
         var postSlug = $(element).data("postslug");
 
         $(".up", $postVoting).click(function () {
