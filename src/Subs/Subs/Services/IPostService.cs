@@ -1,4 +1,5 @@
 ﻿using System.Collections.Generic;
+using Subs.ReadModel;
 
 namespace Subs.Services
 {
@@ -10,7 +11,7 @@ namespace Subs.Services
 
         Post GetPostBySlug(string slug);
 
-        List<Post> GetPosts(List<string> subs = null);
+        List<Post> GetPosts(List<string> subs = null, PostsSortBy sortby = PostsSortBy.Hot);
 
         void UpdatePostVotes(string postSlug, int? upVotes, int? downVotes);
     }

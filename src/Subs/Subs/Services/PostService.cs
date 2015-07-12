@@ -1,6 +1,7 @@
 ﻿using System.Dynamic;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
+using Subs.ReadModel;
 
 namespace Subs.Services
 {
@@ -30,7 +31,7 @@ namespace Subs.Services
             return _conn.Perform(conn => conn.Single<Post>(x => x.Slug == slug));
         }
 
-        public System.Collections.Generic.List<Post> GetPosts(System.Collections.Generic.List<string> subs = null)
+        public System.Collections.Generic.List<Post> GetPosts(System.Collections.Generic.List<string> subs = null, PostsSortBy sortBy = PostsSortBy.Hot)
         {
             return _conn.Perform(conn =>
             {
@@ -38,6 +39,15 @@ namespace Subs.Services
                 if (subs != null && subs.Count > 0)
                 {
                     query.Where(x => subs.Contains(x.SubName));
+                }
+
+                switch (sortBy)
+                {
+                        case PostsSortBy.Hot:
+                        case PostsSortBy.New:
+                        break;
+                    default:
+                        break;
                 }
 
                 return conn.Select(query);

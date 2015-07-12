@@ -6,7 +6,7 @@ using System.Threading.Tasks;
 
 namespace Skimur
 {
-    public class TimeHelper
+    public static class TimeHelper
     {
         private const double Tolerance = 0.01;
 
@@ -53,6 +53,18 @@ namespace Skimur
             }
 
             return result;
+        }
+
+        public static DateTime FromUnixTime(this long unixTime)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return epoch.AddSeconds(unixTime);
+        }
+
+        public static long ToUnixTime(this DateTime date)
+        {
+            var epoch = new DateTime(1970, 1, 1, 0, 0, 0, DateTimeKind.Utc);
+            return Convert.ToInt64((date.ToUniversalTime() - epoch).TotalSeconds);
         }
     }
 }

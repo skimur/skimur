@@ -8,6 +8,15 @@ namespace Subs.ReadModel
 {
     public interface IPostDao
     {
-        List<Post> GetPosts(List<string> subs = null);
+        List<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.Hot);
+    }
+
+    public enum PostsSortBy
+    {
+        Hot,
+        New,
+        Rising,
+        Controversial,
+        Top
     }
 }

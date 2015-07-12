@@ -67,6 +67,7 @@
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteCasted.cs" />
+    <Compile Include="HotFactor.cs" />
     <Compile Include="ReadModel\IPostDao.cs" />
     <Compile Include="ReadModel\IVoteDao.cs" />
     <Compile Include="ReadModel\PostDao.cs" />
