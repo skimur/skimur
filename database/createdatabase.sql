@@ -1,7 +1,7 @@
 CREATE TABLE users
 (
   id uuid NOT NULL,
-  created_date timestamp NOT NULL,
+  created_date timestamp with time zone NOT NULL,
   user_name text NOT NULL,
   email text,
   email_confirmed boolean,
@@ -10,7 +10,7 @@ CREATE TABLE users
   phone_number text,
   phone_number_confirmed boolean,
   two_factor_enabled boolean,
-  lockout_end_date timestamp,
+  lockout_end_date timestamp with time zone,
   lockout_enabled boolean,
   access_failed_count integer,
   security_question text,
@@ -43,7 +43,7 @@ CREATE TABLE user_logins
 CREATE TABLE subs
 (
   id uuid NOT NULL,
-  created_date timestamp NOT NULL,
+  created_date timestamp with time zone NOT NULL,
   name text,
   description text,
   sidebar_text text,
@@ -58,7 +58,7 @@ CREATE TABLE sub_admins
   user_name text,
   sub_name text,
   added_by text,
-  added_on timestamp,
+  added_on timestamp with time zone,
   CONSTRAINT sub_admins_pkey PRIMARY KEY (id)
 );
 
@@ -73,8 +73,8 @@ CREATE TABLE sub_scriptions
 CREATE TABLE posts
 (
   id uuid NOT NULL,
-  date_created timestamp,
-  last_edit_date timestamp,
+  date_created timestamp with time zone NOT NULL,
+  last_edit_date timestamp with time zone,
   slug text,
   sub_name text,
   user_name text,
@@ -93,11 +93,11 @@ CREATE TABLE posts
 CREATE TABLE votes
 (
   id uuid NOT NULL,
-  date_created timestamp,
+  date_created timestamp with time zone,
   user_name text,
   post_slug text,
   type integer,
-  date_casted timestamp,
+  date_casted timestamp with time zone,
   ip_address text,
   user_ip text
 );
