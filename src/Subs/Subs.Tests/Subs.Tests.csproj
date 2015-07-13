@@ -49,6 +49,7 @@
   <ItemGroup>
     <Compile Include="HotTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
+    <Compile Include="PostServiceTests.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />
@@ -58,6 +59,10 @@
     <ProjectReference Include="..\..\Infrastructure\Infrastructure\Infrastructure.csproj">
       <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
       <Name>Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Skimur.Tests\Skimur.Tests.csproj">
+      <Project>{effe72ce-da71-40da-a082-c76f24083687}</Project>
+      <Name>Skimur.Tests</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>

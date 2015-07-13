@@ -101,3 +101,19 @@ CREATE TABLE votes
   ip_address text,
   user_ip text
 );
+
+-- for unit tests
+CREATE OR REPLACE FUNCTION clear_database() RETURNS void AS $$
+DECLARE
+BEGIN
+    DELETE FROM votes;
+    DELETE FROM posts;
+    DELETE FROM sub_scriptions;
+    DELETE FROM sub_admins;
+    DELETE FROM subs;
+    DELETE FROM user_logins;
+    DELETE FROM user_roles;
+    DELETE FROM roles;
+    DELETE from users;
+END;
+$$ LANGUAGE plpgsql;
