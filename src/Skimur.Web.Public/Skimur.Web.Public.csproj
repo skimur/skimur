@@ -285,12 +285,12 @@
     <Content Include="Views\Subs\Posts.cshtml" />
     <Content Include="Views\Subs\_SubCreateEdit.cshtml" />
     <Content Include="Views\Subs\_TopBar.cshtml" />
-    <Content Include="Views\Subs\PostsAll.cshtml" />
     <Content Include="Views\Subs\CreatePost.cshtml" />
     <Content Include="Views\Shared\_LayoutFull.cshtml" />
     <Content Include="Views\Subs\_ModerationSideBar.cshtml" />
     <Content Include="Views\Users\User.cshtml" />
     <Content Include="Views\Subs\_SubDetails.cshtml" />
+    <Content Include="Views\Subs\_Post.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

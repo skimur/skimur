@@ -56,10 +56,13 @@ namespace Skimur.Web.Controllers
             return View(allSubs);
         }
 
-        public ActionResult Posts(string name)
+        public ActionResult Posts(string name, PostsSortBy? sort, TimeFilter? time)
         {
             if (string.IsNullOrEmpty(name))
                 return Redirect(Url.Subs());
+
+            if (sort == null)
+                sort = PostsSortBy.Hot; // TODO: get default from sub
 
             var sub = _subDao.GetSubByName(name);
 
@@ -69,8 +72,10 @@ namespace Skimur.Web.Controllers
             var model = new SubPosts();
             model.Sub = _mapper.Map<Sub, SubModel>(sub);
             model.Sub.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
+            model.SortBy = sort.Value;
+            model.TimeFilter = time;
             // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }, PostsSortBy.Hot).Select(x =>
+            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }, sort.Value).Select(x =>
             {
                 var post = _mapper.Map<Post, PostModel>(x);
                 if (_userContext.CurrentUser != null)
@@ -86,7 +91,7 @@ namespace Skimur.Web.Controllers
             var model = new SubPosts();
             // todo: implement paging
             model.Posts.AddRange(_postDao.GetPosts(sortBy:PostsSortBy.Hot).Select(x => _mapper.Map<Post, PostModel>(x)));
-            return View(model);
+            return View("Posts", model);
         }
 
         public ActionResult Random()

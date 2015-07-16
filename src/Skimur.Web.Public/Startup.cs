@@ -76,6 +76,26 @@ namespace Skimur.Web.Public
                defaults: new { controller = "Subs", action = "Posts" });
 
             routes.MapRoute(
+               name: "SubHot",
+               url: "s/{name}/hot",
+               defaults: new { controller = "Subs", action = "Posts", sort = "hot" });
+
+            routes.MapRoute(
+               name: "SubNew",
+               url: "s/{name}/new",
+               defaults: new { controller = "Subs", action = "Posts", sort = "new" });
+
+            routes.MapRoute(
+               name: "SubControversial",
+               url: "s/{name}/controversial",
+               defaults: new { controller = "Subs", action = "Posts", sort = "controversial" });
+
+            routes.MapRoute(
+               name: "SubTop",
+               url: "s/{name}/top",
+               defaults: new { controller = "Subs", action = "Posts", sort = "top" });
+
+            routes.MapRoute(
                 name: "Post",
                 url: "post/{slug}/{title}",
                 defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
@@ -98,7 +118,7 @@ namespace Skimur.Web.Public
             routes.MapRoute(
                 name: "UnSubscribe",
                 url: "unsubscribe/{subName}",
-                defaults: new { controller = "Subs", action = "UnSubscribe", subName= UrlParameter.Optional /*not really optionally, but they could provide subName via ajax if they wish*/ });
+                defaults: new { controller = "Subs", action = "UnSubscribe", subName = UrlParameter.Optional /*not really optionally, but they could provide subName via ajax if they wish*/ });
 
             routes.MapRoute(
                 name: "Default",

@@ -23,12 +23,8 @@
     @Html.Action("TopBar", "Subs")
     <div class="layout-header navbar">
         <div class="navbar-header">
-            <button type="button" class="navbar-toggle" data-toggle="collapse" data-target=".navbar-collapse">
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-                <span class="icon-bar"></span>
-            </button>
-            <a href="/" class="navbar-brand"><img src="/content/img/logo.png" /></a>
+            <a href="/" class="navbar-brand"><img src="/content/img/logo.png"/></a>
+            @RenderSection("header", false)
         </div>
         <div class="navbar-collapse collapse">
             @*<ul class="nav navbar-nav">

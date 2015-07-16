@@ -1,6 +1,5 @@
 ﻿
-.btn-sub.subscribed
-{
+.btn-sub.subscribed {
     .btn-primary;
 }
 
@@ -9,12 +8,13 @@
         float: left;
         margin-right: 7px;
         margin-left: 7px;
-        min-width:111px;
-        text-align:center;
+        min-width: 111px;
+        text-align: center;
     }
 
     .sub-body {
-        overflow:hidden;
+        overflow: hidden;
+
         .sub-title {
             margin: 0;
 
@@ -22,11 +22,13 @@
                 font-size: @font-size-large;
             }
         }
-        .sub-description{
+
+        .sub-description {
             .well;
-            padding:10px;
-            margin-bottom:5px;
+            padding: 10px;
+            margin-bottom: 5px;
         }
+
         .sub-meta {
             margin: 0px;
             font-size: @font-size-small;
@@ -34,6 +36,18 @@
         }
 
         .sub-links {
+        }
+    }
+}
+
+.sub-header {
+    float: left;
+    margin-top:10px;
+    .sort {
+        border-bottom: none;
+        .dropdown-menu {
+            border-top: none;
+            margin: 0px;
         }
     }
 }

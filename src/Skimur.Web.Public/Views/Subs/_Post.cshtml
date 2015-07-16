@@ -1,0 +1,49 @@
+﻿@using Subs
+@model PostModel
+
+<div class="post row" data-postslug="@Model.Slug">
+    <div class="post-voting @(Model.CurrentVote != null ? Model.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+        <span class="up"></span>
+        <span class="votes">@(Model.VoteUpCount - Model.VoteDownCount)</span>
+        <span class="down"></span>
+    </div>
+    <div class="post-body">
+        <div>
+            <p class="post-title">
+                <a class="post-link" href="@PostUrl(Model)">@Model.Title</a> @(DomainLink(Model))
+            </p>
+            <p class="post-meta">
+                Posted @Html.Age(Model.DateCreated) ago
+            </p>
+            <p class="post-links">
+                <a href="@Url.Post(Model.Slug, Model.Title)">comments</a>
+            </p>
+        </div>
+    </div>
+</div>
+
+@helper DomainLink(PostModel post)
+{
+    if (post.PostType == PostType.Link)
+    {
+        if (!string.IsNullOrEmpty(post.Domain))
+        {
+            <a class="post-domain" href="@Url.Domain(post.Domain)">(@post.Domain)</a>
+        }
+    }
+    else if (post.PostType == PostType.Text)
+    {
+        <a class="post-domain" href="@Url.Post(post.Slug, post.Title)">(self.@post.SubName)</a>
+    }
+}
+@helper PostUrl(PostModel post)
+{
+    if (post.PostType == PostType.Link)
+    {
+        @post.Url
+    }
+    else if (post.PostType == PostType.Text)
+    {
+        @Url.Post(post.Slug, post.Title)
+    }
+}

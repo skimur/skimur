@@ -8,4 +8,9 @@
         <p>&copy; @DateTime.Now.Year - Skimur</p>
     </footer>
 </div>
-@RenderSection("scripts", required: false)
+@section scripts {
+    @RenderSection("scripts", false)
+}
+@section header {
+    @RenderSection("header", false)
+}

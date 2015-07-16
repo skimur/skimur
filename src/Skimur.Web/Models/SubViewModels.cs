@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Models
 {
@@ -39,5 +40,9 @@ namespace Skimur.Web.Models
         public SubModel Sub { get; set; }
 
         public List<PostModel> Posts { get; set; }
+
+        public PostsSortBy SortBy { get; set; }
+
+        public TimeFilter? TimeFilter { get; set; }
     }
 }

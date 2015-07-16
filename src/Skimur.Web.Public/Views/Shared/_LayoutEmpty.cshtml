@@ -2,4 +2,10 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 @RenderBody()
-@RenderSection("scripts", required: false)
+@section scripts {
+    @RenderSection("scripts", false)
+}
+
+@section header {
+    @RenderSection("header", false)
+}

@@ -16,19 +16,16 @@ namespace Subs.Worker
 {
     public class VoteCommandHandler : ICommandHandler<CaseVote>
     {
-        private readonly IDbConnectionProvider _conn;
         private readonly IMembershipService _membershipService;
         private readonly IPostService _postService;
         private readonly IVoteService _voteService;
         private readonly IEventBus _eventBus;
 
-        public VoteCommandHandler(IDbConnectionProvider conn,
-            IMembershipService membershipService,
+        public VoteCommandHandler(IMembershipService membershipService,
             IPostService postService,
             IVoteService voteService,
             IEventBus eventBus)
         {
-            _conn = conn;
             _membershipService = membershipService;
             _postService = postService;
             _voteService = voteService;

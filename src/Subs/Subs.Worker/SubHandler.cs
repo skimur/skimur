@@ -16,7 +16,7 @@ using Subs.Services;
 
 namespace Subs.Worker
 {
-    public class SubHandler : 
+    public class SubHandler :
         ICommandHandlerResponse<CreateSub, CreateSubResponse>,
         ICommandHandlerResponse<EditSub, EditSubResponse>,
         ICommandHandlerResponse<CreatePost, CreatePostResponse>,
@@ -27,16 +27,19 @@ namespace Subs.Worker
         private readonly IMembershipService _membershipService;
         private readonly IPostService _postService;
         private readonly IEventBus _eventBus;
+        private readonly ICommandBus _commandBus;
 
-        public SubHandler(ISubService subService, 
+        public SubHandler(ISubService subService,
             IMembershipService membershipService,
             IPostService postService,
-            IEventBus eventBus)
+            IEventBus eventBus,
+            ICommandBus commandBus)
         {
             _subService = subService;
             _membershipService = membershipService;
             _postService = postService;
             _eventBus = eventBus;
+            _commandBus = commandBus;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -232,7 +235,8 @@ namespace Subs.Worker
                     // todo: make sure the url wasn't already submitted
 
 
-                }else if (command.PostType == PostType.Text)
+                }
+                else if (command.PostType == PostType.Text)
                 {
                     // todo: only validate this length is user is not an admin
                     if (!string.IsNullOrEmpty(command.Content) && command.Content.Length > 40000)
@@ -273,6 +277,7 @@ namespace Subs.Worker
                     post.Slug = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
 
                 _postService.InsertPost(post);
+                _commandBus.Send(new CaseVote { DateCasted = post.DateCreated, IpAddress = command.IpAddress, PostSlug = post.Slug, UserName = user.UserName, VoteType = VoteType.Up });
 
                 response.Title = command.Title;
                 response.Slug = post.Slug;
@@ -349,14 +354,14 @@ namespace Subs.Worker
                     return response;
                 }
 
-               _subService.UnSubscribeToSub(command.UserName, command.SubName);
+                _subService.UnSubscribeToSub(command.UserName, command.SubName);
 
-               _eventBus.Publish(new SubScriptionChanged
-               {
-                   Unsubscribed = true,
-                   UserName = command.UserName,
-                   SubName = command.SubName
-               });
+                _eventBus.Publish(new SubScriptionChanged
+                {
+                    Unsubscribed = true,
+                    UserName = command.UserName,
+                    SubName = command.SubName
+                });
 
                 response.Success = true;
             }

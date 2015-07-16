@@ -1,33 +1,47 @@
 ﻿@using Subs
+@using Subs.ReadModel
 @model SubPosts
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
+}
+
+@section header {
+    @{
+        var urlBase = Model.Sub != null ? Url.Content("~/s/" + Model.Sub.Name) : Url.Content("/");
+    }
+
+    <div class="sub-header">
+        <div class="hidden-xs">
+            <ul class="nav nav-tabs sort">
+                <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@(urlBase)">Hot</a></li>
+                <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@(urlBase)/new">New</a></li>
+                <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@(urlBase)/controversial">Controversial</a></li>
+                <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@(urlBase)/top">Top</a></li>
+            </ul>
+        </div>
+        <div class="visible-xs-block">
+            <ul class="nav nav-tabs sort">
+                <li class="dropdown active">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">@Model.SortBy.ToString() <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@(urlBase)">Hot</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@(urlBase)/new">New</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@(urlBase)/controversial">Controversial</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@(urlBase)/top">Top</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
         @foreach (var post in Model.Posts)
         {
-            <div class="post row" data-postslug="@post.Slug">
-                <div class="post-voting @(post.CurrentVote != null ? post.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
-                    <span class="up"></span>
-                    <span class="votes">@(post.VoteUpCount - post.VoteDownCount)</span>
-                    <span class="down"></span>
-                </div>
-                <div class="post-body">
-                    <div>
-                        <p class="post-title">
-                            <a class="post-link" href="@PostUrl(post)">@post.Title</a> @(DomainLink(post))
-                        </p>
-                        <p class="post-meta">
-                            Posted 10 hours ago
-                        </p>
-                        <p class="post-links">
-                            <a href="@Url.Post(post.Slug, post.Title)">comments</a>
-                        </p>
-                    </div>
-                </div>
-            </div>
+            @Html.Partial("_Post", post)
         }
     </div>
     <div class="col-lg-3 col-sm-4">
@@ -44,29 +58,3 @@
 
     </div>
 </div>
-
-@helper DomainLink(PostModel post)
-{
-    if (post.PostType == PostType.Link)
-    {
-        if (!string.IsNullOrEmpty(post.Domain))
-        {
-            <a class="post-domain" href="@Url.Domain(post.Domain)">(@post.Domain)</a>
-        }
-    }
-    else if (post.PostType == PostType.Text)
-    {
-        <a class="post-domain" href="@Url.Post(post.Slug, post.Title)">(self.@post.SubName)</a>
-    }
-}
-@helper PostUrl(PostModel post)
-{
-    if (post.PostType == PostType.Link)
-    {
-        @post.Url
-    }
-    else if(post.PostType == PostType.Text)
-    {
-        @Url.Post(post.Slug, post.Title)
-    }
-}
