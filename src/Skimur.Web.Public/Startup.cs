@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using BundleTransformer.Core.Transformers;
+using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security.Cookies;
@@ -19,6 +20,8 @@ namespace Skimur.Web.Public
     public class Startup : IRegistrar
     {
         IAppBuilder _app;
+        // todo: factor out the command/event bus handling to separate exe via a build script
+        IBusLifetime _busLifetime;
 
         public void Configuration(IAppBuilder app)
         {
@@ -28,6 +31,9 @@ namespace Skimur.Web.Public
             RegisterBundles(BundleTable.Bundles);
             ConfigureAuth(app);
             ConfigureContainer();
+
+            // todo: factor out the command/event bus handling to separate exe via a build script
+            _busLifetime = SkimurContext.Resolve<IBusLifetime>();
         }
 
         public void ConfigureContainer()
@@ -38,7 +44,9 @@ namespace Skimur.Web.Public
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
                 new Registrar(),
-                new Subs.Registrar(), this);
+                new Subs.Registrar(),
+                new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
+                this);
         }
 
         public void RegisterRoutes(RouteCollection routes)

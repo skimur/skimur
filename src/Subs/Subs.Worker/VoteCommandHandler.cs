@@ -50,7 +50,7 @@ namespace Subs.Worker
             if (command.VoteType.HasValue)
                 _voteService.VoteForPost(post.Slug, user.UserName, command.IpAddress, command.VoteType.Value, command.DateCasted);
             else
-                _voteService.UnVotePost(post.Slug, post.UserName);
+                _voteService.UnVotePost(post.Slug, user.UserName);
 
             _eventBus.Publish(new VoteCasted { PostSlug = post.Slug, UserName = user.UserName, VoteType = command.VoteType });
         }

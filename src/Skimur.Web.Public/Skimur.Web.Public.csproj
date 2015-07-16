@@ -372,6 +372,10 @@
       <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Subs\Subs.Worker\Subs.Worker.csproj">
+      <Project>{454dcbfb-9497-4e9e-98df-3c4067978193}</Project>
+      <Name>Subs.Worker</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Subs\Subs\Subs.csproj">
       <Project>{8566e066-9b0f-4e7b-97a0-a2d40978de26}</Project>
       <Name>Subs</Name>
