@@ -20,7 +20,6 @@ namespace Skimur.Tests
         [SetUp]
         protected virtual void Setup()
         {
-            if (_container != null) throw new Exception("The context was already initialized!");
             _container = new Container(new ContainerOptions { AllowOverridingRegistrations = true });
             foreach (var registrar in GetRegistrars().OrderBy(x => x.Order))
                 registrar.Register(_container);

@@ -11,7 +11,7 @@ namespace Subs.Services
 
         Post GetPostBySlug(string slug);
 
-        List<Post> GetPosts(List<string> subs = null, PostsSortBy sortby = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All);
+        List<Post> GetPosts(List<string> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All);
 
         void UpdatePostVotes(string postSlug, int? upVotes, int? downVotes);
     }

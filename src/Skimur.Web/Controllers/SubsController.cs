@@ -70,7 +70,7 @@ namespace Skimur.Web.Controllers
             model.Sub = _mapper.Map<Sub, SubModel>(sub);
             model.Sub.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
             // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }).Select(x =>
+            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }, PostsSortBy.Hot).Select(x =>
             {
                 var post = _mapper.Map<Post, PostModel>(x);
                 if (_userContext.CurrentUser != null)
@@ -85,7 +85,7 @@ namespace Skimur.Web.Controllers
         {
             var model = new SubPosts();
             // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts().Select(x => _mapper.Map<Post, PostModel>(x)));
+            model.Posts.AddRange(_postDao.GetPosts(sortBy:PostsSortBy.Hot).Select(x => _mapper.Map<Post, PostModel>(x)));
             return View(model);
         }
 

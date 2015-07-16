@@ -46,24 +46,27 @@ namespace Subs.Services
                 switch (sortBy)
                 {
                     case PostsSortBy.Hot:
-                        // todo:
+                        query.OrderByExpression = "ORDER BY (hot(vote_up_count, vote_down_count, date_created), date_created) DESC";
                         break;
                     case PostsSortBy.New:
                         query.OrderByDescending(x => x.DateCreated);
                         break;
                     case PostsSortBy.Rising:
-                        // todo:
+                        throw new Exception("not implemented");
                         break;
                     case PostsSortBy.Controversial:
-                        // todo:
+                        query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
                         break;
                     case PostsSortBy.Top:
-                        query.OrderByDescending(x => x.VoteUpCount - x.VoteDownCount);
+                        query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
                         break;
                     default:
                         throw new Exception("uknown sort");
-                        break;
                 }
+
+                //CREATE INDEX posts_hot_index ON posts (hot(vote_up_count, vote_down_count, date_created), date_created);
+                //CREATE INDEX posts_score_index ON posts (score(vote_up_count, vote_down_count), date_created);
+                //CREATE INDEX posts_controversy_index ON posts (controversy(vote_up_count, vote_down_count), date_created);
 
                 if (timeFilter != TimeFilter.All)
                 {

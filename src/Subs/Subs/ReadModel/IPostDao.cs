@@ -8,7 +8,7 @@ namespace Subs.ReadModel
 {
     public interface IPostDao
     {
-        List<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All);
+        List<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All);
     }
 
     public enum PostsSortBy

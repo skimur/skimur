@@ -31,31 +31,35 @@ namespace Subs.Tests
         [Test]
         public void Can_calculate_hot_factor()
         {
+            // arrange
             var currentTime = DateTime.SpecifyKind(DateTime.Parse("7/12/2015 7:48:12 PM"), DateTimeKind.Utc);
-
             var posts = JsonConvert.DeserializeObject<List<JsonPost>>(
                     File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sorting_hot.json"))).Select(
                         x =>
                         {
                             x.Created = DateTime.SpecifyKind(x.Created, DateTimeKind.Utc);
                             return x;
-                        }).ToList();
+                        })
+                        .OrderBy(x => Guid.NewGuid())
+                        .ToList();
 
+            // act
             var sortedPosts = SortPosts(currentTime, posts);
 
-            foreach (var post in posts)
+            // assert
+            // TODO: assert
+            foreach (var post in sortedPosts)
             {
-                Assert.That(post.Title, Is.EqualTo(sortedPosts[posts.IndexOf(post)].Title));
+                Console.WriteLine(post.Score + "-" + post.EffectiveScore);
+                Console.WriteLine("     " + (currentTime - post.Created).TotalHours);
             }
         }
 
         private List<JsonPost> SortPosts(DateTime now, List<JsonPost> posts)
         {
-            var nowSeconds = now.ToUnixTime();
-
             foreach (var post in posts)
             {
-                post.EffectiveScore = (post.Score / (double)HotFactor.GetHotFactor(post.Score, nowSeconds, post.Created.ToUnixTime()));
+                post.EffectiveScore = Hot.GetHot(post.Score, post.Created.ToUnixTime());
             }
 
             return posts.OrderByDescending(x => x.EffectiveScore).ToList();
