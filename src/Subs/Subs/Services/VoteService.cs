@@ -56,6 +56,8 @@ namespace Subs.Services
 
         public VoteType? GetVoteForUserOnPost(string userName, string postSlug)
         {
+            if (string.IsNullOrEmpty(postSlug)) return null;
+
             return _conn.Perform(conn =>
             {
                 var vote = conn.Single<Vote>(x => x.UserName.ToLower() == userName.ToLower() && x.PostSlug.ToLower() == postSlug.ToLower());

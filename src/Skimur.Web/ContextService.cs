@@ -24,7 +24,7 @@ namespace Skimur.Web
         public bool IsSubcribedToSub(string subName)
         {
             // todo: optimize
-            return _userContext.CurrentUser == null ? _subDao.GetDefaultSubs().Any(x => x.Name == subName) : _subDao.GetSubscribedSubsForUser(_userContext.CurrentUser.UserName).Any(x => x.Name == subName);
+            return _userContext.CurrentUser == null ? _subDao.GetDefaultSubs().Any(x => x.Name == subName) : _subDao.IsUserSubscribedToSub(_userContext.CurrentUser.UserName, subName);
         }
     }
 }

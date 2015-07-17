@@ -62,6 +62,17 @@ namespace Subs.Services
             });
         }
 
+        public bool IsUserSubscribedToSub(string userName, string subName)
+        {
+            return _conn.Perform(conn =>
+            {
+                return conn.Count(
+                        conn.From<Sub>()
+                            .LeftJoin<SubScription>((scription, sub) => scription.Name == sub.SubName)
+                            .Where<SubScription>(x => x.UserName == userName)) > 0;
+            });
+        }
+
         public Sub GetRandomSub()
         {
             // todo: optimize

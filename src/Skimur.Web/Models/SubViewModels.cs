@@ -30,9 +30,9 @@ namespace Skimur.Web.Models
         public ulong NumberOfSubscribers { get; set; }
     }
 
-    public class SubPosts
+    public class SubPostsModel
     {
-        public SubPosts()
+        public SubPostsModel()
         {
             Posts = new List<PostModel>();
         }
@@ -42,6 +42,27 @@ namespace Skimur.Web.Models
         public List<PostModel> Posts { get; set; }
 
         public PostsSortBy SortBy { get; set; }
+
+        public TimeFilter? TimeFilter { get; set; }
+    }
+
+    public class SearchResultsModel
+    {
+        public SearchResultsModel()
+        {
+            Posts = new List<PostModel>();
+            Subs = new List<SubModel>();
+        }
+
+        public string Query { get; set; }
+
+        public SubModel LimitingToSub { get; set; }
+
+        public List<SubModel> Subs { get; set; } 
+
+        public List<PostModel> Posts { get; set; }
+
+        public PostsSearchSortBy SortBy { get; set; }
 
         public TimeFilter? TimeFilter { get; set; }
     }

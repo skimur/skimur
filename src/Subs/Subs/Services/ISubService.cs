@@ -12,6 +12,8 @@ namespace Subs.Services
 
         List<Sub> GetSubscribedSubsForUser(string userName);
 
+        bool IsUserSubscribedToSub(string userName, string subName);
+
         Sub GetRandomSub();
 
         void InsertSub(Sub sub);

@@ -45,7 +45,7 @@ namespace Skimur.Web.Public
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
                 new Registrar(),
                 new Subs.Registrar(),
-                new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
+                //new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
                 this);
         }
 
@@ -56,9 +56,14 @@ namespace Skimur.Web.Public
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
-              name: "Vote",
-              url: "vote",
-              defaults: new { controller = "Subs", action = "Vote" });
+                name: "Search",
+                url: "search",
+                defaults: new { controller = "Subs", action = "Search" });
+
+            routes.MapRoute(
+                name: "Vote",
+                url: "vote",
+                defaults: new { controller = "Subs", action = "Vote" });
 
             routes.MapRoute(
                 name: "UnVote",
@@ -69,6 +74,11 @@ namespace Skimur.Web.Public
                 name: "SubAll",
                 url: "s/all",
                 defaults: new { controller = "Subs", action = "PostsAll" });
+
+            routes.MapRoute(
+                name: "SubRandom",
+                url: "s/random",
+                defaults: new { controller = "Subs", action = "Random" });
 
             routes.MapRoute(
                name: "Sub",

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Dynamic;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
@@ -64,15 +65,83 @@ namespace Subs.Services
                         throw new Exception("uknown sort");
                 }
 
-                //CREATE INDEX posts_hot_index ON posts (hot(vote_up_count, vote_down_count, date_created), date_created);
-                //CREATE INDEX posts_score_index ON posts (score(vote_up_count, vote_down_count), date_created);
-                //CREATE INDEX posts_controversy_index ON posts (controversy(vote_up_count, vote_down_count), date_created);
+                if (timeFilter != TimeFilter.All)
+                {
+                    TimeSpan timeSpan;
+                    switch (timeFilter)
+                    {
+                        case TimeFilter.Hour:
+                            timeSpan = TimeSpan.FromHours(1);
+                            break;
+                        case TimeFilter.Day:
+                            timeSpan = TimeSpan.FromDays(1);
+                            break;
+                        case TimeFilter.Week:
+                            timeSpan = TimeSpan.FromDays(7);
+                            break;
+                        case TimeFilter.Month:
+                            timeSpan = TimeSpan.FromDays(30);
+                            break;
+                        case TimeFilter.Year:
+                            timeSpan = TimeSpan.FromDays(365);
+                            break;
+                        default:
+                            throw new Exception("unknown time filter");
+                    }
+
+                    var from = Common.CurrentTime() - timeSpan;
+
+                    query.Where(x => x.DateCreated >= from);
+                }
+
+                return conn.Select(query);
+            });
+        }
+
+        public List<Post> QueryPosts(string text, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All)
+        {
+            // this implemention will eventually store a index, such as solr.
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Post>();
+
+                if (!string.IsNullOrEmpty(sub))
+                {
+                    query.Where(x => x.SubName.Contains(sub));
+                }
+
+                if(!string.IsNullOrEmpty(text))
+                {
+                    query.Where(x => x.Title.Contains(text) || x.Content.Contains(text));
+                }
+
+                switch (sortBy)
+                {
+                    case PostsSearchSortBy.Relevance:
+                        // let the db do its thing
+                        break;
+                    case PostsSearchSortBy.Top:
+                        query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
+                        break;
+                    case PostsSearchSortBy.New:
+                        query.OrderByDescending(x => x.DateCreated);
+                        break;
+                    case PostsSearchSortBy.Comments:
+                        // TODO:
+                        break;
+                    default:
+                        throw new Exception("unknown sort");
+                }
 
                 if (timeFilter != TimeFilter.All)
                 {
                     TimeSpan timeSpan;
                     switch (timeFilter)
                     {
+                        case TimeFilter.Hour:
+                            timeSpan = TimeSpan.FromHours(1);
+                            break;
                         case TimeFilter.Day:
                             timeSpan = TimeSpan.FromDays(1);
                             break;

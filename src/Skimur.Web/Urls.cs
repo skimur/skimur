@@ -41,5 +41,10 @@ namespace Skimur.Web
         {
             return urlHelper.RouteUrl("Domain", new { domain });
         }
+
+        public static string Search(this UrlHelper urlHelper)
+        {
+            return urlHelper.RouteUrl("Search");
+        }
     }
 }

@@ -1,0 +1,54 @@
+﻿@model SubModel
+
+<div id="search-sidebar" class="panel panel-search">
+    <div class="input-group">
+        <input id="search-sidebar-text" type="text" class="form-control" placeholder="Search..." value="@ViewBag.Query">
+        <span id="search-sidebar-button" class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-search"></span></span>
+    </div>
+    @if (Model != null)
+    {
+        <div id="search-sidebar-info" class="alert alert-info panel-search-info" style="display:none;">
+            <div class="checkbox">
+                <label>
+                    <input id="search-sidebar-limit" type="checkbox"> Limit my search to /s/@Model.Name
+                </label>
+            </div>
+        </div>
+    }
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $("#search-sidebar-button").click(function (e) {
+            e.preventDefault();
+            var query = $("#search-sidebar-text").val();
+            @if(Model != null)
+            {
+                <text>
+                if ($("#search-sidebar-limit").is(":checked")) {
+                    window.location = "@Url.Sub(Model.Name)/search?query=" + query;
+                } else {
+                    window.location = "@Url.Search()";
+                }
+                </text>
+            }else{
+                <text>
+                window.location = "@Url.Search()?query=" + query;
+                </text>
+            }
+
+        });
+        $("#search-sidebar-text").enterKey(function (e) {
+            e.preventDefault();
+            $("#search-sidebar-button").click();
+        });
+        @if (Model != null)
+        {
+            <text>
+            $("#search-sidebar-text").focus(function (e) {
+                $("#search-sidebar-info").slideDown();
+            });
+            </text>
+        }
+    });
+</script>

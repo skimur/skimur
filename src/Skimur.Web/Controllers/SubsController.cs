@@ -64,33 +64,39 @@ namespace Skimur.Web.Controllers
             if (sort == null)
                 sort = PostsSortBy.Hot; // TODO: get default from sub
 
+            if(time == null)
+                time = TimeFilter.All;
+
             var sub = _subDao.GetSubByName(name);
 
             if (sub == null)
                 return Redirect(Url.Subs(name));
 
-            var model = new SubPosts();
+            var model = new SubPostsModel();
             model.Sub = _mapper.Map<Sub, SubModel>(sub);
             model.Sub.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
             model.SortBy = sort.Value;
             model.TimeFilter = time;
             // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }, sort.Value).Select(x =>
-            {
-                var post = _mapper.Map<Post, PostModel>(x);
-                if (_userContext.CurrentUser != null)
-                    post.CurrentVote = _voteDao.GetVoteForUserOnPost(_userContext.CurrentUser.UserName, post.Slug);
-                return post;
-            }));
+            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }, sort.Value, time.Value).Select(MapPost));
 
             return View(model);
         }
 
-        public ActionResult PostsAll()
+        public ActionResult PostsAll(PostsSortBy? sort, TimeFilter? time)
         {
-            var model = new SubPosts();
+            if(sort == null)
+                sort = PostsSortBy.Hot;
+
+            if(time == null)
+                time = TimeFilter.All;
+
+            var model = new SubPostsModel();
+            model.SortBy = sort.Value;
+            model.TimeFilter = time.Value;
             // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(sortBy:PostsSortBy.Hot).Select(x => _mapper.Map<Post, PostModel>(x)));
+            model.Posts.AddRange(_postDao.GetPosts(null, sort.Value, time.Value).Select(MapPost));
+
             return View("Posts", model);
         }
 
@@ -365,6 +371,49 @@ namespace Skimur.Web.Controllers
             }
 
             return PartialView("_ModerationSideBar", model);
+        }
+
+        public ActionResult Search(string query, string subName, PostsSearchSortBy? sort, TimeFilter? time)
+        {
+            if(sort == null)
+                sort = PostsSearchSortBy.Relevance;
+
+            if(time == null)
+                time = TimeFilter.All;
+
+            var model = new SearchResultsModel();
+            model.Query = query;
+            model.SortBy = sort.Value;
+            model.TimeFilter = time.Value;
+            model.LimitingToSub = MapSub(_subDao.GetSubByName(subName));
+
+            if (!string.IsNullOrEmpty(model.Query))
+            {
+                model.Posts.AddRange(_postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value).Select(MapPost));
+
+                if (model.LimitingToSub == null)
+                    model.Subs.AddRange(_subDao.GetAllSubs(model.Query).Select(MapSub));
+            }
+
+            return View(model);
+        }
+
+        private PostModel MapPost(Post post)
+        {
+            if (post == null)
+                return null;
+            var result = _mapper.Map<Post, PostModel>(post);
+            if (_userContext.CurrentUser != null)
+                result.CurrentVote = _voteDao.GetVoteForUserOnPost(_userContext.CurrentUser.UserName, post.Slug);
+            return result;
+        }
+
+        private SubModel MapSub(Sub sub)
+        {
+            if (sub == null) return null;
+            var result = _mapper.Map<Sub, SubModel>(sub);
+            result.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
+            return result;
         }
     }
 }

@@ -14,6 +14,8 @@ namespace Subs.ReadModel
 
         List<Sub> GetSubscribedSubsForUser(string userName);
 
+        bool IsUserSubscribedToSub(string userName, string subName);
+
         Sub GetRandomSub();
 
         Sub GetSubByName(string name);

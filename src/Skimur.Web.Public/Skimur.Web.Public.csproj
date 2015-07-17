@@ -291,6 +291,8 @@
     <Content Include="Views\Users\User.cshtml" />
     <Content Include="Views\Subs\_SubDetails.cshtml" />
     <Content Include="Views\Subs\_Post.cshtml" />
+    <Content Include="Views\Subs\Search.cshtml" />
+    <Content Include="Views\Subs\_SideBarSearch.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -349,6 +351,7 @@
     <Content Include="Content\theme-variables.less" />
     <Content Include="Content\components\posts.less" />
     <Content Include="Content\components\subs.less" />
+    <Content Include="Content\components\misc.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>

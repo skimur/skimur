@@ -9,6 +9,16 @@ namespace Subs.ReadModel
     public interface IPostDao
     {
         List<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All);
+
+        List<Post> QueryPosts(string query, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All);
+    }
+
+    public enum PostsSearchSortBy
+    {
+        Relevance,
+        Top,
+        New,
+        Comments
     }
 
     public enum PostsSortBy
@@ -23,6 +33,7 @@ namespace Subs.ReadModel
     public enum TimeFilter
     {
         All,
+        Hour,
         Day,
         Week,
         Month,
