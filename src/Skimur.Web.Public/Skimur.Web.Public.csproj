@@ -291,8 +291,8 @@
     <Content Include="Views\Users\User.cshtml" />
     <Content Include="Views\Subs\_SubDetails.cshtml" />
     <Content Include="Views\Subs\_Post.cshtml" />
-    <Content Include="Views\Subs\Search.cshtml" />
     <Content Include="Views\Subs\_SideBarSearch.cshtml" />
+    <Content Include="Views\Subs\Search.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

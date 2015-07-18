@@ -56,10 +56,50 @@ namespace Skimur.Web.Controllers
             return View(allSubs);
         }
 
+        public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time)
+        {
+            var subs = _contextService.GetSubscribedSubNames();
+
+            if (sort == null)
+                sort = PostsSortBy.Hot;
+
+            if (time == null)
+                time = TimeFilter.All;
+
+            var model = new SubPostsModel();
+            model.SortBy = sort.Value;
+            model.TimeFilter = time;
+            // todo: implement paging
+            if(subs.Any()) // maybe the user hasn't subscribed to any subs?
+                model.Posts.AddRange(_postDao.GetPosts(subs, sort.Value, time.Value).Select(MapPost));
+
+            return View("Posts", model);
+        }
+
         public ActionResult Posts(string name, PostsSortBy? sort, TimeFilter? time)
         {
             if (string.IsNullOrEmpty(name))
                 return Redirect(Url.Subs());
+
+            var subs = new List<string>();
+
+            Sub sub = null;
+
+            if (name.Equals("all", StringComparison.InvariantCultureIgnoreCase))
+            {
+                // TODO: Filter only by subs that want to be including in "all". For now, we will do nothing, which will effectively return all posts.
+            }
+            else
+            {
+                // the user wants to view a specific sub
+
+                sub = _subDao.GetSubByName(name);
+
+                if (sub == null)
+                    return Redirect(Url.Subs(name));
+
+                subs.Add(sub.Name);
+            }
 
             if (sort == null)
                 sort = PostsSortBy.Hot; // TODO: get default from sub
@@ -67,37 +107,64 @@ namespace Skimur.Web.Controllers
             if(time == null)
                 time = TimeFilter.All;
 
+            var model = new SubPostsModel();
+            model.Sub = MapSub(sub);
+            model.SortBy = sort.Value;
+            model.TimeFilter = time;
+            // todo: implement paging
+            model.Posts.AddRange(_postDao.GetPosts(subs, sort.Value, time.Value).Select(MapPost));
+
+            return View(model);
+        }
+
+        public ActionResult SearchSub(string name, string query, PostsSearchSortBy? sort, TimeFilter? time)
+        {
+            if (string.IsNullOrEmpty(name))
+                return Redirect(Url.Subs());
+
+            if (sort == null)
+                sort = PostsSearchSortBy.Relevance;
+
+            if (time == null)
+                time = TimeFilter.All;
+
             var sub = _subDao.GetSubByName(name);
 
             if (sub == null)
                 return Redirect(Url.Subs(name));
 
-            var model = new SubPostsModel();
-            model.Sub = _mapper.Map<Sub, SubModel>(sub);
-            model.Sub.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
-            model.SortBy = sort.Value;
-            model.TimeFilter = time;
-            // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(new List<string> { sub.Name }, sort.Value, time.Value).Select(MapPost));
-
-            return View(model);
-        }
-
-        public ActionResult PostsAll(PostsSortBy? sort, TimeFilter? time)
-        {
-            if(sort == null)
-                sort = PostsSortBy.Hot;
-
-            if(time == null)
-                time = TimeFilter.All;
-
-            var model = new SubPostsModel();
+            var model = new SearchResultsModel();
+            model.Query = query;
             model.SortBy = sort.Value;
             model.TimeFilter = time.Value;
-            // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(null, sort.Value, time.Value).Select(MapPost));
+            model.LimitingToSub = MapSub(sub);
 
-            return View("Posts", model);
+            if (!string.IsNullOrEmpty(model.Query))
+                model.Posts.AddRange(_postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value).Select(MapPost));
+
+            return View("Search", model);
+        }
+
+        public ActionResult SearchSite(string query, PostsSearchSortBy? sort, TimeFilter? time)
+        {
+            if (sort == null)
+                sort = PostsSearchSortBy.Relevance;
+
+            if (time == null)
+                time = TimeFilter.All;
+
+            var model = new SearchResultsModel();
+            model.Query = query;
+            model.SortBy = sort.Value;
+            model.TimeFilter = time.Value;
+
+            if (!string.IsNullOrEmpty(model.Query))
+            {
+                model.Posts.AddRange(_postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value).Select(MapPost));
+                model.Subs.AddRange(_subDao.GetAllSubs(model.Query).Select(MapSub));
+            }
+
+            return View("Search", model);
         }
 
         public ActionResult Random()
@@ -371,31 +438,6 @@ namespace Skimur.Web.Controllers
             }
 
             return PartialView("_ModerationSideBar", model);
-        }
-
-        public ActionResult Search(string query, string subName, PostsSearchSortBy? sort, TimeFilter? time)
-        {
-            if(sort == null)
-                sort = PostsSearchSortBy.Relevance;
-
-            if(time == null)
-                time = TimeFilter.All;
-
-            var model = new SearchResultsModel();
-            model.Query = query;
-            model.SortBy = sort.Value;
-            model.TimeFilter = time.Value;
-            model.LimitingToSub = MapSub(_subDao.GetSubByName(subName));
-
-            if (!string.IsNullOrEmpty(model.Query))
-            {
-                model.Posts.AddRange(_postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value).Select(MapPost));
-
-                if (model.LimitingToSub == null)
-                    model.Subs.AddRange(_subDao.GetAllSubs(model.Query).Select(MapSub));
-            }
-
-            return View(model);
         }
 
         private PostModel MapPost(Post post)

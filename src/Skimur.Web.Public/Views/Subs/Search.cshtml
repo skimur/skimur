@@ -2,7 +2,9 @@
 @{
     ViewBag.Title = "Search";
 }
-
+@{
+    var o = new object();
+}
 <div class="row">
     <div class="col-lg-4">
         <div class="panel panel-search">
@@ -18,10 +20,10 @@
 {
     <div class="row">
         <div class="col-lg-12">
-            <h2>Subs</h2>
-            <hr />
             @if (Model.LimitingToSub == null)
             {
+                <h2>Subs</h2>
+                <hr />
                 if (Model.Subs.Count == 0)
                 {
                     <p>
@@ -67,20 +69,20 @@
 @section scripts
 {
     <script type="text/javascript">
-        $(function () {
-            $("#search-button").click(function (e) {
-                e.preventDefault();
-                var query = $("#search-input").val();
-                if (query) {
-                    window.location = "@Url.Search()?query=" + query;
-                } else {
-                    window.location = "@Url.Search()";
-                }
-            });
-            $("#search-input").enterKey(function (e) {
-                e.preventDefault();
-                $("#search-button").click();
-            });
+    $(function () {
+        $("#search-button").click(function (e) {
+            e.preventDefault();
+            var query = $("#search-input").val();
+            if (query) {
+                window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))?query=" + query;
+            } else {
+                window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))";
+            }
         });
-    </script>
+        $("#search-input").enterKey(function (e) {
+            e.preventDefault();
+            $("#search-button").click();
+        });
+    });
+</script>
 }

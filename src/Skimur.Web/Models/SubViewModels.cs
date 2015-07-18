@@ -44,6 +44,8 @@ namespace Skimur.Web.Models
         public PostsSortBy SortBy { get; set; }
 
         public TimeFilter? TimeFilter { get; set; }
+
+        public bool IsFrontpage { get; set; }
     }
 
     public class SearchResultsModel

@@ -45,7 +45,7 @@ namespace Skimur.Web.Public
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
                 new Registrar(),
                 new Subs.Registrar(),
-                //new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
+                new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
                 this);
         }
 
@@ -56,9 +56,34 @@ namespace Skimur.Web.Public
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name: "Frontpage",
+                url: "",
+                defaults: new { controller = "Subs", action = "Frontpage" });
+
+            routes.MapRoute(
+              name: "FrontpageHot",
+              url: "hot",
+              defaults: new { controller = "Subs", action = "Frontpage", sort = "hot" });
+
+            routes.MapRoute(
+               name: "FrontpageNew",
+               url: "new",
+               defaults: new { controller = "Subs", action = "Frontpage", sort = "new" });
+
+            routes.MapRoute(
+               name: "FrontpageControversial",
+               url: "controversial",
+               defaults: new { controller = "Subs", action = "Frontpage", sort = "controversial" });
+
+            routes.MapRoute(
+               name: "FrontpageTop",
+               url: "top",
+               defaults: new { controller = "Subs", action = "Frontpage", sort = "top" });
+
+            routes.MapRoute(
                 name: "Search",
                 url: "search",
-                defaults: new { controller = "Subs", action = "Search" });
+                defaults: new { controller = "Subs", action = "SearchSite" });
 
             routes.MapRoute(
                 name: "Vote",
@@ -69,11 +94,6 @@ namespace Skimur.Web.Public
                 name: "UnVote",
                 url: "unvote",
                 defaults: new { controller = "Subs", action = "UnVote" });
-
-            routes.MapRoute(
-                name: "SubAll",
-                url: "s/all",
-                defaults: new { controller = "Subs", action = "PostsAll" });
 
             routes.MapRoute(
                 name: "SubRandom",
@@ -104,6 +124,11 @@ namespace Skimur.Web.Public
                name: "SubTop",
                url: "s/{name}/top",
                defaults: new { controller = "Subs", action = "Posts", sort = "top" });
+
+            routes.MapRoute(
+               name: "SubSearch",
+               url: "s/{name}/search",
+               defaults: new { controller = "Subs", action = "SearchSub" });
 
             routes.MapRoute(
                 name: "Post",
