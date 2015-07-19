@@ -48,6 +48,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skimur.Tests", "Skimur.Test
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subs.Tests", "Subs\Subs.Tests\Subs.Tests.csproj", "{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skimur.Markdown", "Skimur.Markdown\Skimur.Markdown.csproj", "{6E215BD9-7494-4C84-AF04-5E700CE945B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -114,6 +116,10 @@ Global
 		{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29}.Release|Any CPU.Build.0 = Release|Any CPU
+		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
