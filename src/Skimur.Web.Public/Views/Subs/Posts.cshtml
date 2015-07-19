@@ -54,10 +54,10 @@
                         @Model.SortBy.ToString() <span class="caret"></span>
                     </a>
                     <ul class="dropdown-menu">
-                        <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@(urlBase)">Hot</a></li>
-                        <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@(urlBase)/new">New</a></li>
-                        <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@(urlBase)/controversial">Controversial</a></li>
-                        <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@(urlBase)/top">Top</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@AppendSortUrl(urlBase, null)">Hot</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@AppendSortUrl(urlBase, "new")">New</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@AppendSortUrl(urlBase, "controversial")">Controversial</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@AppendSortUrl(urlBase, "top")">Top</a></li>
                     </ul>
                 </li>
             </ul>
