@@ -293,6 +293,7 @@
     <Content Include="Views\Subs\_Post.cshtml" />
     <Content Include="Views\Subs\_SideBarSearch.cshtml" />
     <Content Include="Views\Subs\Search.cshtml" />
+    <Content Include="Views\Subs\Post.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

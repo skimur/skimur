@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using Subs;
 
 // ReSharper disable Mvc.ActionNotResolved
 // ReSharper disable Mvc.ControllerNotResolved
@@ -51,9 +52,14 @@ namespace Skimur.Web
             return urlHelper.Action("CreatePost", "Subs");
         }
 
-        public static string Post(this UrlHelper urlHelper, string slug, string title = null)
+        public static string Post(this UrlHelper urlHelper, string subName, string slug, string title = null)
         {
-            return urlHelper.RouteUrl("Post", new { slug, title });
+            return urlHelper.RouteUrl("Post", new { subName, slug, title = title.UrlFriendly() });
+        }
+
+        public static string Post(this UrlHelper urlHelper, Post post)
+        {
+            return urlHelper.Post(post.SubName, post.Slug, post.Title);
         }
 
         public static string User(this UrlHelper urlHelper, string userName)

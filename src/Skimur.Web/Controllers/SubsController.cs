@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
 using Infrastructure.Messaging;
@@ -133,6 +134,28 @@ namespace Skimur.Web.Controllers
                 MapPost,
                 pageNumber.Value,
                 pageSize.Value);
+
+            return View(model);
+        }
+
+        public ActionResult Post(string subName, string slug)
+        {
+            var post = _postDao.GetPostBySlug(slug);
+
+            if (post == null)
+                throw new HttpException(404, "no post found");
+
+            if(!post.SubName.Equals(subName, StringComparison.InvariantCultureIgnoreCase))
+                throw new HttpException(404, "no post found");
+
+            var sub = _subDao.GetSubByName(subName);
+
+            if(sub == null)
+                throw new HttpException(404, "no post found");
+
+            var model = new PostDetailsModel();
+            model.Post = MapPost(post);
+            model.Sub = MapSub(sub);
 
             return View(model);
         }
@@ -364,7 +387,7 @@ namespace Skimur.Web.Controllers
 
             // todo: success message
 
-            return Redirect(Url.Post(response.Slug, response.Title));
+            return Redirect(Url.Post(model.SubName, response.Slug, response.Title));
         }
 
         public ActionResult SideBar()

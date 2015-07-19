@@ -21,4 +21,11 @@ namespace Skimur.Web.Models
     {
         public VoteType? CurrentVote { get; set; }
     }
+
+    public class PostDetailsModel
+    {
+        public PostModel Post { get; set; }
+
+        public SubModel Sub { get; set; }
+    }
 }

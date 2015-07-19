@@ -9,6 +9,8 @@ namespace Subs.ReadModel
 {
     public interface IPostDao
     {
+        Post GetPostBySlug(string slug);
+
         SeekedList<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
         SeekedList<Post> QueryPosts(string query, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);

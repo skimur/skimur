@@ -16,7 +16,7 @@
                 Posted @Html.Age(Model.DateCreated) ago  to <a href="@Url.Sub(Model.SubName)">/s/@Model.SubName</a>
             </p>
             <p class="post-links">
-                <a href="@Url.Post(Model.Slug, Model.Title)">comments</a>
+                <a href="@Url.Post(Model)">comments</a>
             </p>
         </div>
     </div>
@@ -33,7 +33,7 @@
     }
     else if (post.PostType == PostType.Text)
     {
-        <a class="post-domain" href="@Url.Post(post.Slug, post.Title)">(self.@post.SubName)</a>
+        <a class="post-domain" href="@Url.Post(post)">(self.@post.SubName)</a>
     }
 }
 @helper PostUrl(PostModel post)
@@ -44,6 +44,6 @@
     }
     else if (post.PostType == PostType.Text)
     {
-        @Url.Post(post.Slug, post.Title)
+        @Url.Post(post)
     }
 }

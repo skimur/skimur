@@ -132,7 +132,7 @@ namespace Skimur.Web.Public
 
             routes.MapRoute(
                 name: "Post",
-                url: "post/{slug}/{title}",
+                url: "s/{subName}/post/{slug}/{title}",
                 defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
 
             routes.MapRoute(

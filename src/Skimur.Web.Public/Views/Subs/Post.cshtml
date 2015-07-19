@@ -1,0 +1,22 @@
+﻿@model PostDetailsModel
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        @Html.Partial("_Post", Model.Post)
+    </div>
+    <div class="col-lg-3 col-sm-4">
+
+        @Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.Sub))
+
+        <div class="panel">
+            <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new link</a>
+            <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new post</a>
+        </div>
+
+        @Html.Action("ModerationSideBar", new { subName = Model.Sub.Name })
+
+    </div>
+</div>
