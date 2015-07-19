@@ -175,6 +175,9 @@ namespace Skimur.Web.Public
                 "~/Scripts/modernizr.js",
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js",
+                "~/Scripts/MarkdownDeep.js",
+                "~/Scripts/MarkdownDeepEditor.js",
+                "~/Scripts/MarkdownDeepEditorUI.js",
                 "~/Scripts/app.js",
                 "~/Scripts/app.ui.js");
             var stylesBundle = new StyleBundle("~/bundles/styles").Include(

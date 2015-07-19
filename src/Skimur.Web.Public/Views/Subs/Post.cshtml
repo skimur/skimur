@@ -6,6 +6,11 @@
 <div class="row">
     <div class="col-lg-9 col-sm-8">
         @Html.Partial("_Post", Model.Post)
+
+        <div class="row">
+            <textarea id="test-comment"></textarea>
+        </div>
+
     </div>
     <div class="col-lg-3 col-sm-4">
 
@@ -16,7 +21,16 @@
             <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new post</a>
         </div>
 
-        @Html.Action("ModerationSideBar", new { subName = Model.Sub.Name })
+        @Html.Action("ModerationSideBar", new {subName = Model.Sub.Name})
 
     </div>
 </div>
+
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#test-comment").MarkdownDeep({
+            });
+        });
+    </script>
+}
