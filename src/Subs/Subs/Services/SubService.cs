@@ -21,13 +21,17 @@ namespace Subs.Services
             _mapper = mapper;
         }
 
-        public List<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance)
+        public SeekedList<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
                 var query = conn.From<Sub>();
                 if (!string.IsNullOrEmpty(searchText))
                     query.Where(x => x.Name.Contains(searchText)).OrderBy(x => x.Name);
+
+                var totalCount = conn.Count(query);
+
+                query.Skip(skip).Take(take);
 
                 switch (sortBy)
                 {
@@ -38,7 +42,7 @@ namespace Subs.Services
                         break;
                 }
 
-                return conn.Select(query);
+                return new SeekedList<Sub>(conn.Select(query), skip ?? 0, take, totalCount);
             });
         }
 

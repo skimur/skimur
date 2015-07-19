@@ -34,7 +34,7 @@ namespace Subs.Services
             return _conn.Perform(conn => conn.Single<Post>(x => x.Slug == slug));
         }
 
-        public System.Collections.Generic.List<Post> GetPosts(System.Collections.Generic.List<string> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All)
+        public SeekedList<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -43,6 +43,39 @@ namespace Subs.Services
                 {
                     query.Where(x => subs.Contains(x.SubName));
                 }
+
+                if (timeFilter != TimeFilter.All)
+                {
+                    TimeSpan timeSpan;
+                    switch (timeFilter)
+                    {
+                        case TimeFilter.Hour:
+                            timeSpan = TimeSpan.FromHours(1);
+                            break;
+                        case TimeFilter.Day:
+                            timeSpan = TimeSpan.FromDays(1);
+                            break;
+                        case TimeFilter.Week:
+                            timeSpan = TimeSpan.FromDays(7);
+                            break;
+                        case TimeFilter.Month:
+                            timeSpan = TimeSpan.FromDays(30);
+                            break;
+                        case TimeFilter.Year:
+                            timeSpan = TimeSpan.FromDays(365);
+                            break;
+                        default:
+                            throw new Exception("unknown time filter");
+                    }
+
+                    var from = Common.CurrentTime() - timeSpan;
+
+                    query.Where(x => x.DateCreated >= from);
+                }
+
+                var totalCount = conn.Count(query);
+
+                query.Skip(skip).Take(take);
 
                 switch (sortBy)
                 {
@@ -65,6 +98,28 @@ namespace Subs.Services
                         throw new Exception("uknown sort");
                 }
 
+                return new SeekedList<Post>(conn.Select(query), skip ?? 0, take, totalCount);
+            });
+        }
+
+        public SeekedList<Post> QueryPosts(string text, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        {
+            // this implemention will eventually store a index, such as solr.
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Post>();
+
+                if (!string.IsNullOrEmpty(sub))
+                {
+                    query.Where(x => x.SubName.Contains(sub));
+                }
+
+                if(!string.IsNullOrEmpty(text))
+                {
+                    query.Where(x => x.Title.Contains(text) || x.Content.Contains(text));
+                }
+
                 if (timeFilter != TimeFilter.All)
                 {
                     TimeSpan timeSpan;
@@ -94,27 +149,9 @@ namespace Subs.Services
                     query.Where(x => x.DateCreated >= from);
                 }
 
-                return conn.Select(query);
-            });
-        }
+                var totalCount = conn.Count(query);
 
-        public List<Post> QueryPosts(string text, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All)
-        {
-            // this implemention will eventually store a index, such as solr.
-
-            return _conn.Perform(conn =>
-            {
-                var query = conn.From<Post>();
-
-                if (!string.IsNullOrEmpty(sub))
-                {
-                    query.Where(x => x.SubName.Contains(sub));
-                }
-
-                if(!string.IsNullOrEmpty(text))
-                {
-                    query.Where(x => x.Title.Contains(text) || x.Content.Contains(text));
-                }
+                query.Skip(skip).Take(take);
 
                 switch (sortBy)
                 {
@@ -134,36 +171,7 @@ namespace Subs.Services
                         throw new Exception("unknown sort");
                 }
 
-                if (timeFilter != TimeFilter.All)
-                {
-                    TimeSpan timeSpan;
-                    switch (timeFilter)
-                    {
-                        case TimeFilter.Hour:
-                            timeSpan = TimeSpan.FromHours(1);
-                            break;
-                        case TimeFilter.Day:
-                            timeSpan = TimeSpan.FromDays(1);
-                            break;
-                        case TimeFilter.Week:
-                            timeSpan = TimeSpan.FromDays(7);
-                            break;
-                        case TimeFilter.Month:
-                            timeSpan = TimeSpan.FromDays(30);
-                            break;
-                        case TimeFilter.Year:
-                            timeSpan = TimeSpan.FromDays(365);
-                            break;
-                        default:
-                            throw new Exception("unknown time filter");
-                    }
-
-                    var from = Common.CurrentTime() - timeSpan;
-
-                    query.Where(x => x.DateCreated >= from);
-                }
-
-                return conn.Select(query);
+                return new SeekedList<Post>(conn.Select(query), skip ?? 0, take, totalCount);
             });
         }
 

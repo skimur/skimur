@@ -32,14 +32,9 @@ namespace Skimur.Web.Models
 
     public class SubPostsModel
     {
-        public SubPostsModel()
-        {
-            Posts = new List<PostModel>();
-        }
-
         public SubModel Sub { get; set; }
 
-        public List<PostModel> Posts { get; set; }
+        public PagedList<PostModel> Posts { get; set; }
 
         public PostsSortBy SortBy { get; set; }
 
@@ -50,22 +45,24 @@ namespace Skimur.Web.Models
 
     public class SearchResultsModel
     {
-        public SearchResultsModel()
-        {
-            Posts = new List<PostModel>();
-            Subs = new List<SubModel>();
-        }
-
         public string Query { get; set; }
 
         public SubModel LimitingToSub { get; set; }
 
-        public List<SubModel> Subs { get; set; } 
+        public PagedList<SubModel> Subs { get; set; }
 
-        public List<PostModel> Posts { get; set; }
+        public PagedList<PostModel> Posts { get; set; }
 
         public PostsSearchSortBy SortBy { get; set; }
 
         public TimeFilter? TimeFilter { get; set; }
+
+        public SearchResultType? ResultType { get; set; }
+    }
+
+    public enum SearchResultType
+    {
+        Sub,
+        Post
     }
 }

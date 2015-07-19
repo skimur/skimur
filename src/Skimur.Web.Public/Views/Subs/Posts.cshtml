@@ -52,25 +52,36 @@
                 <li class="dropdown active">
                     <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
                         @Model.SortBy.ToString() <span class="caret"></span>
-                </a>
-                <ul class="dropdown-menu">
-                    <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@(urlBase)">Hot</a></li>
-                    <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@(urlBase)/new">New</a></li>
-                    <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@(urlBase)/controversial">Controversial</a></li>
-                    <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@(urlBase)/top">Top</a></li>
-                </ul>
-            </li>
-        </ul>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@(urlBase)">Hot</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@(urlBase)/new">New</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@(urlBase)/controversial">Controversial</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@(urlBase)/top">Top</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
     </div>
-</div>
 
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        @foreach (var post in Model.Posts)
+        @if (Model.Posts != null)
         {
-            @Html.Partial("_Post", post)
+            foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_Post", post)
+            }
+            if (Model.Posts.HasPreviousPage || Model.Posts.HasNextPage)
+            {
+                <div class="row">
+                    <div class="list-pager">
+                        @Html.Pager(Model.Posts)
+                    </div>
+                </div>
+            }
         }
     </div>
     <div class="col-lg-3 col-sm-4">

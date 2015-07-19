@@ -3,12 +3,13 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Skimur;
 
 namespace Subs.ReadModel
 {
     public interface ISubDao
     {
-        List<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance);
+        SeekedList<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null);
 
         List<Sub> GetDefaultSubs();
 

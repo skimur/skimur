@@ -56,7 +56,7 @@ namespace Skimur.Web.Controllers
             return View(allSubs);
         }
 
-        public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time)
+        public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
         {
             var subs = _contextService.GetSubscribedSubNames();
 
@@ -66,17 +66,25 @@ namespace Skimur.Web.Controllers
             if (time == null)
                 time = TimeFilter.All;
 
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
             model.TimeFilter = time;
-            // todo: implement paging
-            if(subs.Any()) // maybe the user hasn't subscribed to any subs?
-                model.Posts.AddRange(_postDao.GetPosts(subs, sort.Value, time.Value).Select(MapPost));
+            if (subs.Any()) // maybe the user hasn't subscribed to any subs?
+                model.Posts = PagedList<PostModel>.Build(_postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize), MapPost, pageNumber.Value, pageSize.Value);
 
             return View("Posts", model);
         }
 
-        public ActionResult Posts(string name, PostsSortBy? sort, TimeFilter? time)
+        public ActionResult Posts(string name, PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
         {
             if (string.IsNullOrEmpty(name))
                 return Redirect(Url.Subs());
@@ -104,20 +112,32 @@ namespace Skimur.Web.Controllers
             if (sort == null)
                 sort = PostsSortBy.Hot; // TODO: get default from sub
 
-            if(time == null)
+            if (time == null)
                 time = TimeFilter.All;
+
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
 
             var model = new SubPostsModel();
             model.Sub = MapSub(sub);
             model.SortBy = sort.Value;
             model.TimeFilter = time;
-            // todo: implement paging
-            model.Posts.AddRange(_postDao.GetPosts(subs, sort.Value, time.Value).Select(MapPost));
+            model.Posts = PagedList<PostModel>.Build(
+                _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
+                MapPost,
+                pageNumber.Value,
+                pageSize.Value);
 
             return View(model);
         }
 
-        public ActionResult SearchSub(string name, string query, PostsSearchSortBy? sort, TimeFilter? time)
+        public ActionResult SearchSub(string name, string query, PostsSearchSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
         {
             if (string.IsNullOrEmpty(name))
                 return Redirect(Url.Subs());
@@ -133,19 +153,38 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 return Redirect(Url.Subs(name));
 
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
             var model = new SearchResultsModel();
             model.Query = query;
             model.SortBy = sort.Value;
             model.TimeFilter = time.Value;
+            model.ResultType = SearchResultType.Post;
             model.LimitingToSub = MapSub(sub);
 
             if (!string.IsNullOrEmpty(model.Query))
-                model.Posts.AddRange(_postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value).Select(MapPost));
+                model.Posts = PagedList<PostModel>.Build(
+                    _postDao.QueryPosts(query,
+                        model.LimitingToSub.Name,
+                        sort.Value,
+                        time.Value,
+                        ((pageNumber - 1) * pageSize),
+                        pageSize),
+                    MapPost,
+                    pageNumber.Value,
+                    pageSize.Value);
 
             return View("Search", model);
         }
 
-        public ActionResult SearchSite(string query, PostsSearchSortBy? sort, TimeFilter? time)
+        public ActionResult SearchSite(string query, PostsSearchSortBy? sort, TimeFilter? time, SearchResultType? resultType, int? pageNumber, int? pageSize)
         {
             if (sort == null)
                 sort = PostsSearchSortBy.Relevance;
@@ -153,15 +192,55 @@ namespace Skimur.Web.Controllers
             if (time == null)
                 time = TimeFilter.All;
 
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
             var model = new SearchResultsModel();
             model.Query = query;
             model.SortBy = sort.Value;
             model.TimeFilter = time.Value;
+            model.ResultType = resultType;
 
             if (!string.IsNullOrEmpty(model.Query))
             {
-                model.Posts.AddRange(_postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value).Select(MapPost));
-                model.Subs.AddRange(_subDao.GetAllSubs(model.Query).Select(MapSub));
+                switch (resultType)
+                {
+                    case null:
+                        model.Posts = PagedList<PostModel>.Build(
+                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
+                            MapPost,
+                            pageNumber.Value,
+                            pageSize.Value);
+                        model.Subs = PagedList<SubModel>.Build(
+                            _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize),
+                            MapSub,
+                            pageNumber.Value,
+                            pageSize.Value);
+                        break;
+                    case SearchResultType.Post:
+                        model.Posts = PagedList<PostModel>.Build(
+                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
+                            MapPost,
+                            pageNumber.Value,
+                            pageSize.Value);
+                        break;
+                    case SearchResultType.Sub:
+                        model.Subs = PagedList<SubModel>.Build(
+                            _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize),
+                            MapSub,
+                            pageNumber.Value,
+                            pageSize.Value);
+                        break;
+                    default:
+                        throw new Exception("unknown result type");
+                }
+
             }
 
             return View("Search", model);
@@ -374,14 +453,14 @@ namespace Skimur.Web.Controllers
                 });
             }
 
-           _commandBus.Send(new CaseVote
-            {
-                UserName = _userContext.CurrentUser.UserName,
-                PostSlug = postSlug,
-                DateCasted = Common.CurrentTime(),
-                IpAddress = Request.UserHostAddress,
-                VoteType = type
-            });
+            _commandBus.Send(new CaseVote
+             {
+                 UserName = _userContext.CurrentUser.UserName,
+                 PostSlug = postSlug,
+                 DateCasted = Common.CurrentTime(),
+                 IpAddress = Request.UserHostAddress,
+                 VoteType = type
+             });
 
             return Json(new
             {

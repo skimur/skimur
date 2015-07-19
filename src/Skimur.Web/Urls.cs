@@ -1,4 +1,7 @@
-﻿using System.Web.Mvc;
+﻿using System;
+using System.Web;
+using System.Web.Mvc;
+using System.Web.UI.WebControls;
 
 // ReSharper disable Mvc.ActionNotResolved
 // ReSharper disable Mvc.ControllerNotResolved
@@ -7,6 +10,27 @@ namespace Skimur.Web
 {
     public static class Urls
     {
+        public static string ModifyQuery(this UrlHelper urlHelper, string name, string value)
+        {
+            var url = urlHelper.RequestContext.HttpContext.Request.Url;
+            if(url == null) throw new ArgumentNullException();
+
+            return urlHelper.ModifyQuery(url.PathAndQuery, name, value);
+        }
+
+        public static string ModifyQuery(this UrlHelper urlHelper, string url, string name, string value)
+        {
+            if(url == null) throw new ArgumentNullException();
+            var queryStartIndex = url.IndexOf("?");
+
+            if (queryStartIndex == -1)
+                return url + "?" + name + "=" + value;
+
+            var queries = HttpUtility.ParseQueryString(url.Substring(queryStartIndex));
+            queries[name] = value;
+            return url.Substring(0, queryStartIndex) + "?" + queries;
+        }
+
         public static string Subs(this UrlHelper urlHelper, string query = null)
         {
             return urlHelper.Action("Index", "Subs", new { query });

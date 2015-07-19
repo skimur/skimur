@@ -1,12 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
+using Skimur;
 using Subs.ReadModel;
 
 namespace Subs.Services
 {
     public interface ISubService
     {
-        List<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance);
+        SeekedList<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null);
 
         List<Sub> GetDefaultSubs();
 

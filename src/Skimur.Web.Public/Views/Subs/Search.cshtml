@@ -20,46 +20,69 @@
 {
     <div class="row">
         <div class="col-lg-12">
-            @if (Model.LimitingToSub == null)
+            @if (Model.ResultType == null || Model.ResultType == SearchResultType.Sub)
             {
                 <h2>Subs</h2>
                 <hr />
-                if (Model.Subs.Count == 0)
+                if (Model.Subs != null)
                 {
-                    <p>
-                        @("No subs were found")
-                    </p>
-                }
-                else
-                {
-                    using (var enumerator = Model.Subs.GetEnumerator())
+                    if (Model.Subs == null || Model.Subs.Count == 0)
                     {
-                        while (enumerator.MoveNext())
+                        <p>
+                            @("No subs were found")
+                        </p>
+                    }
+                    else
+                    {
+                        using (var enumerator = Model.Subs.GetEnumerator())
+                        {
+                            while (enumerator.MoveNext())
+                            {
+                                <div class="row">
+                                    <div class="col-md-6">@Html.Partial("_SubDetails", enumerator.Current)</div>
+                                    @if (enumerator.MoveNext())
+                                    {
+                                        <div class="col-md-6">@Html.Partial("_SubDetails", enumerator.Current)</div>
+                                    }
+                                </div>
+                            }
+                        }
+
+                        if (Model.Subs.HasPreviousPage || Model.Subs.HasNextPage)
                         {
                             <div class="row">
-                                <div class="col-md-6">@Html.Partial("_SubDetails", enumerator.Current)</div>
-                                @if (enumerator.MoveNext())
-                                {
-                                    <div class="col-md-6">@Html.Partial("_SubDetails", enumerator.Current)</div>
-                                }
+                                <div class="list-pager">
+                                    @Html.Pager(Model.Subs, Url.ModifyQuery("resultType", "sub"))
+                                </div>
                             </div>
                         }
                     }
                 }
             }
-            <h2>Posts</h2>
-            <hr />
-            @if (Model.Posts.Count == 0)
+            @if (Model.ResultType == null || Model.ResultType == SearchResultType.Post)
             {
-                <p>
-                    @("No posts were found")
-                </p>
-            }
-            else
-            {
-                foreach (var post in Model.Posts)
+                <h2>Posts</h2>
+                <hr />
+                if (Model.Posts == null || Model.Posts.Count == 0)
                 {
-                    @Html.Partial("_Post", post)
+                    <p>
+                        @("No posts were found")
+                    </p>
+                }
+                else
+                {
+                    foreach (var post in Model.Posts)
+                    {
+                        @Html.Partial("_Post", post)
+                    }
+                    if (Model.Posts.HasPreviousPage || Model.Posts.HasNextPage)
+                    {
+                        <div class="row">
+                            <div class="list-pager">
+                                @Html.Pager(Model.Posts, Url.ModifyQuery("resultType", "post"))
+                            </div>
+                        </div>
+                    }
                 }
             }
         </div>
@@ -69,20 +92,20 @@
 @section scripts
 {
     <script type="text/javascript">
-    $(function () {
-        $("#search-button").click(function (e) {
-            e.preventDefault();
-            var query = $("#search-input").val();
-            if (query) {
-                window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))?query=" + query;
-            } else {
-                window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))";
-            }
+        $(function () {
+            $("#search-button").click(function (e) {
+                e.preventDefault();
+                var query = $("#search-input").val();
+                if (query) {
+                    window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))?query=" + query;
+                } else {
+                    window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))";
+                }
+            });
+            $("#search-input").enterKey(function (e) {
+                e.preventDefault();
+                $("#search-button").click();
+            });
         });
-        $("#search-input").enterKey(function (e) {
-            e.preventDefault();
-            $("#search-button").click();
-        });
-    });
-</script>
+    </script>
 }
