@@ -11,6 +11,8 @@ using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using SimpleInjector;
 using Skimur.Web.Public;
+using JavaScriptEngineSwitcher.Core;
+using JavaScriptEngineSwitcher.V8;
 
 // ReSharper disable once RedundantNameQualifier
 
@@ -169,24 +171,31 @@ namespace Skimur.Web.Public
 
         public void RegisterBundles(BundleCollection bundles)
         {
+            var scriptTransformer = new ScriptTransformer();
+
             var scriptsBundle = new ScriptBundle("~/bundles/scripts").Include(
                 "~/Scripts/jquery.js",
                 "~/Scripts/jquery.validate*",
                 "~/Scripts/modernizr.js",
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js",
-                "~/Scripts/MarkdownDeep.js",
-                "~/Scripts/MarkdownDeepEditor.js",
-                "~/Scripts/MarkdownDeepEditorUI.js",
                 "~/Scripts/app.js",
                 "~/Scripts/app.ui.js");
+
+            var markdownBundle = new ScriptBundle("~/bundles/editor").Include(
+                "~/Scripts/markdown.js",
+                "~/Scripts/to-markdown.js",
+                "~/Scripts/bootstrap-markdown.js");
+
             var stylesBundle = new StyleBundle("~/bundles/styles").Include(
                 "~/Content/site.less");
 
-            scriptsBundle.Transforms.Add(new ScriptTransformer());
+            scriptsBundle.Transforms.Add(scriptTransformer);
+            markdownBundle.Transforms.Add(scriptTransformer);
             stylesBundle.Transforms.Add(new StyleTransformer());
 
             bundles.Add(scriptsBundle);
+            bundles.Add(markdownBundle);
             bundles.Add(stylesBundle);
         }
 

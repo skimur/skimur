@@ -27,10 +27,10 @@
 </div>
 
 @section scripts {
+    @Scripts.Render("~/bundles/editor")
     <script type="text/javascript">
         $(function () {
-            $("#test-comment").MarkdownDeep({
-            });
+            $("#test-comment").markdown({ autofocus: false, savable: false });
         });
     </script>
 }

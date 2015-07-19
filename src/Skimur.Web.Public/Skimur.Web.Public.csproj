@@ -64,9 +64,6 @@
       <HintPath>..\packages\JavaScriptEngineSwitcher.V8.1.2.9\lib\net40\JavaScriptEngineSwitcher.V8.dll</HintPath>
       <Private>True</Private>
     </Reference>
-    <Reference Include="MarkdownDeep">
-      <HintPath>..\Dependencies\MarkdownDeep.dll</HintPath>
-    </Reference>
     <Reference Include="Microsoft.AspNet.Identity.Core, Version=2.0.0.0, Culture=neutral, PublicKeyToken=31bf3856ad364e35, processorArchitecture=MSIL">
       <HintPath>..\packages\Microsoft.AspNet.Identity.Core.2.2.1\lib\net45\Microsoft.AspNet.Identity.Core.dll</HintPath>
       <Private>True</Private>
@@ -270,10 +267,6 @@
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\wells.less" />
     <Content Include="Content\img\logo.png" />
-    <Content Include="Content\MarkdownDeep\mdd_ajax_loader.gif" />
-    <Content Include="Content\MarkdownDeep\mdd_gripper.png" />
-    <Content Include="Content\MarkdownDeep\mdd_modal_background.png" />
-    <Content Include="Content\MarkdownDeep\mdd_toolbar.png" />
     <Content Include="Content\site.less" />
     <Content Include="Content\components\sidebar.less" />
     <Content Include="Content\components\layout.less" />
@@ -282,9 +275,9 @@
     <Compile Include="Startup.cs" />
     <Content Include="Scripts\app.ui.js" />
     <Content Include="Scripts\app.js" />
-    <Content Include="Scripts\MarkdownDeep.js" />
-    <Content Include="Scripts\MarkdownDeepEditor.js" />
-    <Content Include="Scripts\MarkdownDeepEditorUI.js" />
+    <Content Include="Scripts\bootstrap-markdown.js" />
+    <Content Include="Scripts\to-markdown.js" />
+    <Content Include="Scripts\markdown.js" />
     <Content Include="Views\Shared\_LayoutCentered.cshtml" />
     <Content Include="Views\Shared\_LayoutEmpty.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
@@ -363,7 +356,7 @@
     <Content Include="Content\components\posts.less" />
     <Content Include="Content\components\subs.less" />
     <Content Include="Content\components\misc.less" />
-    <Content Include="Content\MarkdownDeep\mdd_styles.less" />
+    <Content Include="Content\bootstrap-markdown\bootstrap-markdown.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
