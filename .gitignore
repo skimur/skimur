@@ -191,3 +191,4 @@ ModelManifest.xml
 src/packages
 src/temptheme
 .vagrant/
+Skimur.sublime-*
