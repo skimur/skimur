@@ -1,5 +1,11 @@
 ﻿@import "bootstrap/bootstrap.less";
 @import "bootstrap-markdown/bootstrap-markdown.less";
+@import "fontawesome/font-awesome.less";
+
+.fa-mixin-icon(@icon){
+  @var: "fa-var-@{icon}";
+  &:before { content: @@var; }
+}
 
 @import "components/common.less";
 @import "components/layout.less";

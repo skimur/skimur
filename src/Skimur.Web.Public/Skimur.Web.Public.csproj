@@ -359,6 +359,19 @@
     <Content Include="Content\components\misc.less" />
     <Content Include="Content\bootstrap-markdown\bootstrap-markdown.less" />
     <Content Include="Content\components\comments.less" />
+    <Content Include="Content\fontawesome\animated.less" />
+    <Content Include="Content\fontawesome\bordered-pulled.less" />
+    <Content Include="Content\fontawesome\core.less" />
+    <Content Include="Content\fontawesome\fixed-width.less" />
+    <Content Include="Content\fontawesome\font-awesome.less" />
+    <Content Include="Content\fontawesome\icons.less" />
+    <Content Include="Content\fontawesome\larger.less" />
+    <Content Include="Content\fontawesome\list.less" />
+    <Content Include="Content\fontawesome\mixins.less" />
+    <Content Include="Content\fontawesome\path.less" />
+    <Content Include="Content\fontawesome\rotated-flipped.less" />
+    <Content Include="Content\fontawesome\stacked.less" />
+    <Content Include="Content\fontawesome\variables.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
