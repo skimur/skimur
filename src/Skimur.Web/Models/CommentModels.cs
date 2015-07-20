@@ -39,6 +39,10 @@ namespace Skimur.Web.Models
 
         public int VoteDownCount { get; set; }
 
+        public DateTime DateCreated { get; set; }
+
+        public bool WasEdited { get; set; }
+
         public VoteType? CurrentVote { get; set; }
 
         public List<CommentModel> Children { get; set; } 

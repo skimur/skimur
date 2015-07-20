@@ -164,13 +164,15 @@ namespace Skimur.Web.Controllers
 
             for (var x = 0; x < 10; x++)
             {
+                var time = Common.CurrentTime().Subtract(TimeSpan.FromDays(5));
                 var comment = new CommentModel();
                 comment.Id = GuidUtil.NewSequentialId();
                 comment.AuthorUserName = "testuser";
                 comment.BodyFormatted = "<p>test " + x + "</p>";
                 comment.Body = "test " + x;
+                comment.DateCreated = time;
 
-                for (var y = 0; y <= 10; y++)
+                for (var y = 0; y <= 1; y++)
                 {
                     var child = new CommentModel();
                     child.Id = GuidUtil.NewSequentialId();
@@ -178,13 +180,14 @@ namespace Skimur.Web.Controllers
                     child.AuthorUserName = "testuser";
                     child.BodyFormatted = "<p>child " + y + "</p>";
                     child.Body = "child " + y;
+                    child.DateCreated = time;
 
                     if(comment.Children == null)
                         comment.Children = new List<CommentModel>();
 
                     comment.Children.Add(child);
 
-                    for (var z = 0; z <= 10; z++)
+                    for (var z = 0; z <= 2; z++)
                     {
                         var grandChild = new CommentModel();
                         grandChild.Id = GuidUtil.NewSequentialId();
@@ -192,6 +195,7 @@ namespace Skimur.Web.Controllers
                         grandChild.AuthorUserName = "testuser";
                         grandChild.BodyFormatted = "<p>grand child " + z + "</p>";
                         grandChild.Body = "grand child " + z;
+                        grandChild.DateCreated = time;
 
                         if (child.Children == null)
                             child.Children = new List<CommentModel>();

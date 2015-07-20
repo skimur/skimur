@@ -14,11 +14,16 @@
     <div class="comment@(isAlternateRow ? " alternate" : null)">
         <div class="comment-voting @(comment.CurrentVote != null ? comment.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
             <span class="up"></span>
-            <span class="votes">@(comment.VoteUpCount - comment.VoteDownCount)</span>
             <span class="down"></span>
         </div>
         <div class="comment-body">
-            @Html.Raw(comment.BodyFormatted)
+            <div class="comment-tagline">
+                <a href="javascript:void(0)" class="expand">[–]</a> <a href="/u/@comment.AuthorUserName" class="author">@comment.AuthorUserName</a> <span class="score">@(comment.VoteUpCount - comment.VoteDownCount) points</span> <time class="timestamp">@Html.Age(comment.DateCreated) ago</time>
+            </div>
+            <div class="comment-md">
+                @Html.Raw(comment.BodyFormatted)
+            </div>
+            <ul class="comment-options"><li class="first"><a href="https://www.reddit.com/r/news/comments/3dylvi/chicago_fires_investigator_who_found_cops_at/ct9v95v" class="bylink" rel="nofollow">permalink</a></li><li class="comment-save-button save-button"><a href="javascript:void(0)">save</a></li><li class="report-button"><a href="javascript:void(0)" class="action-thing" data-action-form="#report-action-form">report</a></li><li class="give-gold-button"><a href="/gold?goldtype=gift&amp;months=1&amp;thing=t1_ct9v95v" title="give reddit gold in appreciation of this post." class="give-gold login-required">give gold</a></li><li class="reply-button"><a class="" href="javascript:void(0)" onclick="return reply(this)">reply</a></li></ul>
         </div>
 
         <div class="clearfix"></div>
