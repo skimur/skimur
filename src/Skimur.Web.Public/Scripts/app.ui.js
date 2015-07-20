@@ -36,6 +36,7 @@
 
 $(function() {
 
+    // the post up/down voting logic
     $(".post").each(function (index, element) {
 
         var $postVoting = $(".post-voting", element);
@@ -47,7 +48,7 @@ $(function() {
             if ($postVoting.hasClass("voted-up")) {
                 // the user already upvoted it, let's just remove the vote
                 $postVoting.addClass("vote-processing");
-                skimur.unvote(postSlug, function(result) {
+                skimur.unvotePost(postSlug, function(result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -58,7 +59,7 @@ $(function() {
             } else {
                 // the user hasn't casted an upvote, so lets add it
                 $postVoting.addClass("vote-processing");
-                skimur.upvote(postSlug, function(result) {
+                skimur.upvotePost(postSlug, function(result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -75,7 +76,7 @@ $(function() {
             if ($postVoting.hasClass("voted-down")) {
                 // the user already downvoted it, let's just remove the vote
                 $postVoting.addClass("vote-processing");
-                skimur.unvote(postSlug, function (result) {
+                skimur.unvotePost(postSlug, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -86,7 +87,7 @@ $(function() {
             } else {
                 // the user hasn't casted a downvote, so lets add it
                 $postVoting.addClass("vote-processing");
-                skimur.downvote(postSlug, function (result) {
+                skimur.downvotePost(postSlug, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -97,5 +98,19 @@ $(function() {
             }
         });
     });
+
+    // the comment creating
+    $.fn.comment = function() {
+
+        var initializeHtml = function(string ) {
+            
+        }
+
+        return {
+            buildHtml: buildHtml,
+            initializeHtml: initializeHtml
+        };
+
+    };
 
 });

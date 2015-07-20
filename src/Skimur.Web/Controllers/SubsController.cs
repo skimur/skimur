@@ -5,6 +5,7 @@ using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
 using Infrastructure.Messaging;
+using Infrastructure.Utils;
 using Skimur.Web.Models;
 using Subs;
 using Subs.Commands;
@@ -21,6 +22,7 @@ namespace Skimur.Web.Controllers
         private readonly IUserContext _userContext;
         private readonly IPostDao _postDao;
         private readonly IVoteDao _voteDao;
+        private readonly ICommentDao _commentDao;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -28,7 +30,8 @@ namespace Skimur.Web.Controllers
             ICommandBus commandBus,
             IUserContext userContext,
             IPostDao postDao,
-            IVoteDao voteDao)
+            IVoteDao voteDao,
+            ICommentDao commentDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -37,6 +40,7 @@ namespace Skimur.Web.Controllers
             _userContext = userContext;
             _postDao = postDao;
             _voteDao = voteDao;
+            _commentDao = commentDao;
         }
 
         public ActionResult Index(string query)
@@ -156,6 +160,48 @@ namespace Skimur.Web.Controllers
             var model = new PostDetailsModel();
             model.Post = MapPost(post);
             model.Sub = MapSub(sub);
+            model.Comments = new CommentListModel();
+
+            for (var x = 0; x < 10; x++)
+            {
+                var comment = new CommentModel();
+                comment.Id = GuidUtil.NewSequentialId();
+                comment.AuthorUserName = "testuser";
+                comment.BodyFormatted = "<p>test " + x + "</p>";
+                comment.Body = "test " + x;
+
+                for (var y = 0; y <= 10; y++)
+                {
+                    var child = new CommentModel();
+                    child.Id = GuidUtil.NewSequentialId();
+                    child.ParentId = comment.Id;
+                    child.AuthorUserName = "testuser";
+                    child.BodyFormatted = "<p>child " + y + "</p>";
+                    child.Body = "child " + y;
+
+                    if(comment.Children == null)
+                        comment.Children = new List<CommentModel>();
+
+                    comment.Children.Add(child);
+
+                    for (var z = 0; z <= 10; z++)
+                    {
+                        var grandChild = new CommentModel();
+                        grandChild.Id = GuidUtil.NewSequentialId();
+                        grandChild.ParentId = child.Id;
+                        grandChild.AuthorUserName = "testuser";
+                        grandChild.BodyFormatted = "<p>grand child " + z + "</p>";
+                        grandChild.Body = "grand child " + z;
+
+                        if (child.Children == null)
+                            child.Children = new List<CommentModel>();
+
+                        child.Children.Add(grandChild);
+                    }
+                }
+
+                model.Comments.Comments.Add(comment);
+            }
 
             return View(model);
         }
@@ -390,6 +436,58 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.Post(model.SubName, response.Slug, response.Title));
         }
 
+        [HttpPost]
+        public ActionResult CreateComment(CreateCommentModel model)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to comment."
+                });
+            }
+
+            try
+            {
+                var response = _commandBus.Send<CreateComment, CreateCommentResponse>(new CreateComment
+                {
+                    PostSlug = model.PostSlug,
+                    ParentId = model.ParentId,
+                    AuthorIpAddress = Request.UserHostAddress,
+                    AuthorUserName = _userContext.CurrentUser.UserName,
+                    Body = model.Body,
+                    SendReplies = model.SendReplies
+                });
+
+                if (!string.IsNullOrEmpty(response.Error))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = response.Error
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    commentId = response.CommentId,
+                    body = response.Body,
+                    formattedBody = response.FormattedBody
+                });
+            }
+            catch (Exception ex)
+            {
+                // TODO: log
+                return Json(new
+                {
+                    success = false,
+                    error = "An unexpected error occured."
+                });
+            }
+        }
+
         public ActionResult SideBar()
         {
             var allSubs = _subDao.GetSubByNames(_contextService.GetSubscribedSubNames()).Select(x =>
@@ -557,6 +655,13 @@ namespace Skimur.Web.Controllers
             if (sub == null) return null;
             var result = _mapper.Map<Sub, SubModel>(sub);
             result.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
+            return result;
+        }
+
+        private CommentModel MapComment(Comment comment)
+        {
+            if (comment == null) return null;
+            var result = _mapper.Map<Comment, CommentModel>(comment);
             return result;
         }
     }

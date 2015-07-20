@@ -27,5 +27,7 @@ namespace Skimur.Web.Models
         public PostModel Post { get; set; }
 
         public SubModel Sub { get; set; }
+
+        public CommentListModel Comments { get; set; }
     }
 }

@@ -18,6 +18,8 @@ namespace Subs
 
         public string PostSlug { get; set; }
 
+        public Guid CommentId { get; set; }
+
         public int Type { get; set; }
 
         public DateTime DateCasted { get; set; }

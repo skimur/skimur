@@ -1,0 +1,34 @@
+﻿@using Subs
+@model CommentListModel
+
+@if (Model.Comments != null && Model.Comments.Count > 0)
+{
+    foreach (var comment in Model.Comments)
+    {
+        @RenderComment(comment)
+    }
+}
+
+@helper RenderComment(CommentModel comment, bool isAlternateRow = false)
+{
+    <div class="comment@(isAlternateRow ? " alternate" : null)">
+        <div class="comment-voting @(comment.CurrentVote != null ? comment.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+            <span class="up"></span>
+            <span class="votes">@(comment.VoteUpCount - comment.VoteDownCount)</span>
+            <span class="down"></span>
+        </div>
+        <div class="comment-body">
+            @Html.Raw(comment.BodyFormatted)
+        </div>
+
+        <div class="clearfix"></div>
+
+        @if (comment.Children != null && comment.Children.Count > 0)
+        {
+            foreach (var child in comment.Children)
+            {
+                @RenderComment(child, !isAlternateRow)
+            }
+        }
+    </div>
+}

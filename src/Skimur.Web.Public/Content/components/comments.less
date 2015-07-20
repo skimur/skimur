@@ -1,5 +1,22 @@
-﻿.post {
-    .post-voting {
+﻿.comment {
+    background: #fff;
+    border: 1px solid #c9c9c9;
+    color: #242424;
+    padding: 8px;
+    position: relative;
+
+    > .comment {
+        margin-left: 10px;
+        margin-top: 10px;
+    }
+
+    &.alternate {
+        background: #ededed;
+        border: 1px solid #c4c4c4;
+        color: #242424;
+    }
+
+    .comment-voting {
         color: @gray-light;
         font-size: ceil((@font-size-base * 1.2));
         float: left;
@@ -42,34 +59,7 @@
         }
     }
 
-    .post-body {
+    .comment-body {
         overflow: hidden;
-
-        .post-title {
-            margin: 0;
-
-            .post-link {
-                font-size: @font-size-large;
-            }
-
-            .post-domain {
-                font-size: @font-size-small;
-                color: @gray;
-
-                &:hover,
-                &:focus {
-                    color: darken(@gray, 50%);
-                }
-            }
-        }
-
-        .post-meta {
-            margin: 0px;
-            font-size: @font-size-small;
-            color: @gray;
-        }
-
-        .post-links {
-        }
     }
 }

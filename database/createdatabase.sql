@@ -100,10 +100,28 @@ CREATE TABLE votes
   date_created timestamp with time zone,
   user_name text,
   post_slug text,
+  comment_id uuid,
   type integer,
   date_casted timestamp with time zone,
   ip_address text,
   user_ip text
+);
+
+CREATE TABLE comments
+(
+  id uuid NOT NULL,
+  date_created timestamp with time zone,
+  date_edited timestamp with time zone,
+  parent_id uuid,
+  parents text,
+  author_user_name text,
+  author_ip_address text,
+  post_slug text,
+  body text,
+  body_formatted text,
+  send_replies boolean,
+  vote_up_count integer,
+  vote_down_count integer
 );
 
 -- for unit tests

@@ -133,6 +133,14 @@ class skimur::postgres {
     require     => Exec['create database'],
   }
 
+  ::postgresql::server::table_grant { 'comments permission':
+    privilege => 'ALL',
+    table     => 'comments',
+    db        => 'skimur',
+    role      => 'db-user',
+    require     => Exec['create database'],
+  }
+
 }
 
 class skimur::rabbitmq {

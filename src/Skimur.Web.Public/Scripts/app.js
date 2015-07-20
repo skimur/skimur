@@ -34,7 +34,7 @@
         });
     };
 
-    var vote = function (postSlug, voteType, callback) {
+    var votePost = function (postSlug, voteType, callback) {
         $.ajax({
             type: "POST",
             url: "/vote",
@@ -51,7 +51,7 @@
         });
     };
 
-    var unvote = function(postSlug, callback) {
+    var unvotePost = function(postSlug, callback) {
         $.ajax({
             type: "POST",
             url: "/unvote",
@@ -68,13 +68,31 @@
         });
     };
 
+    var createComment = function (postSlug, parentId, body, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/createcomment",
+            data: { postSlug: postSlug, parentId: parentId, body: body },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
-        vote: vote,
-        upvote: function (postSlug, callback) { vote(postSlug, 1, callback); },
-        downvote: function (postSlug, callback) { vote(postSlug, 0, callback); },
-        unvote : unvote
+        votePost: votePost,
+        upvotePost: function (postSlug, callback) { votePost(postSlug, 1, callback); },
+        downvotePost: function (postSlug, callback) { votePost(postSlug, 0, callback); },
+        unvotePost: unvotePost,
+        createComment: createComment
     };
 
 })();

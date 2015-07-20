@@ -27,6 +27,8 @@ namespace Subs.Worker
             container.Register<ICommandHandler<CaseVote>, VoteCommandHandler>();
 
             container.Register<IEventHandler<VoteCasted>, VoteEventHandler>();
+
+            container.Register<ICommandHandlerResponse<CreateComment, CreateCommentResponse>, CommentCommandHandler>();
         }
 
         public int Order

@@ -70,6 +70,10 @@
       <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Skimur.Markdown\Skimur.Markdown.csproj">
+      <Project>{6e215bd9-7494-4c84-af04-5e700ce945b8}</Project>
+      <Name>Skimur.Markdown</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>
       <Name>Skimur</Name>

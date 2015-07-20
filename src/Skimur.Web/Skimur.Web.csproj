@@ -126,6 +126,7 @@
     <Compile Include="IContextService.cs" />
     <Compile Include="IUserContext.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
+    <Compile Include="Models\CommentModels.cs" />
     <Compile Include="Models\CommonModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\ModerationSideBarModel.cs" />

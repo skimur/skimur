@@ -60,6 +60,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="Commands\CaseVote.cs" />
+    <Compile Include="Commands\CreateComment.cs" />
     <Compile Include="Commands\CreatePost.cs" />
     <Compile Include="Commands\CreateSub.cs" />
     <Compile Include="Commands\EditSub.cs" />
@@ -68,10 +69,15 @@
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteCasted.cs" />
     <Compile Include="Hot.cs" />
+    <Compile Include="Comment.cs" />
+    <Compile Include="ReadModel\CommentDao.cs" />
+    <Compile Include="ReadModel\ICommentDao.cs" />
     <Compile Include="ReadModel\IPostDao.cs" />
     <Compile Include="ReadModel\IVoteDao.cs" />
     <Compile Include="ReadModel\PostDao.cs" />
     <Compile Include="ReadModel\VoteDao.cs" />
+    <Compile Include="Services\CommentService.cs" />
+    <Compile Include="Services\ICommentService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ISubService.cs" />
     <Compile Include="Post.cs" />

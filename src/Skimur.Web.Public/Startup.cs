@@ -46,6 +46,7 @@ namespace Skimur.Web.Public
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
                 new Registrar(),
+                new Markdown.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
                 this);
@@ -156,6 +157,11 @@ namespace Skimur.Web.Public
                 name: "UnSubscribe",
                 url: "unsubscribe/{subName}",
                 defaults: new { controller = "Subs", action = "UnSubscribe", subName = UrlParameter.Optional /*not really optionally, but they could provide subName via ajax if they wish*/ });
+
+            routes.MapRoute(
+                name: "CreateComment",
+                url: "createcomment",
+                defaults: new { controller = "Subs", action = "CreateComment" });
 
             routes.MapRoute(
                 name: "Default",

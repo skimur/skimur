@@ -1,4 +1,5 @@
-﻿@model PostDetailsModel
+﻿@using Subs
+@model PostDetailsModel
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
 }
@@ -8,8 +9,20 @@
         @Html.Partial("_Post", Model.Post)
 
         <div class="row">
-            <textarea id="test-comment"></textarea>
+            <div class="form-group">
+                <textarea id="post-comment"></textarea>
+            </div>
+            <div class="form-group">
+                <button id="post-comment-submit" type="submit" class="btn btn-default">Submit</button>
+            </div>
         </div>
+
+        @if (Model.Comments != null)
+        {
+            <div class="row">
+                @Html.Partial("_Comments", Model.Comments)
+            </div>
+        }
 
     </div>
     <div class="col-lg-3 col-sm-4">
@@ -21,7 +34,7 @@
             <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new post</a>
         </div>
 
-        @Html.Action("ModerationSideBar", new {subName = Model.Sub.Name})
+        @Html.Action("ModerationSideBar", new { subName = Model.Sub.Name })
 
     </div>
 </div>
@@ -30,7 +43,15 @@
     @Scripts.Render("~/bundles/editor")
     <script type="text/javascript">
         $(function () {
-            $("#test-comment").markdown({ autofocus: false, savable: false });
+            $("#post-comment").markdown({ autofocus: false, savable: false });
+
+            $("#post-comment-submit").click(function (e) {
+                e.preventDefault();
+                skimur.createComment("@Model.Post.Slug", null, $("#post-comment").val(), function (result) {
+                    console.log(result);
+                });
+            });
+
         });
     </script>
 }

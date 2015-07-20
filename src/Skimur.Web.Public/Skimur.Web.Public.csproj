@@ -297,6 +297,7 @@
     <Content Include="Views\Subs\_SideBarSearch.cshtml" />
     <Content Include="Views\Subs\Search.cshtml" />
     <Content Include="Views\Subs\Post.cshtml" />
+    <Content Include="Views\Subs\_Comments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -357,6 +358,7 @@
     <Content Include="Content\components\subs.less" />
     <Content Include="Content\components\misc.less" />
     <Content Include="Content\bootstrap-markdown\bootstrap-markdown.less" />
+    <Content Include="Content\components\comments.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
@@ -379,6 +381,10 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure\Infrastructure.csproj">
       <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
       <Name>Infrastructure</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Skimur.Markdown\Skimur.Markdown.csproj">
+      <Project>{6e215bd9-7494-4c84-af04-5e700ce945b8}</Project>
+      <Name>Skimur.Markdown</Name>
     </ProjectReference>
     <ProjectReference Include="..\Subs\Subs.Worker\Subs.Worker.csproj">
       <Project>{454dcbfb-9497-4e9e-98df-3c4067978193}</Project>
