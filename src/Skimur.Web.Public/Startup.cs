@@ -164,6 +164,11 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Subs", action = "CreateComment" });
 
             routes.MapRoute(
+               name: "EditComment",
+               url: "editcomment",
+               defaults: new { controller = "Subs", action = "EditComment" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

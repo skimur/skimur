@@ -85,6 +85,23 @@
         });
     };
 
+    var editComment = function (commentId, body, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/editcomment",
+            data: { commentId: commentId, body: body },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -92,7 +109,8 @@
         upvotePost: function (postSlug, callback) { votePost(postSlug, 1, callback); },
         downvotePost: function (postSlug, callback) { votePost(postSlug, 0, callback); },
         unvotePost: unvotePost,
-        createComment: createComment
+        createComment: createComment,
+        editComment: editComment
     };
 
 })();

@@ -161,51 +161,20 @@ namespace Skimur.Web.Controllers
             model.Post = MapPost(post);
             model.Sub = MapSub(sub);
             model.Comments = new CommentListModel();
+            model.Comments.PostSlug = model.Post.Slug;
 
-            for (var x = 0; x < 10; x++)
+            var comments = _commentDao.GetAllCommentsForPost(post.Slug).Select(MapComment).ToList();
+
+            Func<Guid?, List<CommentModel>> buildComments = null;
+            buildComments = parentCommentId =>
             {
-                var time = Common.CurrentTime().Subtract(TimeSpan.FromDays(5));
-                var comment = new CommentModel();
-                comment.Id = GuidUtil.NewSequentialId();
-                comment.AuthorUserName = "testuser";
-                comment.BodyFormatted = "<p>test " + x + "</p>";
-                comment.Body = "test " + x;
-                comment.DateCreated = time;
+                var children = comments.Where(x => parentCommentId.HasValue ? x.ParentId == parentCommentId.Value : x.ParentId == null).ToList();
+                foreach (var comment in children)
+                    comment.Children = buildComments(comment.Id);
+                return children;
+            };
 
-                for (var y = 0; y <= 1; y++)
-                {
-                    var child = new CommentModel();
-                    child.Id = GuidUtil.NewSequentialId();
-                    child.ParentId = comment.Id;
-                    child.AuthorUserName = "testuser";
-                    child.BodyFormatted = "<p>child " + y + "</p>";
-                    child.Body = "child " + y;
-                    child.DateCreated = time;
-
-                    if(comment.Children == null)
-                        comment.Children = new List<CommentModel>();
-
-                    comment.Children.Add(child);
-
-                    for (var z = 0; z <= 2; z++)
-                    {
-                        var grandChild = new CommentModel();
-                        grandChild.Id = GuidUtil.NewSequentialId();
-                        grandChild.ParentId = child.Id;
-                        grandChild.AuthorUserName = "testuser";
-                        grandChild.BodyFormatted = "<p>grand child " + z + "</p>";
-                        grandChild.Body = "grand child " + z;
-                        grandChild.DateCreated = time;
-
-                        if (child.Children == null)
-                            child.Children = new List<CommentModel>();
-
-                        child.Children.Add(grandChild);
-                    }
-                }
-
-                model.Comments.Comments.Add(comment);
-            }
+            model.Comments.Comments.AddRange(buildComments(null));
 
             return View(model);
         }
@@ -492,6 +461,55 @@ namespace Skimur.Web.Controllers
             }
         }
 
+        [HttpPost]
+        public ActionResult EditComment(EditCommentModel model)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to edit a comment."
+                });
+            }
+
+            try
+            {
+                var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
+                {
+                    DateEdited = Common.CurrentTime(),
+                    CommentId =  model.CommentId,
+                    Body = model.Body
+                });
+
+                if (!string.IsNullOrEmpty(response.Error))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = response.Error
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    commentId = model.CommentId,
+                    body = response.Body,
+                    formattedBody = response.FormattedBody
+                });
+            }
+            catch (Exception ex)
+            {
+                // TODO: log
+                return Json(new
+                {
+                    success = false,
+                    error = "An unexpected error occured."
+                });
+            }
+        }
+
         public ActionResult SideBar()
         {
             var allSubs = _subDao.GetSubByNames(_contextService.GetSubscribedSubNames()).Select(x =>
@@ -666,6 +684,8 @@ namespace Skimur.Web.Controllers
         {
             if (comment == null) return null;
             var result = _mapper.Map<Comment, CommentModel>(comment);
+            result.CanDelete = true;
+            result.CanEdit = true;
             return result;
         }
     }

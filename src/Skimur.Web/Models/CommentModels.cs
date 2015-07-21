@@ -23,9 +23,20 @@ namespace Skimur.Web.Models
         public bool SendReplies { get; set; }
     }
 
-    public class CommentModel
+    public class EditCommentModel
+    {
+        public Guid CommentId { get; set; }
+
+        public string Body { get; set; }
+    }
+
+    public class CommentModel : Comment
     {
         public Guid Id { get; set; }
+
+        public DateTime DateCreated { get; set; }
+
+        public DateTime? DateEdited { get; set; }
 
         public Guid? ParentId { get; set; }
 
@@ -39,13 +50,13 @@ namespace Skimur.Web.Models
 
         public int VoteDownCount { get; set; }
 
-        public DateTime DateCreated { get; set; }
-
-        public bool WasEdited { get; set; }
+        public List<CommentModel> Children { get; set; } 
 
         public VoteType? CurrentVote { get; set; }
 
-        public List<CommentModel> Children { get; set; } 
+        public bool CanDelete { get; set; }
+
+        public bool CanEdit { get; set; }
     }
 
     public class CommentListModel
@@ -54,6 +65,8 @@ namespace Skimur.Web.Models
         {
             Comments = new List<CommentModel>();
         }
+
+        public string PostSlug { get; set; }
 
         public List<CommentModel> Comments { get; set; } 
     }

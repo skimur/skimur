@@ -12,7 +12,8 @@ using Subs.Services;
 
 namespace Subs.Worker
 {
-    public class CommentCommandHandler : ICommandHandlerResponse<CreateComment, CreateCommentResponse>
+    public class CommentCommandHandler : ICommandHandlerResponse<CreateComment, CreateCommentResponse>, 
+        ICommandHandlerResponse<EditComment, EditCommentResponse>
     {
         private readonly IPostService _postService;
         private readonly IMembershipService _membershipService;
@@ -90,6 +91,42 @@ namespace Subs.Worker
                 _commentService.InsertComment(comment);
 
                 response.CommentId = comment.Id;
+                response.Body = comment.Body;
+                response.FormattedBody = comment.BodyFormatted;
+            }
+            catch (Exception ex)
+            {
+                response.Error = ex.Message;
+            }
+
+            return response;
+        }
+
+        public EditCommentResponse Handle(EditComment command)
+        {
+            var response = new EditCommentResponse();
+
+            try
+            {
+                if (string.IsNullOrEmpty(command.Body))
+                {
+                    response.Error = "A comment is required.";
+                    return response;
+                }
+
+                command.Body = command.Body.Trim();
+
+                var comment = _commentService.GetCommentById(command.CommentId);
+
+                if (comment == null)
+                {
+                    response.Error = "Invalid comment.";
+                    return response;
+                }
+
+                var bodyFormatted = _markdownCompiler.Compile(comment.Body);
+                _commentService.UpdateCommentBody(comment.Id, comment.Body, bodyFormatted, command.DateEdited);
+
                 response.Body = comment.Body;
                 response.FormattedBody = comment.BodyFormatted;
             }

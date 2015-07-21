@@ -18,7 +18,7 @@
             });
         } else if ($button.hasClass("unsubscribed")) {
             $button.addClass("disabled");
-            skimur.subscribe(subName, function(data) {
+            skimur.subscribe(subName, function (data) {
                 $button.removeClass("disabled");
                 if (data.success) {
                     $button.removeClass("unsubscribed").addClass("subscribed");
@@ -34,7 +34,7 @@
 
 })();
 
-$(function() {
+$(function () {
 
     // the post up/down voting logic
     $(".post").each(function (index, element) {
@@ -48,7 +48,7 @@ $(function() {
             if ($postVoting.hasClass("voted-up")) {
                 // the user already upvoted it, let's just remove the vote
                 $postVoting.addClass("vote-processing");
-                skimur.unvotePost(postSlug, function(result) {
+                skimur.unvotePost(postSlug, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -59,7 +59,7 @@ $(function() {
             } else {
                 // the user hasn't casted an upvote, so lets add it
                 $postVoting.addClass("vote-processing");
-                skimur.upvotePost(postSlug, function(result) {
+                skimur.upvotePost(postSlug, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -100,17 +100,104 @@ $(function() {
     });
 
     // the comment creating
-    $.fn.comment = function() {
+    $.fn.comment = function () {
 
-        var initializeHtml = function(string ) {
-            
-        }
+        return this.each(function () {
+            var $comment = $(this);
 
-        return {
-            buildHtml: buildHtml,
-            initializeHtml: initializeHtml
-        };
+            var cancel = function () {
+                return $comment.find("> .comment-body .comment-staging").addClass("hidden").empty();
+            };
+
+            var startReply = function() {
+                var $staging = cancel();
+                var $textArea = $("<textarea />").appendTo($staging);
+
+                $textArea.markdown({ iconlibrary: "fa" });
+
+                var $buttonsContainer = $("<div class='form-group' />").appendTo($staging);
+
+                $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
+                    .appendTo($buttonsContainer)
+                    .click(function(e) {
+                        e.preventDefault();
+                        skimur.createComment($comment.data("post-slug"), $comment.data("comment-id"), $textArea.val(), function(result) {
+                            alert(result.success);
+                            cancel();
+                        });
+                    });
+
+                $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
+                    .appendTo($buttonsContainer)
+                    .click(function(e) {
+                        e.preventDefault();
+                        cancel();
+                    });
+
+                $staging.removeClass("hidden");
+                $textArea.focus();
+            };
+
+            var toggleExpand = function($toggleButton) {
+                if ($comment.hasClass("collapsed")) {
+                    $comment.removeClass("collapsed");
+                    $toggleButton.html("[–]");
+                } else {
+                    $comment.addClass("collapsed");
+                    $toggleButton.html("[+]");
+                }
+            };
+
+            var startEdit = function() {
+                var $staging = cancel();
+                var $textArea = $("<textarea />")
+                    .appendTo($staging)
+                    .val($comment.find("> .comment-body .comment-md-unformatted").val());
+
+                $textArea.markdown({ iconlibrary: "fa" });
+
+                var $buttonsContainer = $("<div class='form-group' />").appendTo($staging);
+
+                $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
+                    .appendTo($buttonsContainer)
+                    .click(function (e) {
+                        e.preventDefault();
+                        skimur.editComment($comment.data("comment-id"), $textArea.val(), function (result) {
+                            alert(result.success);
+                            cancel();
+                        });
+                    });
+
+                $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
+                    .appendTo($buttonsContainer)
+                    .click(function (e) {
+                        e.preventDefault();
+                        cancel();
+                    });
+
+                $staging.removeClass("hidden");
+                $textArea.focus();
+            };
+
+            $("> .comment-body .reply", $comment).click(function (e) {
+                e.preventDefault();
+                startReply();
+            });
+
+            $("> .comment-body .edit", $comment).click(function (e) {
+                e.preventDefault();
+                startEdit();
+            });
+
+            $("> .comment-body .expand", $comment).click(function (e) {
+                e.preventDefault();
+                toggleExpand($(this));
+            });
+
+        });
 
     };
+
+    $(".comment").comment();
 
 });

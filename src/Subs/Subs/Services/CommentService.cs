@@ -33,6 +33,19 @@ namespace Subs.Services
             });
         }
 
+        public void UpdateCommentBody(Guid commentId, string body, string bodyFormatted, DateTime dateEdited)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Comment>(new
+                {
+                    Body = body,
+                    BodyFormatted = bodyFormatted,
+                    DateEdited = dateEdited
+                }, x => x.Id == commentId);
+            });
+        }
+
         public List<Comment> GetAllCommentsForPost(string postSlug)
         {
             if(string.IsNullOrEmpty(postSlug))

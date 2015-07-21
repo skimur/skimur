@@ -1,14 +1,35 @@
 ﻿.comment {
     position: relative;
-    margin-bottom:20px;
+
     .comment {
         margin-left: 15px;
-        margin-bottom:0px;
+        margin-bottom: 0px;
         padding-left: 10px;
         border-left: 1px dotted #DDF;
     }
 
     &.alternate {
+    }
+
+    &.collapsed {
+        .comment, .comment-md, .comment-options {
+            display: none;
+        }
+
+        .comment-voting {
+            visibility: hidden;
+            height: 1px;
+        }
+
+        .comment-tagline {
+            color: lighten(@text-color, 40%);
+            font-style: italic;
+
+            a {
+                color: lighten(@text-color, 40%);
+                text-decoration: none;
+            }
+        }
     }
 
     .comment-voting {
@@ -57,7 +78,7 @@
 
     .comment-body {
         overflow: hidden;
-        margin-bottom:15px;
+        margin-bottom: 15px;
 
         .comment-tagline {
             font-size: @font-size-small;
@@ -69,31 +90,34 @@
         }
 
         .comment-md {
-            margin-top:5px;
-            margin-bottom:5px;
+            margin-top: 5px;
+            margin-bottom: 5px;
 
-            >:first-child {
-                margin-top:0px;
+            > :first-child {
+                margin-top: 0px;
             }
-            &>:last-child {
-                margin-bottom:0px;
+
+            & > :last-child {
+                margin-bottom: 0px;
             }
         }
 
         .comment-options {
-            margin:0;
-            padding:0;
-            > li {
-                  display: inline-block;
-                  white-space: nowrap;
-                  margin-left:10px;
+            margin: 0;
+            padding: 0;
+            font-size: @font-size-small;
 
-                  &.first {
-                      margin-left:0px;
-                  }
+            > li {
+                display: inline-block;
+                white-space: nowrap;
+                margin-left: 10px;
+
+                &.first {
+                    margin-left: 0px;
+                }
             }
+
             list-style-type: none;
-            
         }
     }
 }

@@ -12,6 +12,8 @@ namespace Subs.Services
 
         void InsertComment(Comment comment);
 
+        void UpdateCommentBody(Guid commentId, string body, string bodyFormatted, DateTime dateEdited);
+
         List<Comment> GetAllCommentsForPost(string postSlug);
     }
 }
