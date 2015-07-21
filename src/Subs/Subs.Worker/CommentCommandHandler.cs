@@ -124,11 +124,11 @@ namespace Subs.Worker
                     return response;
                 }
 
-                var bodyFormatted = _markdownCompiler.Compile(comment.Body);
-                _commentService.UpdateCommentBody(comment.Id, comment.Body, bodyFormatted, command.DateEdited);
+                var bodyFormatted = _markdownCompiler.Compile(command.Body);
+                _commentService.UpdateCommentBody(comment.Id, command.Body, bodyFormatted, command.DateEdited);
 
-                response.Body = comment.Body;
-                response.FormattedBody = comment.BodyFormatted;
+                response.Body = command.Body;
+                response.FormattedBody = bodyFormatted;
             }
             catch (Exception ex)
             {

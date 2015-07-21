@@ -109,7 +109,7 @@ $(function () {
                 return $comment.find("> .comment-body .comment-staging").addClass("hidden").empty();
             };
 
-            var startReply = function() {
+            var startReply = function () {
                 var $staging = cancel();
                 var $textArea = $("<textarea />").appendTo($staging);
 
@@ -119,17 +119,24 @@ $(function () {
 
                 $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
                     .appendTo($buttonsContainer)
-                    .click(function(e) {
+                    .click(function (e) {
                         e.preventDefault();
-                        skimur.createComment($comment.data("post-slug"), $comment.data("comment-id"), $textArea.val(), function(result) {
-                            alert(result.success);
+                        skimur.createComment($comment.data("post-slug"), $comment.data("comment-id"), $textArea.val(), function (result) {
                             cancel();
+                            if (result.success) {
+                                $.buildComment(result)
+                                    .insertAfter($("> .comment-body", $comment))
+                                    .comment();
+                            } else {
+                                alert(result.error);
+                            }
+
                         });
                     });
 
                 $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
                     .appendTo($buttonsContainer)
-                    .click(function(e) {
+                    .click(function (e) {
                         e.preventDefault();
                         cancel();
                     });
@@ -138,7 +145,7 @@ $(function () {
                 $textArea.focus();
             };
 
-            var toggleExpand = function($toggleButton) {
+            var toggleExpand = function ($toggleButton) {
                 if ($comment.hasClass("collapsed")) {
                     $comment.removeClass("collapsed");
                     $toggleButton.html("[–]");
@@ -148,7 +155,7 @@ $(function () {
                 }
             };
 
-            var startEdit = function() {
+            var startEdit = function () {
                 var $staging = cancel();
                 var $textArea = $("<textarea />")
                     .appendTo($staging)
@@ -163,8 +170,13 @@ $(function () {
                     .click(function (e) {
                         e.preventDefault();
                         skimur.editComment($comment.data("comment-id"), $textArea.val(), function (result) {
-                            alert(result.success);
                             cancel();
+                            if (result.success) {
+                                $comment.find("> .comment-body .comment-md-unformatted").val(result.body);
+                                $comment.find("> .comment-body .comment-md").html(result.bodyFormatted);
+                            } else {
+                                alert(result.error);
+                            }
                         });
                     });
 
@@ -196,6 +208,38 @@ $(function () {
 
         });
 
+    };
+
+    $.buildComment = function (comment) {
+        var $comment = $(
+        "<div class='comment' data-post-slug='" + comment.postSlug + "' data-comment-id='" + comment.commentId + "'>" +
+            "<div class='comment-voting'>" +
+                "<span class='up'></span>" +
+                "<span class='down'></span>" +
+            "</div>" +
+            "<div class='comment-body'>" +
+                "<div class='comment-tagline'>" +
+                    "<a href='javascript:void(0)' class='expand'>[–]</a> <a href='/u/" + comment.author + "' class='author'>" + comment.author + "</a> <span class='score'>" + comment.score + " points</span> <time class='timestamp'>" + comment.dateCreatedAgo + "</time>" +
+                "</div>" +
+                "<div class='comment-md'>" +
+                comment.bodyFormatted +
+                "</div>" +
+                "<textarea class='comment-md-unformatted hidden'>" + comment.body + "</textarea>" +
+                       "<ul class='comment-options'>" +
+                           "<li class='first'>" +
+                               "<a href='javascript:void(0);' class='reply'>reply</a>" +
+                           "</li>" +
+                           "<li>" +
+                               "<a href='javascript:void(0);' class='edit'>edit</a>" +
+                           "</li>" +
+                       "</ul>" +
+                       "<div class='comment-staging hidden'></div>" +
+                   "</div>" +
+                "<div class='clearfix'></div>" +
+            "</div>" +
+        "</div>"
+        );
+        return $comment;
     };
 
     $(".comment").comment();

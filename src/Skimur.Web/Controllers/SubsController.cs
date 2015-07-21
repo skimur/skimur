@@ -13,7 +13,7 @@ using Subs.ReadModel;
 
 namespace Skimur.Web.Controllers
 {
-    public class SubsController : Controller
+    public class SubsController : BaseController
     {
         private readonly IContextService _contextService;
         private readonly ISubDao _subDao;
@@ -423,10 +423,12 @@ namespace Skimur.Web.Controllers
 
             try
             {
+                var dateCreated = Common.CurrentTime();
                 var response = _commandBus.Send<CreateComment, CreateCommentResponse>(new CreateComment
                 {
                     PostSlug = model.PostSlug,
                     ParentId = model.ParentId,
+                    DateCreated = dateCreated,
                     AuthorIpAddress = Request.UserHostAddress,
                     AuthorUserName = _userContext.CurrentUser.UserName,
                     Body = model.Body,
@@ -445,9 +447,15 @@ namespace Skimur.Web.Controllers
                 return Json(new
                 {
                     success = true,
-                    commentId = response.CommentId,
+                    commentId = response.CommentId, 
+                    dateCreated,
+                    dateCreatedAgo =TimeHelper.Age(Common.CurrentTime() - dateCreated) + " ago",
+                    parentId = model.ParentId,
+                    author = _userContext.CurrentUser.UserName,
+                    postSlug = model.PostSlug,
                     body = response.Body,
-                    formattedBody = response.FormattedBody
+                    bodyFormatted = response.FormattedBody,
+                    score = 1
                 });
             }
             catch (Exception ex)
@@ -496,7 +504,7 @@ namespace Skimur.Web.Controllers
                     success = true,
                     commentId = model.CommentId,
                     body = response.Body,
-                    formattedBody = response.FormattedBody
+                    bodyFormatted = response.FormattedBody
                 });
             }
             catch (Exception ex)
