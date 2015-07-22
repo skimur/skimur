@@ -37,7 +37,7 @@
     var votePost = function (postSlug, voteType, callback) {
         $.ajax({
             type: "POST",
-            url: "/vote",
+            url: "/votepost",
             data: { postSlug: postSlug, type : voteType },
             dataType: "json",
             success: function (data) {
@@ -54,8 +54,42 @@
     var unvotePost = function(postSlug, callback) {
         $.ajax({
             type: "POST",
-            url: "/unvote",
+            url: "/unvotepost",
             data: { postSlug: postSlug },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var voteComment = function (commentId, voteType, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/votecomment",
+            data: { commentId: commentId, type: voteType },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var unvoteComment = function (commentId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/unvotecomment",
+            data: { commentId: commentId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -109,6 +143,9 @@
         upvotePost: function (postSlug, callback) { votePost(postSlug, 1, callback); },
         downvotePost: function (postSlug, callback) { votePost(postSlug, 0, callback); },
         unvotePost: unvotePost,
+        upvoteComment: function (postSlug, callback) { voteComment(postSlug, 1, callback); },
+        downvoteComment: function (postSlug, callback) { voteComment(postSlug, 0, callback); },
+        unvoteComment: unvoteComment,
         createComment: createComment,
         editComment: editComment
     };

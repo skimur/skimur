@@ -7,7 +7,7 @@ using Infrastructure.Messaging;
 
 namespace Subs.Events
 {
-    public class VoteCasted : IEvent
+    public class VoteForPostCasted : IEvent
     {
         public string PostSlug { get; set; }
 

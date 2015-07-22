@@ -59,7 +59,8 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Commands\CaseVote.cs" />
+    <Compile Include="Commands\CastVoteForPost.cs" />
+    <Compile Include="Commands\CastVoteForComment.cs" />
     <Compile Include="Commands\CreateComment.cs" />
     <Compile Include="Commands\CreatePost.cs" />
     <Compile Include="Commands\CreateSub.cs" />
@@ -68,7 +69,8 @@
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
-    <Compile Include="Events\VoteCasted.cs" />
+    <Compile Include="Events\VoteForCommentCasted.cs" />
+    <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="Hot.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="ReadModel\CommentDao.cs" />

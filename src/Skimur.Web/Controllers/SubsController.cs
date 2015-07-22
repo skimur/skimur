@@ -593,7 +593,7 @@ namespace Skimur.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult Vote(string postSlug, VoteType type)
+        public ActionResult VotePost(string postSlug, VoteType type)
         {
             if (!Request.IsAuthenticated)
             {
@@ -604,7 +604,7 @@ namespace Skimur.Web.Controllers
                 });
             }
 
-            _commandBus.Send(new CaseVote
+            _commandBus.Send(new CastVoteForPost
              {
                  UserName = _userContext.CurrentUser.UserName,
                  PostSlug = postSlug,
@@ -620,7 +620,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        public ActionResult UnVote(string postSlug)
+        public ActionResult UnVotePost(string postSlug)
         {
             if (!Request.IsAuthenticated)
             {
@@ -631,10 +631,65 @@ namespace Skimur.Web.Controllers
                 });
             }
 
-            _commandBus.Send(new CaseVote
+            _commandBus.Send(new CastVoteForPost
             {
                 UserName = _userContext.CurrentUser.UserName,
                 PostSlug = postSlug,
+                DateCasted = Common.CurrentTime(),
+                IpAddress = Request.UserHostAddress,
+                VoteType = null /*no vote*/
+            });
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
+        [HttpPost]
+        public ActionResult VoteComment(Guid commentId, VoteType type)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to vote for an item."
+                });
+            }
+
+            _commandBus.Send(new CastVoteForComment
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                CommentId = commentId,
+                DateCasted = Common.CurrentTime(),
+                IpAddress = Request.UserHostAddress,
+                VoteType = type
+            });
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
+        public ActionResult UnVoteComment(Guid commentId)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to unvote for an item."
+                });
+            }
+
+            _commandBus.Send(new CastVoteForComment
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                CommentId = commentId,
                 DateCasted = Common.CurrentTime(),
                 IpAddress = Request.UserHostAddress,
                 VoteType = null /*no vote*/
@@ -694,6 +749,8 @@ namespace Skimur.Web.Controllers
             var result = _mapper.Map<Comment, CommentModel>(comment);
             result.CanDelete = true;
             result.CanEdit = true;
+            if (_userContext.CurrentUser != null)
+                result.CurrentVote = _voteDao.GetVoteForUserOnComment(_userContext.CurrentUser.UserName, comment.Id);
             return result;
         }
     }

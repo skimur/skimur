@@ -7,7 +7,7 @@ using Infrastructure.Messaging;
 
 namespace Subs.Commands
 {
-    public class CaseVote : ICommand
+    public class CastVoteForPost : ICommand
     {
         public DateTime DateCasted { get; set; }
 

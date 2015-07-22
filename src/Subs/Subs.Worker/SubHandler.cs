@@ -277,7 +277,7 @@ namespace Subs.Worker
                     post.Slug = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
 
                 _postService.InsertPost(post);
-                _commandBus.Send(new CaseVote { DateCasted = post.DateCreated, IpAddress = command.IpAddress, PostSlug = post.Slug, UserName = user.UserName, VoteType = VoteType.Up });
+                _commandBus.Send(new CastVoteForPost { DateCasted = post.DateCreated, IpAddress = command.IpAddress, PostSlug = post.Slug, UserName = user.UserName, VoteType = VoteType.Up });
 
                 response.Title = command.Title;
                 response.Slug = post.Slug;

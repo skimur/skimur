@@ -124,9 +124,11 @@ $(function () {
                         skimur.createComment($comment.data("post-slug"), $comment.data("comment-id"), $textArea.val(), function (result) {
                             cancel();
                             if (result.success) {
-                                $.buildComment(result)
-                                    .insertAfter($("> .comment-body", $comment))
-                                    .comment();
+
+                                var $newComment = $.buildComment(result);
+                                $(".comment-voting", $newComment).addClass("voted-up");
+                                $newComment.insertAfter($("> .comment-body", $comment));
+                                $newComment.comment();
                             } else {
                                 alert(result.error);
                             }
@@ -191,6 +193,68 @@ $(function () {
                 $textArea.focus();
             };
 
+            var voteUp = function () {
+
+                var $voting = $("> .comment-voting", $comment);
+
+                // the user wants to upvote a post!
+                if ($voting.hasClass("vote-processing")) return;
+                if ($voting.hasClass("voted-up")) {
+                    // the user already upvoted it, let's just remove the vote
+                    $voting.addClass("vote-processing");
+                    skimur.unvoteComment($comment.data("comment-id"), function (result) {
+                        $voting.removeClass("vote-processing");
+                        if (result.success) {
+                            var votes = $(".votes", $voting);
+                            votes.html(+votes.html() - 1);
+                            $voting.removeClass("voted-up").removeClass("voted-down");
+                        }
+                    });
+                } else {
+                    // the user hasn't casted an upvote, so lets add it
+                    $voting.addClass("vote-processing");
+                    skimur.upvoteComment($comment.data("comment-id"), function (result) {
+                        $voting.removeClass("vote-processing");
+                        if (result.success) {
+                            var votes = $(".votes", $voting);
+                            votes.html(+votes.html() + 1 + ($voting.hasClass("voted-down") ? 1 : 0));
+                            $voting.addClass("voted-up").removeClass("voted-down");
+                        }
+                    });
+                }
+            };
+
+            var voteDown = function () {
+
+                var $voting = $("> .comment-voting", $comment);
+
+                // the user wants to downvote a post!
+                if ($voting.hasClass("vote-processing")) return;
+                if ($voting.hasClass("voted-down")) {
+                    // the user already downvoted it, let's just remove the vote
+                    $voting.addClass("vote-processing");
+                    skimur.unvoteComment($comment.data("comment-id"), function (result) {
+                        $voting.removeClass("vote-processing");
+                        if (result.success) {
+                            var votes = $(".votes", $voting);
+                            votes.html(+votes.html() + 1);
+                            $voting.removeClass("voted-up").removeClass("voted-down");
+                        }
+                    });
+                } else {
+                    // the user hasn't casted a downvote, so lets add it
+                    $voting.addClass("vote-processing");
+                    skimur.downvoteComment($comment.data("comment-id"), function (result) {
+                        $voting.removeClass("vote-processing");
+                        if (result.success) {
+                            var votes = $(".votes", $voting);
+                            votes.html(+votes.html() - 1 - ($voting.hasClass("voted-up") ? 1 : 0));
+                            $voting.removeClass("voted-up").addClass("voted-down");
+                        }
+                    });
+                }
+            };
+
             $("> .comment-body .reply", $comment).click(function (e) {
                 e.preventDefault();
                 startReply();
@@ -204,6 +268,18 @@ $(function () {
             $("> .comment-body .expand", $comment).click(function (e) {
                 e.preventDefault();
                 toggleExpand($(this));
+            });
+
+            var $commentVotes = $("> .comment-voting", $comment);
+
+            $(".up", $commentVotes).click(function (e) {
+                e.preventDefault();
+                voteUp();
+            });
+
+            $(".down", $commentVotes).click(function (e) {
+                e.preventDefault();
+                voteDown();
             });
 
         });

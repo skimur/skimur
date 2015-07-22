@@ -9,5 +9,7 @@ namespace Subs.ReadModel
     public interface IVoteDao
     {
         VoteType? GetVoteForUserOnPost(string userName, string postSlug);
+
+        VoteType? GetVoteForUserOnComment(string userName, Guid commentId);
     }
 }

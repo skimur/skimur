@@ -89,14 +89,24 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Subs", action = "SearchSite" });
 
             routes.MapRoute(
-                name: "Vote",
-                url: "vote",
-                defaults: new { controller = "Subs", action = "Vote" });
+                name: "VotePost",
+                url: "votepost",
+                defaults: new { controller = "Subs", action = "VoteComment" });
 
             routes.MapRoute(
-                name: "UnVote",
-                url: "unvote",
-                defaults: new { controller = "Subs", action = "UnVote" });
+                name: "UnVotePost",
+                url: "unvotepost",
+                defaults: new { controller = "Subs", action = "UnVoteComment" });
+
+            routes.MapRoute(
+                name: "VoteComment",
+                url: "votecomment",
+                defaults: new { controller = "Subs", action = "VoteComment" });
+
+            routes.MapRoute(
+                name: "UnVoteComment",
+                url: "unvotecomment",
+                defaults: new { controller = "Subs", action = "UnVoteComment" });
 
             routes.MapRoute(
                 name: "SubRandom",

@@ -24,9 +24,11 @@ namespace Subs.Worker
 
             container.Register<IEventHandler<SubScriptionChanged>, SubEventHandler>();
 
-            container.Register<ICommandHandler<CaseVote>, VoteCommandHandler>();
+            container.Register<ICommandHandler<CastVoteForPost>, VoteCommandHandler>();
+            container.Register<ICommandHandler<CastVoteForComment>, VoteCommandHandler>();
 
-            container.Register<IEventHandler<VoteCasted>, VoteEventHandler>();
+            container.Register<IEventHandler<VoteForPostCasted>, VoteEventHandler>();
+            container.Register<IEventHandler<VoteForCommentCasted>, VoteEventHandler>();
 
             container.Register<ICommandHandlerResponse<CreateComment, CreateCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<EditComment, EditCommentResponse>, CommentCommandHandler>();

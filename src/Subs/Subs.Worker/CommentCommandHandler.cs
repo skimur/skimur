@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Membership;
+using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
 using Skimur.Markdown;
@@ -19,13 +20,19 @@ namespace Subs.Worker
         private readonly IMembershipService _membershipService;
         private readonly ICommentService _commentService;
         private readonly IMarkdownCompiler _markdownCompiler;
+        private readonly ICommandBus _commandBus;
 
-        public CommentCommandHandler(IPostService postService, IMembershipService membershipService, ICommentService commentService, IMarkdownCompiler markdownCompiler)
+        public CommentCommandHandler(IPostService postService, 
+            IMembershipService membershipService, 
+            ICommentService commentService, 
+            IMarkdownCompiler markdownCompiler,
+            ICommandBus commandBus)
         {
             _postService = postService;
             _membershipService = membershipService;
             _commentService = commentService;
             _markdownCompiler = markdownCompiler;
+            _commandBus = commandBus;
         }
 
         public CreateCommentResponse Handle(CreateComment command)
@@ -89,7 +96,8 @@ namespace Subs.Worker
                 };
 
                 _commentService.InsertComment(comment);
-
+                _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserName = user.UserName, VoteType = VoteType.Up });
+                
                 response.CommentId = comment.Id;
                 response.Body = comment.Body;
                 response.FormattedBody = comment.BodyFormatted;

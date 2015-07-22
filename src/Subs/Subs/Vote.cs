@@ -18,7 +18,7 @@ namespace Subs
 
         public string PostSlug { get; set; }
 
-        public Guid CommentId { get; set; }
+        public Guid? CommentId { get; set; }
 
         public int Type { get; set; }
 
