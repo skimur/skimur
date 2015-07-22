@@ -91,12 +91,12 @@ namespace Skimur.Web.Public
             routes.MapRoute(
                 name: "VotePost",
                 url: "votepost",
-                defaults: new { controller = "Subs", action = "VoteComment" });
+                defaults: new { controller = "Subs", action = "VotePost" });
 
             routes.MapRoute(
                 name: "UnVotePost",
                 url: "unvotepost",
-                defaults: new { controller = "Subs", action = "UnVoteComment" });
+                defaults: new { controller = "Subs", action = "UnVotePost" });
 
             routes.MapRoute(
                 name: "VoteComment",

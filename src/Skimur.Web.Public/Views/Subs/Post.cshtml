@@ -13,7 +13,7 @@
                 <textarea id="post-comment"></textarea>
             </div>
             <div class="form-group">
-                <button id="post-comment-submit" type="submit" class="btn btn-default">Submit</button>
+                <button id="post-comment-submit" type="submit" class="btn btn-primary">Save</button>
             </div>
         </div>
 
@@ -48,7 +48,14 @@
             $("#post-comment-submit").click(function (e) {
                 e.preventDefault();
                 skimur.createComment("@Model.Post.Slug", null, $("#post-comment").val(), function (result) {
-                    console.log(result);
+                    if (result.success) {
+                        $.buildComment(result).comment()
+                            .prependTo($(".comments-container"))
+                            .find(".comment-voting")
+                            .addClass("voted-up");
+                    } else {
+                        skimur.displayError(result.error);
+                    }
                 });
             });
 

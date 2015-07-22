@@ -1,4 +1,8 @@
-﻿.comment {
+﻿.comments-container {
+    margin-bottom: 20px;
+}
+
+.comment {
     position: relative;
 
     .comment {
@@ -67,11 +71,19 @@
             .up, .votes {
                 color: @brand-success;
             }
+
+            .down {
+                color: lighten(@gray-light, 40%);
+            }
         }
 
         &.voted-down {
             .down, .votes {
                 color: @brand-danger;
+            }
+
+            .up {
+                color: lighten(@gray-light, 40%);
             }
         }
     }

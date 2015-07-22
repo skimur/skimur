@@ -26,18 +26,26 @@
         }
 
         .down {
-             .fa-mixin-icon(chevron-down);
+            .fa-mixin-icon(chevron-down);
         }
 
         &.voted-up {
             .up, .votes {
                 color: @brand-success;
             }
+
+            .down {
+                color: lighten(@gray-light, 40%);
+            }
         }
 
         &.voted-down {
             .down, .votes {
                 color: @brand-danger;
+            }
+
+            .up {
+                color: lighten(@gray-light, 40%);
             }
         }
     }

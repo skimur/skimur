@@ -1,13 +1,15 @@
 ﻿@using Subs
 @model CommentListModel
 
-@if (Model.Comments != null && Model.Comments.Count > 0)
-{
-    foreach (var comment in Model.Comments)
+<div class="comments-container">
+    @if (Model.Comments != null && Model.Comments.Count > 0)
     {
-        @RenderComment(comment)
+        foreach (var comment in Model.Comments)
+        {
+            @RenderComment(comment)
+        }
     }
-}
+</div>
 
 @helper RenderComment(CommentModel comment, bool isAlternateRow = false)
 {
