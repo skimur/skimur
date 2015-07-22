@@ -136,6 +136,15 @@
         });
     };
 
+    var displayError = function(message) {
+        $.notify(message, {
+            type: "danger",
+            placement: {
+                align: "center"
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -147,7 +156,8 @@
         downvoteComment: function (postSlug, callback) { voteComment(postSlug, 0, callback); },
         unvoteComment: unvoteComment,
         createComment: createComment,
-        editComment: editComment
+        editComment: editComment,
+        displayError : displayError
     };
 
 })();

@@ -9,20 +9,24 @@
 
         if ($button.hasClass("subscribed")) {
             $button.addClass("disabled");
-            skimur.unsubcribe(subName, function (data) {
+            skimur.unsubcribe(subName, function (result) {
                 $button.removeClass("disabled");
-                if (data.success) {
+                if (result.success) {
                     $button.removeClass("subscribed").addClass("unsubscribed");
                     $button.html("unsubscribed");
+                } else {
+                    skimur.displayError(result.error);
                 }
             });
         } else if ($button.hasClass("unsubscribed")) {
             $button.addClass("disabled");
-            skimur.subscribe(subName, function (data) {
+            skimur.subscribe(subName, function (result) {
                 $button.removeClass("disabled");
-                if (data.success) {
+                if (result.success) {
                     $button.removeClass("unsubscribed").addClass("subscribed");
                     $button.html("subscribed");
+                } else {
+                    skimur.displayError(result.error);
                 }
             });
         }
@@ -54,6 +58,8 @@ $(function () {
                         var votes = $(".votes", $postVoting);
                         votes.html(+votes.html() - 1);
                         $postVoting.removeClass("voted-up").removeClass("voted-down");
+                    } else {
+                        skimur.displayError(result.error);
                     }
                 });
             } else {
@@ -65,6 +71,8 @@ $(function () {
                         var votes = $(".votes", $postVoting);
                         votes.html(+votes.html() + 1 + ($postVoting.hasClass("voted-down") ? 1 : 0));
                         $postVoting.addClass("voted-up").removeClass("voted-down");
+                    } else {
+                        skimur.displayError(result.error);
                     }
                 });
             }
@@ -82,6 +90,8 @@ $(function () {
                         var votes = $(".votes", $postVoting);
                         votes.html(+votes.html() + 1);
                         $postVoting.removeClass("voted-up").removeClass("voted-down");
+                    } else {
+                        skimur.displayError(result.error);
                     }
                 });
             } else {
@@ -93,6 +103,8 @@ $(function () {
                         var votes = $(".votes", $postVoting);
                         votes.html(+votes.html() - 1 - ($postVoting.hasClass("voted-up") ? 1 : 0));
                         $postVoting.removeClass("voted-up").addClass("voted-down");
+                    } else {
+                        skimur.displayError(result.error);
                     }
                 });
             }
@@ -113,9 +125,9 @@ $(function () {
                 var $staging = cancel();
                 var $textArea = $("<textarea />").appendTo($staging);
 
-                $textArea.markdown({ iconlibrary: "fa" });
+                $textArea.markdown({ iconlibrary: "fa", width: "form-group" }).addClass("form-control");
 
-                var $buttonsContainer = $("<div class='form-group' />").appendTo($staging);
+                var $buttonsContainer = $("<div />").appendTo($staging);
 
                 $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
                     .appendTo($buttonsContainer)
@@ -124,17 +136,17 @@ $(function () {
                         skimur.createComment($comment.data("post-slug"), $comment.data("comment-id"), $textArea.val(), function (result) {
                             cancel();
                             if (result.success) {
-
                                 var $newComment = $.buildComment(result);
                                 $(".comment-voting", $newComment).addClass("voted-up");
                                 $newComment.insertAfter($("> .comment-body", $comment));
                                 $newComment.comment();
                             } else {
-                                alert(result.error);
+                                skimur.displayError(result.error);
                             }
-
                         });
                     });
+
+                $buttonsContainer.append("&nbsp;&nbsp;&nbsp;");
 
                 $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
                     .appendTo($buttonsContainer)
@@ -163,9 +175,9 @@ $(function () {
                     .appendTo($staging)
                     .val($comment.find("> .comment-body .comment-md-unformatted").val());
 
-                $textArea.markdown({ iconlibrary: "fa" });
+                $textArea.markdown({ iconlibrary: "fa", width: "form-group" });
 
-                var $buttonsContainer = $("<div class='form-group' />").appendTo($staging);
+                var $buttonsContainer = $("<div />").appendTo($staging);
 
                 $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
                     .appendTo($buttonsContainer)
@@ -177,10 +189,12 @@ $(function () {
                                 $comment.find("> .comment-body .comment-md-unformatted").val(result.body);
                                 $comment.find("> .comment-body .comment-md").html(result.bodyFormatted);
                             } else {
-                                alert(result.error);
+                                skimur.displayError(result.error);
                             }
                         });
                     });
+
+                $buttonsContainer.append("&nbsp;&nbsp;&nbsp;");
 
                 $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
                     .appendTo($buttonsContainer)
@@ -208,6 +222,8 @@ $(function () {
                             var votes = $(".votes", $voting);
                             votes.html(+votes.html() - 1);
                             $voting.removeClass("voted-up").removeClass("voted-down");
+                        } else {
+                            skimur.displayError(result.error);
                         }
                     });
                 } else {
@@ -219,6 +235,8 @@ $(function () {
                             var votes = $(".votes", $voting);
                             votes.html(+votes.html() + 1 + ($voting.hasClass("voted-down") ? 1 : 0));
                             $voting.addClass("voted-up").removeClass("voted-down");
+                        } else {
+                            skimur.displayError(result.error);
                         }
                     });
                 }
@@ -239,6 +257,8 @@ $(function () {
                             var votes = $(".votes", $voting);
                             votes.html(+votes.html() + 1);
                             $voting.removeClass("voted-up").removeClass("voted-down");
+                        } else {
+                            skimur.displayError(result.error);
                         }
                     });
                 } else {
@@ -250,6 +270,8 @@ $(function () {
                             var votes = $(".votes", $voting);
                             votes.html(+votes.html() - 1 - ($voting.hasClass("voted-up") ? 1 : 0));
                             $voting.removeClass("voted-up").addClass("voted-down");
+                        } else {
+                            skimur.displayError(result.error);
                         }
                     });
                 }

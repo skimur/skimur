@@ -200,6 +200,7 @@ namespace Skimur.Web.Public
                 "~/Scripts/modernizr.js",
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js",
+                "~/Scripts/bootstrap-notify.js",
                 "~/Scripts/app.js",
                 "~/Scripts/app.ui.js");
 

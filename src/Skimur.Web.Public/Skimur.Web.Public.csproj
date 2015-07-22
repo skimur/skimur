@@ -276,6 +276,7 @@
     <Content Include="Scripts\app.ui.js" />
     <Content Include="Scripts\app.js" />
     <Content Include="Scripts\bootstrap-markdown.js" />
+    <Content Include="Scripts\bootstrap-notify.js" />
     <Content Include="Scripts\to-markdown.js" />
     <Content Include="Scripts\markdown.js" />
     <Content Include="Views\Shared\_LayoutCentered.cshtml" />
