@@ -3,9 +3,9 @@
 
 <div class="post row" data-postslug="@Model.Slug">
     <div class="post-voting @(Model.CurrentVote != null ? Model.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
-        <span class="up"></span>
+        <span class="up login-required"></span>
         <span class="votes">@(Model.VoteUpCount - Model.VoteDownCount)</span>
-        <span class="down"></span>
+        <span class="down login-required"></span>
     </div>
     <div class="post-body">
         <div>

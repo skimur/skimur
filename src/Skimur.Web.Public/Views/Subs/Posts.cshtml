@@ -89,8 +89,8 @@
         @Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.Sub))
 
         <div class="panel">
-            <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new link</a>
-            <a href="@Url.CreatePost()" class="btn btn-primary btn-block">Submit a new post</a>
+            <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-link">Submit a new link</a>
+            <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post">Submit a new post</a>
         </div>
 
         @if (Model.Sub != null)

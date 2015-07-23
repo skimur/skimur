@@ -273,10 +273,15 @@
     <Content Include="Content\components\common.less" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
-    <Content Include="Scripts\app.ui.js" />
-    <Content Include="Scripts\app.js" />
+    <Content Include="Scripts\app\api.js" />
+    <Content Include="Scripts\app\comments.js" />
+    <Content Include="Scripts\app\login.js" />
+    <Content Include="Scripts\app\misc.js" />
+    <Content Include="Scripts\app\posts.js" />
+    <Content Include="Scripts\app\subs.js" />
     <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap-notify.js" />
+    <Content Include="Scripts\jquery.validate.bootstrap.js" />
     <Content Include="Scripts\to-markdown.js" />
     <Content Include="Scripts\markdown.js" />
     <Content Include="Views\Shared\_LayoutCentered.cshtml" />
@@ -299,6 +304,9 @@
     <Content Include="Views\Subs\Search.cshtml" />
     <Content Include="Views\Subs\Post.cshtml" />
     <Content Include="Views\Subs\_Comments.cshtml" />
+    <Content Include="Views\Shared\_LoginModal.cshtml" />
+    <Content Include="Views\Shared\LoginModal\Register.cshtml" />
+    <Content Include="Views\Shared\LoginModal\SignIn.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -326,7 +334,7 @@
     <Content Include="Views\Home\About.cshtml" />
     <Content Include="Views\Home\Contact.cshtml" />
     <Content Include="Views\Home\Index.cshtml" />
-    <Content Include="Views\Account\_ExternalLoginsListPartial.cshtml" />
+    <Content Include="Views\Shared\_ExternalLoginsListPartial.cshtml" />
     <Content Include="Views\Account\ConfirmEmail.cshtml" />
     <Content Include="Views\Account\ExternalLoginConfirmation.cshtml" />
     <Content Include="Views\Account\ExternalLoginFailure.cshtml" />
@@ -373,6 +381,7 @@
     <Content Include="Content\fontawesome\rotated-flipped.less" />
     <Content Include="Content\fontawesome\stacked.less" />
     <Content Include="Content\fontawesome\variables.less" />
+    <Content Include="Content\bootstrap-social\bootstrap-social.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>

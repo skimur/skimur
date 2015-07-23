@@ -15,8 +15,8 @@
 {
     <div class="comment@(isAlternateRow ? " alternate" : null)" data-post-slug="@Model.PostSlug" data-comment-id="@comment.Id">
         <div class="comment-voting @(comment.CurrentVote != null ? comment.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
-            <span class="up"></span>
-            <span class="down"></span>
+            <span class="up login-required"></span>
+            <span class="down login-required"></span>
         </div>
         <div class="comment-body">
             <div class="comment-tagline">
@@ -28,15 +28,12 @@
             <textarea class="comment-md-unformatted hidden">@Html.Raw(comment.Body)</textarea>
             <ul class="comment-options">
                 <li class="first">
-                    <a href="javascript:void(0);" class="reply">reply</a>
-                    <a href="javascript:void(0);" class="edit">edit</a>
+                    <a href="javascript:void(0);" class="reply login-required">reply</a>
+                    <a href="javascript:void(0);" class="edit login-required">edit</a>
                 </li>
             </ul>
             <div class="comment-staging hidden"></div>
         </div>
-
-        <div class="clearfix"></div>
-
         @if (comment.Children != null && comment.Children.Count > 0)
         {
             foreach (var child in comment.Children)

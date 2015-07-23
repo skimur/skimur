@@ -6,6 +6,8 @@
     <title>@ViewBag.Title - Skimur</title>
     @Styles.Render("~/bundles/styles")
     <script type="text/javascript">
+        var skimurui = {};
+        skimurui.isLoggedIn = @Request.IsAuthenticated.ToString().ToLower();
         window.q = [];
         window.$ = function (f) {
             q.push(f);
@@ -23,7 +25,7 @@
     @Html.Action("TopBar", "Subs")
     <div class="layout-header navbar">
         <div class="navbar-header">
-            <a href="/" class="navbar-brand"><img src="/content/img/logo.png"/></a>
+            <a href="/" class="navbar-brand"><img src="/content/img/logo.png" /></a>
             @RenderSection("header", false)
         </div>
         <div class="navbar-collapse collapse">
@@ -39,9 +41,10 @@
     @Scripts.Render("~/bundles/scripts")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
-        $.each(q, function (index, f) {
+        $.each(q, function(index, f) {
             $(f);
         });
     </script>
+    @Html.Partial("_LoginModal", new LoginViewModel())
 </body>
 </html>

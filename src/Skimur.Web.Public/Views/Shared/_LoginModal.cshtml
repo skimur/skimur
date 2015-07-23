@@ -1,0 +1,23 @@
+﻿@model LoginViewModel
+
+<div id="login-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <ul class="nav nav-tabs" role="tablist">
+                    <li role="presentation" class="active"><a href="#signin-tab" aria-controls="home" role="tab" data-toggle="tab">Sign in</a></li>
+                    <li role="presentation"><a href="#register-tab" aria-controls="profile" role="tab" data-toggle="tab">Register</a></li>
+                    <li role="presentation" class="pull-right"><button type="button" class="close pull-right" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button></li>
+                </ul>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="signin-tab">
+                        @Html.Partial("LoginModal/SignIn", new LoginViewModel())
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="register-tab">
+                        @Html.Partial("LoginModal/Register", new RegisterViewModel())
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+</div>

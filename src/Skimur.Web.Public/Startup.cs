@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
@@ -196,13 +197,19 @@ namespace Skimur.Web.Public
 
             var scriptsBundle = new ScriptBundle("~/bundles/scripts").Include(
                 "~/Scripts/jquery.js",
-                "~/Scripts/jquery.validate*",
+                "~/Scripts/jquery.validate.js",
+                "~/Scripts/jquery.validate.unobtrusive.js",
+                "~/Scripts/jquery.validate.bootstrap.js",
                 "~/Scripts/modernizr.js",
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js",
                 "~/Scripts/bootstrap-notify.js",
-                "~/Scripts/app.js",
-                "~/Scripts/app.ui.js");
+                "~/Scripts/app/api.js",
+                "~/Scripts/app/login.js",
+                "~/Scripts/app/misc.js",
+                "~/Scripts/app/comments.js",
+                "~/Scripts/app/posts.js",
+                "~/Scripts/app/subs.js");
 
             var markdownBundle = new ScriptBundle("~/bundles/editor").Include(
                 "~/Scripts/markdown.js",
@@ -232,8 +239,8 @@ namespace Skimur.Web.Public
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            //app.UseGoogleAuthentication(clientId: "...",
-            //     clientSecret: "...");
+            app.UseGoogleAuthentication(Environment.GetEnvironmentVariable("SkimurSSOGoogleClientId"),
+                Environment.GetEnvironmentVariable("SkimurSSOGoogleSecret"));
         }
 
         public void Register(Container container)
