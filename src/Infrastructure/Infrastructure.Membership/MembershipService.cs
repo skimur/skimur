@@ -215,12 +215,12 @@ namespace Infrastructure.Membership
 
             if (!IsUserNameValid(user.UserName))
                 result |= result | UserValidationResult.InvalidUserName;
-            if (!IsEmailValid(user.Email))
+            if (!string.IsNullOrEmpty(user.Email) && !IsEmailValid(user.Email))
                 result |= UserValidationResult.InvalidEmail;
 
             if (result != UserValidationResult.Success) return result;
 
-            if (!CanChangedEmail(user.Id, user.Email))
+            if (!string.IsNullOrEmpty(user.Email) && !CanChangedEmail(user.Id, user.Email))
                 result |= UserValidationResult.EmailInUse;
 
             if (user.Id == Guid.Empty)
