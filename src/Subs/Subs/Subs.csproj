@@ -77,8 +77,10 @@
     <Compile Include="Comment.cs" />
     <Compile Include="ReadModel\CommentDao.cs" />
     <Compile Include="ReadModel\ICommentDao.cs" />
+    <Compile Include="ReadModel\IPermissionDao.cs" />
     <Compile Include="ReadModel\IPostDao.cs" />
     <Compile Include="ReadModel\IVoteDao.cs" />
+    <Compile Include="ReadModel\PermissionDao.cs" />
     <Compile Include="ReadModel\PostDao.cs" />
     <Compile Include="ReadModel\VoteDao.cs" />
     <Compile Include="Services\CommentService.cs" />
