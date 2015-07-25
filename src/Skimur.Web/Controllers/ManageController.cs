@@ -35,6 +35,8 @@ namespace Skimur.Web.Controllers
             return View(new IndexViewModel());
         }
 
+        #region Password
+
         [HttpGet]
         public async Task<ActionResult> Password()
         {
@@ -108,6 +110,76 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
+
+        #endregion
+
+        #region Logins
+
+        public async Task<ActionResult> ManageLogins()
+        {
+            ViewBag.ManageNavigationKey = "Logins";
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var userLogins = await _userManager.GetLoginsAsync(User.Identity.GetUserId().ParseGuid());
+            var otherLogins = _authenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
+
+            return View(new ManageLoginsViewModel
+            {
+                IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash),
+                CurrentLogins = userLogins,
+                OtherLogins = otherLogins
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult LinkLogin(string provider)
+        {
+            ViewBag.ManageNavigationKey = "Logins";
+
+            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), _authenticationManager, User.Identity.GetUserId());
+        }
+
+        public async Task<ActionResult> LinkLoginCallback()
+        {
+            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync("XsrfId", User.Identity.GetUserId());
+
+            if (loginInfo == null)
+            {
+                AddErrorMessage("An error has occurred.");
+                return Redirect(Url.ManageLogins());
+            }
+
+            var result = await _userManager.AddLoginAsync(User.Identity.GetUserId().ParseGuid(), loginInfo.Login);
+
+            if (!result.Succeeded)
+                foreach (var error in result.Errors)
+                    AddErrorMessage(error);
+
+            return Redirect(Url.ManageLogins());
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
+        {
+            var result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId().ParseGuid(), new UserLoginInfo(loginProvider, providerKey));
+
+            if (result.Succeeded)
+            {
+                var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+                if (user != null)
+                    await _signInManager.SignInAsync(user, false, false);
+
+                AddSuccessMessage("The external login was successfully removed.");
+            }
+            else
+                AddErrorMessage("An error has occurred.");
+
+            return Redirect(Url.ManageLogins());
+        }
+
+        #endregion
 
         //        //
         //        // POST: /Manage/RemoveLogin

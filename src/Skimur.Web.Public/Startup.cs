@@ -239,6 +239,9 @@ namespace Skimur.Web.Public
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
+            app.UseFacebookAuthentication(Environment.GetEnvironmentVariable("SkimurSSOFacebookAppId"),
+                Environment.GetEnvironmentVariable("SkimurSSOFacebookAppSecret"));
+
             app.UseGoogleAuthentication(Environment.GetEnvironmentVariable("SkimurSSOGoogleClientId"),
                 Environment.GetEnvironmentVariable("SkimurSSOGoogleSecret"));
         }

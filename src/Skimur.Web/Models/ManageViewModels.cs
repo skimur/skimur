@@ -16,6 +16,7 @@ namespace Skimur.Web.Models
 
     public class ManageLoginsViewModel
     {
+        public bool IsPasswordSet { get; set; }
         public IList<UserLoginInfo> CurrentLogins { get; set; }
         public IList<AuthenticationDescription> OtherLogins { get; set; }
     }
