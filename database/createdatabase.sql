@@ -117,6 +117,7 @@ CREATE TABLE comments
   id uuid NOT NULL,
   date_created timestamp with time zone,
   date_edited timestamp with time zone,
+  sub_name text,
   parent_id uuid,
   parents text,
   author_user_name text,
@@ -126,7 +127,8 @@ CREATE TABLE comments
   body_formatted text,
   send_replies boolean,
   vote_up_count integer,
-  vote_down_count integer
+  vote_down_count integer,
+  deleted boolean
 );
 
 -- for unit tests

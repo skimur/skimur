@@ -78,5 +78,20 @@ namespace Subs.Services
                 });
             }
         }
+
+        public void DeleteComment(Guid commentId, DateTime deletedOn)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Comment>(new
+                    {
+                        Deleted = true,
+                        AuthorUserName = "deleted",
+                        Body = "deleted on " + deletedOn.ToLongTimeString(),
+                        BodyFormatted = "deleted"
+                    },
+                    x => x.Id == commentId);
+            });
+        }
     }
 }

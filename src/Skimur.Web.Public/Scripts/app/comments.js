@@ -165,6 +165,25 @@
                 }
             };
 
+            var deleteComment = function() {
+                skimur.confirmDelete(function(result) {
+                    if (result.confirmed) {
+                        skimur.deleteComment($comment.data("comment-id"), null, function(deleteResult) {
+                            if (deleteResult.success) {
+                                $("> .comment-body", $comment).find(".delete, .reply, .edit").remove();
+                            } else {
+                                skimur.displayError(deleteResult.error);
+                            }
+                        });
+                    }
+                });
+            }
+
+            $("> .comment-body .delete", $comment).click(function (e) {
+                e.preventDefault();
+                deleteComment();
+            });
+
             $("> .comment-body .reply", $comment).click(function (e) {
                 e.preventDefault();
 

@@ -38,7 +38,7 @@
         $.ajax({
             type: "POST",
             url: "/votepost",
-            data: { postSlug: postSlug, type : voteType },
+            data: { postSlug: postSlug, type: voteType },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -51,7 +51,7 @@
         });
     };
 
-    var unvotePost = function(postSlug, callback) {
+    var unvotePost = function (postSlug, callback) {
         $.ajax({
             type: "POST",
             url: "/unvotepost",
@@ -136,7 +136,24 @@
         });
     };
 
-    var displayError = function(message) {
+    var deleteComment = function (commentId, reason, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/deletecomment",
+            data: { commentId: commentId, reason: reason },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var displayError = function (message) {
         $.notify(message, {
             type: "danger",
             placement: {
@@ -144,6 +161,24 @@
             }
         });
     };
+
+    var confirmDelete = function (callback) {
+        swal({
+            title: "Are you sure?",
+            type: "warning",
+            showCancelButton: true,
+            confirmButtonClass: "btn-danger",
+            confirmButtonText: "Yes, delete it!",
+            cancelButtonText: "Cancel",
+            closeOnConfirm: true,
+            closeOnCancel: true
+        },
+        function (isConfirm) {
+            callback({
+                confirmed: isConfirm
+            });
+        });
+    }
 
     return {
         subscribe: subscribe,
@@ -157,7 +192,9 @@
         unvoteComment: unvoteComment,
         createComment: createComment,
         editComment: editComment,
-        displayError : displayError
+        deleteComment: deleteComment,
+        displayError: displayError,
+        confirmDelete: confirmDelete
     };
 
 })();

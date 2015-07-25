@@ -149,12 +149,12 @@ namespace Skimur.Web.Controllers
             if (post == null)
                 throw new HttpException(404, "no post found");
 
-            if(!post.SubName.Equals(subName, StringComparison.InvariantCultureIgnoreCase))
+            if (!post.SubName.Equals(subName, StringComparison.InvariantCultureIgnoreCase))
                 throw new HttpException(404, "no post found");
 
             var sub = _subDao.GetSubByName(subName);
 
-            if(sub == null)
+            if (sub == null)
                 throw new HttpException(404, "no post found");
 
             var model = new PostDetailsModel();
@@ -447,9 +447,9 @@ namespace Skimur.Web.Controllers
                 return Json(new
                 {
                     success = true,
-                    commentId = response.CommentId, 
+                    commentId = response.CommentId,
                     dateCreated,
-                    dateCreatedAgo =TimeHelper.Age(Common.CurrentTime() - dateCreated) + " ago",
+                    dateCreatedAgo = TimeHelper.Age(Common.CurrentTime() - dateCreated) + " ago",
                     parentId = model.ParentId,
                     author = _userContext.CurrentUser.UserName,
                     postSlug = model.PostSlug,
@@ -486,7 +486,7 @@ namespace Skimur.Web.Controllers
                 var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
                 {
                     DateEdited = Common.CurrentTime(),
-                    CommentId =  model.CommentId,
+                    CommentId = model.CommentId,
                     Body = model.Body
                 });
 
@@ -505,6 +505,53 @@ namespace Skimur.Web.Controllers
                     commentId = model.CommentId,
                     body = response.Body,
                     bodyFormatted = response.FormattedBody
+                });
+            }
+            catch (Exception ex)
+            {
+                // TODO: log
+                return Json(new
+                {
+                    success = false,
+                    error = "An unexpected error occured."
+                });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult DeleteComment(Guid commentId)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to delete a comment."
+                });
+            }
+
+            try
+            {
+                var response = _commandBus.Send<DeleteComment, DeleteCommentResponse>(new DeleteComment
+                {
+                    CommentId = commentId,
+                    UserName = _userContext.CurrentUser.UserName,
+                    DateDeleted = Common.CurrentTime()
+                });
+
+                if (!string.IsNullOrEmpty(response.Error))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = response.Error
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    error = (string)null
                 });
             }
             catch (Exception ex)
@@ -605,13 +652,13 @@ namespace Skimur.Web.Controllers
             }
 
             _commandBus.Send(new CastVoteForPost
-             {
-                 UserName = _userContext.CurrentUser.UserName,
-                 PostSlug = postSlug,
-                 DateCasted = Common.CurrentTime(),
-                 IpAddress = Request.UserHostAddress,
-                 VoteType = type
-             });
+            {
+                UserName = _userContext.CurrentUser.UserName,
+                PostSlug = postSlug,
+                DateCasted = Common.CurrentTime(),
+                IpAddress = Request.UserHostAddress,
+                VoteType = type
+            });
 
             return Json(new
             {

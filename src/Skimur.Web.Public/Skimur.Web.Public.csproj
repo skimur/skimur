@@ -284,6 +284,7 @@
     <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap-notify.js" />
     <Content Include="Scripts\jquery.validate.bootstrap.js" />
+    <Content Include="Scripts\sweet-alert.js" />
     <Content Include="Scripts\to-markdown.js" />
     <Content Include="Scripts\markdown.js" />
     <Content Include="Views\Shared\_LayoutCentered.cshtml" />
@@ -387,6 +388,8 @@
     <Content Include="Content\fontawesome\stacked.less" />
     <Content Include="Content\fontawesome\variables.less" />
     <Content Include="Content\bootstrap-social\bootstrap-social.less" />
+    <Content Include="Content\sweet-alert\sweet-alert.less" />
+    <Content Include="Content\sweet-alert\sweet-alert-animations.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>

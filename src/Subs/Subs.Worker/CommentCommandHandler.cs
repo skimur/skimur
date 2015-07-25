@@ -9,30 +9,39 @@ using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
 using Skimur.Markdown;
 using Subs.Commands;
+using Subs.Events;
 using Subs.Services;
 
 namespace Subs.Worker
 {
-    public class CommentCommandHandler : ICommandHandlerResponse<CreateComment, CreateCommentResponse>, 
-        ICommandHandlerResponse<EditComment, EditCommentResponse>
+    public class CommentCommandHandler : 
+        ICommandHandlerResponse<CreateComment, CreateCommentResponse>, 
+        ICommandHandlerResponse<EditComment, EditCommentResponse>,
+        ICommandHandlerResponse<DeleteComment, DeleteCommentResponse>
     {
         private readonly IPostService _postService;
         private readonly IMembershipService _membershipService;
         private readonly ICommentService _commentService;
         private readonly IMarkdownCompiler _markdownCompiler;
         private readonly ICommandBus _commandBus;
+        private readonly IPermissionService _permissionService;
+        private readonly IEventBus _eventBus;
 
         public CommentCommandHandler(IPostService postService, 
             IMembershipService membershipService, 
             ICommentService commentService, 
             IMarkdownCompiler markdownCompiler,
-            ICommandBus commandBus)
+            ICommandBus commandBus,
+            IPermissionService permissionService,
+            IEventBus eventBus)
         {
             _postService = postService;
             _membershipService = membershipService;
             _commentService = commentService;
             _markdownCompiler = markdownCompiler;
             _commandBus = commandBus;
+            _permissionService = permissionService;
+            _eventBus = eventBus;
         }
 
         public CreateCommentResponse Handle(CreateComment command)
@@ -84,6 +93,7 @@ namespace Subs.Worker
                 {
                     Id = GuidUtil.NewSequentialId(),
                     DateCreated = command.DateCreated,
+                    SubName = post.SubName,
                     ParentId = parentComment != null ? parentComment.Id : (Guid?) null,
                     Parents = new Guid[0],
                     AuthorUserName = user.UserName,
@@ -137,6 +147,52 @@ namespace Subs.Worker
 
                 response.Body = command.Body;
                 response.FormattedBody = bodyFormatted;
+            }
+            catch (Exception ex)
+            {
+                response.Error = ex.Message;
+            }
+
+            return response;
+        }
+
+        public DeleteCommentResponse Handle(DeleteComment command)
+        {
+            var response = new DeleteCommentResponse();
+
+            try
+            {
+                var comment = _commentService.GetCommentById(command.CommentId);
+
+                if (comment == null)
+                {
+                    response.Error = "Invalid comment.";
+                    return response;
+                }
+
+                var user = _membershipService.GetUserByUserName(command.UserName);
+
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                if (!_permissionService.CanUserDeleteComment(user.UserName, comment))
+                {
+                    response.Error = "You are not allowed to delete this comment.";
+                    return response;
+                }
+
+                _commentService.DeleteComment(comment.Id, command.DateDeleted);
+
+                _eventBus.Publish(new CommentDeleted
+                {
+                    CommentId = comment.Id,
+                    PostSlug = comment.PostSlug,
+                    SubName = comment.SubName,
+                    DeletedByUserName = user.UserName
+                });
             }
             catch (Exception ex)
             {

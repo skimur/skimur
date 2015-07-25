@@ -17,5 +17,7 @@ namespace Subs.Services
         List<Comment> GetAllCommentsForPost(string postSlug);
 
         void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes);
+
+        void DeleteComment(Guid commentId, DateTime deletedOn);
     }
 }

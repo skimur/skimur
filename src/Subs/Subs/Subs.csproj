@@ -64,10 +64,12 @@
     <Compile Include="Commands\CreateComment.cs" />
     <Compile Include="Commands\CreatePost.cs" />
     <Compile Include="Commands\CreateSub.cs" />
+    <Compile Include="Commands\DeleteComment.cs" />
     <Compile Include="Commands\EditComment.cs" />
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
+    <Compile Include="Events\CommentDeleted.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
@@ -81,6 +83,7 @@
     <Compile Include="ReadModel\VoteDao.cs" />
     <Compile Include="Services\CommentService.cs" />
     <Compile Include="Services\ICommentService.cs" />
+    <Compile Include="Services\IPermissionService.cs" />
     <Compile Include="Services\IPostService.cs" />
     <Compile Include="Services\ISubService.cs" />
     <Compile Include="Post.cs" />
@@ -89,6 +92,7 @@
     <Compile Include="ReadModel\SubDao.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="Services\IVoteService.cs" />
+    <Compile Include="Services\PermissionService.cs" />
     <Compile Include="Services\PostService.cs" />
     <Compile Include="Services\VoteService.cs" />
     <Compile Include="Sub.cs" />

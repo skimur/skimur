@@ -27,6 +27,11 @@ namespace Subs
         public DateTime? DateEdited { get; set; }
 
         /// <summary>
+        /// The sub this comment is located in
+        /// </summary>
+        public string SubName { get; set; }
+
+        /// <summary>
         /// If this message is a response to another message, this will point to that message
         /// </summary>
         public Guid? ParentId { get; set; }
@@ -78,5 +83,10 @@ namespace Subs
         /// This should only have valid values if it is a comment to a post.
         /// </summary>
         public int VoteDownCount { get; set; }
+
+        /// <summary>
+        /// Is this comment deleted? If so, AuthorUserName, Body and BodyFormatted should be marked as "deleted".
+        /// </summary>
+        public bool Deleted { get; set; }
     }
 }

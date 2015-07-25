@@ -180,6 +180,11 @@ namespace Skimur.Web.Public
                defaults: new { controller = "Subs", action = "EditComment" });
 
             routes.MapRoute(
+                name: "DeleteComment",
+                url: "deletecomment",
+                defaults: new { controller = "Subs", action = "DeleteComment" });
+
+            routes.MapRoute(
                 name: "Avatar",
                 url: "avatar/{key}",
                 defaults: new { controller = "Avatar", action = "Key" });
@@ -209,6 +214,7 @@ namespace Skimur.Web.Public
                 "~/Scripts/bootstrap.js",
                 "~/Scripts/respond.js",
                 "~/Scripts/bootstrap-notify.js",
+                "~/Scripts/sweet-alert.js",
                 "~/Scripts/app/api.js",
                 "~/Scripts/app/login.js",
                 "~/Scripts/app/misc.js",

@@ -32,6 +32,7 @@ namespace Subs.Worker
 
             container.Register<ICommandHandlerResponse<CreateComment, CreateCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<EditComment, EditCommentResponse>, CommentCommandHandler>();
+            container.Register<ICommandHandlerResponse<DeleteComment, DeleteCommentResponse>, CommentCommandHandler>();
         }
 
         public int Order
