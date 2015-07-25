@@ -85,5 +85,30 @@ namespace Infrastructure.Membership
         /// Security answer for resetting password
         /// </summary>
         public virtual string SecurityAnswer { get; set; }
+
+        /// <summary>
+        /// The full name of the user
+        /// </summary>
+        public string FullName { get; set; }
+
+        /// <summary>
+        /// A short bio for the user
+        /// </summary>
+        public string Bio { get; set; }
+
+        /// <summary>
+        /// A url for the user. Maybe a blog?
+        /// </summary>
+        public string Url { get; set; }
+
+        /// <summary>
+        /// Where the user is located.
+        /// </summary>
+        public string Location { get; set; }
+
+        /// <summary>
+        /// Gets or set the avatar to use for the user
+        /// </summary>
+        public string AvatarIdentifier { get; set; }
     }
 }

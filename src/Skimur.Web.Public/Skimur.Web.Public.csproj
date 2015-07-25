@@ -266,6 +266,8 @@
     <Content Include="Content\bootstrap\utilities.less" />
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\wells.less" />
+    <Content Include="Content\img\avatar.jpg" />
+    <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\logo.png" />
     <Content Include="Content\site.less" />
     <Content Include="Content\components\sidebar.less" />
@@ -309,6 +311,7 @@
     <Content Include="Views\Shared\LoginModal\SignIn.cshtml" />
     <Content Include="Views\Manage\_ManageNavigation.cshtml" />
     <Content Include="Views\Manage\_LayoutManageAccount.cshtml" />
+    <Content Include="Views\Shared\_Avatar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

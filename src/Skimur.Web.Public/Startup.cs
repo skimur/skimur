@@ -180,6 +180,11 @@ namespace Skimur.Web.Public
                defaults: new { controller = "Subs", action = "EditComment" });
 
             routes.MapRoute(
+                name: "Avatar",
+                url: "avatar/{key}",
+                defaults: new { controller = "Avatar", action = "Key" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

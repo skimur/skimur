@@ -198,6 +198,23 @@ namespace Infrastructure.Membership
         /// <param name="loginKey"></param>
         /// <returns></returns>
         User FindUserByExternalLogin(string loginProvider, string loginKey);
+
+        /// <summary>
+        /// Updates just profile data about a user
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="fullName">The full name.</param>
+        /// <param name="bio">The bio.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="location">The location.</param>
+        void UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location);
+
+        /// <summary>
+        /// Updates the user's avatar identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="avatarIdentifier">The avatar identifier.</param>
+        void UpdateUserAvatar(Guid userId, string avatarIdentifier);
     }
 
     [Flags]

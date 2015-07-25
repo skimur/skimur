@@ -121,5 +121,13 @@ namespace Skimur.Web
         {
             return urlHelper.Action("ManageLogins", "Manage");
         }
+
+        public static string AvatarUrl(this UrlHelper urlHelper, string avatarIdentifier)
+        {
+            if(string.IsNullOrEmpty(avatarIdentifier))
+                return urlHelper.Content("~/content/img/avatar.jpg");
+
+            return urlHelper.Content("~/avatar/" + avatarIdentifier);
+        }
     }
 }

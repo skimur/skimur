@@ -3,6 +3,7 @@ using System.Web.Mvc;
 using Microsoft.AspNet.Identity;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
+using Skimur.Web.Avatar;
 using Skimur.Web.Identity;
 
 namespace Skimur.Web
@@ -14,6 +15,7 @@ namespace Skimur.Web
             container.RegisterSingle<IUserStore<ApplicationUser, Guid>, ApplicationUserStore>();
             container.RegisterSingle<IIdentityMessageService, ApplicationIdentityMessageService>();
             container.RegisterSingle<ApplicationUserManager>();
+            container.RegisterSingle<IAvatarService, AvatarService>();
 
             container.RegisterPerWebRequest<ApplicationSignInManager>();
             container.RegisterPerWebRequest<IUserContext, UserContext>();

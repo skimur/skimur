@@ -15,6 +15,11 @@ CREATE TABLE users
   access_failed_count integer,
   security_question text,
   security_answer text,
+  full_name text,
+  bio text,
+  url text,
+  location text,
+  avatar_identifier text,
   CONSTRAINT users_pkey PRIMARY KEY (id)
 );
 

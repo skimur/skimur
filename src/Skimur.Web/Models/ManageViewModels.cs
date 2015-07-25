@@ -1,17 +1,34 @@
 ﻿using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 
 namespace Skimur.Web.Models
 {
-    public class IndexViewModel
+    public class ProfileViewModel
     {
-        public bool HasPassword { get; set; }
-        public IList<UserLoginInfo> Logins { get; set; }
-        public string PhoneNumber { get; set; }
-        public bool TwoFactor { get; set; }
-        public bool BrowserRemembered { get; set; }
+        [DisplayName("Full name")]
+        [MaxLength(50, ErrorMessage = "Full name name cannot be more than 50 characters.")]
+        public string FullName { get; set; }
+
+        [DisplayName("Bio")]
+        [MaxLength(150, ErrorMessage = "Bio cannot be more than 150 characters.")]
+        public string Bio { get; set; }
+
+        [DisplayName("Url")]
+        public string Url { get; set; }
+
+        [DisplayName("Location")]
+        [MaxLength(75, ErrorMessage = "Location cannot be more than 75 characters.")]
+        public string Location { get; set; }
+
+        [Display(Name = "Avatar")]
+        public string AvatarIdentifier { get; set; }
+
+        [Display(Name = "Avatar")]
+        public HttpPostedFileBase AvatarFile { get; set; }
     }
 
     public class ManageLoginsViewModel

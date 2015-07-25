@@ -275,7 +275,7 @@ namespace Infrastructure.Membership
                 }
             });
         }
-        
+
         /// <summary>
         /// Remove a remote login from a user
         /// </summary>
@@ -309,6 +309,46 @@ namespace Infrastructure.Membership
                 conn.Single(conn.From<User>()
                     .LeftJoin<UserLogin>((user, login) => user.Id == login.UserId)
                     .Where<UserLogin>(x => x.LoginProvider == loginProvider && x.LoginKey == loginKey)));
+        }
+
+        /// <summary>
+        /// Updates just profile data about a user
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="fullName">The full name.</param>
+        /// <param name="bio">The bio.</param>
+        /// <param name="url">The URL.</param>
+        /// <param name="location">The location.</param>
+        public void UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<User>(new
+                    {
+                        FullName = fullName,
+                        Bio = bio,
+                        Url = url,
+                        Location = location
+                    },
+                    x => x.Id == userId);
+            });
+        }
+
+        /// <summary>
+        /// Updates the user's avatar identifier.
+        /// </summary>
+        /// <param name="userId">The user identifier.</param>
+        /// <param name="avatarIdentifier">The avatar identifier.</param>
+        public void UpdateUserAvatar(Guid userId, string avatarIdentifier)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<User>(new
+                    {
+                        AvatarIdentifier = avatarIdentifier
+                    },
+                    x => x.Id == userId);
+            });
         }
     }
 }
