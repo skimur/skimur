@@ -3,6 +3,15 @@
 }
 <div class="body-content">
     <div class="container-fluid">
+        @if (IsSectionDefined("messages"))
+        {
+            @RenderSection("messages")
+        }
+        else
+        {
+            @Html.ErrorMessages()
+            @Html.SuccessMessages()
+        }
         @RenderBody()
     </div>
 </div>

@@ -2,8 +2,17 @@
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
 <div class="container body-content">
+    @if (IsSectionDefined("messages"))
+    {
+        @RenderSection("messages")
+    }
+    else
+    {
+        @Html.ErrorMessages()
+        @Html.SuccessMessages()
+    }
     @RenderBody()
-    <hr/>
+    <hr />
     <footer>
         <p>&copy; @DateTime.Now.Year - Skimur</p>
     </footer>

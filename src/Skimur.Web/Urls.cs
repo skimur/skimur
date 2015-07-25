@@ -96,5 +96,25 @@ namespace Skimur.Web
         {
             return urlHelper.Action("ForgotPassword", "Account");
         }
+
+        public static string ManagePassword(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("Password", "Manage");
+        }
+
+        public static string ChangePassword(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("ChangePassword", "Manage");
+        }
+
+        public static string SetPassword(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("SetPassword", "Manage");
+        }
+
+        public static string ManageProfile(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("Index", "Manage");
+        }
     }
 }

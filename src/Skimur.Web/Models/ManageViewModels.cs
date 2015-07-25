@@ -25,6 +25,11 @@ namespace Skimur.Web.Models
         public string Purpose { get; set; }
     }
 
+    public class ManagePasswordViewModel
+    {
+        
+    }
+
     public class SetPasswordViewModel
     {
         [Required]

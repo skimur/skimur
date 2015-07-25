@@ -1,0 +1,12 @@
+﻿@{
+    var currentNavigationKey = ViewBag.ManageNavigationKey;
+}
+<ul class="nav nav-pills nav-stacked">
+    @RenderLink("Account", Url.ManageProfile(), "Profile")
+    @RenderLink("Password", Url.ManagePassword(), "Password")
+</ul>
+
+@helper RenderLink(string navigationKey, string url, string title)
+{
+    <li class="@(ViewBag.ManageNavigationKey == navigationKey ? "active" : "")"><a href="@url">@title</a></li>
+}

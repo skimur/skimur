@@ -1,6 +1,15 @@
 ﻿@{
     Layout = "~/Views/Shared/_Layout.cshtml";
 }
+@if (IsSectionDefined("messages"))
+{
+    @RenderSection("messages")
+}
+else
+{
+    @Html.ErrorMessages()
+    @Html.SuccessMessages()
+}
 @RenderBody()
 @section scripts {
     @RenderSection("scripts", false)

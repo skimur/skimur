@@ -307,6 +307,8 @@
     <Content Include="Views\Shared\_LoginModal.cshtml" />
     <Content Include="Views\Shared\LoginModal\Register.cshtml" />
     <Content Include="Views\Shared\LoginModal\SignIn.cshtml" />
+    <Content Include="Views\Manage\_ManageNavigation.cshtml" />
+    <Content Include="Views\Manage\_LayoutManageAccount.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
