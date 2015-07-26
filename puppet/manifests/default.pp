@@ -16,11 +16,18 @@ node skimurredis {
 
 }
 
+node skimurcassandra {
+
+  class { 'skimur::cassandra': }
+
+}
+
 node skimurdev {
 
-  class { 'skimur::postgres': }
-  class { 'skimur::rabbitmq': }
-  class { 'skimur::redis': }
+  # class { 'skimur::postgres': }
+  # class { 'skimur::rabbitmq': }
+  # class { 'skimur::redis': }
+  class { 'skimur::cassandra': }
 
 }
 
@@ -159,6 +166,16 @@ class skimur::redis {
 
   class { '::redis':
     system_sysctl => true
+  }
+
+}
+
+class skimur::cassandra {
+
+  class { '::cassandra':
+    listen_address  => "${::ipaddress}",
+    manage_dsc_repo => true,
+    cassandra_opt_package_ensure => '2.1.8'
   }
 
 }
