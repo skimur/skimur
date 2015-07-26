@@ -199,8 +199,15 @@ class skimur::cassandra {
     ensure  => 'installed',
   } ->
   class { '::cassandra':
+    listen_address  => '192.168.10.200',
+    seeds  => '192.168.10.200',
+    rpc_address => '192.168.10.200',
     manage_dsc_repo => true
   }
 
+  class { '::cassandra::datastax_agent':
+  }
 
+  class { '::cassandra::optutils':
+  }
 }
