@@ -21,7 +21,7 @@ namespace Subs.Tests
         public void Can_get_posts_by_hot()
         {
             // arrange
-            var posts = JsonConvert.DeserializeObject<List<HotTests.JsonPost>>(
+            var posts = JsonConvert.DeserializeObject<List<SortTests.JsonPost>>(
                 File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sorting_hot.json"))).Select(
                     x =>
                     {
@@ -53,7 +53,7 @@ namespace Subs.Tests
         [Test]
         public void Can_get_posts_by_score()
         {
-            foreach (var post in JsonConvert.DeserializeObject<List<HotTests.JsonPost>>(
+            foreach (var post in JsonConvert.DeserializeObject<List<SortTests.JsonPost>>(
                 File.ReadAllText(Path.Combine(AppDomain.CurrentDomain.BaseDirectory, "sorting_hot.json"))).Select(
                     x =>
                     {

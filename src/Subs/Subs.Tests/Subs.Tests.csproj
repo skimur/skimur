@@ -63,7 +63,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="HotTests.cs" />
+    <Compile Include="SortTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="PostServiceTests.cs" />
   </ItemGroup>

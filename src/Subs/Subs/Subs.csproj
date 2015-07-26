@@ -73,7 +73,7 @@
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
-    <Compile Include="Hot.cs" />
+    <Compile Include="Sorting.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="ReadModel\CommentDao.cs" />
     <Compile Include="ReadModel\ICommentDao.cs" />
