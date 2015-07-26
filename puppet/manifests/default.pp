@@ -1,3 +1,15 @@
+stage { 'preinstall':
+  before => Stage['main']
+}
+
+class apt_get_update {
+  exec { '/usr/bin/apt-get -y update': }
+}
+
+class { 'apt_get_update':
+  stage => preinstall
+}
+
 node skimurpostgres {
 
   class { 'skimur::postgres': }
@@ -24,10 +36,10 @@ node skimurcassandra {
 
 node skimurdev {
 
+  class { 'skimur::cassandra': }
   class { 'skimur::postgres': }
   class { 'skimur::rabbitmq': }
   class { 'skimur::redis': }
-  # class { 'skimur::cassandra': }
 
 }
 
@@ -172,10 +184,23 @@ class skimur::redis {
 
 class skimur::cassandra {
 
-  class { '::cassandra::java':
+
+  # exec { "apt-update":
+  #   command => "/usr/bin/apt-get update"
+  # }
+
+  #openjdk-7-jdk
+  # class { 'java':
+  #   distribution => 'jdk',
+  # } ->
+  package { [
+      'openjdk-7-jdk'
+    ]:
+    ensure  => 'installed',
+  } ->
+  class { '::cassandra':
+    manage_dsc_repo => true
   }
 
-  class { '::cassandra':
-    # manage_dsc_repo => true
-  }
+
 }
