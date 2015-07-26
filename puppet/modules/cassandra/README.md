@@ -1,4 +1,9 @@
 # cassandra
+[![Puppet Forge](http://img.shields.io/puppetforge/v/locp/cassandra.svg)](https://forge.puppetlabs.com/locp/cassandra)
+[![Github Tag](https://img.shields.io/github/tag/locp/cassandra.svg)](https://github.com/locp/cassandra)
+[![Build Status](https://travis-ci.org/locp/cassandra.png?branch=master)](https://travis-ci.org/locp/cassandra)
+[![Coverage Status](https://coveralls.io/repos/locp/cassandra/badge.svg?branch=master&service=github)](https://coveralls.io/github/locp/cassandra?branch=master)
+[![Join the chat at https://gitter.im/locp/cassandra](https://badges.gitter.im/Join%20Chat.svg)](https://gitter.im/locp/cassandra?utm_source=badge&utm_medium=badge&utm_campaign=pr-badge&utm_content=badge)
 
 #### Table of Contents
 
@@ -6,40 +11,74 @@
 2. [Setup - The basics of getting started with cassandra](#setup)
     * [What cassandra affects](#what-cassandra-affects)
     * [Beginning with cassandra](#beginning-with-cassandra)
+      * [DataStax Enterprise](#datastax-enterprise)
     * [Upgrading](#upgrading)
 3. [Usage - Configuration options and additional functionality](#usage)
 4. [Reference - An under-the-hood peek at what the module is doing and how](#reference)
+    * [cassandra](#class-cassandra)
+    * [cassandra::datastax_agent](#class-cassandradatastax_agent)
+    * [cassandra::java](#class-cassandrajava)
+    * [cassandra::opscenter](#class-cassandraopscenter)
+    * [cassandra::opscenter::pycrypto](#class-cassandraopscenterpycrypto)
+    * [cassandra::optutils](#class-cassandraoptutils)
+    * [cassandra::opscenter::setting](#defined-type-cassandraopscentersetting)
 5. [Limitations - OS compatibility, etc.](#limitations)
 6. [Contributers](#contributers)
-7. [External Links](#external-links)
 
 ## Overview
 
-This module installs and configures Apache Cassandra.  The installation steps
-were taken from the installation documentation prepared by DataStax [1] and
-the configuration parameters are the same as those for the Puppet module
-developed by msimonin [2].
+A Puppet module to install and manage Cassandra, DataStax Agent & OpsCenter
 
 ## Setup
 
-### What cassandra affects
+### What the cassandra module affects
 
-* Installs the Cassandra package (default **dsc21**).
+#### What the cassandra class affects
+
+* Installs the Cassandra package (default **dsc22**).
 * Configures settings in *${config_path}/cassandra.yaml*.
-* Optionally insures that the Cassandra service is enabled and running.
-* Optionally installs the Cassandra support tools (e.g. cassandra21-tools).
+* Optionally ensures that the Cassandra service is enabled and running.
 * Optionally configures a Yum repository to install the Cassandra packages
-  from (on RedHat).
+  from (on Red Hat).
 * Optionally configures an Apt repository to install the Cassandra packages
   from (on Ubuntu).
-* Optionally installs a JRE/JDK package (e.g. java-1.7.0-openjdk).
+
+#### What the cassandra::datastax_agent class affects
+
 * Optionally installs the DataStax agent.
+
+#### What the cassandra::java class affects
+
+* Optionally installs a JRE/JDK package (e.g. java-1.7.0-openjdk).
+
+#### What the cassandra::opscenter class affects
+
+* Installs the opscenter package.
+* Manages the content of the configuration file
+  (/etc/opscenter/opscenterd.conf).
+* Manages the opscenterd service.
+
+#### What the cassandra::opscenter::pycrypto class affects
+
+* On the Red Hat family it installs the pycrypto library and it's
+  pre-requisits (the python-devel and python-pip packages).
+* Optionally installs the Extra Packages for Enterprise Linux (EPEL)
+  repository.
+* As a workaround for
+  [PUP-3829](https://tickets.puppetlabs.com/browse/PUP-3829) a symbolic
+  link is created from ```/usr/bin/pip``` to
+  ```/usr/bin/pip-python```.  Hopefully this can be removed in the not
+  too distant future.
+
+#### What the cassandra::optutils class affects
+
+* Optionally installs the Cassandra support tools (e.g. cassandra22-tools).
 
 ### Beginning with cassandra
 
 This most basic example would attempt to install the default Cassandra package
-(assuming there is an available repository).  See the following section for
-more realistic scenarios.
+(assuming there is an available repository).  See the [Usage](#usage) section
+for more realistic scenarios.
 
 ```puppet
 node 'example' {
@@ -47,51 +86,140 @@ node 'example' {
 }
 ```
 
+To install the DataStax agent, include the specific class.
+
+```puppet
+node 'example' {
+  include '::cassandra'
+  include '::cassandra::datastax_agent'
+}
+```
+
+To install with a reasonably sensible Java environment include the java
+subclass.
+
+```puppet
+node 'example' {
+  include '::cassandra'
+  include '::cassandra::java'
+}
+```
+
+To install Cassandra with the optional utilities.
+
+```puppet
+node 'example' {
+  include '::cassandra'
+  include '::cassandra::optutils'
+}
+```
+
+To install the main cassandra package (which is mandatory) and all the
+optional packages, do the following:
+
+```puppet
+node 'example' {
+  include '::cassandra'
+  include '::cassandra::datastax_agent'
+  include '::cassandra::java'
+  include '::cassandra::optutils'
+}
+```
+
+By saying the cassandra class/package is mandatory, what is meant is that all
+the sub classes have a dependency on the main class.  So for example one
+could not specify the cassandra::java class for a node with the cassandra
+class also being included.
+
+#### DataStax Enterprise
+
+After configuring the relevant repositories elsewhere in the manifest, the
+following snippet works on CentOS 7 to install DSE Cassandra 4.7.0:
+
+```puppet
+class { 'cassandra':
+  package_ensure => '4.7.0-1',
+  package_name   => 'dse-full',
+  cluster_name   => 'My Cluster',
+  config_path    => '/etc/dse/cassandra',
+  service_name   => 'dse',
+}
+```
+
 ### Upgrading
 
-**From version <= 0.2.2 to >= 0.3.0**
+The following changes to the API have taken place.
+
+#### Changes in 1.0.0
+
+* cassandra::cassandra_package_ensure has been renamed to
+  cassandra::package_ensure.
+* cassandra::cassandra_package_name has been renamed to
+  cassandra::package_name.
+
+#### Changes in 0.4.0
+
+There is now a cassandra::datastax_agent class, therefore:
+
+* cassandra::datastax_agent_package_ensure has now been replaced with
+  cassandra::datastax_agent::package_ensure.
+* cassandra::datastax_agent_service_enable has now been replaced with
+  cassandra::datastax_agent::service_enable.
+* cassandra::datastax_agent_service_ensure has now been replaced with
+  cassandra::datastax_agent::service_ensure.
+* cassandra::datastax_agent_package_name has now been replaced with
+  cassandra::datastax_agent::package_name.
+* cassandra::datastax_agent_service_name has now been replaced with
+  cassandra::datastax_agent::service_name.
+
+Likewise now there is a new class for handling the installation of Java:
+
+* cassandra::java_package_ensure has now been replaced with
+  cassandra::java::ensure.
+* cassandra::java_package_name has now been replaced with
+  cassandra::java::package_name.
+
+Also there is now a class for installing the optional utilities:
+
+* cassandra::cassandra_opt_package_ensure has now been replaced with
+  cassandra::optutils:ensure.
+* cassandra::cassandra_opt_package_name has now been replaced with
+  cassandra::optutils:package_name.
+
+#### Changes in 0.3.0
 
 * cassandra_opt_package_ensure changed from 'present' to undef.
-
-**From version >= 0.2.0 and <= 0.2.2 to >= 0.3.0**
 
 * The manage_service option has been replaced with service_enable and
   service_ensure.
 
 ## Usage
 
+### Create a Small Cluster
+
 To install Cassandra in a two node cluster called 'Foobar Cluster' where
-node1 (192.168.42.1) is the seed and node2 192.168.42.2 is also to be a
+node1 (192.168.42.1) is the seed and node2 (192.168.42.2) is also to be a
 member, do something similar to this:
 
 ```puppet
-if $::osfamily == 'Debian' {
-  $java_package_name = 'openjdk-7-jre-headless'
-} else {
-  $java_package_name = 'java-1.7.0-openjdk'
-}
+include cassandra::java
+include cassandra::optutils
 
 node 'node1' {
   class { 'cassandra':
-    cluster_name                 => 'Foobar Cluster',
-    listen_address               => "${::ipaddress}",
-    seeds                        => "${::ipaddress}",
-    cassandra_opt_package_ensure => 'present',
-    java_package_name            => $java_package_name,
-    java_package_ensure          => 'present',
-    manage_dsc_repo              => true
+    cluster_name    => 'Foobar Cluster',
+    listen_address  => "${::ipaddress}",
+    seeds           => "${::ipaddress}",
+    manage_dsc_repo => true
   }
 }
 
 node 'node2' {
   class { 'cassandra':
-    cluster_name                 => 'Foobar Cluster',
-    listen_address               => "${::ipaddress}",
-    seeds                        => '192.168.42.1',
-    cassandra_opt_package_ensure => 'present',
-    java_package_name            => $java_package_name,
-    java_package_ensure          => 'present',
-    manage_dsc_repo              => true
+    cluster_name    => 'Foobar Cluster',
+    listen_address  => "${::ipaddress}",
+    seeds           => '192.168.42.1',
+    manage_dsc_repo => true
   }
 }
 ```
@@ -99,423 +227,467 @@ node 'node2' {
 This would also ensure that the JDK is installed and the optional Cassandra
 tools.
 
+## Reference
+
+### Public Classes
+
+* **cassandra**
+* **cassandra::datastax_agent**
+* **cassandra::java**
+* **cassandra::opscenter**
+* **cassandra::opscenter::pycrypto**
+* **cassandra::optutils**
+
+### Defined Types
+
+* **cassandra::opscenter::setting**
+
 ### Class: cassandra
 
-Currently this is the only public class within this module.
+A class for installing the Cassandra package and manipulate settings in the
+configuration file.
 
 #### Parameters
 
-#####`authenticator`
-Authentication backend, implementing IAuthenticator; used to identify users
-Out of the box, Cassandra provides
-org.apache.cassandra.auth.{AllowAllAuthenticator, PasswordAuthenticator}.
+##### `authenticator`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **AllowAllAuthenticator**).
 
-* AllowAllAuthenticator performs no checks - set it to disable authentication.
-* PasswordAuthenticator relies on username/password pairs to authenticate
-  users. It keeps usernames and hashed passwords in system_auth.credentials
-  table. Please increase system_auth keyspace replication factor if you use this
-  authenticator.
+##### `authorizer`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default: **AllowAllAuthorizer**).
 
-Default: **AllowAllAuthenticator**
+##### `auto_snapshot`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **true**).
 
-#####`authorizer`
-Authorization backend, implementing IAuthorizer; used to limit access/provide
-permissions Out of the box, Cassandra provides
-org.apache.cassandra.auth.{AllowAllAuthorizer, CassandraAuthorizer}.
-
-* AllowAllAuthorizer allows any action to any user - set it to disable
-  authorization.
-* CassandraAuthorizer stores permissions in system_auth.permissions table.
-  Please increase system_auth keyspace replication factor if you use this
-  authorizer.
-
-Default: **AllowAllAuthorizer**
-
-#####`auto_snapshot`
-Whether or not a snapshot is taken of the data before keyspace truncation
-or dropping of column families. The STRONGLY advised default of true 
-should be used to provide data safety. If you set this flag to false, you will
-lose data on truncation or drop (default **true**).
-
-#####`cassandra_opt_package_ensure`
-The status of the package specified in **cassandra_opt_package_name**.  Can be
-*present*, *latest* or a specific version number.  If
-*cassandra_opt_package_name* is *undef*, this option has no effect (default
-**present**).
-
-#####`cassandra_opt_package_name`
-If left at the default, this will change to 'cassandra21-tools' on RedHat
-or 'cassandra-tools' on Ubuntu.  Alternatively this use can specify the
-package name
-(default undef).
-
-#####`cassandra_package_ensure`
-The status of the package specified in **cassandra_package_name**.  Can be
-*present*, *latest* or a specific version number (default **present**).
-
-#####`cassandra_package_name`
-The name of the Cassandra package.  Must be installable from a repository
-(default **dsc21**).
-
-#####`cassandra_yaml_tmpl`
+##### `cassandra_yaml_tmpl`
 The path to the Puppet template for the Cassandra configuration file.  This
 allows the user to supply their own customized template.  A Cassandra 1.X
 compatible template called cassandra1.yaml.erb has been provided by @Spredzy
 (default **cassandra/cassandra.yaml.erb**).
 
-#####`client_encryption_enabled`
-Enable or disable client/server encryption (default **false**).
+##### `client_encryption_enabled`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **false**).
 
-#####`client_encryption_keystore`
-Keystore for client_encryption (default **conf/.keystore**).
+##### `client_encryption_keystore`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **conf/.keystore**).
 
-#####`client_encryption_keystore_password`
-Keystore password for client encryption (default **cassandra**).
+##### `client_encryption_keystore_password`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **cassandra**).
 
-#####`cluster_name`
-The name of the cluster. This is mainly used to prevent machines in one logical
-cluster from joining another (default **Test Cluster**).
+##### `cluster_name`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **Test Cluster**).
 
-#####`commitlog_directory`
-Commit log.  when running on magnetic HDD, this should be a separate spindle
-than the data directories (default **/var/lib/cassandra/commitlog**).
+##### `commitlog_directory`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **/var/lib/cassandra/commitlog**).
 
-#####`concurrent_counter_writes`
-For workloads with more data than can fit in memory, Cassandra's bottleneck
-will be reads that need to fetch data from disk. "concurrent_reads"
-should be set to (16 * number_of_drives) in order to allow the operations to
-enqueue low enough in the stack that the OS and drives can reorder them. Same
-applies to "concurrent_counter_writes", since counter writes read the current
-values before incrementing and writing them back.
+##### `concurrent_counter_writes`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **32**).
 
-On the other hand, since writes are almost never IO bound, the ideal
-number of "concurrent_writes" is dependent on the number of cores in
-your system; (8 * number_of_cores) is a good rule of thumb (default **32**).
+##### `concurrent_reads`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **32**).
 
-#####`concurrent_reads`
-For workloads with more data than can fit in memory, Cassandra's bottleneck
-will be reads that need to fetch data from disk. "concurrent_reads"
-should be set to (16 * number_of_drives) in order to allow the operations to
-enqueue low enough in the stack that the OS and drives can reorder them. Same
-applies to "concurrent_counter_writes", since counter writes read the current
-values before incrementing and writing them back.
+##### `concurrent_writes`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **32**).
 
-On the other hand, since writes are almost never IO bound, the ideal
-number of "concurrent_writes" is dependent on the number of cores in
-your system; (8 * number_of_cores) is a good rule of thumb (default **32**).
-
-#####`concurrent_writes`
-For workloads with more data than can fit in memory, Cassandra's bottleneck
-will be reads that need to fetch data from disk. "concurrent_reads"
-should be set to (16 * number_of_drives) in order to allow the operations to
-enqueue low enough in the stack that the OS and drives can reorder them. Same
-applies to "concurrent_counter_writes", since counter writes read the current
-values before incrementing and writing them back.
-
-On the other hand, since writes are almost never IO bound, the ideal
-number of "concurrent_writes" is dependent on the number of cores in
-your system; (8 * number_of_cores) is a good rule of thumb (default **32**).
-
-#####`config_path`
+##### `config_path`
 The path to the cassandra configuration file.  If this is undef, it will be
-changed to /etc/cassandra/default.conf on the RedHat family of operating
-systems or /etc/cassandra on Ubuntu.  Otherwise the user can specify the
+changed to **/etc/cassandra/default.conf** on the Red Hat family of operating
+systems or **/etc/cassandra** on Ubuntu.  Otherwise the user can specify the
 path name
 (default **undef**).
 
-#####`data_file_directories`
-Directories where Cassandra should store data on disk.  Cassandra
-will spread data evenly across them, subject to the granularity of
-the configured compaction strategy (default **['/var/lib/cassandra/data']**).
+##### `data_file_directories`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **['/var/lib/cassandra/data']**).
 
-#####`datastax_agent_package_ensure`
-If the value is anything other than undef, it is passed to a package reference
-to install the DataStax Agent package.
-(default **undef**).
+##### `disk_failure_policy`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default: **stop**).
 
-#####`datastax_agent_service_enable`
-The datastax_agent_service_enable is passed to a service reference enable
-parameter for the DataStax Agent.  This parameter has no effect if
-datastax_agent_package_ensure is undef, absent or purged.  Valid values are
-true or false
-(default **true**).
+##### `endpoint_snitch`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default: **SimpleSnitch**).
 
-#####`datastax_agent_service_ensure`
-The datastax_agent_service_ensure is passed to a service reference ensure
-parameter for the DataStax Agent.  This parameter has no effect if
-datastax_agent_package_ensure is undef, absent or purged. Valid values are
-running or stopped
-(default **running**).
+##### `hinted_handoff_enabled`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(defaults to **'true'**).
 
-#####`datastax_agent_package_name`
-The name of the datastax-agent package.  This is ignored if
-datastax_agent_ensure is set to undef.
-(default **datastax-agent**).
+##### `incremental_backups`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **false**).
 
-#####`datastax_agent_service_name`
-The name of the datastax-agent service.  This is ignored if
-the agent is not installed
-(default **datastax-agent**).
+##### `internode_compression`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **all**).
 
-#####`disk_failure_policy`
-Policy for data disk failures:
-
-* die: shut down gossip and Thrift and kill the JVM for any fs errors or
-  single-sstable errors, so the node can be replaced.
-* stop_paranoid: shut down gossip and Thrift even for single-sstable errors.
-* stop: shut down gossip and Thrift, leaving the node effectively dead, but
-  can still be inspected via JMX.
-* best_effort: stop using the failed disk and respond to requests based on
-  remaining available sstables.  This means you WILL see obsolete
-  data at CL.ONE!
-* ignore: ignore fatal errors and let requests fail, as in pre-1.2 Cassandra.
-
-Default: **stop**
-
-#####`endpoint_snitch`
-Set this to a class that implements IEndpointSnitch.  The snitch has two
-functions:
-
-* it teaches Cassandra enough about your network topology to route
-  requests efficiently.
-* it allows Cassandra to spread replicas around your cluster to avoid
-  correlated failures. It does this by grouping machines into
-  "datacenters" and "racks."  Cassandra will do its best not to have
-  more than one replica on the same "rack" (which may not actually
-  be a physical location).
-
-IF YOU CHANGE THE SNITCH AFTER DATA IS INSERTED INTO THE CLUSTER,
-YOU MUST RUN A FULL REPAIR, SINCE THE SNITCH AFFECTS WHERE REPLICAS
-ARE PLACED.
-
-Out of the box, Cassandra provides:
-
-* SimpleSnitch: Treats Strategy order as proximity. This can improve cache
-  locality when disabling read repair.  Only appropriate for
-  single-datacenter deployments.
-* GossipingPropertyFileSnitch: This should be your go-to snitch for production
-  use.  The rack and datacenter for the local node are defined in
-  cassandra-rackdc.properties and propagated to other nodes via
-  gossip.  If cassandra-topology.properties exists, it is used as a
-  fallback, allowing migration from the PropertyFileSnitch.
-* PropertyFileSnitch: Proximity is determined by rack and data center, which are
-  explicitly configured in cassandra-topology.properties.
-* Ec2Snitch: Appropriate for EC2 deployments in a single Region. Loads Region
-  and Availability Zone information from the EC2 API. The Region is
-  treated as the datacenter, and the Availability Zone as the rack.
-  Only private IPs are used, so this will not work across multiple Regions.
-* Ec2MultiRegionSnitch: Uses public IPs as broadcast_address to allow
-  cross-region connectivity.  (Thus, you should set seed addresses to the public
-  IP as well.) You will need to open the storage_port or
-  ssl_storage_port on the public IP firewall.  (For intra-Region
-  traffic, Cassandra will switch to the private IP after
-  establishing a connection.)
-* RackInferringSnitch: Proximity is determined by rack and data center, which
-  are assumed to correspond to the 3rd and 2nd octet of each node's IP
-  address, respectively.  Unless this happens to match your
-  deployment conventions, this is best used as an example of
-  writing a custom Snitch class and is provided in that spirit.
-
-You can use a custom Snitch by setting this to the full class name
-of the snitch, which will be assumed to be on your classpath.
-
-Default: **SimpleSnitch**
-
-#####`hinted_handoff_enabled`
-See http://wiki.apache.org/cassandra/HintedHandoff May either be "true" or
-"false" to enable globally, or contain a list of data centers to enable
-per-datacenter (e.g. 'DC1,DC2').  Defaults to **'true'**.
-
-#####`incremental_backups`
-Set to true to have Cassandra create a hard link to each sstable
-flushed or streamed locally in a backups/ subdirectory of the
-keyspace data.  Removing these links is the operator's
-responsibility (default **false**).
-
-#####`internode_compression`
-Controls whether traffic between nodes is compressed. Can be:
-
-* all  - all traffic is compressed
-* dc   - traffic between different datacenters is compressed
-* none - nothing is compressed.
-
-Default **all**
-
-#####`java_package_ensure`
-The status of the package specified in **java_package_name**.  Can be
-*present*, *latest* or a specific version number.  If
-*java_package_name* is *undef*, this option has no effect (default
-**present**).
-
-#####`java_package_name`
-Optionally specify a JRE/JDK package (e.g. java-1.7.0-openjdk).  Nothing is
-executed if the default value of **undef** is unchanged.
-
-#####`listen_address`
-Address or interface to bind to and tell other Cassandra nodes to connect to
+##### `listen_address`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
 (default **localhost**).
 
-#####`manage_dsc_repo`
+##### `manage_dsc_repo`
 If set to true then a repository will be setup so that packages can be
 downloaded from the DataStax community edition (default **false**).
 
-#####`native_transport_port`
-Port for the CQL native transport to listen for clients on
-For security reasons, you should not expose this port to the internet.
-Firewall it if needed (default **9042**).
+##### `native_transport_port`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **9042**).
 
-#####`num_tokens`
-This defines the number of tokens randomly assigned to this node on the ring
-The more tokens, relative to other nodes, the larger the proportion of data
-that this node will store. You probably want all nodes to have the same number
-of tokens assuming they have equal hardware capability.
+##### `num_tokens`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **256**).
 
-#####`partitioner`
-The partitioner is responsible for distributing groups of rows (by
-partition key) across nodes in the cluster.  You should leave this
-alone for new clusters.  The partitioner can NOT be changed without
-reloading all data, so when upgrading you should set this to the
-same partitioner you were already using.
+##### `package_ensure`
+The status of the package specified in **package_name**.  Can be
+*present*, *latest* or a specific version number (default **present**).
 
-Besides Murmur3Partitioner, partitioners included for backwards
-compatibility include RandomPartitioner, ByteOrderedPartitioner, and
-OrderPreservingPartitioner (default
-**org.apache.cassandra.dht.Murmur3Partitioner**)
+##### `package_name`
+The name of the Cassandra package.  Must be available from a repository
+(default **dsc22**).
 
-#####`rpc_address`
-The address to bind the Thrift RPC service and native transport server to
+##### `partitioner`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **org.apache.cassandra.dht.Murmur3Partitioner**)
+
+##### `rpc_address`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
 (default **localhost**).
 
-#####`rpc_port`
-Port for Thrift to listen for clients on (default **9160**).
+##### `rpc_port`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **9160**).
 
-#####`rpc_server_type`
-Cassandra provides two out-of-the-box options for the RPC Server:
+##### `rpc_server_type`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **sync**).
 
-* One thread per thrift connection. For a very large number of clients,
-  memory will be your limiting factor. On a 64 bit JVM, 180KB is the minimum
-  stack size per thread, and that will correspond to your use of virtual memory
-  (but physical memory may be limited depending on use of stack space).
-* Stands for "half synchronous, half asynchronous." All thrift clients
-  are handled asynchronously using a small number of threads that does
-  not vary with the amount of thrift clients (and thus scales well to many
-  clients).  The rpc requests are still synchronous (one thread per active
-  request). If hsha is selected then it is essential that rpc_max_threads
-  is changed from the default value of unlimited.
+##### `saved_caches_directory`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **/var/lib/cassandra/saved_caches**).
 
-The default is sync because on Windows hsha is about 30% slower.  On Linux,
-sync/hsha performance is about the same, with hsha of course using less memory.
+##### `seeds`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **127.0.0.1**).
 
-Alternatively, you can provide your own RPC server by providing the
-fully-qualified class name of an o.a.c.t.TServerFactory that can create an
-instance of it.
+##### `server_encryption_internode`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **none**).
 
-#####`saved_caches_directory`
-Default: **/var/lib/cassandra/saved_caches**
+##### `server_encryption_keystore`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **conf/.keystore**).
 
-#####`seeds`
-Addresses of hosts that are deemed contact points.  Cassandra nodes use this
-list of hosts to find each other and learn the topology of the ring.  You must
-change this if you are running multiple nodes!  Seeds is actually a
-comma-delimited list of addresses (default **127.0.0.1**).
+##### `server_encryption_keystore_password`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **cassandra**).
 
-#####`server_encryption_internode`
-Enable or disable inter-node encryption (default **none**).
+##### `server_encryption_truststore`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **conf/.truststore**).
 
-#####`server_encryption_keystore`
-Default: **conf/.keystore**
+##### `server_encryption_truststore_password`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **cassandra**).
 
-#####`server_encryption_keystore_password`
-Default: **cassandra**
-
-#####`server_encryption_truststore`
-Default: **conf/.truststore**
-
-#####`server_encryption_truststore_password`
-Default: **cassandra**
-
-#####`service_enable`
+##### `service_enable`
 Enable the Cassandra service to start at boot time.  Valid values are true
 or false
 (default: **true**)
 
-#####`service_ensure`
+##### `service_ensure`
 Ensure the Cassandra service is running.  Valid values are running or stopped
 (default: **running**)
 
-#####`service_name`
+##### `service_name`
 The name of the service that runs the Cassandra software (default
 **cassandra**).
 
-#####`snapshot_before_compaction`
-Whether or not to take a snapshot before each compaction.  Be
-careful using this option, since Cassandra won't clean up the
-snapshots for you.  Mostly useful if you're paranoid when there
-is a data format change (default **false**).
+##### `snapshot_before_compaction`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **false**).
 
-#####`start_native_transport`
-Whether to start the native transport server.  Please note that the address on
-which the native transport is bound is the same as the rpc_address. The port
-however is different and specified below (default **true**).
+##### `start_native_transport`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **true**).
 
-#####`start_rpc`
-Whether to start the thrift rpc server (default **true**).
+##### `start_rpc`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **true**).
 
-#####`storage_port`
-TCP port, for commands and data for security reasons, you should not expose this
-port to the internet.  Firewall it if needed (default **7000**).
+##### `storage_port`
+This is passed to the
+[cassandra.yaml](http://docs.datastax.com/en/cassandra/2.1/cassandra/configuration/configCassandra_yaml_r.html) file
+(default **7000**).
 
-### Class: cassandra::config
+### Class: cassandra::datastax_agent
 
-A private class.
+A class for installing the DataStax agent and to point it at an OpsCenter
+instance.
 
-### Class: cassandra::install
+#### Parameters
 
-A private class.
+##### `package_ensure`
+Is passed to the package reference.  Valid values are **present** or a version
+number
+(default **present**).
 
-## Reference
+##### `package_name`
+Is passed to the package reference (default **datastax-agent**).
 
-This module uses the package type to install the Cassandra package, the
-optional Cassandra tools, the DataStax agent and Java package.
+##### `service_ensure`
+Is passed to the service reference (default **running**).
 
-It optionally uses the service type to enable the cassandra service and/or the
-DataStax agent and ensure that they are running.
+##### `service_enable`
+Is passed to the service reference (default **true**).
 
-It also uses the yumrepo type on the RedHat family of operating systems to
-(optionally) install the *DataStax Repo for Apache Cassandra*.
+##### `service_name`
+Is passed to the service reference (default **datastax-agent**).
 
-On Ubuntu, the apt class is optionally utilised.
+##### `stomp_interface`
+If the value is changed from the default of *undef* then this is what is
+set as the stomp_interface setting in
+**/var/lib/datastax-agent/conf/address.yaml**
+which connects the agent to an OpsCenter instance
+(default **undef**).
+
+### Class: cassandra::java
+
+A class to install a reasonably sensible Java package.
+
+#### Parameters
+
+##### `ensure`
+Is passed to the package reference.  Valid values are **present** or a version
+number
+(default **present**).
+
+##### `package_name`
+If the default value of *undef* is left as it is, then a package called
+java-1.8.0-openjdk-headless or openjdk-7-jre-headless will be installed
+on a Red Hat family or Ubuntu system respectively.  Alternatively, one
+can specify a package that is available in a package repository to the
+node
+(default **undef**).
+
+### Class: cassandra::opscenter
+
+This class installs and manages the DataStax OpsCenter.
+
+#### Parameters
+
+##### `ensure`
+This is passed to the package reference for **opscenter**.  Valid values are
+**present** or a version number
+(default **present**).
+
+##### `config_file`
+The full path to the OpsCenter configuration file
+(default **/etc/opscenter/opscenterd.conf**).
+
+##### `package_name`
+The name of the OpsCenter package
+(default **opscenter**).
+
+##### `service_enable`
+Enable the OpsCenter service to start at boot time.  Valid values are true
+or false
+(default: **true**)
+
+##### `service_ensure`
+Ensure the OpsCenter service is running.  Valid values are running or stopped
+(default: **running**)
+
+##### `service_name`
+The name of the service that runs the OpsCenter software (default
+**opscenterd**).
+
+The rest of the module parameters are passed into the configuration file.
+
+If a parameter is *undef* then the module will ensure that the corresponding
+setting is removed from the configuration file.
+
+See
+http://docs.datastax.com/en/opscenter/5.2/opsc/configure/opscConfigProps_r.html
+for details on a specific parameter.
+
+Leaving the defaults as they are will provide a running OpsCenter without any
+authentication on port 8888.
+
+This table shows the name of the module parameter, specifies which section
+and setting it is associated with in the configuration file and shows what the
+default value is:
+
+Module Parameter            | Section        | Setting      | Default Value
+--------------------------- | -------------- | -------      | -------------
+authentication_audit_auth |authentication|audit_auth|*undef*
+authentication_audit_pattern |authentication|audit_pattern|*undef*
+authentication_method |authentication|method|*undef*
+authentication_enabled |authentication|enabled|**False**
+authentication_passwd_db |authentication|passwd_db|*undef*
+authentication_timeout |authentication|timeout|*undef*
+logging_level                    |logging|level|*undef*
+logging_log_length               |logging|log_length|*undef*
+logging_log_path                 |logging|log_path|*undef*
+logging_max_rotate               |logging|max_rotate|*undef*
+logging_resource_usage_interval  |logging|resource_usage_interval|*undef*
+stat_reporter_initial_sleep      |stat_reporter|initial_sleep|*undef*
+stat_reporter_interval           |stat_reporter|interval|*undef*
+stat_reporter_report_file        |stat_reporter|report_file|*undef*
+stat_reporter_ssl_key            |stat_reporter|ssl_key|*undef*
+webserver_interface              |webserver|interface|**0.0.0.0**
+webserver_port                   |webserver|port|**8888**
+webserver_ssl_certfile           |webserver| ssl_certfile|*undef*
+webserver_ssl_keyfile            |webserver| ssl_keyfile|*undef*
+webserver_ssl_port               |webserver|ssl_port|*undef*
+webserver_staticdir|webserver    |staticdir|*undef*
+webserver_sub_process_timeout    |webserver|sub_process_timeout|*undef*
+webserver_tarball_process_timeout|webserver|tarball_process_timeout|*undef*
+
+### Class: cassandra::opscenter::pycrypto
+
+On the Red Hat family of operating systems, if one intends to use encryption
+for configuration values then the pycrypto library is required.  This class
+will install it for the user.  See
+http://docs.datastax.com/en/opscenter/5.2//opsc/configure/installPycrypto.html
+for more details.
+
+This class has no effect when included on nodes that are not in the Red Hat
+family.
+
+#### Parameters
+
+##### `ensure`
+This is passed to the package reference for **pycrypto**.  Valid values are
+**present** or a version number
+(default **present**).
+
+##### `manage_epel`
+If set to true, the **epel-release** package will be installed
+(default **false**).
+
+##### `package_name`
+The name of the PyCrypto package
+(default **pycrypto**).
+
+##### `provider`
+The name of the provider of the pycrypto package
+(default **pip**).
+
+##### `reqd_pckgs`
+Packages that are required to install the pycrypto package
+(default **['python-devel', 'python-pip' ]**).
+
+### Class: cassandra::optutils
+
+A class to install the optional Cassandra tools package.
+
+#### Parameters
+
+##### `ensure`
+Is passed to the package reference.  Valid values are **present** or a version
+number
+(default **present**).
+
+##### `package_name`
+If the default value of *undef* is left as it is, then a package called
+cassandra22-tools or cassandra-tools will be installed
+on a Red Hat family or Ubuntu system respectively.  Alternatively, one
+can specify a package that is available in a package repository to the
+node
+(default **undef**).
+
+### Defined Type cassandra::opscenter::setting
+
+Simply a defined type to be used as a macro for settings in the OpsCenter
+configuration file.  This is not really supposed to be used by a user (who
+should use the API provided by cassandra::opscenter instead) but is documented
+here for completeness.
+
+#### Parameters
+
+##### `service_name`
+The name of the service to be notified if a change is made to the
+configuration file.  Typically this would by **opscenterd**.
+
+##### `path`
+The path to the configuration file.  Typically this would by
+**/etc/opscenter/opscenterd.conf**.
+
+##### `section`
+The section in the configuration file to be added to (e.g. **webserver**).
+
+##### `setting`
+The setting within the section of the configuration file to changed
+(e.g. **port**).
+
+##### `value`
+The setting value to be changed to (e.g. **8888**).
 
 ## Limitations
 
-This module currently still has somewhat limited functionality.  More
-parameters and configuration parameters will be added later.
+Currently OpsCenter configuration is confined to authentication, logging,
+stat_reporter and webserver.  The remaining sections are planned for the
+near future.
 
-There is currently no method for this module to manipulate Java options.
-
-Currently the is no configuration or customisation of the DataStax Agent.
-
-Tested on the RedHat family versions 6 and 7, Ubuntu 12.04 and 14.04, Puppet
-(CE) 3.7.5 and DSC 2.1.5.
+Tested on the Red Hat family versions 6 and 7, Ubuntu 12.04 and 14.04, Puppet
+(CE) 3.7.5 and DSC 2.1.
 
 ## Contributers
 
-Contributions will be greatfully accepted.  Please go to the project page,
+Contributions will be gratefully accepted.  Please go to the project page,
 fork the project, make your changes locally and then raise a pull request.
 Details on how to do this are available at
 https://guides.github.com/activities/contributing-to-open-source.
 
 ### Additional Contributers
 
-Yanis Guenane (GitHub [@spredzy](https://github.com/Spredzy)) provided the
+* Yanis Guenane (GitHub [@spredzy](https://github.com/Spredzy)) provided the
 Cassandra 1.x compatible template
 (see [#11](https://github.com/locp/cassandra/pull/11)).
 
-## External Links
-
-[1] - *Installing DataStax Community on RHEL-based systems*, available at
-http://docs.datastax.com/en/cassandra/2.1/cassandra/install/installRHEL_t.html, accessed 25th May 2015.
-
-[2] - *msimonin/cassandra: Puppet module to install Apache Cassandra from
-the DataStax distribution. Forked from gini/cassandra*, available at
-https://forge.puppetlabs.com/msimonin/cassandra, accessed 17th March 2015.
+* Amos Shapira (GitHub [@amosshapira](https://github.com/amosshapira)) fixed
+a bug in the requirements metadata that caused a problem with Puppetfile
+(see [#34](https://github.com/locp/cassandra/pull/34)).

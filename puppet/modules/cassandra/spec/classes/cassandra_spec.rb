@@ -1,5 +1,11 @@
 require 'spec_helper'
 describe 'cassandra' do
+  let(:pre_condition) { [
+    'class apt () {}',
+    'class apt::update () {}',
+    'define apt::key ($id, $source) {}',
+    'define apt::source ($location, $comment, $release, $include) {}',
+  ] }
 
   context 'On a RedHat OS with defaults for all parameters' do
     let :facts do
@@ -8,14 +14,11 @@ describe 'cassandra' do
       }
     end
 
-    it {
-      should contain_class('cassandra')
-      should contain_class('cassandra::install')
-      should contain_class('cassandra::config')
-      should contain_file('/etc/cassandra/default.conf/cassandra.yaml')
-      should contain_service('cassandra')
-      is_expected.not_to contain_yumrepo('datastax')
-    }
+    it { should contain_class('cassandra') }
+    it { should contain_file('/etc/cassandra/default.conf/cassandra.yaml') }
+    it { should contain_service('cassandra') }
+    it { should contain_package('dsc22') }
+    it { is_expected.not_to contain_yumrepo('datastax') }
   end
 
   context 'On a RedHat OS with manage_dsc_repo set to true' do
@@ -27,13 +30,11 @@ describe 'cassandra' do
 
     let :params do
       {
-        :manage_dsc_repo => true
+        :manage_dsc_repo => true,
       }
     end
 
-    it {
-      should contain_yumrepo('datastax')
-    }
+    it { should contain_yumrepo('datastax') }
   end
 
   context 'On a Debian OS with defaults for all parameters' do
@@ -43,18 +44,16 @@ describe 'cassandra' do
       }
     end
 
-    it {
-      should contain_class('cassandra')
-      should contain_service('cassandra')
-      should contain_class('cassandra::install')
-      should contain_class('cassandra::config')
-      should contain_file('/etc/cassandra/cassandra.yaml')
-      is_expected.not_to contain_class('apt')
-      is_expected.not_to contain_class('apt::update')
-      is_expected.not_to contain_apt__key('datastaxkey')
-      is_expected.not_to contain_apt__source('datastax')
-      is_expected.not_to contain_exec('update-cassandra-repos')
-    }
+    it { should contain_class('cassandra') }
+    it { should contain_service('cassandra') }
+    it { should contain_file('/etc/cassandra/cassandra.yaml') }
+    it { should contain_package('dsc22') }
+    it { is_expected.to contain_service('cassandra') }
+    it { is_expected.not_to contain_class('apt') }
+    it { is_expected.not_to contain_class('apt::update') }
+    it { is_expected.not_to contain_apt__key('datastaxkey') }
+    it { is_expected.not_to contain_apt__source('datastax') }
+    it { is_expected.not_to contain_exec('update-cassandra-repos') }
   end
 
   context 'On a Debian OS with manage_dsc_repo set to true' do
@@ -68,115 +67,40 @@ describe 'cassandra' do
 
     let :params do
       {
-        :manage_dsc_repo => true
+        :manage_dsc_repo => true,
+        :service_name    => 'foobar_service'
       }
     end
 
-    it {
-      should contain_class('apt')
-      should contain_class('apt::update')
-      is_expected.to contain_apt__key('datastaxkey')
-      is_expected.to contain_apt__source('datastax')
-      is_expected.to contain_exec('update-cassandra-repos')
-    }
+    it { should contain_class('apt') }
+    it { should contain_class('apt::update') }
+    it { is_expected.to contain_apt__key('datastaxkey') }
+    it { is_expected.to contain_apt__source('datastax') }
+    it { is_expected.to contain_exec('update-cassandra-repos') }
+    it { is_expected.to contain_service('cassandra') }
   end
 
-  context 'With datastax_agent_package_ensure set to present' do
+  context 'Install DSE on a Red Hat family OS.' do
     let :facts do
       {
-        :osfamily => 'RedHat',
+        :osfamily => 'RedHat'
       }
     end
 
     let :params do
       {
-        :datastax_agent_package_ensure => 'present',
-        :datastax_agent_package_name   => 'datastax-agent-foo',
-        :datastax_agent_service_name   => 'datastax-agent-bar'
+        :package_ensure => '4.7.0-1',
+        :package_name   => 'dse-full',
+        :cluster_name   => 'DSE Cluster',
+        :config_path    => '/etc/dse/cassandra',
+        :service_name   => 'dse'
       }
     end
 
     it {
-      should contain_package('datastax-agent-foo')
-      should contain_service('datastax-agent-bar')
-    }
-  end
-
-  context 'With datastax_agent_package_ensure set to present' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-      }
-    end
-
-    let :params do
-      {
-        :datastax_agent_package_ensure => 'present',
-        :datastax_agent_package_name   => 'da-foobar',
-      }
-    end
-
-    it {
-      should contain_package('da-foobar')
-    }
-  end
-
-  context 'With cassandra_opt_package_ensure set to present (RedHat)' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-      }
-    end
-
-    let :params do
-      {
-        :cassandra_opt_package_ensure => 'present',
-      }
-    end
-
-    it {
-      should contain_package('cassandra21-tools')
-    }
-  end
-
-  context 'With cassandra_opt_package_ensure set to present (Ubuntu)' do
-    let :facts do
-      {
-        :osfamily => 'Debian',
-        :lsbdistid => 'Ubuntu',
-        :lsbdistrelease => '14.04'
-      }
-    end
-
-    let :params do
-      {
-        :cassandra_opt_package_ensure => 'present',
-      }
-    end
-
-    it {
-      should contain_package('cassandra-tools')
-    }
-  end
-
-  context 'With java_package_name set to foobar' do
-    let :facts do
-      {
-        :osfamily => 'RedHat',
-      }
-    end
-
-    let :params do
-      {
-        :java_package_name   => 'foobar-java',
-        :java_package_ensure => '42',
-      }
-    end
-
-    it {
-      should contain_package('foobar-java').with({
-        :ensure => 42,
-      })
+      is_expected.to contain_file('/etc/dse/cassandra/cassandra.yaml')
+      is_expected.to contain_package('dse-full').with_ensure('4.7.0-1')
+      is_expected.to contain_service('cassandra').with_name('dse')
     }
   end
 
