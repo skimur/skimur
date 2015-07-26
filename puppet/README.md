@@ -38,6 +38,8 @@ C:/ProgramData/PuppetLabs/puppet/etc/modules
 
 > puppet module install puppetlabs-java
 
+```
 C:/Users/Paul/.puppet/modules
 └─┬ puppetlabs-java (v1.4.1)
   └── puppetlabs-stdlib (v4.7.0)
+```
