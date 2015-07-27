@@ -88,5 +88,15 @@ namespace Subs
         /// Is this comment deleted? If so, AuthorUserName, Body and BodyFormatted should be marked as "deleted".
         /// </summary>
         public bool Deleted { get; set; }
+
+        /// <summary>
+        /// Value used to sort the best comments
+        /// </summary>
+        public decimal SortBest { get; set; }
+
+        /// <summary>
+        /// Values used to sort the top comments for a QA-style thread.
+        /// </summary>
+        public decimal SortQa { get; set; }
     }
 }

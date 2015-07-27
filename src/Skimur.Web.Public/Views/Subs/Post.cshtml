@@ -1,4 +1,5 @@
 ﻿@using Subs
+@using Subs.ReadModel
 @model PostDetailsModel
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
@@ -20,12 +21,38 @@
             </div>
         }
 
-        @if (Model.Comments != null)
-        {
-            <div class="row">
+
+        <div class="row">
+            @if (Model.Comments != null)
+            {
+                <div class="page-header comments-header">
+                    <div class="comments-text">Comments</div>
+                    <div class="comments-sort">
+                        Sort by:
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                                @Model.Comments.SortBy <span class="caret"></span>
+                            </button>
+                            <ul class="dropdown-menu">
+                                <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "best")">Best</a></li>
+                                <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "top")">Top</a></li>
+                                <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "new")">New</a></li>
+                                <li class="@(Model.Comments.SortBy == CommentSortBy.Controversial ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "controversial")">Controversial</a></li>
+                                <li class="@(Model.Comments.SortBy == CommentSortBy.Old ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "old")">Old</a></li>
+                                <li class="@(Model.Comments.SortBy == CommentSortBy.Qa ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "qa")">Qa</a></li>
+                            </ul>
+                        </div>
+                    </div>
+                </div>
+                
                 @Html.Partial("_Comments", Model.Comments)
-            </div>
-        }
+            }
+            else
+            {
+                <p>There are no comments yet.</p>
+            }
+        </div>
+
 
     </div>
     <div class="col-lg-3 col-sm-4">

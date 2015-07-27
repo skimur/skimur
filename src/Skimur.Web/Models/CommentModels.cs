@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Subs;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Models
 {
@@ -67,6 +68,8 @@ namespace Skimur.Web.Models
         }
 
         public string PostSlug { get; set; }
+
+        public CommentSortBy SortBy { get; set; } 
 
         public List<CommentModel> Comments { get; set; } 
     }

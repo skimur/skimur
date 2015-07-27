@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Subs.ReadModel;
 
 namespace Subs.Services
 {
@@ -14,7 +15,7 @@ namespace Subs.Services
 
         void UpdateCommentBody(Guid commentId, string body, string bodyFormatted, DateTime dateEdited);
 
-        List<Comment> GetAllCommentsForPost(string postSlug);
+        List<Comment> GetAllCommentsForPost(string postSlug, CommentSortBy? sortBy = null);
 
         void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes);
 

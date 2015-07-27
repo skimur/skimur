@@ -10,6 +10,16 @@ namespace Subs.ReadModel
     {
         Comment GetCommentById(Guid id);
 
-        List<Comment> GetAllCommentsForPost(string postSlug);
+        List<Comment> GetAllCommentsForPost(string postSlug, CommentSortBy? sortBy = null);
+    }
+
+    public enum CommentSortBy
+    {
+        Best,
+        Top,
+        New,
+        Controversial,
+        Old,
+        Qa
     }
 }

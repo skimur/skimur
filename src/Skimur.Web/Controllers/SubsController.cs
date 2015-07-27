@@ -142,7 +142,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, string slug)
+        public ActionResult Post(string subName, string slug, CommentSortBy commentsSort = CommentSortBy.Best)
         {
             var post = _postDao.GetPostBySlug(slug);
 
@@ -161,9 +161,10 @@ namespace Skimur.Web.Controllers
             model.Post = MapPost(post);
             model.Sub = MapSub(sub);
             model.Comments = new CommentListModel();
+            model.Comments.SortBy = commentsSort;
             model.Comments.PostSlug = model.Post.Slug;
 
-            var comments = _commentDao.GetAllCommentsForPost(post.Slug).Select(MapComment).ToList();
+            var comments = _commentDao.GetAllCommentsForPost(post.Slug, commentsSort).Select(MapComment).ToList();
 
             Func<Guid?, List<CommentModel>> buildComments = null;
             buildComments = parentCommentId =>

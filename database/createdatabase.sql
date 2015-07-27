@@ -1,3 +1,34 @@
+-- for unit tests
+CREATE OR REPLACE FUNCTION clear_database() RETURNS void AS $$
+DECLARE
+BEGIN
+    DELETE FROM votes;
+    DELETE FROM posts;
+    DELETE FROM sub_scriptions;
+    DELETE FROM sub_admins;
+    DELETE FROM subs;
+    DELETE FROM user_logins;
+    DELETE FROM user_roles;
+    DELETE FROM roles;
+    DELETE from users;
+END;
+$$ LANGUAGE plpgsql;
+
+create or replace function hot(ups integer, downs integer, date timestamp with time zone) returns numeric as $$
+    select round(cast(log(greatest(abs($1 - $2), 1)) * sign($1 - $2) + (date_part('epoch', $3) - 1134028003) / 45000.0 as numeric), 7)
+$$ language sql immutable;
+
+create or replace function score(ups integer, downs integer) returns integer as $$
+    select $1 - $2
+$$ language sql immutable;
+
+create or replace function controversy(ups integer, downs integer) returns float as $$
+    select CASE WHEN $1 <= 0 or $2 <= 0 THEN 0
+                WHEN $1 > $2 THEN power($1 + $2, cast($2 as float) / $1)
+                ELSE power($1 + $2, cast($1 as float) / $2)
+           END;
+$$ language sql immutable;
+
 CREATE TABLE users
 (
   id uuid NOT NULL,
@@ -128,36 +159,10 @@ CREATE TABLE comments
   send_replies boolean,
   vote_up_count integer,
   vote_down_count integer,
-  deleted boolean
+  deleted boolean,
+  sort_best numeric,
+  sort_qa numeric
 );
 
--- for unit tests
-CREATE OR REPLACE FUNCTION clear_database() RETURNS void AS $$
-DECLARE
-BEGIN
-    DELETE FROM votes;
-    DELETE FROM posts;
-    DELETE FROM sub_scriptions;
-    DELETE FROM sub_admins;
-    DELETE FROM subs;
-    DELETE FROM user_logins;
-    DELETE FROM user_roles;
-    DELETE FROM roles;
-    DELETE from users;
-END;
-$$ LANGUAGE plpgsql;
-
-create or replace function hot(ups integer, downs integer, date timestamp with time zone) returns numeric as $$
-    select round(cast(log(greatest(abs($1 - $2), 1)) * sign($1 - $2) + (date_part('epoch', $3) - 1134028003) / 45000.0 as numeric), 7)
-$$ language sql immutable;
-
-create or replace function score(ups integer, downs integer) returns integer as $$
-    select $1 - $2
-$$ language sql immutable;
-
-create or replace function controversy(ups integer, downs integer) returns float as $$
-    select CASE WHEN $1 <= 0 or $2 <= 0 THEN 0
-                WHEN $1 > $2 THEN power($1 + $2, cast($2 as float) / $1)
-                ELSE power($1 + $2, cast($1 as float) / $2)
-           END;
-$$ language sql immutable;
+CREATE INDEX comments_score_index ON comments (hot(vote_up_count, vote_down_count, date_created), date_created);
+CREATE INDEX comments_controversy_index ON comments (controversy(vote_up_count, vote_down_count), date_created);

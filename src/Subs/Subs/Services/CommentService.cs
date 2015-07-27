@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
+using Subs.ReadModel;
 
 namespace Subs.Services
 {
@@ -46,14 +47,43 @@ namespace Subs.Services
             });
         }
 
-        public List<Comment> GetAllCommentsForPost(string postSlug)
+        public List<Comment> GetAllCommentsForPost(string postSlug, CommentSortBy? sortBy = null)
         {
-            if(string.IsNullOrEmpty(postSlug))
+            if (string.IsNullOrEmpty(postSlug))
                 return new List<Comment>();
 
             return _conn.Perform(conn =>
             {
-                return conn.Select(conn.From<Comment>().Where(x => x.PostSlug == postSlug));
+                var query = conn.From<Comment>().Where(x => x.PostSlug == postSlug);
+
+                if (sortBy.HasValue)
+                {
+                    switch (sortBy)
+                    {
+                        case CommentSortBy.Best:
+                            query.OrderByDescending(x => x.SortBest);
+                            break;
+                        case CommentSortBy.Top:
+                            query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
+                            break;
+                        case CommentSortBy.New:
+                            query.OrderByDescending(x => x.DateCreated);
+                            break;
+                        case CommentSortBy.Controversial:
+                            query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
+                            break;
+                        case CommentSortBy.Old:
+                            query.OrderBy(x => x.DateCreated);
+                            break;
+                        case CommentSortBy.Qa:
+                            query.OrderByDescending(x => x.SortQa);
+                            break;
+                        default:
+                            throw new Exception("unknown sort");
+                    }
+                }
+
+                return conn.Select(query);
             });
         }
 
