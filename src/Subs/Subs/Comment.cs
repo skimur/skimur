@@ -92,7 +92,7 @@ namespace Subs
         /// <summary>
         /// Value used to sort the best comments
         /// </summary>
-        public decimal SortBest { get; set; }
+        public decimal SortConfidence { get; set; }
 
         /// <summary>
         /// Values used to sort the top comments for a QA-style thread.

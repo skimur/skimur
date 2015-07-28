@@ -61,7 +61,7 @@ namespace Subs.Services
                     switch (sortBy)
                     {
                         case CommentSortBy.Best:
-                            query.OrderByDescending(x => x.SortBest);
+                            query.OrderByDescending(x => x.SortConfidence);
                             break;
                         case CommentSortBy.Top:
                             query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
@@ -87,6 +87,14 @@ namespace Subs.Services
             });
         }
 
+        public List<Comment> GetChildrenForComment(Guid commentId, string authorName = null)
+        {
+            return _conn.Perform(conn =>
+            {
+                return conn.Select(!string.IsNullOrEmpty(authorName) ? conn.From<Comment>().Where(x => x.ParentId == commentId && x.AuthorUserName.ToLower() == authorName.ToLower()) : conn.From<Comment>().Where(x => x.ParentId == commentId));
+            });
+        }
+
         public void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes)
         {
             if (downVotes.HasValue || upVotes.HasValue)
@@ -104,6 +112,28 @@ namespace Subs.Services
                     else if (downVotes.HasValue)
                     {
                         conn.Update<Comment>(new { VoteDownCount = downVotes.Value }, x => x.Id == commentId);
+                    }
+                });
+            }
+        }
+
+        public void UpdateCommentSorting(Guid commentId, double? confidence, double? qa)
+        {
+            if (confidence.HasValue || qa.HasValue)
+            {
+                _conn.Perform(conn =>
+                {
+                    if (confidence.HasValue && qa.HasValue)
+                    {
+                        conn.Update<Comment>(new { SortConfidence = confidence.Value, SortQa = qa.Value }, x => x.Id == commentId);
+                    }
+                    else if (confidence.HasValue)
+                    {
+                        conn.Update<Comment>(new { SortConfidence = confidence.Value }, x => x.Id == commentId);
+                    }
+                    else if (qa.HasValue)
+                    {
+                        conn.Update<Comment>(new { SortQa = qa.Value }, x => x.Id == commentId);
                     }
                 });
             }

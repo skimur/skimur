@@ -17,7 +17,11 @@ namespace Subs.Services
 
         List<Comment> GetAllCommentsForPost(string postSlug, CommentSortBy? sortBy = null);
 
+        List<Comment> GetChildrenForComment(Guid commentId, string authorName = null);
+
         void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes);
+
+        void UpdateCommentSorting(Guid commentId, double? confidence, double? qa);
 
         void DeleteComment(Guid commentId, DateTime deletedOn);
     }

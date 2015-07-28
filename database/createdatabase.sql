@@ -140,7 +140,8 @@ CREATE TABLE votes
   type integer,
   date_casted timestamp with time zone,
   ip_address text,
-  user_ip text
+  user_ip text,
+  CONSTRAINT votes_pkey PRIMARY KEY (id)
 );
 
 CREATE TABLE comments
@@ -160,8 +161,9 @@ CREATE TABLE comments
   vote_up_count integer,
   vote_down_count integer,
   deleted boolean,
-  sort_best numeric,
-  sort_qa numeric
+  sort_confidence numeric,
+  sort_qa numeric,
+  CONSTRAINT comments_pkey PRIMARY KEY (id)
 );
 
 CREATE INDEX comments_score_index ON comments (hot(vote_up_count, vote_down_count, date_created), date_created);

@@ -27,8 +27,8 @@ namespace Subs.Worker
             container.Register<ICommandHandler<CastVoteForPost>, VoteCommandHandler>();
             container.Register<ICommandHandler<CastVoteForComment>, VoteCommandHandler>();
 
-            container.Register<IEventHandler<VoteForPostCasted>, VoteEventHandler>();
-            container.Register<IEventHandler<VoteForCommentCasted>, VoteEventHandler>();
+            container.Register<IEventHandler<VoteForPostCasted>, ScoringAndSortingEventHandler>();
+            container.Register<IEventHandler<VoteForCommentCasted>, ScoringAndSortingEventHandler>();
 
             container.Register<ICommandHandlerResponse<CreateComment, CreateCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<EditComment, EditCommentResponse>, CommentCommandHandler>();
