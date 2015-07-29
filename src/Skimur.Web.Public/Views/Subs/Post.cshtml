@@ -33,7 +33,7 @@
                             <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 @Model.Comments.SortBy <span class="caret"></span>
                             </button>
-                            <ul class="dropdown-menu">
+                            <ul class="dropdown-menu dropdown-menu-right">
                                 <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "best")">Best</a></li>
                                 <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "top")">Top</a></li>
                                 <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "new")">New</a></li>
