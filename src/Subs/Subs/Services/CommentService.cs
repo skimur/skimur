@@ -123,18 +123,22 @@ namespace Subs.Services
             {
                 _conn.Perform(conn =>
                 {
-                    if (confidence.HasValue && qa.HasValue)
-                    {
-                        conn.Update<Comment>(new { SortConfidence = confidence.Value, SortQa = qa.Value }, x => x.Id == commentId);
-                    }
-                    else if (confidence.HasValue)
-                    {
-                        conn.Update<Comment>(new { SortConfidence = confidence.Value }, x => x.Id == commentId);
-                    }
-                    else if (qa.HasValue)
-                    {
-                        conn.Update<Comment>(new { SortQa = qa.Value }, x => x.Id == commentId);
-                    }
+                    var from = conn.From<Comment>().Where(x => x.Id == commentId);
+
+                    var sets = new List<string>();
+
+                    if (confidence.HasValue)
+                        sets.Add("sort_confidence = " + confidence.Value);
+
+                    if (qa.HasValue)
+                        sets.Add("sort_qa = " + qa.Value);
+
+                    var statement = string.Format("update {0} set {1} {2}",
+                            OrmLiteConfig.DialectProvider.GetQuotedTableName(ModelDefinition<Comment>.Definition),
+                            string.Join(",", sets), 
+                            from.WhereExpression);
+
+                    conn.ExecuteNonQuery(statement);
                 });
             }
         }
