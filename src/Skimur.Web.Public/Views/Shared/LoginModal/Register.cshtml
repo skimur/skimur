@@ -5,6 +5,7 @@
         @using (Html.BeginForm(null, null, FormMethod.Post, new { action = Url.Register() }))
         {
             @Html.AntiForgeryToken()
+            <input type="hidden" name="returnUrl" value="@Request.RawUrl" />
             <div class="form-group">
                 <div class="input-group">
                     @Html.TextBoxFor(x => x.Username, new { @class = "form-control", placeholder = "User name" })
