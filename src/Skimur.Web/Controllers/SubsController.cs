@@ -23,6 +23,7 @@ namespace Skimur.Web.Controllers
         private readonly IPostDao _postDao;
         private readonly IVoteDao _voteDao;
         private readonly ICommentDao _commentDao;
+        private readonly IPermissionDao _permissionDao;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -31,7 +32,8 @@ namespace Skimur.Web.Controllers
             IUserContext userContext,
             IPostDao postDao,
             IVoteDao voteDao,
-            ICommentDao commentDao)
+            ICommentDao commentDao,
+            IPermissionDao permissionDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -41,6 +43,7 @@ namespace Skimur.Web.Controllers
             _postDao = postDao;
             _voteDao = voteDao;
             _commentDao = commentDao;
+            _permissionDao = permissionDao;
         }
 
         public ActionResult Index(string query)
@@ -795,10 +798,16 @@ namespace Skimur.Web.Controllers
         {
             if (comment == null) return null;
             var result = _mapper.Map<Comment, CommentModel>(comment);
-            result.CanDelete = true;
-            result.CanEdit = true;
+
             if (_userContext.CurrentUser != null)
-                result.CurrentVote = _voteDao.GetVoteForUserOnComment(_userContext.CurrentUser.UserName, comment.Id);
+            {
+                result.CanEdit = _userContext.CurrentUser.UserName == comment.AuthorUserName;
+                result.CanDelete = _permissionDao.CanUserDeleteComment(_userContext.CurrentUser.UserName, comment);
+                result.CanMarkSpam = _permissionDao.CanUserMarkCommentAsSpam(_userContext.CurrentUser.UserName, comment);
+                if (_userContext.CurrentUser != null)
+                    result.CurrentVote = _voteDao.GetVoteForUserOnComment(_userContext.CurrentUser.UserName, comment.Id);
+            }
+        
             return result;
         }
     }

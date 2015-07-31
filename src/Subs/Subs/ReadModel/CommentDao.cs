@@ -12,10 +12,17 @@ namespace Subs.ReadModel
         // this class temporarily implements the service, until we implement the proper read-only layer
         : CommentService, ICommentDao
     {
-        public CommentDao(IDbConnectionProvider conn)
+        private readonly ICommentTreeBuilder _commentTreeBuilder;
+
+        public CommentDao(IDbConnectionProvider conn, ICommentTreeBuilder commentTreeBuilder)
             :base(conn)
         {
-            
+            _commentTreeBuilder = commentTreeBuilder;
+        }
+
+        public CommentTree GetCommentTree(string postSlug, CommentSortBy? sortBy = null)
+        {
+            return _commentTreeBuilder.GetCommentTree(postSlug, sortBy);
         }
     }
 }

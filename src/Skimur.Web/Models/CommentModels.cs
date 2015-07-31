@@ -58,6 +58,8 @@ namespace Skimur.Web.Models
         public bool CanDelete { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public bool CanMarkSpam { get; set; }
     }
 
     public class CommentListModel

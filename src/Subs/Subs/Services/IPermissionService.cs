@@ -10,6 +10,10 @@ namespace Subs.Services
     {
         bool CanUserDeleteComment(string userName, Comment comment);
 
-        bool CanUserDeleteComment(string userName, Guid commentId);
+        bool CanUserMarkCommentAsSpam(string userName, Comment comment);
+
+        bool CanUserMarkPostAsSpam(string userName, Post post);
+
+        bool CanUserModerateSub(string userName, string subName);
     }
 }

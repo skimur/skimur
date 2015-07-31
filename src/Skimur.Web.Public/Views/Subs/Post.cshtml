@@ -16,11 +16,16 @@
                     <textarea id="post-comment"></textarea>
                 </div>
                 <div class="form-group">
-                    <button id="post-comment-submit" type="submit" class="btn btn-primary">Save</button>
+                    <button id="post-comment-submit" type="submit" class="btn btn-primary">Add comment</button>
                 </div>
             </div>
         }
-
+        else
+        {
+            <div class="row">
+                <a href="javascript:skimurui.login.display('You must be logged in to comment.');" class="btn btn-default btn-lg"><span class="fa fa-comment"></span> Add comment</a>
+            </div>
+        }
 
         <div class="row">
             @if (Model.Comments != null)
@@ -44,7 +49,7 @@
                         </div>
                     </div>
                 </div>
-                
+
                 @Html.Partial("_Comments", Model.Comments)
             }
             else

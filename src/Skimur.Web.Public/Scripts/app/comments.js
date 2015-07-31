@@ -249,7 +249,7 @@
                 "</div>" +
                 "<textarea class='comment-md-unformatted hidden'>" + comment.body + "</textarea>" +
                        "<ul class='comment-options'>" +
-                           "<li class='first'>" +
+                           "<li>" +
                                "<a href='javascript:void(0);' class='reply'>reply</a>" +
                            "</li>" +
                            "<li>" +

@@ -27,11 +27,27 @@
             </div>
             <textarea class="comment-md-unformatted hidden">@Html.Raw(comment.Body)</textarea>
             <ul class="comment-options">
-                <li class="first">
-                    <a href="javascript:void(0);" class="delete login-required">delete</a>
-                    <a href="javascript:void(0);" class="reply login-required">reply</a>
-                    <a href="javascript:void(0);" class="edit login-required">edit</a>
+                @if (comment.CanDelete)
+                {
+                    <li>
+                        <a href="javascript:void(0);" class="delete">delete</a>
+                    </li>
+                }
+                <li>
+                    <a href="javascript:void(0);" class="reply">reply</a>
                 </li>
+                @if (comment.CanEdit)
+                {
+                    <li>
+                        <a href="javascript:void(0);" class="edit">edit</a>
+                    </li>
+                }
+                @if (comment.CanMarkSpam)
+                {
+                    <li>
+                        <a href="javascript:void(0);" class="spam">mark spam</a>
+                    </li>
+                }
             </ul>
             <div class="comment-staging hidden"></div>
         </div>

@@ -69,10 +69,13 @@
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
+    <Compile Include="CommentBuilder.cs" />
     <Compile Include="Events\CommentDeleted.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
+    <Compile Include="Services\CommentTreeBuilder.cs" />
+    <Compile Include="Services\ICommentTreeBuilder.cs" />
     <Compile Include="Sorting.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="ReadModel\CommentDao.cs" />

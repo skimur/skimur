@@ -9,30 +9,35 @@ namespace Subs.Services
     public class PermissionService : IPermissionService
     {
         private readonly ISubService _subService;
-        private readonly ICommentService _commentService;
 
         public PermissionService(ISubService subService, ICommentService commentService)
         {
             _subService = subService;
-            _commentService = commentService;
         }
 
         public bool CanUserDeleteComment(string userName, Comment comment)
         {
-            if (comment == null)
-                return false;
-
-            if (string.IsNullOrEmpty(userName))
-                return false;
+            if (comment.AuthorUserName == userName)
+                return true;
 
             // TODO: is user an admin?
 
             return _subService.CanUserModerateSub(userName, comment.SubName);
         }
 
-        public bool CanUserDeleteComment(string userName, Guid commentId)
+        public bool CanUserMarkCommentAsSpam(string userName, Comment comment)
         {
-            return CanUserDeleteComment(userName, _commentService.GetCommentById(commentId));
+            return CanUserModerateSub(userName, comment.SubName);
+        }
+
+        public bool CanUserMarkPostAsSpam(string userName, Post post)
+        {
+            return CanUserModerateSub(userName, post.SubName);
+        }
+
+        public bool CanUserModerateSub(string userName, string subName)
+        {
+            return _subService.CanUserModerateSub(userName, subName);
         }
     }
 }
