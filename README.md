@@ -40,3 +40,8 @@ Skimur uses .NET 4.5. Future versions will run on .NET Core (Windows/Mac/Linux).
 - Redis
 - RabbitMQ
 - TODO: Document source dependencies.
+
+## Contributors
+
+- Paul Knopf ([@theonlylawislov](http://twitter.com/theonlylawislov))
+- Richard Cruz
