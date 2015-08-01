@@ -117,6 +117,27 @@ namespace Subs.Tests
             CollectionAssert.Contains(result.TopLevelComments, comment2);
         }
 
+        [Test]
+        public void Can_get_children_for_a_specific_comment()
+        {
+            // arrange
+            CreateTreeComments();
+            var tree = _commentTreeBuilder.GetCommentTree(null);
+
+            // act
+            var result = _commentTreeContextBuilder.Build(tree, null, comment:tree.Tree[Guid.Empty][0], maxDepth:1);
+
+            // assert
+            Assert.That(result.TopLevelComments, Has.Count.EqualTo(1));
+            foreach (var comment in result.Comments)
+            {
+                if(comment != tree.Tree[Guid.Empty][0])
+                {
+                    Assert.That(tree.Parents[comment], Is.EqualTo(tree.Tree[Guid.Empty][0]));
+                }
+            }
+        }
+
         [SetUp]
         public void Setup()
         {
