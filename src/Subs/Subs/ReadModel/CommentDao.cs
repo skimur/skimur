@@ -73,7 +73,7 @@ namespace Subs.ReadModel
 
         public CommentTreeContext BuildCommentTreeContext(CommentTree commentTree, Dictionary<Guid, double> sorter, List<Guid> children = null, Guid? comment = null)
         {
-            return _commentTreeContextBuilder.BuildCommentTreeContext(commentTree, sorter, children, comment);
+            return _commentTreeContextBuilder.Build(commentTree, sorter, children, comment);
         }
     }
 }

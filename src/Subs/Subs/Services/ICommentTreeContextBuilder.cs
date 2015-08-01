@@ -9,7 +9,7 @@ namespace Subs.Services
 {
     public interface ICommentTreeContextBuilder
     {
-        CommentTreeContext BuildCommentTreeContext(CommentTree commentTree, 
+        CommentTreeContext Build(CommentTree commentTree, 
             Dictionary<Guid, double> sorter, 
             List<Guid> children = null, 
             Guid? comment = null, 

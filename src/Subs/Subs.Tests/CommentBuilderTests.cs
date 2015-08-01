@@ -5,6 +5,7 @@ using System.Runtime.InteropServices.WindowsRuntime;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Utils;
+using Microsoft.ClearScript;
 using Moq;
 using NUnit.Framework;
 using Skimur;
@@ -30,7 +31,7 @@ namespace Subs.Tests
             var sorter = comments.ToDictionary(x => x.Id, x => (double)comments.IndexOf(comments.Single(y => y.Id == x.Id)));
 
             // act
-            var result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, sorter);
+            var result = _commentTreeContextBuilder.Build(tree, sorter);
 
             // assert
             Assert.That(result.Comments, Has.Count.EqualTo(1110));
@@ -56,7 +57,7 @@ namespace Subs.Tests
             var tree = _commentTreeBuilder.GetCommentTree(null);
 
             // act
-            var result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, new Dictionary<Guid, double>());
+            var result = _commentTreeContextBuilder.Build(tree, new Dictionary<Guid, double>());
 
             // assert
             Assert.That(result.CommentsChildrenCount[comment.Id], Is.EqualTo(3));
@@ -84,18 +85,36 @@ namespace Subs.Tests
             var tree = _commentTreeBuilder.GetCommentTree(null);
 
             // act
-            var result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, new Dictionary<Guid, double>(), maxDepth: 1);
+            var result = _commentTreeContextBuilder.Build(tree, new Dictionary<Guid, double>(), maxDepth: 1);
 
             // assert
             Assert.That(result.MoreRecursion, Has.Count.EqualTo(1));
             Assert.IsTrue(result.MoreRecursion.Contains(comment.Id));
 
             // act
-            result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, new Dictionary<Guid, double>(), maxDepth: 2);
+            result = _commentTreeContextBuilder.Build(tree, new Dictionary<Guid, double>(), maxDepth: 2);
 
             // assert
             Assert.That(result.MoreRecursion, Has.Count.EqualTo(1));
             Assert.IsTrue(result.MoreRecursion.Contains(commentChild2.Id));
+        }
+
+        [Test]
+        public void Can_get_specific_children()
+        {
+            // arrange
+            CreateTreeComments();
+            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var comment1 = tree.Tree[Guid.Empty][0];
+            var comment2 = tree.Tree[Guid.Empty][2];
+
+            // act
+            var result = _commentTreeContextBuilder.Build(tree, null, new List<Guid> { comment1, comment2});
+
+            // assert
+            Assert.That(result.TopLevelComments, Has.Count.EqualTo(2));
+            CollectionAssert.Contains(result.TopLevelComments, comment1);
+            CollectionAssert.Contains(result.TopLevelComments, comment2);
         }
 
         [SetUp]

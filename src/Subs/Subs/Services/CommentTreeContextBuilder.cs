@@ -9,7 +9,7 @@ namespace Subs.Services
 {
     public class CommentTreeContextBuilder : ICommentTreeContextBuilder
     {
-        public CommentTreeContext BuildCommentTreeContext(CommentTree commentTree,
+        public CommentTreeContext Build(CommentTree commentTree,
             Dictionary<Guid, double> sorter,
             List<Guid> children = null,
             Guid? comment = null,
@@ -27,6 +27,9 @@ namespace Subs.Services
             if (children != null && children.Count == 0)
                 return result;
             
+            if(sorter == null)
+                sorter = new Dictionary<Guid, double>();
+
             var candidates = new HeapPriorityQueue<CommentQueue>(commentTree.CommentIds.Count);
 
             if (children != null)
