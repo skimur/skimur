@@ -250,11 +250,17 @@ namespace Skimur.Web.Public
 
             app.UseExternalSignInCookie(DefaultAuthenticationTypes.ExternalCookie);
 
-            app.UseFacebookAuthentication(Environment.GetEnvironmentVariable("SkimurSSOFacebookAppId"),
-                Environment.GetEnvironmentVariable("SkimurSSOFacebookAppSecret"));
+            var facebookAppId = Environment.GetEnvironmentVariable("SkimurSSOFacebookAppId");
+            var facebookSecret = Environment.GetEnvironmentVariable("SkimurSSOFacebookAppSecret");
 
-            app.UseGoogleAuthentication(Environment.GetEnvironmentVariable("SkimurSSOGoogleClientId"),
-                Environment.GetEnvironmentVariable("SkimurSSOGoogleSecret"));
+            if (!string.IsNullOrEmpty(facebookAppId) && !string.IsNullOrEmpty(facebookSecret))
+                app.UseFacebookAuthentication(facebookAppId, facebookSecret);
+
+            var googleClientId = Environment.GetEnvironmentVariable("SkimurSSOGoogleClientId");
+            var googleSecret = Environment.GetEnvironmentVariable("SkimurSSOGoogleSecret");
+
+            if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleSecret))
+                app.UseGoogleAuthentication(googleClientId, googleSecret);
         }
 
         public void Register(Container container)
