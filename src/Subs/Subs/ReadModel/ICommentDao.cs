@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Subs.Services;
 
 namespace Subs.ReadModel
 {
@@ -12,22 +13,13 @@ namespace Subs.ReadModel
 
         List<Comment> GetAllCommentsForPost(string postSlug, CommentSortBy? sortBy = null);
 
-        CommentTree GetCommentTree(string postSlug, CommentSortBy? sortBy = null);
+        CommentTree GetCommentTree(string postSlug);
+
+        Dictionary<Guid, double> GetCommentTreeSorter(string postSlug, CommentSortBy sortBy);
+
+        CommentTreeContext BuildCommentTreeContext(CommentTree commentTree, Dictionary<Guid, double> sorter, List<Guid> children = null, Guid? comment = null);
     }
-
-    public class CommentTree
-    {
-        public List<Guid> CommentIds { get; set; }
-
-        public Dictionary<Guid, int> Depth { get; set; }
-
-        public Dictionary<Guid, Guid?> Parents { get; set; }
-
-        public Dictionary<Guid, List<Guid>> Tree { get; set; }
-
-        public Dictionary<Guid, double> Sorter { get; set; }
-    }
-
+    
     public enum CommentSortBy
     {
         Best,

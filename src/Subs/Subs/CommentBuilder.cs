@@ -18,13 +18,14 @@ namespace Subs
         private readonly List<Guid> _topLevelComments = new List<Guid>();
         private readonly List<Guid> _moreRecursion = new List<Guid>();
         private readonly Dictionary<Guid, int> _commentsChildrenCount = new Dictionary<Guid, int>();
+        private readonly List<Guid> _dontCollapse = new List<Guid>();
 
         public CommentBuilder(CommentTree commentTree)
         {
             _tree = commentTree;
         }
 
-        public void BuildForTopLevelComments(int? limit, int maxDepth, bool continueThread = true, bool loadMore = true)
+        public void BuildForTopLevelComments(int? limit, int? maxDepth, bool continueThread = true, bool loadMore = true)
         {
             Clear();
 
@@ -41,7 +42,7 @@ namespace Subs
 
                 var commentDepth = _tree.Depth[candidate.CommentId];
 
-                if (commentDepth < maxDepth)
+                if (!maxDepth.HasValue || commentDepth < maxDepth.Value)
                 {
                     items.Add(candidate.CommentId);
                     if (_tree.Tree.ContainsKey(candidate.CommentId))
@@ -81,9 +82,37 @@ namespace Subs
             }
         }
 
+        public void BuildForComment(Guid commentId, int? limit, int? maxDepth, int context = 0, bool continueThread = true, bool loadMore = true)
+        {
+            Clear();
+
+            if (context < 0)
+                context = 0;
+
+            var candidates = new HeapPriorityQueue<CommentQueue>(_tree.CommentIds.Count);
+
+            var currentComment = (Guid?)commentId;
+            var path = new List<Guid>();
+            while (currentComment.HasValue && path.Count <= context)
+            {
+                path.Add(currentComment.Value);
+                currentComment = _tree.Parents[currentComment.Value];
+            }
+
+            foreach (var comment in path)
+            {
+                var parent = _tree.Parents[comment];
+                _tree.Tree[parent ?? Guid.Empty] = new List<Guid> {comment};
+            }
+
+            _dontCollapse.AddRange(path);
+        }
+
         public List<Guid> Comments { get { return _comments; } }
 
         public Dictionary<Guid, int> CommentChildrenCount { get { return _commentsChildrenCount; } }
+
+        public List<Guid> DontCollapse { get { return _dontCollapse; } } 
 
         public List<Guid> TopLevelComments { get { return _topLevelComments; } }
 
@@ -118,41 +147,6 @@ namespace Subs
             }
 
             return childrenCount;
-
-            //while (stack.Count > 0)
-            //{
-            //    var current = stack[stack.Count - 1];
-
-            //    if (_commentsChildrenCount.ContainsKey(current))
-            //    {
-            //        stack.RemoveAt(stack.Count - 1);
-            //        continue;
-            //    }
-
-            //    var children = _tree.Tree.ContainsKey(current) ? _tree.Tree[current] : new List<Guid>();
-
-            //    foreach (var child in children)
-            //    {
-            //        if (!_commentsChildrenCount.ContainsKey(child) && _tree.Tree.ContainsKey(child))
-            //            _commentsChildrenCount[child] = 0;
-            //    }
-
-            //    var missing = children.Except(_commentsChildrenCount.Keys).ToList();
-
-            //    if (missing.Count == 0)
-            //    {
-            //        _commentsChildrenCount[current] = 0;
-            //        stack.RemoveAt(stack.Count - 1);
-            //        foreach (var child in children)
-            //        {
-            //            _commentsChildrenCount[current] += 1 + _commentsChildrenCount[child];
-            //        }
-            //    }
-            //    else
-            //    {
-            //        stack.AddRange(missing);
-            //    }
-            //}
         }
 
         private void Clear()
@@ -160,16 +154,9 @@ namespace Subs
             _comments.Clear();
             _moreRecursion.Clear();
             _commentsChildrenCount.Clear();
+            _dontCollapse.Clear();
         }
 
-        class CommentQueue : PriorityQueueNode
-        {
-            public CommentQueue(Guid commentId)
-            {
-                CommentId = commentId;
-            }
-
-            public Guid CommentId { get; private set; }
-        }
+        
     }
 }

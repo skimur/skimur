@@ -94,7 +94,7 @@ namespace Subs.Services
                 return conn.Select(!string.IsNullOrEmpty(authorName) ? conn.From<Comment>().Where(x => x.ParentId == commentId && x.AuthorUserName.ToLower() == authorName.ToLower()) : conn.From<Comment>().Where(x => x.ParentId == commentId));
             });
         }
-
+        
         public void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes)
         {
             if (downVotes.HasValue || upVotes.HasValue)

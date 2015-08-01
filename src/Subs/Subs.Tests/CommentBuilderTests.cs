@@ -19,21 +19,22 @@ namespace Subs.Tests
     {
         private Mock<ICommentService> _commentService;
         private ICommentTreeBuilder _commentTreeBuilder;
+        private ICommentTreeContextBuilder _commentTreeContextBuilder;
 
         [Test]
         public void Can_build_comment_tree()
         {
             // arrange
-            CreateTreeComments();
+            var comments = CreateTreeComments();
             var tree = _commentTreeBuilder.GetCommentTree(null);
-            var builder = new CommentBuilder(tree);
+            var sorter = comments.ToDictionary(x => x.Id, x => (double)comments.IndexOf(comments.Single(y => y.Id == x.Id)));
 
             // act
-            builder.BuildForTopLevelComments(null, int.MaxValue);
+            var result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, sorter);
 
             // assert
-            Assert.That(builder.Comments, Has.Count.EqualTo(1110));
-            Assert.That(builder.TopLevelComments, Has.Count.EqualTo(10));
+            Assert.That(result.Comments, Has.Count.EqualTo(1110));
+            Assert.That(result.TopLevelComments, Has.Count.EqualTo(10));
         }
 
         [Test]
@@ -53,16 +54,15 @@ namespace Subs.Tests
             grandChild1.ParentId = commentChild2.Id;
             SetupComments(new List<Comment> { comment, commentChild1, commentChild2, grandChild1 });
             var tree = _commentTreeBuilder.GetCommentTree(null);
-            var builder = new CommentBuilder(tree);
 
             // act
-            builder.BuildForTopLevelComments(null, int.MaxValue);
+            var result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, new Dictionary<Guid, double>());
 
             // assert
-            Assert.That(builder.CommentChildrenCount[comment.Id], Is.EqualTo(3));
-            Assert.That(builder.CommentChildrenCount[commentChild1.Id], Is.EqualTo(0));
-            Assert.That(builder.CommentChildrenCount[commentChild2.Id], Is.EqualTo(1));
-            Assert.That(builder.CommentChildrenCount[grandChild1.Id], Is.EqualTo(0));
+            Assert.That(result.CommentsChildrenCount[comment.Id], Is.EqualTo(3));
+            Assert.That(result.CommentsChildrenCount[commentChild1.Id], Is.EqualTo(0));
+            Assert.That(result.CommentsChildrenCount[commentChild2.Id], Is.EqualTo(1));
+            Assert.That(result.CommentsChildrenCount[grandChild1.Id], Is.EqualTo(0));
         }
 
         [Test]
@@ -82,21 +82,20 @@ namespace Subs.Tests
             grandChild1.ParentId = commentChild2.Id;
             SetupComments(new List<Comment> { comment, commentChild1, commentChild2, grandChild1 });
             var tree = _commentTreeBuilder.GetCommentTree(null);
-            var builder = new CommentBuilder(tree);
 
             // act
-            builder.BuildForTopLevelComments(null, 1);
+            var result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, new Dictionary<Guid, double>(), maxDepth: 1);
 
             // assert
-            Assert.That(builder.MoreRecursion, Has.Count.EqualTo(1));
-            Assert.IsTrue(builder.MoreRecursion.Contains(comment.Id));
+            Assert.That(result.MoreRecursion, Has.Count.EqualTo(1));
+            Assert.IsTrue(result.MoreRecursion.Contains(comment.Id));
 
             // act
-            builder.BuildForTopLevelComments(null, 2);
+            result = _commentTreeContextBuilder.BuildCommentTreeContext(tree, new Dictionary<Guid, double>(), maxDepth: 2);
 
             // assert
-            Assert.That(builder.MoreRecursion, Has.Count.EqualTo(1));
-            Assert.IsTrue(builder.MoreRecursion.Contains(commentChild2.Id));
+            Assert.That(result.MoreRecursion, Has.Count.EqualTo(1));
+            Assert.IsTrue(result.MoreRecursion.Contains(commentChild2.Id));
         }
 
         [SetUp]
@@ -104,6 +103,7 @@ namespace Subs.Tests
         {
             _commentService = new Mock<ICommentService>();
             _commentTreeBuilder = new CommentTreeBuilder(_commentService.Object);
+            _commentTreeContextBuilder = new CommentTreeContextBuilder();
         }
 
         private List<Comment> CreateTreeComments()

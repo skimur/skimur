@@ -16,17 +16,16 @@ namespace Subs.Services
             _commentService = commentService;
         }
 
-        public CommentTree GetCommentTree(string postSlug, CommentSortBy? sortBy = null)
+        public CommentTree GetCommentTree(string postSlug)
         {
             // TODO: this method is very db intensive. however, it should be easy to improve the performance once a caching strategy is implemented.
 
-            var comments = _commentService.GetAllCommentsForPost(postSlug, sortBy);
+            var comments = _commentService.GetAllCommentsForPost(postSlug);
 
             var tree = new CommentTree
             {
                 CommentIds = comments.Select(x => x.Id).ToList(),
                 Parents = comments.ToDictionary(x => x.Id, x => x.ParentId),
-                Sorter = comments.ToDictionary(x => x.Id, x => (double) comments.IndexOf(x)),
                 Tree = new Dictionary<Guid, List<Guid>>(),
                 Depth = comments.ToDictionary(x => x.Id, x => 0)
             };
