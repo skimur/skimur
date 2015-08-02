@@ -31,6 +31,7 @@ namespace Subs.ReadModel
         {
             var wrapped = WrapComments(treeContext.Comments, currentUser);
             var final = new List<CommentNode>();
+            var walked = new List<Guid>();
 
             foreach (var comment in wrapped.Values)
             {
@@ -48,7 +49,6 @@ namespace Subs.ReadModel
                     // this comment is the current user, so lets walk the parents
                     // and uncollapse any comments which may be collapsed
                     var ancestor = parent;
-                    var walked = new List<Guid>();
                     while (ancestor != null && !walked.Contains(ancestor.Comment.Id))
                     {
                         ancestor.Collapsed = false;
