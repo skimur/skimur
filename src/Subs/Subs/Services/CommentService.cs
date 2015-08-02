@@ -70,22 +70,22 @@ namespace Subs.Services
                     switch (sortBy)
                     {
                         case CommentSortBy.Best:
-                            query.OrderByDescending(x => x.SortConfidence);
+                            query.OrderBy(x => x.SortConfidence);
                             break;
                         case CommentSortBy.Top:
-                            query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
+                            query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created)";
                             break;
                         case CommentSortBy.New:
-                            query.OrderByDescending(x => x.DateCreated);
-                            break;
-                        case CommentSortBy.Controversial:
-                            query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
-                            break;
-                        case CommentSortBy.Old:
                             query.OrderBy(x => x.DateCreated);
                             break;
+                        case CommentSortBy.Controversial:
+                            query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created)";
+                            break;
+                        case CommentSortBy.Old:
+                            query.OrderByDescending(x => x.DateCreated);
+                            break;
                         case CommentSortBy.Qa:
-                            query.OrderByDescending(x => x.SortQa);
+                            query.OrderBy(x => x.SortQa);
                             break;
                         default:
                             throw new Exception("unknown sort");

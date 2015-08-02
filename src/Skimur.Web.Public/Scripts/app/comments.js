@@ -19,7 +19,7 @@
 
     var voteUp = function (element) {
         var $comment = getComment(element);
-        var $voting = $("> .comment-voting", $comment);
+        var $voting = $("> .comment-body .comment-voting", $comment);
 
         // the user wants to upvote a post!
         if ($voting.hasClass("vote-processing")) return;
@@ -54,7 +54,7 @@
 
     var voteDown = function (element) {
         var $comment = getComment(element);
-        var $voting = $("> .comment-voting", $comment);
+        var $voting = $("> .comment-body .comment-voting", $comment);
 
         // the user wants to downvote a post!
         if ($voting.hasClass("vote-processing")) return;
