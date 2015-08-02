@@ -1,0 +1,35 @@
+﻿@using Subs
+@model Subs.ReadModel.CommentNode
+<div class="comment-body">
+    <div class="comment-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+        <span class="up login-required" onclick="return skimurui.comments.voteUp(this)"></span>
+        <span class="down login-required" onclick="return skimurui.comments.voteDown(this)"></span>
+    </div>
+    <div class="comment-content">
+        <div class="comment-tagline">
+            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Author.UserName" class="author">@Model.Author.UserName</a> <span class="score">@(Model.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.DateCreated) ago</time>
+        </div>
+        <div class="comment-md">
+            @Html.Raw(Model.Comment.BodyFormatted)
+        </div>
+        <textarea class="comment-md-unformatted hidden">@Html.Raw(Model.Comment.Body)</textarea>
+        <ul class="comment-options">
+            @if (Model.CanDelete)
+            {
+                <li>
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.delete(this)" class="delete">delete</a>
+                </li>
+            }
+            <li>
+                <a href="javascript:void(0);" onclick="return skimurui.comments.startReply(this)" class="reply">reply</a>
+            </li>
+            @if (Model.CanEdit)
+            {
+                <li>
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.startEdit(this)" class="edit">edit</a>
+                </li>
+            }
+        </ul>
+        <div class="comment-staging hidden"></div>
+    </div>
+</div>

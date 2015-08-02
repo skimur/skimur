@@ -24,6 +24,7 @@ namespace Subs.Services
 
             var tree = new CommentTree
             {
+                PostSlug = postSlug,
                 CommentIds = comments.Select(x => x.Id).ToList(),
                 Parents = comments.ToDictionary(x => x.Id, x => x.ParentId),
                 Tree = new Dictionary<Guid, List<Guid>>(),

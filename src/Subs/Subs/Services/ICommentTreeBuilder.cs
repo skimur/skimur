@@ -14,6 +14,8 @@ namespace Subs.Services
 
     public class CommentTree
     {
+        public string PostSlug { get; set; }
+
         public List<Guid> CommentIds { get; set; }
 
         public Dictionary<Guid, int> Depth { get; set; }

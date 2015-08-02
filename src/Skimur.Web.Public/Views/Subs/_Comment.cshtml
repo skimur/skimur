@@ -1,0 +1,19 @@
+﻿@using Subs
+@model Subs.ReadModel.CommentNode
+@{
+    bool isAlternateRow = ViewBag.IsAlternateRow == null ? false : (bool)ViewBag.IsAlternateRow;
+}
+@if (Model.Comment != null)
+{
+    <div class="comment@(isAlternateRow ? " alternate" : null)" data-comment-id="@Model.Comment.Id" data-post-slug="@Model.Comment.PostSlug">
+        @Html.Partial("_CommentBody", Model)
+        @if (Model.Children != null && Model.Children.Count > 0)
+        {
+            foreach (var child in Model.Children)
+            {
+                ViewBag.IsAlternateRow = !isAlternateRow;
+                @Html.Partial("_Comment", child)
+            }
+        }
+    </div>
+}

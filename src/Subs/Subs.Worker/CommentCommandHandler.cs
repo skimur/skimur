@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -109,8 +110,6 @@ namespace Subs.Worker
                 _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserName = user.UserName, VoteType = VoteType.Up });
                 
                 response.CommentId = comment.Id;
-                response.Body = comment.Body;
-                response.FormattedBody = comment.BodyFormatted;
             }
             catch (Exception ex)
             {
@@ -122,6 +121,8 @@ namespace Subs.Worker
 
         public EditCommentResponse Handle(EditComment command)
         {
+            Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Got command..");
+
             var response = new EditCommentResponse();
 
             try
@@ -152,6 +153,8 @@ namespace Subs.Worker
             {
                 response.Error = ex.Message;
             }
+
+            Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Finished command..");
 
             return response;
         }

@@ -68,7 +68,7 @@ namespace Subs.ReadModel
             return final;
         }
 
-        private Dictionary<Guid,CommentNode> WrapComments(List<Guid> comments, User currentUser)
+        public Dictionary<Guid,CommentNode> WrapComments(List<Guid> comments, User currentUser)
         {
             var result = _commentDao.GetCommentsByIds(comments).ToDictionary(comment => comment.Id, comment => new CommentNode {Comment = comment});
 

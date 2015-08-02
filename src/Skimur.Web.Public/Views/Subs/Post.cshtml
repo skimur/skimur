@@ -84,10 +84,7 @@
                 e.preventDefault();
                 skimur.createComment("@Model.Post.Slug", null, $("#post-comment").val(), function (result) {
                     if (result.success) {
-                        $.buildComment(result).comment()
-                            .prependTo($(".comments-container"))
-                            .find(".comment-voting")
-                            .addClass("voted-up");
+                        $(result.html).prependTo($(".comments-container"));
                     } else {
                         skimur.displayError(result.error);
                     }

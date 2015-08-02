@@ -313,6 +313,8 @@
     <Content Include="Views\Manage\_ManageNavigation.cshtml" />
     <Content Include="Views\Manage\_LayoutManageAccount.cshtml" />
     <Content Include="Views\Shared\_Avatar.cshtml" />
+    <Content Include="Views\Subs\_Comment.cshtml" />
+    <Content Include="Views\Subs\_CommentBody.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

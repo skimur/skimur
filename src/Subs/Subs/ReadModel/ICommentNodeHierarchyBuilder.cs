@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Infrastructure.Membership;
 using Subs.Services;
 
@@ -7,6 +8,8 @@ namespace Subs.ReadModel
     public interface ICommentNodeHierarchyBuilder
     {
         List<CommentNode> Build(CommentTree tree, CommentTreeContext treeContext, User currentUser);
+
+        Dictionary<Guid, CommentNode> WrapComments(List<Guid> comments, User currentUser);
     }
 
     public class CommentNode

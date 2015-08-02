@@ -1,6 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
+using System.Timers;
 using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
@@ -448,18 +450,16 @@ namespace Skimur.Web.Controllers
                     });
                 }
 
+                if (!response.CommentId.HasValue)
+                    throw new Exception("No error was given, which indicates success, but no comment id was returned.");
+
+                var node = _commentNodeHierarchyBuilder.WrapComments(new List<Guid> {response.CommentId.Value}, _userContext.CurrentUser);
+
                 return Json(new
                 {
                     success = true,
                     commentId = response.CommentId,
-                    dateCreated,
-                    dateCreatedAgo = TimeHelper.Age(Common.CurrentTime() - dateCreated) + " ago",
-                    parentId = model.ParentId,
-                    author = _userContext.CurrentUser.UserName,
-                    postSlug = model.PostSlug,
-                    body = response.Body,
-                    bodyFormatted = response.FormattedBody,
-                    score = 1
+                    html = RenderView("_Comment", node[response.CommentId.Value])
                 });
             }
             catch (Exception ex)
@@ -487,13 +487,14 @@ namespace Skimur.Web.Controllers
 
             try
             {
+                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Sending command..");
                 var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
                 {
                     DateEdited = Common.CurrentTime(),
                     CommentId = model.CommentId,
                     Body = model.Body
                 });
-
+                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Sent command..");
                 if (!string.IsNullOrEmpty(response.Error))
                 {
                     return Json(new
@@ -503,12 +504,24 @@ namespace Skimur.Web.Controllers
                     });
                 }
 
+                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Wrapping command..");
+                var node = _commentNodeHierarchyBuilder.WrapComments(new List<Guid> {model.CommentId},
+                    _userContext.CurrentUser);
+                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Wrapped command..");
+
+
+                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Rendering html..");
+                var html = RenderView("_CommentBody", node[model.CommentId]);
+                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Rendered html..");
+
+
                 return Json(new
                 {
                     success = true,
                     commentId = model.CommentId,
-                    body = response.Body,
-                    bodyFormatted = response.FormattedBody
+                    // we don't render the whole comment, just the body.
+                    // this is because we want to leave the children in-tact on the ui
+                    html = html
                 });
             }
             catch (Exception ex)
