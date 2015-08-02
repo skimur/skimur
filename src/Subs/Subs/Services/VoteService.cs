@@ -138,6 +138,21 @@ namespace Subs.Services
             });
         }
 
+        public Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(string userName, List<Guid> comments)
+        {
+            if (string.IsNullOrEmpty(userName)) return new Dictionary<Guid, VoteType>();
+
+            if (comments == null || comments.Count == 0)
+                return new Dictionary<Guid, VoteType>();
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Vote>().Where(x => x.UserName.ToLower() == userName.ToLower() && comments.Contains((Guid)x.CommentId));
+                query.SelectExpression = "SELECT \"comment_id\", \"type\"";
+                return conn.Select(query).ToDictionary(x => x.CommentId.Value, x => x.VoteType);
+            });
+        }
+        
         public void GetTotalVotesForComment(Guid commentId, out int upVotes, out int downVotes)
         {
             int tempUpVotes = 0;

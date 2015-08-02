@@ -99,6 +99,19 @@ namespace Infrastructure.Membership
             });
         }
 
+        /// <summary>
+        /// Get a list of users by user names
+        /// </summary>
+        /// <param name="userNames"></param>
+        /// <returns></returns>
+        public List<User> GetUsersByUserNames(List<string> userNames)
+        {
+            if(userNames == null || userNames.Count == 0)
+                return new List<User>();
+
+            return _conn.Perform(conn => conn.Select(conn.From<User>().Where(x => userNames.Contains(x.UserName))));
+        }
+
         public bool IsUserNameValid(string userName)
         {
             if (string.IsNullOrEmpty(userName)) return false;

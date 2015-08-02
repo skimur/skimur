@@ -17,8 +17,10 @@ namespace Subs.ReadModel
         private readonly ICommentTreeBuilder _commentTreeBuilder;
         private readonly ICommentTreeContextBuilder _commentTreeContextBuilder;
 
-        public CommentDao(IDbConnectionProvider conn, ICommentTreeBuilder commentTreeBuilder, ICommentTreeContextBuilder commentTreeContextBuilder)
-            :base(conn)
+        public CommentDao(IDbConnectionProvider conn,
+            ICommentTreeBuilder commentTreeBuilder,
+            ICommentTreeContextBuilder commentTreeContextBuilder)
+            : base(conn)
         {
             _conn = conn;
             _commentTreeBuilder = commentTreeBuilder;
@@ -40,40 +42,37 @@ namespace Subs.ReadModel
             return _conn.Perform(conn =>
             {
                 var query = conn.From<Comment>().Where(x => x.PostSlug == postSlug);
-                
-                    switch (sortBy)
-                    {
-                        case CommentSortBy.Best:
-                            query.OrderByDescending(x => x.SortConfidence);
-                            break;
-                        case CommentSortBy.Top:
-                            query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
-                            break;
-                        case CommentSortBy.New:
-                            query.OrderByDescending(x => x.DateCreated);
-                            break;
-                        case CommentSortBy.Controversial:
-                            query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
-                            break;
-                        case CommentSortBy.Old:
-                            query.OrderBy(x => x.DateCreated);
-                            break;
-                        case CommentSortBy.Qa:
-                            query.OrderByDescending(x => x.SortQa);
-                            break;
-                        default:
-                            throw new Exception("unknown sort");
-                    }
 
-                var commentsSorted = conn.Select<Guid>(query);
+                switch (sortBy)
+                {
+                    case CommentSortBy.Best:
+                        query.OrderByDescending(x => x.SortConfidence);
+                        break;
+                    case CommentSortBy.Top:
+                        query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
+                        break;
+                    case CommentSortBy.New:
+                        query.OrderByDescending(x => x.DateCreated);
+                        break;
+                    case CommentSortBy.Controversial:
+                        query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
+                        break;
+                    case CommentSortBy.Old:
+                        query.OrderBy(x => x.DateCreated);
+                        break;
+                    case CommentSortBy.Qa:
+                        query.OrderByDescending(x => x.SortQa);
+                        break;
+                    default:
+                        throw new Exception("unknown sort");
+                }
+
+                query.SelectExpression = "SELECT \"id\"";
+                
+                var commentsSorted = conn.Select(query).Select(x => x.Id).ToList();
 
                 return commentsSorted.ToDictionary(x => x, x => (double)commentsSorted.IndexOf(x));
             });
-        }
-
-        public CommentTreeContext BuildCommentTreeContext(CommentTree commentTree, Dictionary<Guid, double> sorter, List<Guid> children = null, Guid? comment = null)
-        {
-            return _commentTreeContextBuilder.Build(commentTree, sorter, children, comment);
         }
     }
 }

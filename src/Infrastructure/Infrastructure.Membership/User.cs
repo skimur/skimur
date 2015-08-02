@@ -110,5 +110,11 @@ namespace Infrastructure.Membership
         /// Gets or set the avatar to use for the user
         /// </summary>
         public string AvatarIdentifier { get; set; }
+
+        /// <summary>
+        /// Is this user an administrator?
+        /// </summary>
+        [Ignore]
+        public bool IsAdmin { get; set; }
     }
 }

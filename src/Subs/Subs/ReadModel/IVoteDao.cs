@@ -11,5 +11,7 @@ namespace Subs.ReadModel
         VoteType? GetVoteForUserOnPost(string userName, string postSlug);
 
         VoteType? GetVoteForUserOnComment(string userName, Guid commentId);
+
+        Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(string userName, List<Guid> comments);
     }
 }

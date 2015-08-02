@@ -57,7 +57,14 @@ namespace Infrastructure.Membership
         /// <param name="inRole">Filter users by ones in the given role.</param>
         /// <returns></returns>
         SeekedList<User> GetUsers(string queryText = null, int? skip = null, int? take = null, Guid? inRole = null);
-        
+
+        /// <summary>
+        /// Get a list of users by user names
+        /// </summary>
+        /// <param name="userNames"></param>
+        /// <returns></returns>
+        List<User> GetUsersByUserNames(List<string> userNames); 
+
         /// <summary>
         /// Determines if the given username is a valid one. It does NOT check if it is currently used.
         /// </summary>

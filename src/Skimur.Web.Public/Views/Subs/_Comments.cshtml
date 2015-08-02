@@ -1,4 +1,5 @@
 ﻿@using Subs
+@using Subs.ReadModel
 @model CommentListModel
 
 <div class="comments-container">
@@ -11,21 +12,21 @@
     }
 </div>
 
-@helper RenderComment(CommentModel comment, bool isAlternateRow = false)
+@helper RenderComment(CommentNode comment, bool isAlternateRow = false)
 {
-    <div class="comment@(isAlternateRow ? " alternate" : null)" data-post-slug="@Model.PostSlug" data-comment-id="@comment.Id">
-        <div class="comment-voting @(comment.CurrentVote != null ? comment.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+    <div class="comment@(isAlternateRow ? " alternate" : null)" data-post-slug="@Model.PostSlug" data-comment-id="@comment.Comment.Id">
+        <div class="comment-voting @(comment.CurrentUserVote != null ? comment.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
             <span class="up login-required"></span>
             <span class="down login-required"></span>
         </div>
         <div class="comment-body">
             <div class="comment-tagline">
-                <a href="javascript:void(0)" class="expand">[–]</a> <a href="/u/@comment.AuthorUserName" class="author">@comment.AuthorUserName</a> <span class="score">@(comment.VoteUpCount - comment.VoteDownCount) points</span> <time class="timestamp">@Html.Age(comment.DateCreated) ago</time>
+                <a href="javascript:void(0)" class="expand">[–]</a> <a href="/u/@comment.Author.UserName" class="author">@comment.Author.UserName</a> <span class="score">@(comment.Score) points</span> <time class="timestamp">@Html.Age(comment.Comment.DateCreated) ago</time>
             </div>
             <div class="comment-md">
-                @Html.Raw(comment.BodyFormatted)
+                @Html.Raw(comment.Comment.BodyFormatted)
             </div>
-            <textarea class="comment-md-unformatted hidden">@Html.Raw(comment.Body)</textarea>
+            <textarea class="comment-md-unformatted hidden">@Html.Raw(comment.Comment.Body)</textarea>
             <ul class="comment-options">
                 @if (comment.CanDelete)
                 {
@@ -40,12 +41,6 @@
                 {
                     <li>
                         <a href="javascript:void(0);" class="edit">edit</a>
-                    </li>
-                }
-                @if (comment.CanMarkSpam)
-                {
-                    <li>
-                        <a href="javascript:void(0);" class="spam">mark spam</a>
                     </li>
                 }
             </ul>

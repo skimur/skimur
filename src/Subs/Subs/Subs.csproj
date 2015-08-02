@@ -74,8 +74,10 @@
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
+    <Compile Include="ReadModel\CommentNodeHierarchyBuilder.cs" />
     <Compile Include="Services\CommentTreeBuilder.cs" />
     <Compile Include="Services\CommentTreeContextBuilder.cs" />
+    <Compile Include="ReadModel\ICommentNodeHierarchyBuilder.cs" />
     <Compile Include="Services\ICommentTreeBuilder.cs" />
     <Compile Include="Services\ICommentTreeContextBuilder.cs" />
     <Compile Include="Sorting.cs" />
@@ -109,6 +111,10 @@
     <Compile Include="Vote.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Membership\Infrastructure.Membership.csproj">
+      <Project>{DE3DDE25-3119-4BAE-8422-D387C2A86FA3}</Project>
+      <Name>Infrastructure.Membership</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
       <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>
       <Name>Infrastructure.Messaging</Name>

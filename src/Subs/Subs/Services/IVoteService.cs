@@ -13,7 +13,7 @@ namespace Subs.Services
         void UnVotePost(string postSlug, string userName);
 
         VoteType? GetVoteForUserOnPost(string userName, string postSlug);
-
+        
         void GetTotalVotesForPost(string postSlug, out int upVotes, out int downVotes);
 
         void VoteForComment(Guid commentId, string userName, string ipAddress, VoteType voteType, DateTime dateCasted);
@@ -21,6 +21,8 @@ namespace Subs.Services
         void UnVoteComment(Guid commentId, string userName);
 
         VoteType? GetVoteForUserOnComment(string userName, Guid commentId);
+
+        Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(string userName, List<Guid> comments);
 
         void GetTotalVotesForComment(Guid commentId, out int upVotes, out int downVotes);
     }

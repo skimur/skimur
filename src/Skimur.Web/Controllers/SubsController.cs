@@ -10,6 +10,7 @@ using Skimur.Web.Models;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
+using Subs.Services;
 
 namespace Skimur.Web.Controllers
 {
@@ -24,6 +25,8 @@ namespace Skimur.Web.Controllers
         private readonly IVoteDao _voteDao;
         private readonly ICommentDao _commentDao;
         private readonly IPermissionDao _permissionDao;
+        private readonly ICommentNodeHierarchyBuilder _commentNodeHierarchyBuilder;
+        private readonly ICommentTreeContextBuilder _commentTreeContextBuilder;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -33,7 +36,9 @@ namespace Skimur.Web.Controllers
             IPostDao postDao,
             IVoteDao voteDao,
             ICommentDao commentDao,
-            IPermissionDao permissionDao)
+            IPermissionDao permissionDao,
+            ICommentNodeHierarchyBuilder commentNodeHierarchyBuilder,
+            ICommentTreeContextBuilder commentTreeContextBuilder)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -44,6 +49,8 @@ namespace Skimur.Web.Controllers
             _voteDao = voteDao;
             _commentDao = commentDao;
             _permissionDao = permissionDao;
+            _commentNodeHierarchyBuilder = commentNodeHierarchyBuilder;
+            _commentTreeContextBuilder = commentTreeContextBuilder;
         }
 
         public ActionResult Index(string query)
@@ -161,24 +168,17 @@ namespace Skimur.Web.Controllers
                 throw new HttpException(404, "no post found");
 
             var model = new PostDetailsModel();
+
             model.Post = MapPost(post);
             model.Sub = MapSub(sub);
             model.Comments = new CommentListModel();
             model.Comments.SortBy = commentsSort;
             model.Comments.PostSlug = model.Post.Slug;
 
-            var comments = _commentDao.GetAllCommentsForPost(post.Slug, commentsSort).Select(MapComment).ToList();
-
-            Func<Guid?, List<CommentModel>> buildComments = null;
-            buildComments = parentCommentId =>
-            {
-                var children = comments.Where(x => parentCommentId.HasValue ? x.ParentId == parentCommentId.Value : x.ParentId == null).ToList();
-                foreach (var comment in children)
-                    comment.Children = buildComments(comment.Id);
-                return children;
-            };
-
-            model.Comments.Comments.AddRange(buildComments(null));
+            var commentTree = _commentDao.GetCommentTree(model.Post.Slug);
+            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Slug, model.Comments.SortBy);
+            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter);
+            model.Comments.Comments = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
             return View(model);
         }
@@ -791,23 +791,6 @@ namespace Skimur.Web.Controllers
             if (sub == null) return null;
             var result = _mapper.Map<Sub, SubModel>(sub);
             result.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
-            return result;
-        }
-
-        private CommentModel MapComment(Comment comment)
-        {
-            if (comment == null) return null;
-            var result = _mapper.Map<Comment, CommentModel>(comment);
-
-            if (_userContext.CurrentUser != null)
-            {
-                result.CanEdit = _userContext.CurrentUser.UserName == comment.AuthorUserName;
-                result.CanDelete = _permissionDao.CanUserDeleteComment(_userContext.CurrentUser.UserName, comment);
-                result.CanMarkSpam = _permissionDao.CanUserMarkCommentAsSpam(_userContext.CurrentUser.UserName, comment);
-                if (_userContext.CurrentUser != null)
-                    result.CurrentVote = _voteDao.GetVoteForUserOnComment(_userContext.CurrentUser.UserName, comment.Id);
-            }
-        
             return result;
         }
     }

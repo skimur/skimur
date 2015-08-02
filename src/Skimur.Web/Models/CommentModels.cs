@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Subs;
 using Subs.ReadModel;
+using Subs.Services;
 
 namespace Skimur.Web.Models
 {
@@ -64,15 +65,10 @@ namespace Skimur.Web.Models
 
     public class CommentListModel
     {
-        public CommentListModel()
-        {
-            Comments = new List<CommentModel>();
-        }
-
         public string PostSlug { get; set; }
 
         public CommentSortBy SortBy { get; set; } 
 
-        public List<CommentModel> Comments { get; set; } 
+        public List<CommentNode> Comments { get; set; }
     }
 }

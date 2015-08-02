@@ -26,7 +26,10 @@ namespace Subs.Services
 
             if (children != null && children.Count == 0)
                 return result;
-            
+
+            if (commentTree.CommentIds.Count == 0)
+                return result;
+
             if(sorter == null)
                 sorter = new Dictionary<Guid, double>();
 

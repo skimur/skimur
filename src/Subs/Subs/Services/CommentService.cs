@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Net.NetworkInformation;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
@@ -24,6 +25,14 @@ namespace Subs.Services
                 return null;
 
             return _conn.Perform(conn => conn.SingleById<Comment>(id));
+        }
+
+        public List<Comment> GetCommentsByIds(List<Guid> ids)
+        {
+            if(ids == null || ids.Count == 0)
+                return new List<Comment>();
+
+            return _conn.Perform(conn => conn.SelectByIds<Comment>(ids));
         }
 
         public void InsertComment(Comment comment)

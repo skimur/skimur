@@ -25,6 +25,7 @@ namespace Subs
             container.RegisterSingle<IPermissionDao, PermissionDao>();
             container.RegisterSingle<ICommentTreeBuilder, CommentTreeBuilder>();
             container.RegisterSingle<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
+            container.RegisterSingle<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
         }
 
         public int Order
