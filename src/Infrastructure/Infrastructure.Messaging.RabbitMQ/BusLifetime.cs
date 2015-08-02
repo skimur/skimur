@@ -1,11 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
 using System.Reflection;
-using System.Text;
-using System.Threading.Tasks;
-using EasyNetQ;
 using Infrastructure.Messaging.Handling;
+using ServiceStack.RabbitMq;
 using SimpleInjector;
 
 namespace Infrastructure.Messaging.RabbitMQ
@@ -13,84 +10,60 @@ namespace Infrastructure.Messaging.RabbitMQ
     public class BusLifetime : IBusLifetime
     {
         private readonly Container _container;
-        private readonly IBus _bus;
-        private readonly ICommandBus _commandBus;
-        private readonly IEventBus _eventBus;
+        private readonly RabbitMqServer _server;
+        private readonly Registrar _registrar;
 
-        public BusLifetime(Container container, IBus bus, ICommandBus commandBus, IEventBus eventBus, ICommandHandlerRegistry commandHandlerRegistry, IEventHandlerRegistry eventHandlerRegistry)
+        public BusLifetime(Container container, RabbitMqServer server, ICommandDiscovery commandDiscovery, IEventDiscovery eventDiscovery)
         {
             _container = container;
-            _bus = bus;
-            _commandBus = commandBus;
-            _eventBus = eventBus;
+            _server = server;
+            _registrar = new Registrar(_server, _container);
 
-            commandHandlerRegistry.GetCommands(type =>
-            {
-                var genericArguements = type.GetGenericArguments();
-                if (genericArguements.Count() == 1)
-                {
-                    RegisterCommandHandler(genericArguements[0]);
-                }
-                else
-                {
-                    RegisterCommandResponseHandler(genericArguements[0], genericArguements[1]);
-                }
-            });
-            eventHandlerRegistry.GetEvents(RegisterEventHandler);
+            commandDiscovery.Register(_registrar);
+            eventDiscovery.Register(_registrar);
+
+            _server.Start();
         }
-
-        private void RegisterCommandHandler(Type type)
-        {
-            var methodInfo = typeof (BusLifetime).GetMethod("RegisterCommandHandlerGeneric", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
-            methodInfo.Invoke(this, new object[0]);
-        }
-
-        private void RegisterCommandHandlerGeneric<T>() where T : class, ICommand
-        {
-            _bus.Subscribe<T>(typeof (T).Name, command =>
-            {
-                _container.GetInstance<ICommandHandler<T>>().Handle(command);
-            });
-        }
-
-        private void RegisterCommandResponseHandler(Type request, Type response)
-        {
-            var methodInfo = typeof(BusLifetime).GetMethod("RegisterCommandResponseHandlerGeneric", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(request, response);
-            methodInfo.Invoke(this, new object[0]);
-        }
-
-        private void RegisterCommandResponseHandlerGeneric<TRequest, TResponse>() where TRequest : class, ICommandReturns<TResponse> where TResponse : class
-        {
-            _bus.Respond<TRequest, TResponse>(request => _container.GetInstance<ICommandHandlerResponse<TRequest, TResponse>>().Handle(request));
-        }
-
-        private void CommandHandler<T>(T message) where T : ICommand
-        {
-            _container.GetInstance<ICommandHandler<T>>().Handle(message);
-        }
-
-        private void CommandHandlerResponse<TRequest, TResponse>(TRequest message) where TRequest : ICommandReturns<TResponse>
-        {
-            _container.GetInstance<ICommandHandlerResponse<TRequest, TResponse>>().Handle(message);
-        }
-
-        private void RegisterEventHandler(Type type)
-        {
-            var methodInfo = typeof(BusLifetime).GetMethod("RegisterEventHandlergGeneric", BindingFlags.NonPublic | BindingFlags.Instance).MakeGenericMethod(type);
-            methodInfo.Invoke(this, new object[0]);
-        }
-
-        private void RegisterEventHandlergGeneric<T>() where T : class, IEvent
-        {
-            _bus.Subscribe<T>(typeof (T).Name, @event =>
-            {
-                _container.GetInstance<IEventHandler<T>>().Handle(@event);
-            });
-        }
-
+        
         public void Dispose()
         {
-            _bus.Dispose();
+            _server.Stop();
+            _server.Dispose();
+        }
+
+        class Registrar : ICommandRegistrar, IEventRegistrar
+        {
+            private readonly RabbitMqServer _server;
+            private readonly Container _container;
+
+            public Registrar(RabbitMqServer server, Container container)
+            {
+                _server = server;
+                _container = container;
+            }
+
+            public void RegisterEvent<T>() where T : class, IEvent
+            {
+                _server.RegisterHandler<T>(message =>
+                {
+                    _container.GetInstance<IEventHandler<T>>().Handle(message.GetBody());
+                    return null;
+                });
+            }
+
+            public void RegisterCommand<T>() where T : class, ICommand
+            {
+                _server.RegisterHandler<T>(message =>
+                {
+                    _container.GetInstance<ICommandHandler<T>>().Handle(message.GetBody());
+                    return null;
+                });
+            }
+
+            public void RegisterCommandResponse<TRequest, TResponse>() where TRequest : class, ICommand, ICommandReturns<TResponse> where TResponse : class
+            {
+                _server.RegisterHandler<TRequest>(message => _container.GetInstance<ICommandHandlerResponse<TRequest, TResponse>>().Handle(message.GetBody()));
+            }
         }
     }
 }

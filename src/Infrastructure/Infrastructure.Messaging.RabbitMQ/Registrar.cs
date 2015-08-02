@@ -1,10 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using EasyNetQ;
+using ServiceStack;
+using ServiceStack.RabbitMq;
 using SimpleInjector;
 using Skimur;
 
@@ -16,9 +13,16 @@ namespace Infrastructure.Messaging.RabbitMQ
         {
             container.RegisterSingle(() =>
             {
+                LicenseUtils.RegisterLicense("2283-e1JlZjoyMjgzLE5hbWU6TWVkWENoYW5nZSxUeXBlOkluZGllLEhhc2g6TU" +
+                "FyaTVzNGdQcEdlc0pqd1ZIUXVlL0lacDBZcCt3TkFLY0UyMTlJblBuMzRLNWFRb" +
+                "HBYN204aGkrQXlRYzUvZnNVUlZzWXd4NjR0OFlXZEpjNUNYRTdnMjBLR0ZjQmhG" +
+                "dTFNMHZVazJqcHdQb1RrbStDaHNPRm11Qm50TnZzOTkwcHAzRkxtTC9idThMekN" +
+                "lTVRndFBORzBuREZ0WGJUdzdRMi80K09lQ2tZPSxFeHBpcnk6MjAxNi0wMi0xOX" +
+                "0=");
+
                 var rabbitMqHost = ConfigurationManager.AppSettings["RabbitMQHost"];
                 if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
-                return RabbitHutch.CreateBus("host=" + rabbitMqHost);
+                return new RabbitMqServer(rabbitMqHost);
             });
             container.RegisterSingle<ICommandBus, CommandBus>();
             container.RegisterSingle<IEventBus, EventBus>();

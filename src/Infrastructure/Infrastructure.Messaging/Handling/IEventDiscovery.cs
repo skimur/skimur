@@ -6,8 +6,8 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Messaging.Handling
 {
-    public interface ICommandHandlerRegistry
+    public interface IEventDiscovery
     {
-        void GetCommands(Action<Type> command);
+        void Register(IEventRegistrar registrar);
     }
 }

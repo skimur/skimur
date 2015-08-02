@@ -4,37 +4,51 @@ using System.Linq;
 using System.Reflection;
 using System.Text;
 using System.Threading.Tasks;
-using EasyNetQ;
-using EasyNetQ.FluentConfiguration;
 using Infrastructure.Messaging.Handling;
+using ServiceStack;
+using ServiceStack.Messaging;
+using ServiceStack.RabbitMq;
 
 namespace Infrastructure.Messaging.RabbitMQ
 {
     public class CommandBus : ICommandBus
     {
-        private readonly IBus _bus;
+        private readonly RabbitMqServer _server;
 
-        public CommandBus(IBus bus)
+        public CommandBus(RabbitMqServer server)
         {
-            _bus = bus;
+            _server = server;
         }
 
         public void Send<T>(T command) where T : class, ICommand
         {
-            _bus.Publish(command);
+            using (var client = _server.CreateMessageQueueClient())
+                client.Publish(command);
         }
 
         public void Send<T>(IEnumerable<T> commands) where T : class, ICommand
         {
-            foreach (var command in commands)
-                _bus.Publish(command);
+            using (var client = _server.CreateMessageQueueClient())
+                foreach(var command in commands)
+                    client.Publish(command);
         }
 
         public TResponse Send<TRequest, TResponse>(TRequest command)
             where TRequest : class, ICommandReturns<TResponse>
             where TResponse : class
         {
-            return _bus.Request<TRequest, TResponse>(command);
+            using (var client = _server.CreateMessageQueueClient())
+            {
+                string replyToMq = client.GetTempQueueName();
+                client.Publish(new Message<TRequest>(command)
+                {
+                    ReplyTo = replyToMq
+                });
+
+                IMessage<TResponse> responseMsg = client.Get<TResponse>(replyToMq);
+                client.Ack(responseMsg);
+                return responseMsg.GetBody();
+            }
         }
     }
 }

@@ -44,12 +44,14 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="Handling\CommandHandlerRegistry.cs" />
-    <Compile Include="Handling\EventHandlerRegistry.cs" />
+    <Compile Include="Handling\CommandDiscovery.cs" />
+    <Compile Include="Handling\EventDiscovery.cs" />
     <Compile Include="Handling\ICommandHandler.cs" />
-    <Compile Include="Handling\ICommandHandlerRegistry.cs" />
+    <Compile Include="Handling\ICommandDiscovery.cs" />
+    <Compile Include="Handling\ICommandRegistrar.cs" />
     <Compile Include="Handling\IEventHandler.cs" />
-    <Compile Include="Handling\IEventHandlerRegistry.cs" />
+    <Compile Include="Handling\IEventDiscovery.cs" />
+    <Compile Include="Handling\IEventRegistrar.cs" />
     <Compile Include="IBusLifetime.cs" />
     <Compile Include="ICommand.cs" />
     <Compile Include="ICommandBus.cs" />

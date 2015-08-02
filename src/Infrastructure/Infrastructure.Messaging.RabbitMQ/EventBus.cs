@@ -4,29 +4,31 @@ using System.Linq;
 using System.Text;
 using System.Threading;
 using System.Threading.Tasks;
-using EasyNetQ;
-using EasyNetQ.Scheduling;
+using ServiceStack;
+using ServiceStack.RabbitMq;
 
 namespace Infrastructure.Messaging.RabbitMQ
 {
     public class EventBus : IEventBus
     {
-        private readonly IBus _bus;
+        private readonly RabbitMqServer _server;
 
-        public EventBus(IBus bus)
+        public EventBus(RabbitMqServer server)
         {
-            _bus = bus;
+            _server = server;
         }
 
         public void Publish<T>(T @event) where T : class, IEvent
         {
-            _bus.Publish(@event);
+            using (var client = _server.CreateMessageQueueClient())
+                client.Publish(@event);
         }
 
         public void Publish<T>(IEnumerable<T> events) where T : class, IEvent
         {
-            foreach(var @event in events)
-                _bus.Publish(@event);
+            using (var client = _server.CreateMessageQueueClient())
+                foreach (var @event in events)
+                    client.Publish(@event);
         }
     }
 }
