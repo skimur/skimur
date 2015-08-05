@@ -73,19 +73,19 @@ namespace Subs.Services
                             query.OrderByDescending(x => x.SortConfidence);
                             break;
                         case CommentSortBy.Top:
-                            query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created)";
+                            query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
                             break;
                         case CommentSortBy.New:
                             query.OrderByDescending(x => x.DateCreated);
                             break;
                         case CommentSortBy.Controversial:
-                            query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created)";
+                            query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
                             break;
                         case CommentSortBy.Old:
                             query.OrderBy(x => x.DateCreated);
                             break;
                         case CommentSortBy.Qa:
-                            query.OrderBy(x => x.SortQa);
+                            query.OrderByDescending(x => x.SortQa);
                             break;
                         default:
                             throw new Exception("unknown sort");
