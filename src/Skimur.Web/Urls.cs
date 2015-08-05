@@ -14,14 +14,14 @@ namespace Skimur.Web
         public static string ModifyQuery(this UrlHelper urlHelper, string name, string value)
         {
             var url = urlHelper.RequestContext.HttpContext.Request.Url;
-            if(url == null) throw new ArgumentNullException();
+            if (url == null) throw new ArgumentNullException();
 
             return urlHelper.ModifyQuery(url.PathAndQuery, name, value);
         }
 
         public static string ModifyQuery(this UrlHelper urlHelper, string url, string name, string value)
         {
-            if(url == null) throw new ArgumentNullException();
+            if (url == null) throw new ArgumentNullException();
             var queryStartIndex = url.IndexOf("?");
 
             if (queryStartIndex == -1)
@@ -60,6 +60,11 @@ namespace Skimur.Web
         public static string Post(this UrlHelper urlHelper, Post post)
         {
             return urlHelper.Post(post.SubName, post.Slug, post.Title);
+        }
+
+        public static string Comment(this UrlHelper urlHelper, string subName, Post post, Comment comment)
+        {
+            return urlHelper.RouteUrl("PostComment", new { subName, slug = post.Slug, commentId = comment.Id });
         }
 
         public static string User(this UrlHelper urlHelper, string userName)
@@ -124,7 +129,7 @@ namespace Skimur.Web
 
         public static string AvatarUrl(this UrlHelper urlHelper, string avatarIdentifier)
         {
-            if(string.IsNullOrEmpty(avatarIdentifier))
+            if (string.IsNullOrEmpty(avatarIdentifier))
                 return urlHelper.Content("~/content/img/avatar.jpg");
 
             return urlHelper.Content("~/avatar/" + avatarIdentifier);

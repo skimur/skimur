@@ -154,7 +154,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, string slug, CommentSortBy commentsSort = CommentSortBy.Best)
+        public ActionResult Post(string subName, string slug, CommentSortBy commentsSort = CommentSortBy.Best, Guid? commentId = null)
         {
             var post = _postDao.GetPostBySlug(slug);
 
@@ -179,7 +179,7 @@ namespace Skimur.Web.Controllers
 
             var commentTree = _commentDao.GetCommentTree(model.Post.Slug);
             var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Slug, model.Comments.SortBy);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter);
+            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit:100, maxDepth:5);
             model.Comments.Comments = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
             return View(model);

@@ -95,7 +95,7 @@ namespace Subs.Services
             result.Comments.AddRange(items);
             result.TopLevelComments.AddRange(result.Comments.Where(x => commentTree.Depth[x] == 0));
 
-            UpdateChildrenCount(result, commentTree, result.TopLevelComments);
+            UpdateChildrenCount(result, commentTree, items);
             
             return result;
         }

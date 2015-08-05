@@ -150,6 +150,11 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
 
             routes.MapRoute(
+                name: "PostComment",
+                url: "s/{subName}/post/{slug}/{title}/c/{commentId}",
+                defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional, commentId = UrlParameter.Optional });
+
+            routes.MapRoute(
                 name: "User",
                 url: "user/{userName}",
                 defaults: new { controller = "Users", action = "User" });

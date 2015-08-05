@@ -13,18 +13,21 @@ namespace Subs.ReadModel
         private readonly ISubDao _subDao;
         private readonly IPermissionDao _permissionDao;
         private readonly IVoteDao _voteDao;
+        private readonly IPostDao _postDao;
 
         public CommentNodeHierarchyBuilder(ICommentDao commentDao,
             IMembershipService membershipService,
             ISubDao subDao,
             IPermissionDao permissionDao,
-            IVoteDao voteDao)
+            IVoteDao voteDao,
+            IPostDao postDao)
         {
             _commentDao = commentDao;
             _membershipService = membershipService;
             _subDao = subDao;
             _permissionDao = permissionDao;
             _voteDao = voteDao;
+            _postDao = postDao;
         }
 
         public List<CommentNode> Build(CommentTree tree, CommentTreeContext treeContext, User currentUser)
@@ -59,6 +62,8 @@ namespace Subs.ReadModel
                     }
                 }
 
+                comment.MoreRecursion = treeContext.MoreRecursion.Contains(comment.Comment.Id);
+
                 if (parent != null)
                     parent.Children.Add(comment);
                 else
@@ -86,6 +91,9 @@ namespace Subs.ReadModel
             // TODO: Same thing as the note above about authors, but for subs.
             var subs = _subDao.GetSubByNames(result.Values.Select(x => x.Comment.SubName).Distinct().ToList()).ToDictionary(x => x.Name, x => x);
 
+            // TODO: Same thing as the note aboce about subs, but for posts :)
+            var posts = result.Values.Select(x => x.Comment.PostSlug).Distinct().Select(x => _postDao.GetPostBySlug(x)).Where(x => x != null).ToDictionary(x => x.Slug, x => x);
+
             var userCanModInSubs = new List<Guid>();
 
             if (currentUser != null)
@@ -102,6 +110,7 @@ namespace Subs.ReadModel
                 item.CurrentUserVote = likes.ContainsKey(item.Comment.Id) ? likes[item.Comment.Id] : (VoteType?)null;
                 item.Sub = subs.ContainsKey(item.Comment.SubName) ? subs[item.Comment.SubName] : null;
                 item.Score = item.Comment.VoteUpCount - item.Comment.VoteDownCount;
+                item.Post = posts.ContainsKey(item.Comment.PostSlug) ? posts[item.Comment.PostSlug] : null;
 
                 var userCanMod = item.Sub != null && userCanModInSubs.Contains(item.Sub.Id);
 

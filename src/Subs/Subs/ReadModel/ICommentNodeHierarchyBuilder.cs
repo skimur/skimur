@@ -40,5 +40,9 @@ namespace Subs.ReadModel
         public bool CanDelete { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public bool MoreRecursion { get; set; }
+
+        public Post Post { get; set; }
     }
 }

@@ -10,8 +10,6 @@
             <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Author.UserName" class="author">@Model.Author.UserName</a> <span class="score">@(Model.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.DateCreated) ago</time>
         </div>
         <div class="comment-md">
-            @Model.Comment.SortConfidence<br/>
-            @Model.Comment.Id<br />
             @Html.Raw(Model.Comment.BodyFormatted)
         </div>
         <textarea class="comment-md-unformatted hidden">@Html.Raw(Model.Comment.Body)</textarea>
