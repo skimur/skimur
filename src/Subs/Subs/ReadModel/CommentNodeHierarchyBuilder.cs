@@ -14,9 +14,9 @@ namespace Subs.ReadModel
         private readonly IPermissionDao _permissionDao;
         private readonly IVoteDao _voteDao;
 
-        public CommentNodeHierarchyBuilder(ICommentDao commentDao, 
-            IMembershipService membershipService, 
-            ISubDao subDao, 
+        public CommentNodeHierarchyBuilder(ICommentDao commentDao,
+            IMembershipService membershipService,
+            ISubDao subDao,
             IPermissionDao permissionDao,
             IVoteDao voteDao)
         {
@@ -68,9 +68,15 @@ namespace Subs.ReadModel
             return final;
         }
 
-        public Dictionary<Guid,CommentNode> WrapComments(List<Guid> comments, User currentUser)
+        public Dictionary<Guid, CommentNode> WrapComments(List<Guid> comments, User currentUser)
         {
-            var result = _commentDao.GetCommentsByIds(comments).ToDictionary(comment => comment.Id, comment => new CommentNode {Comment = comment});
+            Dictionary<Guid, CommentNode> result = new Dictionary<Guid, CommentNode>();
+            foreach (var commentId in comments)
+            {
+                var comment = _commentDao.GetCommentById(commentId);
+                if (comment != null)
+                    result.Add(commentId, new CommentNode { Comment = comment });
+            }
 
             // TODO: Thinking about future support for cassandra, we may want to store "user ids" instead of "user names"
             // inside of each comment. That way, we can query authors by id, which is VERY fast in cassandra.
@@ -82,10 +88,10 @@ namespace Subs.ReadModel
 
             var userCanModInSubs = new List<Guid>();
 
-            if(currentUser != null)
+            if (currentUser != null)
                 foreach (var sub in subs.Values)
                     // TODO: Check for a specific permission "ban".
-                    if(_permissionDao.CanUserModerateSub(currentUser.UserName, sub.Name))
+                    if (_permissionDao.CanUserModerateSub(currentUser.UserName, sub.Name))
                         userCanModInSubs.Add(sub.Id);
 
             var likes = currentUser != null ? _voteDao.GetVotesOnCommentsByUser(currentUser.UserName, comments) : new Dictionary<Guid, VoteType>();
@@ -106,7 +112,8 @@ namespace Subs.ReadModel
                     // the current user is the author, don't collapse!
                     item.Collapsed = false;
                     item.CurrentUserIsAuthor = true;
-                }else if (item.Score < minimumScore)
+                }
+                else if (item.Score < minimumScore)
                 {
                     // too many down votes to show to the user
                     item.Collapsed = true;
@@ -117,7 +124,7 @@ namespace Subs.ReadModel
                     // don't collapse
                     item.Collapsed = false;
                 }
-                
+
                 item.CanDelete = userCanMod || item.CurrentUserIsAuthor;
                 item.CanEdit = item.CurrentUserIsAuthor;
             }

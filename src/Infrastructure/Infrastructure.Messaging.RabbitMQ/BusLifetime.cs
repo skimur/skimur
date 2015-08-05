@@ -22,6 +22,7 @@ namespace Infrastructure.Messaging.RabbitMQ
             commandDiscovery.Register(_registrar);
             eventDiscovery.Register(_registrar);
 
+            _server.DisablePriorityQueues = true;
             _server.Start();
         }
         

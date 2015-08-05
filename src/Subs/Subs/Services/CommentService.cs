@@ -70,19 +70,19 @@ namespace Subs.Services
                     switch (sortBy)
                     {
                         case CommentSortBy.Best:
-                            query.OrderBy(x => x.SortConfidence);
+                            query.OrderByDescending(x => x.SortConfidence);
                             break;
                         case CommentSortBy.Top:
                             query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created)";
                             break;
                         case CommentSortBy.New:
-                            query.OrderBy(x => x.DateCreated);
+                            query.OrderByDescending(x => x.DateCreated);
                             break;
                         case CommentSortBy.Controversial:
                             query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created)";
                             break;
                         case CommentSortBy.Old:
-                            query.OrderByDescending(x => x.DateCreated);
+                            query.OrderBy(x => x.DateCreated);
                             break;
                         case CommentSortBy.Qa:
                             query.OrderBy(x => x.SortQa);

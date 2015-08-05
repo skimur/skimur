@@ -46,7 +46,7 @@ namespace Subs.ReadModel
                 switch (sortBy)
                 {
                     case CommentSortBy.Best:
-                        query.OrderByDescending(x => x.SortConfidence);
+                        query.OrderBy(x => x.SortConfidence);
                         break;
                     case CommentSortBy.Top:
                         query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";

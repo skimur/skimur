@@ -33,7 +33,7 @@ namespace Subs.Services
             if(sorter == null)
                 sorter = new Dictionary<Guid, double>();
 
-            var candidates = new HeapPriorityQueue<CommentQueue>(commentTree.CommentIds.Count);
+            var candidates = new PriorityQueue<CommentQueue>();
 
             if (children != null)
             {
@@ -91,19 +91,19 @@ namespace Subs.Services
                         result.MoreRecursion.Add(parentId);
                 }
             }
-
+            
             result.Comments.AddRange(items);
             result.TopLevelComments.AddRange(result.Comments.Where(x => commentTree.Depth[x] == 0));
 
             UpdateChildrenCount(result, commentTree, result.TopLevelComments);
-
+            
             return result;
         }
 
-        private void UpdateCandidates(HeapPriorityQueue<CommentQueue> candidates, Dictionary<Guid, double> sorter, IEnumerable<Guid> comments)
+        private void UpdateCandidates(PriorityQueue<CommentQueue> candidates, Dictionary<Guid, double> sorter, IEnumerable<Guid> comments)
         {
             foreach (var comment in comments)
-                candidates.Enqueue(new CommentQueue(comment), sorter.ContainsKey(comment) ? sorter[comment] : 0);
+                candidates.Enqueue(new CommentQueue(comment, sorter.ContainsKey(comment) ? sorter[comment] : 0));
         }
 
         private int UpdateChildrenCount(CommentTreeContext context, CommentTree commentTree, List<Guid> comments)
@@ -131,14 +131,24 @@ namespace Subs.Services
             return childrenCount;
         }
 
-        class CommentQueue : PriorityQueueNode
+        class CommentQueue : IComparable<CommentQueue>
         {
-            public CommentQueue(Guid commentId)
+            public CommentQueue(Guid commentId, double priority)
             {
                 CommentId = commentId;
+                Priority = priority;
             }
 
             public Guid CommentId { get; private set; }
+
+            public double Priority { get; private set; }
+
+            public int CompareTo(CommentQueue other)
+            {
+                if (Priority < other.Priority) return -1;
+                if (Priority > other.Priority) return 1;
+                return 0;
+            }
         }
     }
 }
