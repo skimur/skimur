@@ -64,7 +64,7 @@ namespace Skimur.Web
 
         public static string Comment(this UrlHelper urlHelper, string subName, Post post, Comment comment)
         {
-            return urlHelper.RouteUrl("PostComment", new { subName, slug = post.Slug, commentId = comment.Id });
+            return urlHelper.RouteUrl("PostComment", new { subName, slug = post.Slug, title=post.Title.UrlFriendly(), commentId = comment.Id });
         }
 
         public static string User(this UrlHelper urlHelper, string userName)

@@ -14,6 +14,9 @@
         </div>
         <textarea class="comment-md-unformatted hidden">@Html.Raw(Model.Comment.Body)</textarea>
         <ul class="comment-options">
+            <li>
+                <a href="@Url.Comment(Model.Sub.Name, Model.Post, Model.Comment)">permalink</a>
+            </li>
             @if (Model.CanDelete)
             {
                 <li>
@@ -29,6 +32,22 @@
                     <a href="javascript:void(0);" onclick="return skimurui.comments.startEdit(this)" class="edit">edit</a>
                 </li>
             }
+            @if (Model.Parent != null)
+            {
+
+                <li>
+                    @if (Model.IsParentVisible)
+                    {
+                        <a href="#@Model.Parent.Comment.Id">parent</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Comment(Model.Parent.Sub.Name, Model.Parent.Post, Model.Parent.Comment)">parent</a>
+                    }
+
+                </li>
+            }
+
         </ul>
         <div class="comment-staging hidden"></div>
     </div>

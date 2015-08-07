@@ -47,6 +47,9 @@ namespace Subs.ReadModel
                         ? wrapped[comment.Comment.ParentId.Value]
                         : null;
 
+                if (comment.Comment.ParentId.HasValue && treeContext.Comments.Contains(comment.Comment.ParentId.Value))
+                    comment.IsParentVisible = true;
+
                 if (parent != null && comment.CurrentUserIsAuthor)
                 {
                     // this comment is the current user, so lets walk the parents
@@ -65,9 +68,20 @@ namespace Subs.ReadModel
                 comment.MoreRecursion = treeContext.MoreRecursion.Contains(comment.Comment.Id);
 
                 if (parent != null)
+                {
+                    comment.Parent = comment;
                     parent.Children.Add(comment);
+                }
                 else
+                {
+                    if (comment.Comment.ParentId.HasValue)
+                    {
+                        // we don't have a parent here, but this comment does have a parent.
+                        // we need to get it
+                        comment.Parent = WrapComments(new List<Guid> {comment.Comment.ParentId.Value}, currentUser).FirstOrDefault().Value;
+                    }
                     final.Add(comment);
+                }
             }
 
             return final;

@@ -15,10 +15,10 @@
             </div>
         }
         @if (Model.Children != null && Model.Children.Count > 0)
-                {
-                    foreach (var child in Model.Children)
-                    {
-                        ViewBag.IsAlternateRow = !isAlternateRow;
+        {
+            foreach (var child in Model.Children)
+            {
+                ViewBag.IsAlternateRow = !isAlternateRow;
                 @Html.Partial("_Comment", child)
             }
         }

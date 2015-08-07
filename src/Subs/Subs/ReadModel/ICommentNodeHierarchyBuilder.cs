@@ -23,6 +23,8 @@ namespace Subs.ReadModel
 
         public List<CommentNode> Children { get; set; }
 
+        public CommentNode Parent { get; set; }
+
         public User Author { get; set; }
 
         public VoteType? CurrentUserVote { get; set; }
@@ -44,5 +46,7 @@ namespace Subs.ReadModel
         public bool MoreRecursion { get; set; }
 
         public Post Post { get; set; }
+
+        public bool IsParentVisible { get; set; }
     }
 }
