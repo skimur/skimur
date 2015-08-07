@@ -9,7 +9,7 @@ Vagrant.configure("2") do |config|
 
     dev.vm.hostname = "skimurdev"
 
-    # dev.vm.network :private_network, ip: "192.168.10.200"
+    dev.vm.network :private_network, ip: "192.168.10.200"
     dev.vm.network :forwarded_port, guest: 5656, host: 5656, id: "skimurpostgres"
     dev.vm.network :forwarded_port, guest: 5672, host: 5672, id: "skimurrabbitmq"
     dev.vm.network :forwarded_port, guest: 15672, host: 15672, id: "skimurrabbitmqadmin"
