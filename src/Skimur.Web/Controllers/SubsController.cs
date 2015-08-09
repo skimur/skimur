@@ -511,7 +511,7 @@ namespace Skimur.Web.Controllers
                     });
                 }
                 
-                var html = RenderView("_CommentBody", _commentWrapper.Wrap(new List<Guid> { model.CommentId }, _userContext.CurrentUser));
+                var html = RenderView("_CommentBody", _commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser));
                 
                 return Json(new
                 {

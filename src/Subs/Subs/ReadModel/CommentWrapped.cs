@@ -12,6 +12,7 @@ namespace Subs.ReadModel
         public CommentWrapped(Comment comment)
         {
             Comment = comment;
+            Children = new List<CommentWrapped>();
         }
 
         public Comment Comment { get; private set; }
