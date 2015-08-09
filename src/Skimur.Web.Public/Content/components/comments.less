@@ -4,11 +4,12 @@
 
 .comments-header {
     .comments-text {
-         font-size: @font-size-h2;
-         display:inline-block;
+        font-size: @font-size-h2;
+        display: inline-block;
     }
+
     .comments-sort {
-        float:right;
+        float: right;
     }
 }
 
@@ -137,9 +138,26 @@
                 &.first {
                     margin-left: 0px;
                 }
+
+                a {
+                    color: lighten(@gray, 25%);
+                    font-weight:bold;
+                }
             }
 
             list-style-type: none;
+        }
+
+        &:hover {
+            .comment-options {
+
+                > li {
+
+                    a {
+                        color: @gray;
+                    }
+                }
+            }
         }
     }
 }

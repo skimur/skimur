@@ -7,14 +7,14 @@
     </div>
     <div class="comment-content">
         <div class="comment-tagline">
-            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Author.UserName" class="author">@Model.Author.UserName</a> <span class="score">@(Model.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.DateCreated) ago</time>
+            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Author.UserName" class="author">@Model.Author.UserName</a> <span class="score">@(Model.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.DateCreated) ago</time>@if (Model.Comment.DateEdited.HasValue) {<em>*</em>}
         </div>
         <div class="comment-md">
             @Html.Raw(Model.Comment.BodyFormatted)
         </div>
         <textarea class="comment-md-unformatted hidden">@Html.Raw(Model.Comment.Body)</textarea>
         <ul class="comment-options">
-            <li>
+            <li class="first">
                 <a href="@Url.Comment(Model.Sub.Name, Model.Post, Model.Comment)">permalink</a>
             </li>
             @if (Model.CanDelete)
