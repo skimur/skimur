@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using Skimur;
 using Subs.ReadModel;
 
@@ -10,12 +11,12 @@ namespace Subs.Services
 
         void UpdatePost(Post post);
 
-        Post GetPostBySlug(string slug);
+        Post GetPostById(Guid id);
 
-        SeekedList<Post> GetPosts(List<string> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+        SeekedList<Post> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
-        SeekedList<Post> QueryPosts(string text, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+        SeekedList<Post> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
-        void UpdatePostVotes(string postSlug, int? upVotes, int? downVotes);
+        void UpdatePostVotes(Guid postId, int? upVotes, int? downVotes);
     }
 }

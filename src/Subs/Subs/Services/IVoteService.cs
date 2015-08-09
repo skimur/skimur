@@ -8,21 +8,21 @@ namespace Subs.Services
 {
     public interface IVoteService
     {
-        void VoteForPost(string postSlug, string userName, string ipAddress, VoteType voteType, DateTime dateCasted);
+        void VoteForPost(Guid postId, Guid userId, string ipAddress, VoteType voteType, DateTime dateCasted);
 
-        void UnVotePost(string postSlug, string userName);
+        void UnVotePost(Guid postId, Guid userId);
 
-        VoteType? GetVoteForUserOnPost(string userName, string postSlug);
+        VoteType? GetVoteForUserOnPost(Guid userId, Guid postId);
         
-        void GetTotalVotesForPost(string postSlug, out int upVotes, out int downVotes);
+        void GetTotalVotesForPost(Guid postId, out int upVotes, out int downVotes);
 
-        void VoteForComment(Guid commentId, string userName, string ipAddress, VoteType voteType, DateTime dateCasted);
+        void VoteForComment(Guid commentId, Guid userId, string ipAddress, VoteType voteType, DateTime dateCasted);
 
-        void UnVoteComment(Guid commentId, string userName);
+        void UnVoteComment(Guid commentId, Guid userId);
 
-        VoteType? GetVoteForUserOnComment(string userName, Guid commentId);
+        VoteType? GetVoteForUserOnComment(Guid userId, Guid commentId);
 
-        Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(string userName, List<Guid> comments);
+        Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(Guid userId, List<Guid> comments);
 
         void GetTotalVotesForComment(Guid commentId, out int upVotes, out int downVotes);
     }

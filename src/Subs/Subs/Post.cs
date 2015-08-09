@@ -19,9 +19,9 @@ namespace Subs
 
         public string Slug { get; set; }
 
-        public string SubName { get; set; }
+        public Guid SubId { get; set; }
 
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
         public string UserIp { get; set; }
 

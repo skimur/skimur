@@ -21,7 +21,7 @@ namespace Subs.Worker
         public void Handle(SubScriptionChanged @event)
         {
             ulong numberOfSubscribers;
-            _subService.UpdateNumberOfSubscribers(@event.SubName, out numberOfSubscribers);
+            _subService.UpdateNumberOfSubscribers(@event.SubId, out numberOfSubscribers);
         }
     }
 }

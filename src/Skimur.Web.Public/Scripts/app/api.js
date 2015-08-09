@@ -34,11 +34,11 @@
         });
     };
 
-    var votePost = function (postSlug, voteType, callback) {
+    var votePost = function (postId, voteType, callback) {
         $.ajax({
             type: "POST",
             url: "/votepost",
-            data: { postSlug: postSlug, type: voteType },
+            data: { postId: postId, type: voteType },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -51,11 +51,11 @@
         });
     };
 
-    var unvotePost = function (postSlug, callback) {
+    var unvotePost = function (postId, callback) {
         $.ajax({
             type: "POST",
             url: "/unvotepost",
-            data: { postSlug: postSlug },
+            data: { postId: postId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -102,11 +102,11 @@
         });
     };
 
-    var createComment = function (postSlug, parentId, body, callback) {
+    var createComment = function (postId, parentId, body, callback) {
         $.ajax({
             type: "POST",
             url: "/createcomment",
-            data: { postSlug: postSlug, parentId: parentId, body: body },
+            data: { postId: postId, parentId: parentId, body: body },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -184,11 +184,11 @@
         subscribe: subscribe,
         unsubcribe: unsubcribe,
         votePost: votePost,
-        upvotePost: function (postSlug, callback) { votePost(postSlug, 1, callback); },
-        downvotePost: function (postSlug, callback) { votePost(postSlug, 0, callback); },
+        upvotePost: function (postId, callback) { votePost(postId, 1, callback); },
+        downvotePost: function (postId, callback) { votePost(postId, 0, callback); },
         unvotePost: unvotePost,
-        upvoteComment: function (postSlug, callback) { voteComment(postSlug, 1, callback); },
-        downvoteComment: function (postSlug, callback) { voteComment(postSlug, 0, callback); },
+        upvoteComment: function (commentId, callback) { voteComment(commentId, 1, callback); },
+        downvoteComment: function (commentId, callback) { voteComment(commentId, 0, callback); },
         unvoteComment: unvoteComment,
         createComment: createComment,
         editComment: editComment,

@@ -1,7 +1,7 @@
 ﻿@using Subs
 @model PostModel
 
-<div class="post row" data-postslug="@Model.Slug">
+<div class="post row" data-post-id="@Model.Id">
     <div class="post-voting @(Model.CurrentVote != null ? Model.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
         <span class="up login-required"></span>
         <span class="votes">@(Model.VoteUpCount - Model.VoteDownCount)</span>
@@ -13,10 +13,10 @@
                 <a class="post-link" href="@PostUrl(Model)">@Model.Title</a> @(DomainLink(Model))
             </p>
             <p class="post-meta">
-                Posted @Html.Age(Model.DateCreated) ago  to <a href="@Url.Sub(Model.SubName)">/s/@Model.SubName</a>
+                Posted @Html.Age(Model.DateCreated) ago  to @*TODO:<a href="@Url.Sub(Model.SubName)">/s/@Model.SubName</a>*@
             </p>
             <p class="post-links">
-                <a href="@Url.Post(Model)">comments</a>
+                @*TODO:<a href="@Url.Post(Model)">comments</a>*@
             </p>
         </div>
     </div>
@@ -33,7 +33,7 @@
     }
     else if (post.PostType == PostType.Text)
     {
-        <a class="post-domain" href="@Url.Post(post)">(self.@post.SubName)</a>
+        @*TODO:<a class="post-domain" href="@Url.Post(post)">(self.@post.SubName)</a>*@
     }
 }
 @helper PostUrl(PostModel post)
@@ -44,6 +44,6 @@
     }
     else if (post.PostType == PostType.Text)
     {
-        @Url.Post(post)
+        @*TODO:@Url.Post(post)*@
     }
 }

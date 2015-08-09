@@ -13,19 +13,19 @@ namespace Subs.ReadModel
 
         List<Sub> GetDefaultSubs();
 
-        List<Sub> GetSubscribedSubsForUser(string userName);
+        List<Sub> GetSubscribedSubsForUser(Guid userId);
 
-        bool IsUserSubscribedToSub(string userName, string subName);
+        bool IsUserSubscribedToSub(Guid userId, Guid subId);
 
         Sub GetRandomSub();
 
         Sub GetSubByName(string name);
 
-        List<Sub> GetSubByNames(List<string> names);
+        List<Sub> GetSubsByIds(List<Guid> ids);
+        
+        bool CanUserModerateSub(Guid userId, Guid subId);
 
-        bool CanUserModerateSub(string userName, string subName);
-
-        List<string> GetAllModsForSub(string subName);
+        List<Guid> GetAllModsForSub(Guid subId);
     }
 
     public enum SubsSortBy

@@ -29,7 +29,7 @@ namespace Subs
         /// <summary>
         /// The sub this comment is located in
         /// </summary>
-        public string SubName { get; set; }
+        public Guid SubId { get; set; }
 
         /// <summary>
         /// If this message is a response to another message, this will point to that message
@@ -45,7 +45,7 @@ namespace Subs
         /// <summary>
         /// The user name of who authored this comment.
         /// </summary>
-        public string AuthorUserName { get; set; }
+        public Guid AuthorUserId { get; set; }
 
         /// <summary>
         /// The ip address of the author when posting the comment.
@@ -55,7 +55,7 @@ namespace Subs
         /// <summary>
         /// The slug of the post that this message was a comment to.
         /// </summary>
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
         /// <summary>
         /// Gets the body of the comment. This could be markdown content.

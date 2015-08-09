@@ -1,11 +1,12 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 
 namespace Skimur.Web
 {
     public interface IContextService
     {
-        List<string> GetSubscribedSubNames();
+        List<Guid> GetSubscribedSubIds();
 
-        bool IsSubcribedToSub(string subName);
+        bool IsSubcribedToSub(Guid subId);
     }
 }

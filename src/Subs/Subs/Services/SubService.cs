@@ -54,26 +54,26 @@ namespace Subs.Services
             });
         }
 
-        public List<Sub> GetSubscribedSubsForUser(string userName)
+        public List<Sub> GetSubscribedSubsForUser(Guid userId)
         {
             return _conn.Perform(conn =>
             {
                 return
                     conn.Select(
                         conn.From<Sub>()
-                            .LeftJoin<SubScription>((scription, sub) => scription.Name == sub.SubName)
-                            .Where<SubScription>(x => x.UserName == userName));
+                            .LeftJoin<SubScription>((sub, scription) => sub.Id == scription.SubId)
+                            .Where<SubScription>(x => x.UserId == userId));
             });
         }
 
-        public bool IsUserSubscribedToSub(string userName, string subName)
+        public bool IsUserSubscribedToSub(Guid userId, Guid subId)
         {
             return _conn.Perform(conn =>
             {
                 return conn.Count(
                         conn.From<Sub>()
-                            .LeftJoin<SubScription>((scription, sub) => scription.Name == sub.SubName)
-                            .Where<SubScription>(x => x.UserName == userName)) > 0;
+                             .LeftJoin<SubScription>((sub, scription) => sub.Id == scription.SubId)
+                            .Where<SubScription>(x => x.UserId == userId)) > 0;
             });
         }
 
@@ -103,27 +103,27 @@ namespace Subs.Services
             _conn.Perform(conn => conn.DeleteById<Sub>(subId));
         }
 
-        public void SubscribeToSub(string userName, string subName)
+        public void SubscribeToSub(Guid userId, Guid subId)
         {
             _conn.Perform(conn =>
             {
-                if (conn.Count(conn.From<SubScription>().Where(x => x.UserName == userName && x.SubName == subName)) == 0)
+                if (conn.Count(conn.From<SubScription>().Where(x => x.UserId == userId && x.SubId == subId)) == 0)
                 {
                     conn.Insert(new SubScription
                     {
                         Id = GuidUtil.NewSequentialId(),
-                        UserName = userName,
-                        SubName = subName
+                        UserId = userId,
+                        SubId = subId
                     });
                 }
             });
         }
 
-        public void UnSubscribeToSub(string userName, string subName)
+        public void UnSubscribeToSub(Guid userId, Guid subId)
         {
             _conn.Perform(conn =>
             {
-                conn.Delete<SubScription>(x => x.UserName.ToLower() == userName.ToLower() && x.SubName.ToLower() == subName.ToLower());
+                conn.Delete<SubScription>(x => x.UserId == userId && x.SubId == subId);
             });
         }
 
@@ -137,70 +137,67 @@ namespace Subs.Services
             });
         }
 
-        public List<Sub> GetSubByNames(List<string> names)
+        public List<Sub> GetSubsByIds(List<Guid> ids)
         {
-            if (names == null || names.Count == 0)
+            if (ids == null || ids.Count == 0)
                 return new List<Sub>();
 
             return _conn.Perform(conn =>
             {
-                return conn.Select(conn.From<Sub>().Where(x => names.Contains(x.Name)));
+                return conn.Select(conn.From<Sub>().Where(x => ids.Contains(x.Id)));
             });
         }
 
-        public bool CanUserModerateSub(string userName, string subName)
+        public bool CanUserModerateSub(Guid userId, Guid subId)
         {
             return _conn.Perform(conn =>
             {
-                return conn.Count(conn.From<SubAdmin>().Where(x => x.UserName == userName && x.SubName == subName)) > 0;
+                return conn.Count(conn.From<SubAdmin>().Where(x => x.UserId == userId && x.SubId == subId)) > 0;
             });
         }
 
-        public List<string> GetAllModsForSub(string subName)
+        public List<Guid> GetAllModsForSub(Guid subId)
         {
             return _conn.Perform(conn =>
             {
-                return conn.Select(conn.From<SubAdmin>().Where(x => x.SubName == subName).Select(x => x.UserName))
-                    .Select(x => x.UserName).ToList();
+                return conn.Select(conn.From<SubAdmin>().Where(x => x.SubId == subId).Select(x => x.UserId))
+                    .Select(x => x.UserId).ToList();
             });
         }
 
-        public void AddModToSub(string userName, string subName, string addedBy = null)
+        public void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null)
         {
             _conn.Perform(conn =>
             {
-                if (conn.Count<SubAdmin>(x => x.UserName == userName && x.SubName == subName) > 0)
+                if (conn.Count<SubAdmin>(x => x.UserId == userId && x.SubId == subId) > 0)
                     return;
-
-                if (string.IsNullOrEmpty(addedBy))
-                    addedBy = "[system]";
-
+                
                 conn.Insert(new SubAdmin
                 {
                     Id = GuidUtil.NewSequentialId(),
-                    UserName = userName,
-                    SubName = subName,
+                    UserId = userId,
+                    SubId = subId,
                     AddedOn = Common.CurrentTime(),
                     AddedBy = addedBy
                 });
             });
         }
 
-        public void RemoveModFromSub(string userName, string subName)
+        public void RemoveModFromSub(Guid userId, Guid subId)
         {
             _conn.Perform(conn =>
             {
-                conn.Delete<SubAdmin>(x => x.UserName == userName && x.SubName == subName);
+                conn.Delete<SubAdmin>(x => x.UserId == userId && x.SubId == subId);
             });
         }
 
-        public void UpdateNumberOfSubscribers(string subName, out ulong totalNumber)
+        public void UpdateNumberOfSubscribers(Guid subId, out ulong totalNumber)
         {
             ulong temp = 0;
             _conn.Perform(conn =>
             {
-                temp = (ulong)conn.Count<SubScription>(x => x.SubName.ToLower() == subName.ToLower());
-                conn.Update<Sub>(new { NumberOfSubscribers = temp }, x => x.Name.ToLower() == subName.ToLower());
+                temp = (ulong)conn.Count<SubScription>(x => x.SubId == subId);
+                conn.Update<Sub>(new { NumberOfSubscribers = temp }, x => x.Id == subId);
             });
             totalNumber = temp;
         }

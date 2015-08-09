@@ -39,22 +39,22 @@ namespace Subs.Worker
 
         public void Handle(CastVoteForPost command)
         {
-            var user = _membershipService.GetUserByUserName(command.UserName);
+            var user = _membershipService.GetUserById(command.UserId);
 
             if (user == null)
                 return;
 
-            var post = _postService.GetPostBySlug(command.PostSlug);
+            var post = _postService.GetPostById(command.PostId);
 
             if (post == null)
                 return;
 
             if (command.VoteType.HasValue)
-                _voteService.VoteForPost(post.Slug, user.UserName, command.IpAddress, command.VoteType.Value, command.DateCasted);
+                _voteService.VoteForPost(post.Id, user.Id, command.IpAddress, command.VoteType.Value, command.DateCasted);
             else
-                _voteService.UnVotePost(post.Slug, user.UserName);
+                _voteService.UnVotePost(post.Id, user.Id);
 
-            _eventBus.Publish(new VoteForPostCasted { PostSlug = post.Slug, UserName = user.UserName, VoteType = command.VoteType });
+            _eventBus.Publish(new VoteForPostCasted { PostId = post.Id, UserId = user.Id, VoteType = command.VoteType });
         }
 
         public void Handle(CastVoteForComment command)
@@ -70,9 +70,9 @@ namespace Subs.Worker
                 return;
 
             if (command.VoteType.HasValue)
-                _voteService.VoteForComment(comment.Id, user.UserName, command.IpAddress, command.VoteType.Value, command.DateCasted);
+                _voteService.VoteForComment(comment.Id, user.Id, command.IpAddress, command.VoteType.Value, command.DateCasted);
             else
-                _voteService.UnVoteComment(comment.Id, user.UserName);
+                _voteService.UnVoteComment(comment.Id, user.Id);
 
             _eventBus.Publish(new VoteForCommentCasted { CommentId = comment.Id, UserName = user.UserName, VoteType = command.VoteType });
         }

@@ -99,7 +99,7 @@
             .appendTo($buttonsContainer)
             .click(function (e) {
                 e.preventDefault();
-                skimur.createComment(comment.comment.data("post-slug"), comment.comment.data("comment-id"), $textArea.val(), function (result) {
+                skimur.createComment(comment.comment.data("post-id"), comment.comment.data("comment-id"), $textArea.val(), function (result) {
                     cancel(element);
                     if (result.success) {
                         $(result.html).insertAfter($("> .comment-body", comment.comment));
@@ -203,38 +203,6 @@ $(function () {
         return this.each(function () {
             
         });
-    };
-
-    $.buildComment = function (comment) {
-        var $comment = $(
-        "<div class='comment' data-post-slug='" + comment.postSlug + "' data-comment-id='" + comment.commentId + "'>" +
-            "<div class='comment-voting'>" +
-                "<span class='up'></span>" +
-                "<span class='down'></span>" +
-            "</div>" +
-            "<div class='comment-body'>" +
-                "<div class='comment-tagline'>" +
-                    "<a href='javascript:void(0)' class='expand'>[–]</a> <a href='/u/" + comment.author + "' class='author'>" + comment.author + "</a> <span class='score'>" + comment.score + " points</span> <time class='timestamp'>" + comment.dateCreatedAgo + "</time>" +
-                "</div>" +
-                "<div class='comment-md'>" +
-                comment.bodyFormatted +
-                "</div>" +
-                "<textarea class='comment-md-unformatted hidden'>" + comment.body + "</textarea>" +
-                       "<ul class='comment-options'>" +
-                           "<li>" +
-                               "<a href='javascript:void(0);' class='reply'>reply</a>" +
-                           "</li>" +
-                           "<li>" +
-                               "<a href='javascript:void(0);' class='edit'>edit</a>" +
-                           "</li>" +
-                       "</ul>" +
-                       "<div class='comment-staging hidden'></div>" +
-                   "</div>" +
-                "<div class='clearfix'></div>" +
-            "</div>" +
-        "</div>"
-        );
-        return $comment;
     };
 
     $(".comment").comment();

@@ -29,8 +29,8 @@ namespace Subs.Worker
             // update the total number of up/down votes for the post
             int upVotes;
             int downVotes;
-            _voteService.GetTotalVotesForPost(@event.PostSlug, out upVotes, out downVotes);
-            _postService.UpdatePostVotes(@event.PostSlug, upVotes, downVotes);
+            _voteService.GetTotalVotesForPost(@event.PostId, out upVotes, out downVotes);
+            _postService.UpdatePostVotes(@event.PostId, upVotes, downVotes);
         }
 
         public void Handle(VoteForCommentCasted @event)
@@ -44,7 +44,7 @@ namespace Subs.Worker
             var comment = _commentService.GetCommentById(commentId);
             if (comment == null) return;
 
-            var post = _postService.GetPostBySlug(comment.PostSlug);
+            var post = _postService.GetPostById(comment.PostId);
             if (post == null) return;
 
             int upVotes;
@@ -52,7 +52,7 @@ namespace Subs.Worker
             _voteService.GetTotalVotesForComment(comment.Id, out upVotes, out downVotes);
             _commentService.UpdateCommentVotes(comment.Id, upVotes, downVotes);
 
-            var opChildren = _commentService.GetChildrenForComment(comment.Id, comment.AuthorUserName);
+            var opChildren = _commentService.GetChildrenForComment(comment.Id, comment.AuthorUserId);
 
             // general/best sort for comments
             var confidence = Sorting.Confidence(upVotes, downVotes);
@@ -62,12 +62,12 @@ namespace Subs.Worker
             var qa = Sorting.Qa(upVotes, downVotes, string.IsNullOrEmpty(comment.Body) ? 0 : comment.Body.Length, opChildren);
 
             // if this comment is from op, we want to give it a boost, but only if it hasn't had a boost already.
-            if (post.UserName == comment.AuthorUserName && !opChildren.Any())
+            if (post.UserId == comment.AuthorUserId && !opChildren.Any())
                 qa *= 2;
 
             _commentService.UpdateCommentSorting(comment.Id, confidence, qa);
 
-            if (post.UserName == comment.AuthorUserName)
+            if (post.UserId == comment.AuthorUserId)
                 // this comment is from the op, then the parent comment's qa sort will be updated because this is an op reply.
                 if (comment.ParentId.HasValue)
                     UpdateSortsForComment(comment.ParentId.Value);

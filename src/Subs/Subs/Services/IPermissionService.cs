@@ -8,12 +8,12 @@ namespace Subs.Services
 {
     public interface IPermissionService
     {
-        bool CanUserDeleteComment(string userName, Comment comment);
+        bool CanUserDeleteComment(Guid userId, Comment comment);
 
-        bool CanUserMarkCommentAsSpam(string userName, Comment comment);
+        bool CanUserMarkCommentAsSpam(Guid userId, Comment comment);
 
-        bool CanUserMarkPostAsSpam(string userName, Post post);
+        bool CanUserMarkPostAsSpam(Guid userId, Post post);
 
-        bool CanUserModerateSub(string userName, string subName);
+        bool CanUserModerateSub(Guid userId, Guid subId);
     }
 }

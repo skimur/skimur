@@ -112,6 +112,19 @@ namespace Infrastructure.Membership
             return _conn.Perform(conn => conn.Select(conn.From<User>().Where(x => userNames.Contains(x.UserName))));
         }
 
+        /// <summary>
+        /// Get a list of users by ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        public List<User> GetUsersByIds(List<Guid> ids)
+        {
+            if (ids == null || ids.Count == 0)
+                return new List<User>();
+
+            return _conn.Perform(conn => conn.Select(conn.From<User>().Where(x => ids.Contains(x.Id))));
+        }
+        
         public bool IsUserNameValid(string userName)
         {
             if (string.IsNullOrEmpty(userName)) return false;

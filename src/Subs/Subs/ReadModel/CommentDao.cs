@@ -26,22 +26,14 @@ namespace Subs.ReadModel
             _commentTreeBuilder = commentTreeBuilder;
             _commentTreeContextBuilder = commentTreeContextBuilder;
         }
-
-        public CommentTree GetCommentTree(string postSlug)
-        {
-            return _commentTreeBuilder.GetCommentTree(postSlug);
-        }
-
-        public Dictionary<Guid, double> GetCommentTreeSorter(string postSlug, CommentSortBy sortBy)
+        
+        public Dictionary<Guid, double> GetCommentTreeSorter(Guid postId, CommentSortBy sortBy)
         {
             // TODO: This should be cached and updated periodically
-
-            if (string.IsNullOrEmpty(postSlug))
-                return new Dictionary<Guid, double>();
-
+            
             return _conn.Perform(conn =>
             {
-                var query = conn.From<Comment>().Where(x => x.PostSlug == postSlug);
+                var query = conn.From<Comment>().Where(x => x.PostId == postId);
 
                 switch (sortBy)
                 {
@@ -73,6 +65,11 @@ namespace Subs.ReadModel
 
                 return commentsSorted.ToDictionary(x => x, x => (double)commentsSorted.IndexOf(x));
             });
+        }
+
+        public CommentTree GetCommentTree(Guid postId)
+        {
+            return _commentTreeBuilder.GetCommentTree(postId);
         }
     }
 }

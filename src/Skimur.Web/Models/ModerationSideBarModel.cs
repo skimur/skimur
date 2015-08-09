@@ -10,13 +10,13 @@ namespace Skimur.Web.Models
     {
         public ModerationSideBarModel()
         {
-            Moderators = new List<string>();
+            Moderators = new List<Guid>();
         }
 
         public string SubName { get; set; }
 
         public bool IsModerator { get; set; }
 
-        public List<string> Moderators { get; set; } 
+        public List<Guid> Moderators { get; set; } 
     }
 }

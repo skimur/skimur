@@ -35,7 +35,7 @@ namespace Subs.Tests
         {
             // arrange
             var comments = CreateTreeComments();
-            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var tree = _commentTreeBuilder.GetCommentTree(Guid.Empty);
             var sorter = comments.ToDictionary(x => x.Id, x => (double)comments.IndexOf(comments.Single(y => y.Id == x.Id)));
 
             // act
@@ -62,7 +62,7 @@ namespace Subs.Tests
             grandChild1.Id = Guid.NewGuid();
             grandChild1.ParentId = commentChild2.Id;
             SetupComments(new List<Comment> { comment, commentChild1, commentChild2, grandChild1 });
-            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var tree = _commentTreeBuilder.GetCommentTree(Guid.Empty);
 
             // act
             var result = _commentTreeContextBuilder.Build(tree, new Dictionary<Guid, double>());
@@ -90,7 +90,7 @@ namespace Subs.Tests
             grandChild1.Id = Guid.NewGuid();
             grandChild1.ParentId = commentChild2.Id;
             SetupComments(new List<Comment> { comment, commentChild1, commentChild2, grandChild1 });
-            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var tree = _commentTreeBuilder.GetCommentTree(Guid.Empty);
 
             // act
             var result = _commentTreeContextBuilder.Build(tree, new Dictionary<Guid, double>(), maxDepth: 1);
@@ -112,7 +112,7 @@ namespace Subs.Tests
         {
             // arrange
             CreateTreeComments();
-            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var tree = _commentTreeBuilder.GetCommentTree(Guid.Empty);
             var comment1 = tree.Tree[Guid.Empty][0];
             var comment2 = tree.Tree[Guid.Empty][2];
 
@@ -130,7 +130,7 @@ namespace Subs.Tests
         {
             // arrange
             CreateTreeComments();
-            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var tree = _commentTreeBuilder.GetCommentTree(Guid.Empty);
 
             // act
             var result = _commentTreeContextBuilder.Build(tree, null, comment: tree.Tree[Guid.Empty][0], maxDepth: 1);
@@ -151,8 +151,10 @@ namespace Subs.Tests
         {
             // arrange
             var sub = new Sub();
+            sub.Id = GuidUtil.NewSequentialId();
             sub.Name = "test";
             var author = new User();
+            author.Id = GuidUtil.NewSequentialId();
             author.UserName = "author";
             var comments = ConvertTestNodesToComments(new List<TestNodeTreeSorted>
             {
@@ -168,15 +170,15 @@ namespace Subs.Tests
             });
             foreach (var comment in comments)
             {
-                comment.SubName = sub.Name;
-                comment.AuthorUserName = author.UserName;
+                comment.SubId = sub.Id;
+                comment.AuthorUserId = author.Id;
             }
             SetupComments(comments);
-            _membershipService.Setup(x => x.GetUsersByUserNames(It.IsAny<List<string>>())).Returns(new List<User> {author});
-            _subDao.Setup(x => x.GetSubByNames(It.IsAny<List<string>>())).Returns(new List<Sub> {sub});
+            _membershipService.Setup(x => x.GetUsersByIds(It.IsAny<List<Guid>>())).Returns(new List<User> {author});
+            _subDao.Setup(x => x.GetSubsByIds(It.IsAny<List<Guid>>())).Returns(new List<Sub> {sub});
 
             // act
-            var tree = _commentTreeBuilder.GetCommentTree(null);
+            var tree = _commentTreeBuilder.GetCommentTree(Guid.Empty);
             var treeContext = _commentTreeContextBuilder.Build(tree,
                 comments.ToDictionary(x => x.Id, x => (double) x.SortConfidence));
             var nodes = _commentNodeHierarchyBuilder.Build(tree, treeContext, null);
@@ -255,7 +257,7 @@ namespace Subs.Tests
 
         private void SetupComments(List<Comment> comments)
         {
-            _commentService.Setup(x => x.GetAllCommentsForPost(It.IsAny<string>(), It.IsAny<CommentSortBy?>())).Returns(comments);
+            _commentService.Setup(x => x.GetAllCommentsForPost(It.IsAny<Guid>(), It.IsAny<CommentSortBy?>())).Returns(comments);
             _commentDao.Setup(x => x.GetCommentsByIds(It.IsAny<List<Guid>>()))
                 .Returns(new Func<List<Guid>, List<Comment>>(
                     list =>

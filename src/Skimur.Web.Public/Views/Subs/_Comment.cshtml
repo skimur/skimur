@@ -4,7 +4,7 @@
 }
 @if (Model.Comment != null)
 {
-    <div class="comment@(isAlternateRow ? " alternate" : null)" data-comment-id="@Model.Comment.Id" data-post-slug="@Model.Comment.PostSlug">
+    <div class="comment@(isAlternateRow ? " alternate" : null)" data-comment-id="@Model.Comment.Id" data-post-id="@Model.Comment.PostId">
         @Html.Partial("_CommentBody", Model)
         @if (Model.MoreRecursion)
         {

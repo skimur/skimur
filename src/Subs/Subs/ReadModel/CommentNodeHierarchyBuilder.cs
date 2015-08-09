@@ -99,32 +99,32 @@ namespace Subs.ReadModel
 
             // TODO: Thinking about future support for cassandra, we may want to store "user ids" instead of "user names"
             // inside of each comment. That way, we can query authors by id, which is VERY fast in cassandra.
-            var authorNames = result.Values.Select(x => x.Comment.AuthorUserName).Distinct().ToList();
-            var authors = _membershipService.GetUsersByUserNames(authorNames).ToDictionary(x => x.UserName, x => x);
+            var authorIds = result.Values.Select(x => x.Comment.AuthorUserId).Distinct().ToList();
+            var authors = _membershipService.GetUsersByIds(authorIds).ToDictionary(x => x.Id, x => x);
 
             // TODO: Same thing as the note above about authors, but for subs.
-            var subs = _subDao.GetSubByNames(result.Values.Select(x => x.Comment.SubName).Distinct().ToList()).ToDictionary(x => x.Name, x => x);
+            var subs = _subDao.GetSubsByIds(result.Values.Select(x => x.Comment.SubId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
 
             // TODO: Same thing as the note aboce about subs, but for posts :)
-            var posts = result.Values.Select(x => x.Comment.PostSlug).Distinct().Select(x => _postDao.GetPostBySlug(x)).Where(x => x != null).ToDictionary(x => x.Slug, x => x);
+            var posts = result.Values.Select(x => x.Comment.PostId).Distinct().Select(x => _postDao.GetPostById(x)).Where(x => x != null).ToDictionary(x => x.Id, x => x);
 
             var userCanModInSubs = new List<Guid>();
 
             if (currentUser != null)
                 foreach (var sub in subs.Values)
                     // TODO: Check for a specific permission "ban".
-                    if (_permissionDao.CanUserModerateSub(currentUser.UserName, sub.Name))
+                    if (_permissionDao.CanUserModerateSub(currentUser.Id, sub.Id))
                         userCanModInSubs.Add(sub.Id);
 
-            var likes = currentUser != null ? _voteDao.GetVotesOnCommentsByUser(currentUser.UserName, comments) : new Dictionary<Guid, VoteType>();
+            var likes = currentUser != null ? _voteDao.GetVotesOnCommentsByUser(currentUser.Id, comments) : new Dictionary<Guid, VoteType>();
 
             foreach (var item in result.Values)
             {
-                item.Author = authors.ContainsKey(item.Comment.AuthorUserName) ? authors[item.Comment.AuthorUserName] : null;
+                item.Author = authors.ContainsKey(item.Comment.AuthorUserId) ? authors[item.Comment.AuthorUserId] : null;
                 item.CurrentUserVote = likes.ContainsKey(item.Comment.Id) ? likes[item.Comment.Id] : (VoteType?)null;
-                item.Sub = subs.ContainsKey(item.Comment.SubName) ? subs[item.Comment.SubName] : null;
+                item.Sub = subs.ContainsKey(item.Comment.SubId) ? subs[item.Comment.SubId] : null;
                 item.Score = item.Comment.VoteUpCount - item.Comment.VoteDownCount;
-                item.Post = posts.ContainsKey(item.Comment.PostSlug) ? posts[item.Comment.PostSlug] : null;
+                item.Post = posts.ContainsKey(item.Comment.PostId) ? posts[item.Comment.PostId] : null;
 
                 var userCanMod = item.Sub != null && userCanModInSubs.Contains(item.Sub.Id);
 

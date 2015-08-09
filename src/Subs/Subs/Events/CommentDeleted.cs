@@ -7,10 +7,10 @@ namespace Subs.Events
     {
         public Guid CommentId { get; set; }
 
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
-        public string SubName { get; set; }
+        public Guid SubId { get; set; }
 
-        public string DeletedByUserName { get; set; }
+        public Guid DeletedByUserId { get; set; }
     }
 }

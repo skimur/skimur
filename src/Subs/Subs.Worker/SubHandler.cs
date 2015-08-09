@@ -94,8 +94,8 @@ namespace Subs.Worker
                 response.SubId = sub.Id;
                 response.SubName = sub.Name;
 
-                _subService.SubscribeToSub(user.UserName, sub.Name);
-                _subService.AddModToSub(user.UserName, sub.Name);
+                _subService.SubscribeToSub(user.Id, sub.Id);
+                _subService.AddModToSub(user.Id, sub.Id);
             }
             catch (Exception ex)
             {
@@ -128,7 +128,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_subService.CanUserModerateSub(user.UserName, sub.Name))
+                if (!_subService.CanUserModerateSub(user.Id, sub.Id))
                 {
                     response.Error = "You are not allowed to modify this sub.";
                     return response;
@@ -255,8 +255,8 @@ namespace Subs.Worker
                     Id = GuidUtil.NewSequentialId(),
                     DateCreated = Common.CurrentTime(),
                     LastEditDate = null,
-                    SubName = sub.Name,
-                    UserName = user.UserName,
+                    SubId = sub.Id,
+                    UserId = user.Id,
                     UserIp = command.IpAddress,
                     PostType = command.PostType,
                     Title = command.Title,
@@ -271,16 +271,12 @@ namespace Subs.Worker
                 {
                     post.Content = command.Content;
                 }
-
-                post.Slug = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
-                while (_postService.GetPostBySlug(post.Slug) != null)
-                    post.Slug = Path.GetFileNameWithoutExtension(Path.GetRandomFileName());
-
+                
                 _postService.InsertPost(post);
-                _commandBus.Send(new CastVoteForPost { DateCasted = post.DateCreated, IpAddress = command.IpAddress, PostSlug = post.Slug, UserName = user.UserName, VoteType = VoteType.Up });
+                _commandBus.Send(new CastVoteForPost { DateCasted = post.DateCreated, IpAddress = command.IpAddress, PostId = post.Id, UserId = user.Id, VoteType = VoteType.Up });
 
                 response.Title = command.Title;
-                response.Slug = post.Slug;
+                response.PostId = post.Id;
             }
             catch (Exception ex)
             {
@@ -322,13 +318,13 @@ namespace Subs.Worker
                 // todo: check for private subs
                 // todo: check if the user is subcribed to too many subs
 
-                _subService.SubscribeToSub(user.UserName, sub.Name);
+                _subService.SubscribeToSub(user.Id, sub.Id);
 
                 _eventBus.Publish(new SubScriptionChanged
                 {
                     Subcribed = true,
-                    UserName = user.UserName,
-                    SubName = sub.Name
+                    UserId = user.Id,
+                    SubId = sub.Id
                 });
 
                 response.Success = true;
@@ -348,19 +344,21 @@ namespace Subs.Worker
 
             try
             {
-                if (string.IsNullOrEmpty(command.UserName) || string.IsNullOrEmpty(command.SubName))
+                var sub = _subService.GetSubByName(command.SubName);
+
+                if (sub == null)
                 {
-                    response.Error = "No user or sub specified.";
+                    response.Error = "No sub found with the given name";
                     return response;
                 }
 
-                _subService.UnSubscribeToSub(command.UserName, command.SubName);
+                _subService.UnSubscribeToSub(command.UserId, sub.Id);
 
                 _eventBus.Publish(new SubScriptionChanged
                 {
                     Unsubscribed = true,
-                    UserName = command.UserName,
-                    SubName = command.SubName
+                    UserId = command.UserId,
+                    SubId = sub.Id
                 });
 
                 response.Success = true;

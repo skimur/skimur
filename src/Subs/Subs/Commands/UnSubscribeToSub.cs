@@ -9,7 +9,7 @@ namespace Subs.Commands
 {
     public class UnSubcribeToSub : ICommandReturns<UnSubcribeToSubResponse>
     {
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
         public string SubName { get; set; }
     }

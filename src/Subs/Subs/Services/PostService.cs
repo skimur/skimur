@@ -27,21 +27,19 @@ namespace Subs.Services
             _conn.Perform(conn => conn.Update(post));
         }
 
-        public Post GetPostBySlug(string slug)
+        public Post GetPostById(Guid id)
         {
-            if (string.IsNullOrEmpty(slug))
-                return null;
-            return _conn.Perform(conn => conn.Single<Post>(x => x.Slug == slug));
+            return _conn.Perform(conn => conn.SingleById<Post>(id));
         }
 
-        public SeekedList<Post> GetPosts(List<string> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        public SeekedList<Post> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
                 var query = conn.From<Post>();
                 if (subs != null && subs.Count > 0)
                 {
-                    query.Where(x => subs.Contains(x.SubName));
+                    query.Where(x => subs.Contains(x.Id));
                 }
 
                 if (timeFilter != TimeFilter.All)
@@ -87,7 +85,6 @@ namespace Subs.Services
                         break;
                     case PostsSortBy.Rising:
                         throw new Exception("not implemented");
-                        break;
                     case PostsSortBy.Controversial:
                         query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
                         break;
@@ -102,7 +99,7 @@ namespace Subs.Services
             });
         }
 
-        public SeekedList<Post> QueryPosts(string text, string sub = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        public SeekedList<Post> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
         {
             // this implemention will eventually store a index, such as solr.
 
@@ -110,9 +107,9 @@ namespace Subs.Services
             {
                 var query = conn.From<Post>();
 
-                if (!string.IsNullOrEmpty(sub))
+                if (subId.HasValue)
                 {
-                    query.Where(x => x.SubName.Contains(sub));
+                    query.Where(x => x.SubId == subId);
                 }
 
                 if(!string.IsNullOrEmpty(text))
@@ -175,27 +172,23 @@ namespace Subs.Services
             });
         }
 
-        public void UpdatePostVotes(string postSlug, int? upVotes, int? downVotes)
+        public void UpdatePostVotes(Guid postId, int? upVotes, int? downVotes)
         {
             if (downVotes.HasValue || upVotes.HasValue)
             {
                 _conn.Perform(conn =>
                 {
-                    var post = conn.Single<Post>(x => x.Slug.ToLower() == postSlug.ToLower());
-                    if (post != null)
+                    if (upVotes.HasValue && downVotes.HasValue)
                     {
-                        if (upVotes.HasValue && downVotes.HasValue)
-                        {
-                            conn.Update<Post>(new { VoteUpCount = upVotes.Value, VoteDownCount = downVotes.Value }, x => x.Id == post.Id);
-                        }
-                        else if (upVotes.HasValue)
-                        {
-                            conn.Update<Post>(new { VoteUpCount = upVotes.Value }, x => x.Id == post.Id);
-                        }
-                        else if (downVotes.HasValue)
-                        {
-                            conn.Update<Post>(new { VoteDownCount = downVotes.Value }, x => x.Id == post.Id);
-                        }
+                        conn.Update<Post>(new { VoteUpCount = upVotes.Value, VoteDownCount = downVotes.Value }, x => x.Id == postId);
+                    }
+                    else if (upVotes.HasValue)
+                    {
+                        conn.Update<Post>(new { VoteUpCount = upVotes.Value }, x => x.Id == postId);
+                    }
+                    else if (downVotes.HasValue)
+                    {
+                        conn.Update<Post>(new { VoteDownCount = downVotes.Value }, x => x.Id == postId);
                     }
                 });
             }

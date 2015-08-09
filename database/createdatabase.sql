@@ -91,9 +91,9 @@ CREATE TABLE subs
 CREATE TABLE sub_admins
 (
   id uuid NOT NULL,
-  user_name text,
-  sub_name text,
-  added_by text,
+  user_id uuid,
+  sub_id uuid,
+  added_by uuid,
   added_on timestamp with time zone,
   CONSTRAINT sub_admins_pkey PRIMARY KEY (id)
 );
@@ -101,8 +101,8 @@ CREATE TABLE sub_admins
 CREATE TABLE sub_scriptions
 (
   id uuid NOT NULL,
-  user_name text,
-  sub_name text,
+  user_id uuid,
+  sub_id uuid,
   CONSTRAINT sub_scriptions_pkey PRIMARY KEY (id)
 );
 
@@ -112,8 +112,8 @@ CREATE TABLE posts
   date_created timestamp with time zone NOT NULL,
   last_edit_date timestamp with time zone,
   slug text,
-  sub_name text,
-  user_name text,
+  sub_id uuid,
+  user_id uuid,
   user_ip text,
   type integer,
   title text,
@@ -134,8 +134,8 @@ CREATE TABLE votes
 (
   id uuid NOT NULL,
   date_created timestamp with time zone,
-  user_name text,
-  post_slug text,
+  user_id uuid,
+  post_id uuid,
   comment_id uuid,
   type integer,
   date_casted timestamp with time zone,
@@ -149,12 +149,12 @@ CREATE TABLE comments
   id uuid NOT NULL,
   date_created timestamp with time zone,
   date_edited timestamp with time zone,
-  sub_name text,
+  sub_id uuid,
   parent_id uuid,
   parents text,
-  author_user_name text,
+  author_user_id uuid,
   author_ip_address text,
-  post_slug text,
+  post_id uuid,
   body text,
   body_formatted text,
   send_replies boolean,

@@ -16,7 +16,7 @@ namespace Skimur.Web.Models
             SendReplies = true;
         }
 
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
         public Guid? ParentId { get; set; }
 
@@ -31,38 +31,7 @@ namespace Skimur.Web.Models
 
         public string Body { get; set; }
     }
-
-    public class CommentModel : Comment
-    {
-        public Guid Id { get; set; }
-
-        public DateTime DateCreated { get; set; }
-
-        public DateTime? DateEdited { get; set; }
-
-        public Guid? ParentId { get; set; }
-
-        public string AuthorUserName { get; set; }
-
-        public string Body { get; set; }
-
-        public string BodyFormatted { get; set; }
-
-        public int VoteUpCount { get; set; }
-
-        public int VoteDownCount { get; set; }
-
-        public List<CommentModel> Children { get; set; } 
-
-        public VoteType? CurrentVote { get; set; }
-
-        public bool CanDelete { get; set; }
-
-        public bool CanEdit { get; set; }
-
-        public bool CanMarkSpam { get; set; }
-    }
-
+    
     public class CommentListModel
     {
         public string PostSlug { get; set; }

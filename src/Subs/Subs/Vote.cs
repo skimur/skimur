@@ -14,9 +14,9 @@ namespace Subs
 
         public DateTime DateCreated { get; set; }
 
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
         public Guid? CommentId { get; set; }
 

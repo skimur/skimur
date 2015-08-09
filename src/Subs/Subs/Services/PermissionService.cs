@@ -15,29 +15,29 @@ namespace Subs.Services
             _subService = subService;
         }
 
-        public bool CanUserDeleteComment(string userName, Comment comment)
+        public bool CanUserDeleteComment(Guid userId, Comment comment)
         {
-            if (comment.AuthorUserName == userName)
+            if (comment.AuthorUserId == userId)
                 return true;
 
             // TODO: is user an admin?
 
-            return _subService.CanUserModerateSub(userName, comment.SubName);
+            return _subService.CanUserModerateSub(userId, comment.SubId);
         }
 
-        public bool CanUserMarkCommentAsSpam(string userName, Comment comment)
+        public bool CanUserMarkCommentAsSpam(Guid userId, Comment comment)
         {
-            return CanUserModerateSub(userName, comment.SubName);
+            return CanUserModerateSub(userId, comment.SubId);
         }
 
-        public bool CanUserMarkPostAsSpam(string userName, Post post)
+        public bool CanUserMarkPostAsSpam(Guid userId, Post post)
         {
-            return CanUserModerateSub(userName, post.SubName);
+            return CanUserModerateSub(userId, post.SubId);
         }
 
-        public bool CanUserModerateSub(string userName, string subName)
+        public bool CanUserModerateSub(Guid userId, Guid subId)
         {
-            return _subService.CanUserModerateSub(userName, subName);
+            return _subService.CanUserModerateSub(userId, subId);
         }
     }
 }

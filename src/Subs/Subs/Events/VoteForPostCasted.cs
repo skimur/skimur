@@ -9,9 +9,9 @@ namespace Subs.Events
 {
     public class VoteForPostCasted : IEvent
     {
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
         public VoteType? VoteType { get; set; }
     }

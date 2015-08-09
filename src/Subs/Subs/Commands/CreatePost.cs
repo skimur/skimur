@@ -28,9 +28,9 @@ namespace Subs.Commands
 
     public class CreatePostResponse
     {
-        public string Error { get; set; }
+        public Guid? PostId { get; set; }
 
-        public string Slug { get; set; }
+        public string Error { get; set; }
 
         public string Title { get; set; }
     }

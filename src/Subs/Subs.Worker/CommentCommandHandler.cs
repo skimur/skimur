@@ -59,7 +59,7 @@ namespace Subs.Worker
 
                 command.Body = command.Body.Trim();
 
-                var post = _postService.GetPostBySlug(command.PostSlug);
+                var post = _postService.GetPostById(command.PostId);
 
                 if (post == null)
                 {
@@ -82,7 +82,7 @@ namespace Subs.Worker
                     // this is a reply to a comment.
                     parentComment = _commentService.GetCommentById(command.ParentId.Value);
 
-                    if (parentComment.PostSlug != post.Slug)
+                    if (parentComment.PostId != post.Id)
                     {
                         // NOTE: this shouldn't happen, and we may want to log it in the future.
                         response.Error = "Replying to a comment in a different post.";
@@ -94,12 +94,12 @@ namespace Subs.Worker
                 {
                     Id = GuidUtil.NewSequentialId(),
                     DateCreated = command.DateCreated,
-                    SubName = post.SubName,
+                    SubId = post.SubId,
                     ParentId = parentComment != null ? parentComment.Id : (Guid?) null,
                     Parents = new Guid[0],
-                    AuthorUserName = user.UserName,
+                    AuthorUserId = user.Id,
                     AuthorIpAddress = command.AuthorIpAddress,
-                    PostSlug = post.Slug,
+                    PostId = post.Id,
                     Body = command.Body,
                     BodyFormatted = _markdownCompiler.Compile(command.Body),
                     SendReplies = command.SendReplies,
@@ -181,7 +181,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_permissionService.CanUserDeleteComment(user.UserName, comment))
+                if (!_permissionService.CanUserDeleteComment(user.Id, comment))
                 {
                     response.Error = "You are not allowed to delete this comment.";
                     return response;
@@ -192,9 +192,9 @@ namespace Subs.Worker
                 _eventBus.Publish(new CommentDeleted
                 {
                     CommentId = comment.Id,
-                    PostSlug = comment.PostSlug,
-                    SubName = comment.SubName,
-                    DeletedByUserName = user.UserName
+                    PostId = comment.PostId,
+                    SubId = comment.SubId,
+                    DeletedByUserId = user.Id
                 });
             }
             catch (Exception ex)

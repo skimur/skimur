@@ -57,12 +57,12 @@ namespace Skimur.Web.Controllers
 
         public ActionResult Index(string query)
         {
-            var subscribedSubs = _contextService.GetSubscribedSubNames();
+            var subscribedSubs = _contextService.GetSubscribedSubIds();
             var allSubs = _subDao.GetAllSubs(query, !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers).Select(x =>
             {
                 var model = _mapper.Map<Sub, SubModel>(x);
 
-                if (subscribedSubs.Contains(model.Name))
+                if (subscribedSubs.Contains(model.Id))
                     model.IsSubscribed = true;
 
                 return model;
@@ -75,7 +75,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
         {
-            var subs = _contextService.GetSubscribedSubNames();
+            var subs = _contextService.GetSubscribedSubIds();
 
             if (sort == null)
                 sort = PostsSortBy.Hot;
@@ -106,7 +106,7 @@ namespace Skimur.Web.Controllers
             if (string.IsNullOrEmpty(name))
                 return Redirect(Url.Subs());
 
-            var subs = new List<string>();
+            var subs = new List<Guid>();
 
             Sub sub = null;
 
@@ -123,7 +123,7 @@ namespace Skimur.Web.Controllers
                 if (sub == null)
                     return Redirect(Url.Subs(name));
 
-                subs.Add(sub.Name);
+                subs.Add(sub.Id);
             }
 
             if (sort == null)
@@ -154,20 +154,20 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, string slug, CommentSortBy commentsSort = CommentSortBy.Best, Guid? commentId = null)
+        public ActionResult Post(string subName, Guid id, CommentSortBy commentsSort = CommentSortBy.Best, Guid? commentId = null)
         {
-            var post = _postDao.GetPostBySlug(slug);
+            var post = _postDao.GetPostById(id);
 
             if (post == null)
                 throw new HttpException(404, "no post found");
-
-            if (!post.SubName.Equals(subName, StringComparison.InvariantCultureIgnoreCase))
-                throw new HttpException(404, "no post found");
-
+            
             var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
                 throw new HttpException(404, "no post found");
+
+            if (!sub.Name.Equals(subName, StringComparison.InvariantCultureIgnoreCase))
+                throw new HttpException(404, "no post found"); // TODO: redirect to correct url
 
             var model = new PostDetailsModel();
 
@@ -177,8 +177,8 @@ namespace Skimur.Web.Controllers
             model.Comments.SortBy = commentsSort;
             model.Comments.PostSlug = model.Post.Slug;
 
-            var commentTree = _commentDao.GetCommentTree(model.Post.Slug);
-            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Slug, model.Comments.SortBy);
+            var commentTree = _commentDao.GetCommentTree(model.Post.Id);
+            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Id, model.Comments.SortBy);
             var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit:100, maxDepth:5);
             model.Comments.Comments = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
@@ -220,7 +220,7 @@ namespace Skimur.Web.Controllers
             if (!string.IsNullOrEmpty(model.Query))
                 model.Posts = PagedList<PostModel>.Build(
                     _postDao.QueryPosts(query,
-                        model.LimitingToSub.Name,
+                        model.LimitingToSub.Id,
                         sort.Value,
                         time.Value,
                         ((pageNumber - 1) * pageSize),
@@ -261,7 +261,7 @@ namespace Skimur.Web.Controllers
                 {
                     case null:
                         model.Posts = PagedList<PostModel>.Build(
-                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
+                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Id : (Guid?)null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
                             MapPost,
                             pageNumber.Value,
                             pageSize.Value);
@@ -273,7 +273,7 @@ namespace Skimur.Web.Controllers
                         break;
                     case SearchResultType.Post:
                         model.Posts = PagedList<PostModel>.Build(
-                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Name : null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
+                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Id : (Guid?)null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
                             MapPost,
                             pageNumber.Value,
                             pageSize.Value);
@@ -410,9 +410,16 @@ namespace Skimur.Web.Controllers
                 return View(model);
             }
 
+            if (!response.PostId.HasValue)
+            {
+                // TODO: log
+                ModelState.AddModelError(string.Empty, "Unknown error creating post.");
+                return View(model);
+            }
+
             // todo: success message
 
-            return Redirect(Url.Post(model.SubName, response.Slug, response.Title));
+            return Redirect(Url.Post(model.SubName, response.PostId.Value, response.Title));
         }
 
         [HttpPost]
@@ -432,7 +439,7 @@ namespace Skimur.Web.Controllers
                 var dateCreated = Common.CurrentTime();
                 var response = _commandBus.Send<CreateComment, CreateCommentResponse>(new CreateComment
                 {
-                    PostSlug = model.PostSlug,
+                    PostId = model.PostId,
                     ParentId = model.ParentId,
                     DateCreated = dateCreated,
                     AuthorIpAddress = Request.UserHostAddress,
@@ -584,7 +591,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult SideBar()
         {
-            var allSubs = _subDao.GetSubByNames(_contextService.GetSubscribedSubNames()).Select(x =>
+            var allSubs = _subDao.GetSubsByIds(_contextService.GetSubscribedSubIds()).Select(x =>
             {
                 var model = _mapper.Map<Sub, SubModel>(x);
                 model.IsSubscribed = true;
@@ -596,7 +603,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult TopBar()
         {
-            var allSubs = _subDao.GetSubByNames(_contextService.GetSubscribedSubNames()).Select(x =>
+            var allSubs = _subDao.GetSubsByIds(_contextService.GetSubscribedSubIds()).Select(x =>
             {
                 var model = _mapper.Map<Sub, SubModel>(x);
                 model.IsSubscribed = true;
@@ -642,10 +649,10 @@ namespace Skimur.Web.Controllers
                     error = "You must be logged in subscribe to a sub."
                 });
             }
-
+            
             var response = _commandBus.Send<UnSubcribeToSub, UnSubcribeToSubResponse>(new UnSubcribeToSub
             {
-                UserName = _userContext.CurrentUser.UserName,
+                UserId = _userContext.CurrentUser.Id,
                 SubName = subName
             });
 
@@ -657,7 +664,7 @@ namespace Skimur.Web.Controllers
         }
 
         [HttpPost]
-        public ActionResult VotePost(string postSlug, VoteType type)
+        public ActionResult VotePost(Guid postId, VoteType type)
         {
             if (!Request.IsAuthenticated)
             {
@@ -670,8 +677,8 @@ namespace Skimur.Web.Controllers
 
             _commandBus.Send(new CastVoteForPost
             {
-                UserName = _userContext.CurrentUser.UserName,
-                PostSlug = postSlug,
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
                 DateCasted = Common.CurrentTime(),
                 IpAddress = Request.UserHostAddress,
                 VoteType = type
@@ -684,7 +691,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        public ActionResult UnVotePost(string postSlug)
+        public ActionResult UnVotePost(Guid postId)
         {
             if (!Request.IsAuthenticated)
             {
@@ -697,8 +704,8 @@ namespace Skimur.Web.Controllers
 
             _commandBus.Send(new CastVoteForPost
             {
-                UserName = _userContext.CurrentUser.UserName,
-                PostSlug = postSlug,
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
                 DateCasted = Common.CurrentTime(),
                 IpAddress = Request.UserHostAddress,
                 VoteType = null /*no vote*/
@@ -778,12 +785,12 @@ namespace Skimur.Web.Controllers
 
             if (_userContext.CurrentUser != null)
             {
-                model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.UserName, sub.Name);
+                model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.Id, sub.Id);
             }
             else
             {
                 // we only show list of mods if the requesting user is not a mod of this sub
-                model.Moderators.AddRange(_subDao.GetAllModsForSub(sub.Name));
+                model.Moderators.AddRange(_subDao.GetAllModsForSub(sub.Id));
             }
 
             return PartialView("_ModerationSideBar", model);
@@ -795,7 +802,7 @@ namespace Skimur.Web.Controllers
                 return null;
             var result = _mapper.Map<Post, PostModel>(post);
             if (_userContext.CurrentUser != null)
-                result.CurrentVote = _voteDao.GetVoteForUserOnPost(_userContext.CurrentUser.UserName, post.Slug);
+                result.CurrentVote = _voteDao.GetVoteForUserOnPost(_userContext.CurrentUser.Id, post.Id);
             return result;
         }
 
@@ -803,7 +810,7 @@ namespace Skimur.Web.Controllers
         {
             if (sub == null) return null;
             var result = _mapper.Map<Sub, SubModel>(sub);
-            result.IsSubscribed = _contextService.IsSubcribedToSub(sub.Name);
+            result.IsSubscribed = _contextService.IsSubcribedToSub(sub.Id);
             return result;
         }
     }

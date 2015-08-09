@@ -13,11 +13,11 @@ namespace Subs
     {
         public virtual Guid Id { get; set; }
 
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
-        public string SubName { get; set; }
+        public Guid SubId { get; set; }
 
-        public string AddedBy { get; set; }
+        public Guid? AddedBy { get; set; }
 
         public DateTime AddedOn { get; set; }
     }

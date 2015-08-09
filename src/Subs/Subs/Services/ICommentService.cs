@@ -15,9 +15,9 @@ namespace Subs.Services
 
         void UpdateCommentBody(Guid commentId, string body, string bodyFormatted, DateTime dateEdited);
 
-        List<Comment> GetAllCommentsForPost(string postSlug, CommentSortBy? sortBy = null);
+        List<Comment> GetAllCommentsForPost(Guid postId, CommentSortBy? sortBy = null);
 
-        List<Comment> GetChildrenForComment(Guid commentId, string authorName = null);
+        List<Comment> GetChildrenForComment(Guid commentId, Guid? authorName = null);
 
         void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes);
 

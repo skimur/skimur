@@ -3,7 +3,7 @@
     $(".post").each(function (index, element) {
 
         var $postVoting = $(".post-voting", element);
-        var postSlug = $(element).data("postslug");
+        var postId = $(element).data("post-id");
 
         $(".up", $postVoting).click(function () {
             // the user wants to upvote a post!
@@ -17,7 +17,7 @@
             if ($postVoting.hasClass("voted-up")) {
                 // the user already upvoted it, let's just remove the vote
                 $postVoting.addClass("vote-processing");
-                skimur.unvotePost(postSlug, function (result) {
+                skimur.unvotePost(postId, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -30,7 +30,7 @@
             } else {
                 // the user hasn't casted an upvote, so lets add it
                 $postVoting.addClass("vote-processing");
-                skimur.upvotePost(postSlug, function (result) {
+                skimur.upvotePost(postId, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -55,7 +55,7 @@
             if ($postVoting.hasClass("voted-down")) {
                 // the user already downvoted it, let's just remove the vote
                 $postVoting.addClass("vote-processing");
-                skimur.unvotePost(postSlug, function (result) {
+                skimur.unvotePost(postId, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);
@@ -68,7 +68,7 @@
             } else {
                 // the user hasn't casted a downvote, so lets add it
                 $postVoting.addClass("vote-processing");
-                skimur.downvotePost(postSlug, function (result) {
+                skimur.downvotePost(postId, function (result) {
                     $postVoting.removeClass("vote-processing");
                     if (result.success) {
                         var votes = $(".votes", $postVoting);

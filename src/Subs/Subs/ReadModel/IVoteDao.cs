@@ -8,10 +8,10 @@ namespace Subs.ReadModel
 {
     public interface IVoteDao
     {
-        VoteType? GetVoteForUserOnPost(string userName, string postSlug);
+        VoteType? GetVoteForUserOnPost(Guid userId, Guid postId);
 
-        VoteType? GetVoteForUserOnComment(string userName, Guid commentId);
+        VoteType? GetVoteForUserOnComment(Guid userId, Guid commentId);
 
-        Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(string userName, List<Guid> comments);
+        Dictionary<Guid, VoteType> GetVotesOnCommentsByUser(Guid userId, List<Guid> comments);
     }
 }

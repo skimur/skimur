@@ -82,7 +82,7 @@
 
             $("#post-comment-submit").click(function (e) {
                 e.preventDefault();
-                skimur.createComment("@Model.Post.Slug", null, $("#post-comment").val(), function (result) {
+                skimur.createComment("@Model.Post.Id", null, $("#post-comment").val(), function (result) {
                     if (result.success) {
                         $(result.html).prependTo($(".comments-container"));
                     } else {

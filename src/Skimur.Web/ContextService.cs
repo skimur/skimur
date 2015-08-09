@@ -1,4 +1,5 @@
-﻿using System.Collections.Generic;
+﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using Subs.ReadModel;
 
@@ -15,16 +16,16 @@ namespace Skimur.Web
             _userContext = userContext;
         }
 
-        public List<string> GetSubscribedSubNames()
+        public List<Guid> GetSubscribedSubIds()
         {
             // todo: optimize
-            return _userContext.CurrentUser != null ? _subDao.GetSubscribedSubsForUser(_userContext.CurrentUser.UserName).Select(x => x.Name).ToList() : _subDao.GetDefaultSubs().Select(x => x.Name).ToList();
+            return _userContext.CurrentUser != null ? _subDao.GetSubscribedSubsForUser(_userContext.CurrentUser.Id).Select(x => x.Id).ToList() : _subDao.GetDefaultSubs().Select(x => x.Id).ToList();
         }
 
-        public bool IsSubcribedToSub(string subName)
+        public bool IsSubcribedToSub(Guid subId)
         {
             // todo: optimize
-            return _userContext.CurrentUser == null ? _subDao.GetDefaultSubs().Any(x => x.Name == subName) : _subDao.IsUserSubscribedToSub(_userContext.CurrentUser.UserName, subName);
+            return _userContext.CurrentUser == null ? _subDao.GetDefaultSubs().Any(x => x.Id == subId) : _subDao.IsUserSubscribedToSub(_userContext.CurrentUser.Id, subId);
         }
     }
 }

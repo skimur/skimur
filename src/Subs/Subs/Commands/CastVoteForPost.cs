@@ -11,9 +11,9 @@ namespace Subs.Commands
     {
         public DateTime DateCasted { get; set; }
 
-        public string UserName { get; set; }
+        public Guid UserId { get; set; }
 
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
         public VoteType? VoteType { get; set; }
 

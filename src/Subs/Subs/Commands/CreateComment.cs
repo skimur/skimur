@@ -9,7 +9,7 @@ namespace Subs.Commands
 {
     public class CreateComment : ICommandReturns<CreateCommentResponse>
     {
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
         public Guid? ParentId { get; set; }
 

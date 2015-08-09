@@ -11,9 +11,9 @@ namespace Subs.Services
 
         List<Sub> GetDefaultSubs();
 
-        List<Sub> GetSubscribedSubsForUser(string userName);
+        List<Sub> GetSubscribedSubsForUser(Guid userId);
 
-        bool IsUserSubscribedToSub(string userName, string subName);
+        bool IsUserSubscribedToSub(Guid userId, Guid subId);
 
         Sub GetRandomSub();
 
@@ -23,22 +23,22 @@ namespace Subs.Services
 
         void DeleteSub(Guid subId);
 
-        void SubscribeToSub(string userName, string subName);
+        void SubscribeToSub(Guid userId, Guid subId);
 
-        void UnSubscribeToSub(string userName, string subName);
+        void UnSubscribeToSub(Guid userId, Guid subId);
 
         Sub GetSubByName(string name);
 
-        List<Sub> GetSubByNames(List<string> names);
+        List<Sub> GetSubsByIds(List<Guid> ids);
 
-        bool CanUserModerateSub(string userName, string subName);
+        bool CanUserModerateSub(Guid userId, Guid subId);
 
-        List<string> GetAllModsForSub(string subName);
+        List<Guid> GetAllModsForSub(Guid subId);
 
-        void AddModToSub(string userName, string subName, string addedBy = null);
+        void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null);
 
-        void RemoveModFromSub(string userName, string subName);
+        void RemoveModFromSub(Guid userId, Guid subId);
 
-        void UpdateNumberOfSubscribers(string subName, out ulong totalNumber);
+        void UpdateNumberOfSubscribers(Guid subId, out ulong totalNumber);
     }
 }

@@ -9,12 +9,12 @@ namespace Subs.Services
 {
     public interface ICommentTreeBuilder
     {
-        CommentTree GetCommentTree(string postSlug);
+        CommentTree GetCommentTree(Guid postId);
     }
 
     public class CommentTree
     {
-        public string PostSlug { get; set; }
+        public Guid PostId { get; set; }
 
         public List<Guid> CommentIds { get; set; }
 

@@ -63,7 +63,14 @@ namespace Infrastructure.Membership
         /// </summary>
         /// <param name="userNames"></param>
         /// <returns></returns>
-        List<User> GetUsersByUserNames(List<string> userNames); 
+        List<User> GetUsersByUserNames(List<string> userNames);
+        
+        /// <summary>
+        /// Get a list of users by ids
+        /// </summary>
+        /// <param name="ids"></param>
+        /// <returns></returns>
+        List<User> GetUsersByIds(List<Guid> ids); 
 
         /// <summary>
         /// Determines if the given username is a valid one. It does NOT check if it is currently used.
