@@ -18,6 +18,10 @@
     };
 
     var voteUp = function (element) {
+
+        if (!skimurui.login.checkLoggedIn("You must be logged in to vote."))
+            return;
+
         var $comment = getComment(element);
         var $voting = $("> .comment-body .comment-voting", $comment);
 
@@ -53,6 +57,10 @@
     };
 
     var voteDown = function (element) {
+
+        if (!skimurui.login.checkLoggedIn("You must be logged in to vote."))
+            return;
+
         var $comment = getComment(element);
         var $voting = $("> .comment-body .comment-voting", $comment);
 
@@ -87,7 +95,11 @@
         }
     };
 
-    var startReply = function(element) {
+    var startReply = function (element) {
+
+        if (!skimurui.login.checkLoggedIn("You must be logged in to comment."))
+            return;
+
         var comment = cancel(element);
         var $textArea = $("<textarea />").appendTo(comment.staging);
 
