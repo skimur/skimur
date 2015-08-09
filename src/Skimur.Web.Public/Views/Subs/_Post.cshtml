@@ -1,49 +1,50 @@
 ﻿@using Subs
-@model PostModel
+@using Subs.ReadModel
+@model PostWrapped
 
-<div class="post row" data-post-id="@Model.Id">
-    <div class="post-voting @(Model.CurrentVote != null ? Model.CurrentVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+<div class="post row" data-post-id="@Model.Post.Id">
+    <div class="post-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
         <span class="up login-required"></span>
-        <span class="votes">@(Model.VoteUpCount - Model.VoteDownCount)</span>
+        <span class="votes">@(Model.Post.VoteUpCount - Model.Post.VoteDownCount)</span>
         <span class="down login-required"></span>
     </div>
     <div class="post-body">
         <div>
             <p class="post-title">
-                <a class="post-link" href="@PostUrl(Model)">@Model.Title</a> @(DomainLink(Model))
+                <a class="post-link" href="@PostUrl(Model)">@Model.Post.Title</a> @(DomainLink(Model))
             </p>
             <p class="post-meta">
-                Posted @Html.Age(Model.DateCreated) ago  to @*TODO:<a href="@Url.Sub(Model.SubName)">/s/@Model.SubName</a>*@
+                Posted @Html.Age(Model.Post.DateCreated) ago  to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
             </p>
             <p class="post-links">
-                @*TODO:<a href="@Url.Post(Model)">comments</a>*@
+                <a href="@Url.Post(Model.Sub, Model.Post)">comments</a>
             </p>
         </div>
     </div>
 </div>
 
-@helper DomainLink(PostModel post)
+@helper DomainLink(PostWrapped post)
 {
-    if (post.PostType == PostType.Link)
+    if (post.Post.PostType == PostType.Link)
     {
-        if (!string.IsNullOrEmpty(post.Domain))
+        if (!string.IsNullOrEmpty(post.Post.Domain))
         {
-            <a class="post-domain" href="@Url.Domain(post.Domain)">(@post.Domain)</a>
+            <a class="post-domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
         }
     }
-    else if (post.PostType == PostType.Text)
+    else if (post.Post.PostType == PostType.Text)
     {
-        @*TODO:<a class="post-domain" href="@Url.Post(post)">(self.@post.SubName)</a>*@
+        <a class="post-domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
     }
 }
-@helper PostUrl(PostModel post)
+@helper PostUrl(PostWrapped post)
 {
-    if (post.PostType == PostType.Link)
+    if (post.Post.PostType == PostType.Link)
     {
-        @post.Url
+        @post.Post.Url
     }
-    else if (post.PostType == PostType.Text)
+    else if (post.Post.PostType == PostType.Text)
     {
-        @*TODO:@Url.Post(post)*@
+        @Url.Post(post.Sub, post.Post)
     }
 }

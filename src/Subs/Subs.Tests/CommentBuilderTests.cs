@@ -26,6 +26,7 @@ namespace Subs.Tests
         private Mock<IPermissionDao> _permissionDao;
         private Mock<IVoteDao> _voteDao;
         private Mock<IPostDao> _postDao;
+        private ICommentWrapper _commentWrapper;
         private ICommentTreeBuilder _commentTreeBuilder;
         private ICommentTreeContextBuilder _commentTreeContextBuilder;
         private ICommentNodeHierarchyBuilder _commentNodeHierarchyBuilder;
@@ -209,9 +210,10 @@ namespace Subs.Tests
             _subDao = new Mock<ISubDao>();
             _permissionDao = new Mock<IPermissionDao>();
             _voteDao = new Mock<IVoteDao>();
+            _commentWrapper = new CommentWrapper(_commentDao.Object, _membershipService.Object, _subDao.Object, _postDao.Object, _permissionDao.Object, _voteDao.Object);
             _commentTreeBuilder = new CommentTreeBuilder(_commentService.Object);
             _commentTreeContextBuilder = new CommentTreeContextBuilder();
-            _commentNodeHierarchyBuilder = new CommentNodeHierarchyBuilder(_commentDao.Object, _membershipService.Object, _subDao.Object, _permissionDao.Object, _voteDao.Object, _postDao.Object);
+            _commentNodeHierarchyBuilder = new CommentNodeHierarchyBuilder(_commentWrapper);
         }
 
         private List<Comment> CreateTreeComments()

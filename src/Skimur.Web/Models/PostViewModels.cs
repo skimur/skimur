@@ -1,4 +1,5 @@
 ﻿using Subs;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Models
 {
@@ -16,17 +17,12 @@ namespace Skimur.Web.Models
 
         public bool NotifyReplies { get; set; }
     }
-
-    public class PostModel : Post
-    {
-        public VoteType? CurrentVote { get; set; }
-    }
-
+    
     public class PostDetailsModel
     {
-        public PostModel Post { get; set; }
+        public PostWrapped Post { get; set; }
 
-        public SubModel Sub { get; set; }
+        public SubWrapped Sub { get; set; }
 
         public CommentListModel Comments { get; set; }
     }

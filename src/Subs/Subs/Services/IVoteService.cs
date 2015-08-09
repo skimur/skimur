@@ -13,7 +13,9 @@ namespace Subs.Services
         void UnVotePost(Guid postId, Guid userId);
 
         VoteType? GetVoteForUserOnPost(Guid userId, Guid postId);
-        
+
+        Dictionary<Guid, VoteType> GetVotesOnPostsByUser(Guid userId, List<Guid> posts);
+
         void GetTotalVotesForPost(Guid postId, out int upVotes, out int downVotes);
 
         void VoteForComment(Guid commentId, Guid userId, string ipAddress, VoteType voteType, DateTime dateCasted);

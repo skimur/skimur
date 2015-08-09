@@ -75,6 +75,15 @@
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="ReadModel\CommentNodeHierarchyBuilder.cs" />
+    <Compile Include="ReadModel\CommentWrapped.cs" />
+    <Compile Include="ReadModel\CommentWrapper.cs" />
+    <Compile Include="ReadModel\ICommentWrapper.cs" />
+    <Compile Include="ReadModel\IPostWrapper.cs" />
+    <Compile Include="ReadModel\ISubWrapper.cs" />
+    <Compile Include="ReadModel\PostWrapped.cs" />
+    <Compile Include="ReadModel\PostWrapper.cs" />
+    <Compile Include="ReadModel\SubWrapped.cs" />
+    <Compile Include="ReadModel\SubWrapper.cs" />
     <Compile Include="Services\CommentTreeBuilder.cs" />
     <Compile Include="Services\CommentTreeContextBuilder.cs" />
     <Compile Include="ReadModel\ICommentNodeHierarchyBuilder.cs" />

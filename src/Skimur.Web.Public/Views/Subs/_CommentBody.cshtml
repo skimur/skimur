@@ -1,5 +1,5 @@
 ﻿@using Subs
-@model Subs.ReadModel.CommentNode
+@model Subs.ReadModel.CommentWrapped
 <div class="comment-body">
     <div class="comment-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
         <span class="up login-required" onclick="return skimurui.comments.voteUp(this)"></span>

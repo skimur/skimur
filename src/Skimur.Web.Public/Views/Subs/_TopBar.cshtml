@@ -1,4 +1,4 @@
-﻿@model List<SubModel>
+﻿@model List<Subs.ReadModel.SubWrapped>
 
 <div class="layout-topbar">
     <ul>
@@ -14,7 +14,7 @@
         @foreach (var sub in Model)
         {
             <li>
-                <a href="@Url.Sub(sub.Name)">@sub.Name</a>
+                <a href="@Url.Sub(sub.Sub.Name)">@sub.Sub.Name</a>
             </li>
         }
     </ul>

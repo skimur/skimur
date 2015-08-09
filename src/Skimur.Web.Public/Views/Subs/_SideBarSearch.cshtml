@@ -1,4 +1,4 @@
-﻿@model SubModel
+﻿@model Subs.ReadModel.SubWrapped
 
 <div id="search-sidebar" class="panel panel-search">
     <div class="input-group">
@@ -10,7 +10,7 @@
         <div id="search-sidebar-info" class="alert alert-info panel-search-info" style="display:none;">
             <div class="checkbox">
                 <label>
-                    <input id="search-sidebar-limit" type="checkbox" checked="checked"> Limit my search to /s/@Model.Name
+                    <input id="search-sidebar-limit" type="checkbox" checked="checked"> Limit my search to /s/@Model.Sub.Name
                 </label>
             </div>
         </div>
@@ -26,7 +26,7 @@
             {
                 <text>
                 if ($("#search-sidebar-limit").is(":checked")) {
-                    window.location = "@Url.Sub(Model.Name)/search?query=" + query;
+                    window.location = "@Url.Sub(Model.Sub.Name)/search?query=" + query;
                 } else {
                     window.location = "@Url.Search()";
                 }

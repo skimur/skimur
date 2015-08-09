@@ -7,15 +7,15 @@ namespace Subs.Services
 {
     public interface ISubService
     {
-        SeekedList<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null);
+        SeekedList<Guid> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null);
 
-        List<Sub> GetDefaultSubs();
+        List<Guid> GetDefaultSubs();
 
-        List<Sub> GetSubscribedSubsForUser(Guid userId);
+        List<Guid> GetSubscribedSubsForUser(Guid userId);
 
         bool IsUserSubscribedToSub(Guid userId, Guid subId);
 
-        Sub GetRandomSub();
+        Guid? GetRandomSub();
 
         void InsertSub(Sub sub);
 
@@ -30,6 +30,8 @@ namespace Subs.Services
         Sub GetSubByName(string name);
 
         List<Sub> GetSubsByIds(List<Guid> ids);
+
+        Sub GetSubById(Guid id);
 
         bool CanUserModerateSub(Guid userId, Guid subId);
 

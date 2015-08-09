@@ -13,9 +13,9 @@ namespace Subs.Services
 
         Post GetPostById(Guid id);
 
-        SeekedList<Post> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+        SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
-        SeekedList<Post> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+        SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
         void UpdatePostVotes(Guid postId, int? upVotes, int? downVotes);
     }

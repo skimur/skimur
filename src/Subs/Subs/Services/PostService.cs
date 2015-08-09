@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Dynamic;
+using System.Linq;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
 using Skimur;
@@ -32,14 +33,14 @@ namespace Subs.Services
             return _conn.Perform(conn => conn.SingleById<Post>(id));
         }
 
-        public SeekedList<Post> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        public SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
                 var query = conn.From<Post>();
                 if (subs != null && subs.Count > 0)
                 {
-                    query.Where(x => subs.Contains(x.Id));
+                    query.Where(x => subs.Contains(x.SubId));
                 }
 
                 if (timeFilter != TimeFilter.All)
@@ -94,12 +95,14 @@ namespace Subs.Services
                     default:
                         throw new Exception("uknown sort");
                 }
+                
+                query.SelectExpression = "SELECT \"id\"";
 
-                return new SeekedList<Post>(conn.Select(query), skip ?? 0, take, totalCount);
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
 
-        public SeekedList<Post> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        public SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
         {
             // this implemention will eventually store a index, such as solr.
 
@@ -167,8 +170,10 @@ namespace Subs.Services
                     default:
                         throw new Exception("unknown sort");
                 }
+                
+                query.SelectExpression = "SELECT \"id\"";
 
-                return new SeekedList<Post>(conn.Select(query), skip ?? 0, take, totalCount);
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
 

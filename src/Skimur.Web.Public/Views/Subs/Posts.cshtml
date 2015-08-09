@@ -31,7 +31,7 @@
 
         if (Model.Sub != null)
         {
-            urlBase = "/s/" + Model.Sub.Name;
+            urlBase = "/s/" + Model.Sub.Sub.Name;
         }
         else
         {
@@ -95,7 +95,7 @@
 
         @if (Model.Sub != null)
         {
-            @Html.Action("ModerationSideBar", new { subName = Model.Sub.Name })
+            @Html.Action("ModerationSideBar", new { subId = Model.Sub.Sub.Id })
         }
 
     </div>

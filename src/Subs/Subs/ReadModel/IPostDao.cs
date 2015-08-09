@@ -11,9 +11,9 @@ namespace Subs.ReadModel
     {
         Post GetPostById(Guid id);
 
-        SeekedList<Post> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+        SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
-        SeekedList<Post> QueryPosts(string query, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+        SeekedList<Guid> QueryPosts(string query, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
     }
 
     public enum PostsSearchSortBy

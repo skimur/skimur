@@ -69,7 +69,7 @@
             <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post">Submit a new post</a>
         </div>
 
-        @Html.Action("ModerationSideBar", new { subName = Model.Sub.Name })
+        @Html.Action("ModerationSideBar", new { subId = Model.Sub.Sub.Id })
 
     </div>
 </div>
@@ -82,7 +82,7 @@
 
             $("#post-comment-submit").click(function (e) {
                 e.preventDefault();
-                skimur.createComment("@Model.Post.Id", null, $("#post-comment").val(), function (result) {
+                skimur.createComment("@Model.Post.Post.Id", null, $("#post-comment").val(), function (result) {
                     if (result.success) {
                         $(result.html).prependTo($(".comments-container"));
                     } else {

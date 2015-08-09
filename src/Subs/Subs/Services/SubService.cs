@@ -21,7 +21,7 @@ namespace Subs.Services
             _mapper = mapper;
         }
 
-        public SeekedList<Sub> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null)
+        public SeekedList<Guid> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -42,27 +42,33 @@ namespace Subs.Services
                         break;
                 }
 
-                return new SeekedList<Sub>(conn.Select(query), skip ?? 0, take, totalCount);
+                query.SelectExpression = "SELECT \"id\"";
+
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
 
-        public List<Sub> GetDefaultSubs()
+        public List<Guid> GetDefaultSubs()
         {
             return _conn.Perform(conn =>
             {
-                return conn.Select<Sub>(x => x.IsDefault);
+                var query = conn.From<Sub>().Where(x => x.IsDefault);
+                query.SelectExpression = "SELECT \"id\"";
+                return conn.Select(query).Select(x => x.Id).ToList();
             });
         }
 
-        public List<Sub> GetSubscribedSubsForUser(Guid userId)
+        public List<Guid> GetSubscribedSubsForUser(Guid userId)
         {
             return _conn.Perform(conn =>
             {
-                return
-                    conn.Select(
-                        conn.From<Sub>()
-                            .LeftJoin<SubScription>((sub, scription) => sub.Id == scription.SubId)
-                            .Where<SubScription>(x => x.UserId == userId));
+                var query = conn.From<Sub>()
+                    .LeftJoin<SubScription>((sub, scription) => sub.Id == scription.SubId)
+                    .Where<SubScription>(x => x.UserId == userId);
+
+                query.SelectExpression = "";
+
+                return conn.Select(query).Select(x => x.Id).ToList();
             });
         }
 
@@ -77,7 +83,7 @@ namespace Subs.Services
             });
         }
 
-        public Sub GetRandomSub()
+        public Guid? GetRandomSub()
         {
             // todo: optimize
             var allSubs = GetAllSubs();
@@ -146,6 +152,11 @@ namespace Subs.Services
             {
                 return conn.Select(conn.From<Sub>().Where(x => ids.Contains(x.Id)));
             });
+        }
+
+        public Sub GetSubById(Guid id)
+        {
+            return _conn.Perform(conn => conn.SingleById<Sub>(id));
         }
 
         public bool CanUserModerateSub(Guid userId, Guid subId)

@@ -8,39 +8,24 @@ namespace Subs.ReadModel
 {
     public class CommentNodeHierarchyBuilder : ICommentNodeHierarchyBuilder
     {
-        private readonly ICommentDao _commentDao;
-        private readonly IMembershipService _membershipService;
-        private readonly ISubDao _subDao;
-        private readonly IPermissionDao _permissionDao;
-        private readonly IVoteDao _voteDao;
-        private readonly IPostDao _postDao;
+        private readonly ICommentWrapper _commentWrapper;
 
-        public CommentNodeHierarchyBuilder(ICommentDao commentDao,
-            IMembershipService membershipService,
-            ISubDao subDao,
-            IPermissionDao permissionDao,
-            IVoteDao voteDao,
-            IPostDao postDao)
+        public CommentNodeHierarchyBuilder(ICommentWrapper commentWrapper)
         {
-            _commentDao = commentDao;
-            _membershipService = membershipService;
-            _subDao = subDao;
-            _permissionDao = permissionDao;
-            _voteDao = voteDao;
-            _postDao = postDao;
+            _commentWrapper = commentWrapper;
         }
 
-        public List<CommentNode> Build(CommentTree tree, CommentTreeContext treeContext, User currentUser)
+        public List<CommentWrapped> Build(CommentTree tree, CommentTreeContext treeContext, User currentUser)
         {
-            var wrapped = WrapComments(treeContext.Comments, currentUser);
-            var final = new List<CommentNode>();
+            var wrapped = _commentWrapper.Wrap(treeContext.Comments, currentUser).ToDictionary(x => x.Comment.Id, x => x);
+            var final = new List<CommentWrapped>();
             var walked = new List<Guid>();
 
             foreach (var comment in wrapped.Values)
             {
                 comment.NumberOfChildren = treeContext.CommentsChildrenCount[comment.Comment.Id];
 
-                CommentNode parent = null;
+                CommentWrapped parent = null;
 
                 if (comment.Comment.ParentId.HasValue)
                     parent = wrapped.ContainsKey(comment.Comment.ParentId.Value)
@@ -78,81 +63,13 @@ namespace Subs.ReadModel
                     {
                         // we don't have a parent here, but this comment does have a parent.
                         // we need to get it
-                        comment.Parent = WrapComments(new List<Guid> {comment.Comment.ParentId.Value}, currentUser).FirstOrDefault().Value;
+                        comment.Parent = _commentWrapper.Wrap(comment.Comment.ParentId.Value);
                     }
                     final.Add(comment);
                 }
             }
 
             return final;
-        }
-
-        public Dictionary<Guid, CommentNode> WrapComments(List<Guid> comments, User currentUser)
-        {
-            Dictionary<Guid, CommentNode> result = new Dictionary<Guid, CommentNode>();
-            foreach (var commentId in comments)
-            {
-                var comment = _commentDao.GetCommentById(commentId);
-                if (comment != null)
-                    result.Add(commentId, new CommentNode { Comment = comment });
-            }
-
-            // TODO: Thinking about future support for cassandra, we may want to store "user ids" instead of "user names"
-            // inside of each comment. That way, we can query authors by id, which is VERY fast in cassandra.
-            var authorIds = result.Values.Select(x => x.Comment.AuthorUserId).Distinct().ToList();
-            var authors = _membershipService.GetUsersByIds(authorIds).ToDictionary(x => x.Id, x => x);
-
-            // TODO: Same thing as the note above about authors, but for subs.
-            var subs = _subDao.GetSubsByIds(result.Values.Select(x => x.Comment.SubId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
-
-            // TODO: Same thing as the note aboce about subs, but for posts :)
-            var posts = result.Values.Select(x => x.Comment.PostId).Distinct().Select(x => _postDao.GetPostById(x)).Where(x => x != null).ToDictionary(x => x.Id, x => x);
-
-            var userCanModInSubs = new List<Guid>();
-
-            if (currentUser != null)
-                foreach (var sub in subs.Values)
-                    // TODO: Check for a specific permission "ban".
-                    if (_permissionDao.CanUserModerateSub(currentUser.Id, sub.Id))
-                        userCanModInSubs.Add(sub.Id);
-
-            var likes = currentUser != null ? _voteDao.GetVotesOnCommentsByUser(currentUser.Id, comments) : new Dictionary<Guid, VoteType>();
-
-            foreach (var item in result.Values)
-            {
-                item.Author = authors.ContainsKey(item.Comment.AuthorUserId) ? authors[item.Comment.AuthorUserId] : null;
-                item.CurrentUserVote = likes.ContainsKey(item.Comment.Id) ? likes[item.Comment.Id] : (VoteType?)null;
-                item.Sub = subs.ContainsKey(item.Comment.SubId) ? subs[item.Comment.SubId] : null;
-                item.Score = item.Comment.VoteUpCount - item.Comment.VoteDownCount;
-                item.Post = posts.ContainsKey(item.Comment.PostId) ? posts[item.Comment.PostId] : null;
-
-                var userCanMod = item.Sub != null && userCanModInSubs.Contains(item.Sub.Id);
-
-                // TODO: make this configurable per-user
-                int minimumScore = 0;
-                if ((item.Author != null && currentUser != null) && currentUser.Id == item.Author.Id)
-                {
-                    // the current user is the author, don't collapse!
-                    item.Collapsed = false;
-                    item.CurrentUserIsAuthor = true;
-                }
-                else if (item.Score < minimumScore)
-                {
-                    // too many down votes to show to the user
-                    item.Collapsed = true;
-                }
-                else
-                {
-                    // the current user is not the author, and we have enough upvotes to display,
-                    // don't collapse
-                    item.Collapsed = false;
-                }
-
-                item.CanDelete = userCanMod || item.CurrentUserIsAuthor;
-                item.CanEdit = item.CurrentUserIsAuthor;
-            }
-
-            return result;
         }
     }
 }

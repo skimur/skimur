@@ -19,13 +19,13 @@ namespace Skimur.Web
         public List<Guid> GetSubscribedSubIds()
         {
             // todo: optimize
-            return _userContext.CurrentUser != null ? _subDao.GetSubscribedSubsForUser(_userContext.CurrentUser.Id).Select(x => x.Id).ToList() : _subDao.GetDefaultSubs().Select(x => x.Id).ToList();
+            return _userContext.CurrentUser != null ? _subDao.GetSubscribedSubsForUser(_userContext.CurrentUser.Id) : _subDao.GetDefaultSubs();
         }
 
         public bool IsSubcribedToSub(Guid subId)
         {
             // todo: optimize
-            return _userContext.CurrentUser == null ? _subDao.GetDefaultSubs().Any(x => x.Id == subId) : _subDao.IsUserSubscribedToSub(_userContext.CurrentUser.Id, subId);
+            return _userContext.CurrentUser == null ? _subDao.GetDefaultSubs().Any(x => x == subId) : _subDao.IsUserSubscribedToSub(_userContext.CurrentUser.Id, subId);
         }
     }
 }

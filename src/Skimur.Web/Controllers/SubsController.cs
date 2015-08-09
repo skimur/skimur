@@ -29,6 +29,9 @@ namespace Skimur.Web.Controllers
         private readonly IPermissionDao _permissionDao;
         private readonly ICommentNodeHierarchyBuilder _commentNodeHierarchyBuilder;
         private readonly ICommentTreeContextBuilder _commentTreeContextBuilder;
+        private readonly IPostWrapper _postWrapper;
+        private readonly ISubWrapper _subWrapper;
+        private readonly ICommentWrapper _commentWrapper;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -40,7 +43,10 @@ namespace Skimur.Web.Controllers
             ICommentDao commentDao,
             IPermissionDao permissionDao,
             ICommentNodeHierarchyBuilder commentNodeHierarchyBuilder,
-            ICommentTreeContextBuilder commentTreeContextBuilder)
+            ICommentTreeContextBuilder commentTreeContextBuilder,
+            IPostWrapper postWrapper,
+            ISubWrapper subWrapper,
+            ICommentWrapper commentWrapper)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -53,24 +59,16 @@ namespace Skimur.Web.Controllers
             _permissionDao = permissionDao;
             _commentNodeHierarchyBuilder = commentNodeHierarchyBuilder;
             _commentTreeContextBuilder = commentTreeContextBuilder;
+            _postWrapper = postWrapper;
+            _subWrapper = subWrapper;
+            _commentWrapper = commentWrapper;
         }
 
         public ActionResult Index(string query)
         {
-            var subscribedSubs = _contextService.GetSubscribedSubIds();
-            var allSubs = _subDao.GetAllSubs(query, !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers).Select(x =>
-            {
-                var model = _mapper.Map<Sub, SubModel>(x);
-
-                if (subscribedSubs.Contains(model.Id))
-                    model.IsSubscribed = true;
-
-                return model;
-            }).ToList();
-
             ViewBag.Query = query;
-
-            return View(allSubs);
+            
+            return View(_subWrapper.Wrap(_subDao.GetAllSubs(query, !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers), _userContext.CurrentUser));
         }
 
         public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
@@ -92,11 +90,13 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1)*pageSize), pageSize);
+            
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
             model.TimeFilter = time;
             if (subs.Any()) // maybe the user hasn't subscribed to any subs?
-                model.Posts = PagedList<PostModel>.Build(_postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize), MapPost, pageNumber.Value, pageSize.Value);
+                model.Posts = new PagedList<PostWrapped>(_postWrapper.Wrap(postIds, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, postIds.HasMore);
 
             return View("Posts", model);
         }
@@ -141,15 +141,13 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize);
+
             var model = new SubPostsModel();
-            model.Sub = MapSub(sub);
+            model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;
             model.SortBy = sort.Value;
             model.TimeFilter = time;
-            model.Posts = PagedList<PostModel>.Build(
-                _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
-                MapPost,
-                pageNumber.Value,
-                pageSize.Value);
+            model.Posts = new PagedList<PostWrapped>(_postWrapper.Wrap(postIds, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, postIds.HasMore);
 
             return View(model);
         }
@@ -171,14 +169,13 @@ namespace Skimur.Web.Controllers
 
             var model = new PostDetailsModel();
 
-            model.Post = MapPost(post);
-            model.Sub = MapSub(sub);
+            model.Post = _postWrapper.Wrap(id, _userContext.CurrentUser);
+            model.Sub = _subWrapper.Wrap(sub.Id, _userContext.CurrentUser);
             model.Comments = new CommentListModel();
             model.Comments.SortBy = commentsSort;
-            model.Comments.PostSlug = model.Post.Slug;
 
-            var commentTree = _commentDao.GetCommentTree(model.Post.Id);
-            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Id, model.Comments.SortBy);
+            var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
+            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
             var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit:100, maxDepth:5);
             model.Comments.Comments = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
@@ -209,25 +206,27 @@ namespace Skimur.Web.Controllers
                 pageSize = 100;
             if (pageSize < 1)
                 pageSize = 1;
-
+            
             var model = new SearchResultsModel();
             model.Query = query;
             model.SortBy = sort.Value;
             model.TimeFilter = time.Value;
             model.ResultType = SearchResultType.Post;
-            model.LimitingToSub = MapSub(sub);
+            model.LimitingToSub = _subWrapper.Wrap(sub.Id, _userContext.CurrentUser);
+
+            var postIds = _postDao.QueryPosts(query,
+               model.LimitingToSub.Sub.Id,
+               sort.Value,
+               time.Value,
+               ((pageNumber - 1) * pageSize),
+               pageSize);
 
             if (!string.IsNullOrEmpty(model.Query))
-                model.Posts = PagedList<PostModel>.Build(
-                    _postDao.QueryPosts(query,
-                        model.LimitingToSub.Id,
-                        sort.Value,
-                        time.Value,
-                        ((pageNumber - 1) * pageSize),
-                        pageSize),
-                    MapPost,
+                model.Posts = new PagedList<PostWrapped>(
+                    _postWrapper.Wrap(postIds, _userContext.CurrentUser),
                     pageNumber.Value,
-                    pageSize.Value);
+                    pageSize.Value,
+                    postIds.HasMore);
 
             return View("Search", model);
         }
@@ -257,38 +256,34 @@ namespace Skimur.Web.Controllers
 
             if (!string.IsNullOrEmpty(model.Query))
             {
+                SeekedList<Guid> postIds = null;
+                SeekedList<Guid> subIds = null;
+
                 switch (resultType)
                 {
                     case null:
-                        model.Posts = PagedList<PostModel>.Build(
-                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Id : (Guid?)null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
-                            MapPost,
-                            pageNumber.Value,
-                            pageSize.Value);
-                        model.Subs = PagedList<SubModel>.Build(
-                            _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize),
-                            MapSub,
-                            pageNumber.Value,
-                            pageSize.Value);
+                        postIds = _postDao.QueryPosts(query,
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?) null, sort.Value,
+                            time.Value, ((pageNumber - 1)*pageSize), pageSize);
+                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1)*pageSize), pageSize);
                         break;
                     case SearchResultType.Post:
-                        model.Posts = PagedList<PostModel>.Build(
-                            _postDao.QueryPosts(query, model.LimitingToSub != null ? model.LimitingToSub.Id : (Guid?)null, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize),
-                            MapPost,
-                            pageNumber.Value,
-                            pageSize.Value);
+                        postIds = _postDao.QueryPosts(query,
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?) null, sort.Value, 
+                            time.Value, ((pageNumber - 1)*pageSize), pageSize);
                         break;
                     case SearchResultType.Sub:
-                        model.Subs = PagedList<SubModel>.Build(
-                            _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize),
-                            MapSub,
-                            pageNumber.Value,
-                            pageSize.Value);
+                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1)*pageSize), pageSize);
                         break;
                     default:
                         throw new Exception("unknown result type");
                 }
 
+                if (postIds != null)
+                    model.Posts = new PagedList<PostWrapped>(_postWrapper.Wrap(postIds, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, postIds.HasMore);
+
+                if (subIds != null)
+                    model.Subs = new PagedList<SubWrapped>(_subWrapper.Wrap(subIds, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, subIds.HasMore);
             }
 
             return View("Search", model);
@@ -296,9 +291,14 @@ namespace Skimur.Web.Controllers
 
         public ActionResult Random()
         {
-            var randomSub = _subDao.GetRandomSub();
+            var randomSubId = _subDao.GetRandomSub();
 
-            if (randomSub == null)
+            if (randomSubId == null)
+                return Redirect(Url.Subs());
+
+            var randomSub = _subDao.GetSubById(randomSubId.Value);
+
+            if(randomSub == null)
                 return Redirect(Url.Subs());
 
             return Redirect(Url.Sub(randomSub.Name));
@@ -460,13 +460,13 @@ namespace Skimur.Web.Controllers
                 if (!response.CommentId.HasValue)
                     throw new Exception("No error was given, which indicates success, but no comment id was returned.");
 
-                var node = _commentNodeHierarchyBuilder.WrapComments(new List<Guid> {response.CommentId.Value}, _userContext.CurrentUser);
+                var node = _commentWrapper.Wrap(response.CommentId.Value, _userContext.CurrentUser);
 
                 return Json(new
                 {
                     success = true,
                     commentId = response.CommentId,
-                    html = RenderView("_Comment", node[response.CommentId.Value])
+                    html = RenderView("_Comment", node)
                 });
             }
             catch (Exception ex)
@@ -494,14 +494,14 @@ namespace Skimur.Web.Controllers
 
             try
             {
-                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Sending command..");
+
                 var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
                 {
                     DateEdited = Common.CurrentTime(),
                     CommentId = model.CommentId,
                     Body = model.Body
                 });
-                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Sent command..");
+
                 if (!string.IsNullOrEmpty(response.Error))
                 {
                     return Json(new
@@ -510,25 +510,16 @@ namespace Skimur.Web.Controllers
                         error = response.Error
                     });
                 }
-
-                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Wrapping command..");
-                var node = _commentNodeHierarchyBuilder.WrapComments(new List<Guid> {model.CommentId},
-                    _userContext.CurrentUser);
-                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Wrapped command..");
-
-
-                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Rendering html..");
-                var html = RenderView("_CommentBody", node[model.CommentId]);
-                Debug.WriteLine(DateTime.Now.ToLongTimeString() + ":Rendered html..");
-
-
+                
+                var html = RenderView("_CommentBody", _commentWrapper.Wrap(new List<Guid> { model.CommentId }, _userContext.CurrentUser));
+                
                 return Json(new
                 {
                     success = true,
                     commentId = model.CommentId,
                     // we don't render the whole comment, just the body.
                     // this is because we want to leave the children in-tact on the ui
-                    html = html
+                    html
                 });
             }
             catch (Exception ex)
@@ -591,26 +582,12 @@ namespace Skimur.Web.Controllers
 
         public ActionResult SideBar()
         {
-            var allSubs = _subDao.GetSubsByIds(_contextService.GetSubscribedSubIds()).Select(x =>
-            {
-                var model = _mapper.Map<Sub, SubModel>(x);
-                model.IsSubscribed = true;
-                return model;
-            }).ToList();
-
-            return PartialView("_SideBar", allSubs);
+            return PartialView("_SideBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
         }
 
         public ActionResult TopBar()
         {
-            var allSubs = _subDao.GetSubsByIds(_contextService.GetSubscribedSubIds()).Select(x =>
-            {
-                var model = _mapper.Map<Sub, SubModel>(x);
-                model.IsSubscribed = true;
-                return model;
-            }).ToList();
-
-            return PartialView("_TopBar", allSubs);
+            return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
         }
 
         [HttpPost]
@@ -773,9 +750,9 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        public ActionResult ModerationSideBar(string subName)
+        public ActionResult ModerationSideBar(Guid subId)
         {
-            var sub = _subDao.GetSubByName(subName);
+            var sub = _subDao.GetSubById(subId);
 
             if (sub == null)
                 return new EmptyResult();
@@ -794,24 +771,6 @@ namespace Skimur.Web.Controllers
             }
 
             return PartialView("_ModerationSideBar", model);
-        }
-
-        private PostModel MapPost(Post post)
-        {
-            if (post == null)
-                return null;
-            var result = _mapper.Map<Post, PostModel>(post);
-            if (_userContext.CurrentUser != null)
-                result.CurrentVote = _voteDao.GetVoteForUserOnPost(_userContext.CurrentUser.Id, post.Id);
-            return result;
-        }
-
-        private SubModel MapSub(Sub sub)
-        {
-            if (sub == null) return null;
-            var result = _mapper.Map<Sub, SubModel>(sub);
-            result.IsSubscribed = _contextService.IsSubcribedToSub(sub.Id);
-            return result;
         }
     }
 }

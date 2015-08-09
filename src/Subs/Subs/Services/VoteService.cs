@@ -67,6 +67,19 @@ namespace Subs.Services
             });
         }
 
+        public Dictionary<Guid, VoteType> GetVotesOnPostsByUser(Guid userId, List<Guid> posts)
+        {
+            if (posts == null || posts.Count == 0)
+                return new Dictionary<Guid, VoteType>();
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Vote>().Where(x => x.UserId == userId && posts.Contains((Guid)x.PostId));
+                query.SelectExpression = "SELECT \"post_id\", \"type\"";
+                return conn.Select(query).ToDictionary(x => x.PostId.Value, x => x.VoteType);
+            });
+        }
+
         public void GetTotalVotesForPost(Guid postId, out int upVotes, out int downVotes)
         {
             int tempUpVotes = 0;

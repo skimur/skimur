@@ -26,6 +26,9 @@ namespace Subs
             container.RegisterSingle<ICommentTreeBuilder, CommentTreeBuilder>();
             container.RegisterSingle<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
             container.RegisterSingle<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
+            container.RegisterSingle<ICommentWrapper, CommentWrapper>();
+            container.RegisterSingle<IPostWrapper, PostWrapper>();
+            container.RegisterSingle<ISubWrapper, SubWrapper>();
         }
 
         public int Order

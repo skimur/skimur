@@ -34,10 +34,8 @@ namespace Skimur.Web.Models
     
     public class CommentListModel
     {
-        public string PostSlug { get; set; }
-
         public CommentSortBy SortBy { get; set; } 
 
-        public List<CommentNode> Comments { get; set; }
+        public List<CommentWrapped> Comments { get; set; }
     }
 }
