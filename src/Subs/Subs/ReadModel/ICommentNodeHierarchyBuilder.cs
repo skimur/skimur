@@ -85,6 +85,14 @@ namespace Subs.ReadModel
 
         public List<Guid> ChildComments { get; set; }
 
+        public int MissingCount { get; set; }
+
+        public int Depth { get; set; }
+
+        public CommentSortBy Sort { get; set; }
+        
+        public Guid PostId { get; set; }
+
         #region INode
 
         public NodeType NodeType

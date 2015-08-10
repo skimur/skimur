@@ -1,6 +1,6 @@
 ﻿; skimurui.comments = (function () {
 
-    var getComment = function(element) {
+    var getComment = function (element) {
         return $(element).closest(".comment");
     };
 
@@ -134,7 +134,7 @@
         $textArea.focus();
     };
 
-    var startEdit = function(element) {
+    var startEdit = function (element) {
         var comment = cancel(element);
         var $textArea = $("<textarea />")
             .appendTo(comment.staging)
@@ -171,7 +171,7 @@
         $textArea.focus();
     };
 
-    var toggleExpand = function(element) {
+    var toggleExpand = function (element) {
         var $comment = getComment(element);
         if ($comment.hasClass("collapsed")) {
             $comment.removeClass("collapsed");
@@ -198,13 +198,21 @@
         });
     };
 
+    var moreChildren = function (element, postId, sort, children, depth) {
+        var $comment = getComment(element);
+        skimur.moreComments(postId, sort, children, depth, function(result) {
+            $comment.after($(result.html)).remove();
+        });
+    }
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
         startReply: startReply,
         startEdit: startEdit,
         toggleExpand: toggleExpand,
-        delete: deleteComment
+        delete: deleteComment,
+        moreChildren: moreChildren
     };
 
 })();
@@ -213,7 +221,7 @@ $(function () {
 
     $.fn.comment = function () {
         return this.each(function () {
-            
+
         });
     };
 

@@ -152,7 +152,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, Guid id, CommentSortBy commentsSort = CommentSortBy.Best, Guid? commentId = null, int? limit = 100)
+        public ActionResult Post(string subName, Guid id, CommentSortBy? commentsSort, Guid? commentId = null, int? limit = 100)
         {
             var post = _postDao.GetPostById(id);
 
@@ -174,19 +174,47 @@ namespace Skimur.Web.Controllers
             if (limit > 200)
                 limit = 200;
 
+            if(!commentsSort.HasValue)
+                commentsSort = CommentSortBy.Best; // TODO: get suggested sort for this link, and if none, from the sub
+
             var model = new PostDetailsModel();
 
             model.Post = _postWrapper.Wrap(id, _userContext.CurrentUser);
             model.Sub = _subWrapper.Wrap(sub.Id, _userContext.CurrentUser);
             model.Comments = new CommentListModel();
-            model.Comments.SortBy = commentsSort;
+            model.Comments.SortBy = commentsSort.Value;
 
             var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
             var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
             var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit: limit, maxDepth:5);
+            commentTreeContext.Sort = model.Comments.SortBy;
             model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
             return View(model);
+        }
+
+        public ActionResult MoreComments(Guid postId, CommentSortBy? sort, string children, int depth)
+        {
+            if (!sort.HasValue)
+                sort = CommentSortBy.Best; // TODO: get suggested sort for this link, and if none, from the sub
+
+            var commentTree = _commentDao.GetCommentTree(postId);
+            var commentTreeSorter = _commentDao.GetCommentTreeSorter(postId, sort.Value);
+            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, 
+                commentTreeSorter, 
+                children.Split(',').Select(x => Guid.Parse(x)).ToList(), 
+                limit: 20, 
+                maxDepth: 5);
+            commentTreeContext.Sort = sort.Value;
+
+            var model = new CommentListModel();
+            model.SortBy = sort.Value;
+            model.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
+
+            return Json(new
+            {
+                html = RenderView("_CommentNodes", model)
+            });
         }
 
         public ActionResult SearchSub(string name, string query, PostsSearchSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)

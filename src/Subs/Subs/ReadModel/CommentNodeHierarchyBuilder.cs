@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Membership;
+using ServiceStack;
 using Subs.Services;
 
 namespace Subs.ReadModel
@@ -72,8 +73,8 @@ namespace Subs.ReadModel
                             : null;
                     }
                 }
-                
-                if(treeContext.MoreRecursion.Contains(comment.Comment.Comment.Id))
+
+                if (treeContext.MoreRecursion.Contains(comment.Comment.Comment.Id))
                     comment.Children.Add(new MoreRecursionNode(comment.Comment));
 
                 if (parent != null)
@@ -91,6 +92,43 @@ namespace Subs.ReadModel
                     }
                     final.Add(comment);
                 }
+            }
+
+            foreach (var visibleId in wrapped.Keys)
+            {
+                // this item is already scheduled to have a new link to see all the children
+                if (treeContext.MoreRecursion.Contains(visibleId)) continue;
+
+                var children = tree.Tree.ContainsKey(visibleId) ? tree.Tree[visibleId] : new List<Guid>();
+                var missingChildren = children.Where(x => !treeContext.Comments.Contains(x)).ToList();
+
+                if (missingChildren.Count > 0)
+                {
+                    var visibleChildren = children.Where(x => treeContext.Comments.Contains(x)).ToList();
+                    var visibleCount = visibleChildren.Sum(x => (treeContext.CommentsChildrenCount[x]) + 1);
+                    var missingCount = treeContext.CommentsChildrenCount[visibleId] - visibleCount;
+                    var missingDepth = (tree.Depth.ContainsKey(visibleId) ? tree.Depth[visibleId] : 0) + 1 -
+                                       treeContext.OffsetDepth;
+                    
+                    var moreChildren = new MoreChildren();
+                    moreChildren.ChildComments.AddRange(missingChildren);
+                    moreChildren.MissingCount = missingCount;
+                    moreChildren.PostId = tree.PostId;
+                    moreChildren.Sort = treeContext.Sort;
+                    moreChildren.Depth = missingDepth;
+                    wrapped[visibleId].Children.Add(moreChildren);
+                }
+            }
+
+            if (treeContext.TopLevelCandidates.Count > 0)
+            {
+                var moreChildren = new MoreChildren();
+                moreChildren.ChildComments.AddRange(treeContext.TopLevelCandidates);
+                moreChildren.MissingCount = moreChildren.ChildComments.Sum(x => (treeContext.CommentsChildrenCount.ContainsKey(x) ? treeContext.CommentsChildrenCount[x] : 0) + 1);
+                moreChildren.PostId = tree.PostId;
+                moreChildren.Sort = treeContext.Sort;
+                moreChildren.Depth = 0;
+                final.Add(moreChildren);
             }
 
             return final;

@@ -1,6 +1,6 @@
 ﻿@using Subs.ReadModel
 @model ICommentNode
-<div class="comment" @if (Model.NodeType == NodeType.Comment) { var comment = ((CommentNode)Model).Comment; @("data-comment-id=" + comment.Comment.Id + " data-post-id=" + comment.Comment.PostId + "")  }>
+<div class="comment" @if (Model.NodeType == NodeType.Comment) { var comment = ((CommentNode)Model).Comment; @("data-comment-id=" + comment.Comment.Id + " data-post-id=" + comment.Comment.PostId + "")   }>
     @if (Model.NodeType == NodeType.Comment)
     {
         @Html.Partial("_CommentBody", (CommentNode)Model)
@@ -14,8 +14,10 @@
     }
     else if (Model.NodeType == NodeType.MoreChildren)
     {
+        var moreChildren = (MoreChildren)Model;
+        var children = string.Join(", ", moreChildren.ChildComments);
         // TODO
-        <a href="#">Load more children...</a>
+        <a href="javascript:void(0);" onclick="return skimurui.comments.moreChildren(this, '@moreChildren.PostId', '@moreChildren.Sort', '@children', @moreChildren.Depth)">Load more children...</a> <span>(@moreChildren.MissingCount @(moreChildren.MissingCount != 1 ? "replies" : "reply"))</span>
     }
 
     @if (Model.Children != null && Model.Children.Count > 0)

@@ -180,6 +180,23 @@
         });
     }
 
+    var moreComments = function (postId, sort, children, depth, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/morecomments",
+            data: { postId: postId, sort: sort, children: children, depth: depth },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -194,7 +211,8 @@
         editComment: editComment,
         deleteComment: deleteComment,
         displayError: displayError,
-        confirmDelete: confirmDelete
+        confirmDelete: confirmDelete,
+        moreComments: moreComments
     };
 
 })();
