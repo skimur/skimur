@@ -1,0 +1,11 @@
+﻿@model CommentListModel
+
+<div class="comments-container">
+    @if (Model.CommentNodes != null && Model.CommentNodes.Count > 0)
+    {
+        foreach (var node in Model.CommentNodes)
+        {
+            @Html.Partial("_CommentNode", node)
+        }
+    }
+</div>

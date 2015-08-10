@@ -36,6 +36,6 @@ namespace Skimur.Web.Models
     {
         public CommentSortBy SortBy { get; set; } 
 
-        public List<CommentWrapped> Comments { get; set; }
+        public List<ICommentNode> CommentNodes { get; set; }
     }
 }

@@ -46,6 +46,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="CommentExtensions.cs" />
     <Compile Include="Common.cs" />
     <Compile Include="IRegistrar.cs" />
     <Compile Include="PriorityQueue\PriorityQueue.cs" />

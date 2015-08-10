@@ -186,19 +186,19 @@ namespace Subs.Tests
 
             //assert
             Assert.That(nodes, Has.Count.EqualTo(2));
-            Assert.That(nodes[0].Comment.SortConfidence, Is.EqualTo(10));
-            Assert.That(nodes[0].Children, Has.Count.EqualTo(2));
-            Assert.That(nodes[0].Children[0].Comment.SortConfidence, Is.EqualTo(5));
-            Assert.That(nodes[0].Children[1].Comment.SortConfidence, Is.EqualTo(4));
-            Assert.That(nodes[0].Children[1].Children, Has.Count.EqualTo(2));
-            Assert.That(nodes[0].Children[1].Children[0].Comment.SortConfidence, Is.EqualTo(20));
-            Assert.That(nodes[0].Children[1].Children[1].Comment.SortConfidence, Is.EqualTo(2));
-            Assert.That(nodes[1].Comment.SortConfidence, Is.EqualTo(9));
-            Assert.That(nodes[1].Children, Has.Count.EqualTo(2));
-            Assert.That(nodes[1].Children[0].Comment.SortConfidence, Is.EqualTo(12));
-            Assert.That(nodes[1].Children[1].Comment.SortConfidence, Is.EqualTo(3));
-            Assert.That(nodes[1].Children[1].Children, Has.Count.EqualTo(1));
-            Assert.That(nodes[1].Children[1].Children[0].Comment.SortConfidence, Is.EqualTo(1));
+            Assert.That(nodes[0].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(10));
+            Assert.That(nodes[0].As<CommentNode>().Children, Has.Count.EqualTo(2));
+            Assert.That(nodes[0].As<CommentNode>().Children[0].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(5));
+            Assert.That(nodes[0].As<CommentNode>().Children[1].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(4));
+            Assert.That(nodes[0].As<CommentNode>().Children[1].Children, Has.Count.EqualTo(2));
+            Assert.That(nodes[0].As<CommentNode>().Children[1].Children[0].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(20));
+            Assert.That(nodes[0].As<CommentNode>().Children[1].Children[1].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(2));
+            Assert.That(nodes[1].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(9));
+            Assert.That(nodes[1].As<CommentNode>().Children, Has.Count.EqualTo(2));
+            Assert.That(nodes[1].As<CommentNode>().Children[0].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(12));
+            Assert.That(nodes[1].As<CommentNode>().Children[1].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(3));
+            Assert.That(nodes[1].As<CommentNode>().Children[1].Children, Has.Count.EqualTo(1));
+            Assert.That(nodes[1].As<CommentNode>().Children[1].Children[0].As<CommentNode>().Comment.Comment.SortConfidence, Is.EqualTo(1));
         }
 
         [SetUp]

@@ -59,26 +59,9 @@ namespace Subs.ReadModel
                 item.Post = posts.ContainsKey(item.Comment.PostId) ? posts[item.Comment.PostId] : null;
 
                 var userCanMod = item.Sub != null && userCanModInSubs.Contains(item.Sub.Id);
-
-                // TODO: make this configurable per-user
-                int minimumScore = 0;
+                
                 if ((item.Author != null && currentUser != null) && currentUser.Id == item.Author.Id)
-                {
-                    // the current user is the author, don't collapse!
-                    item.Collapsed = false;
                     item.CurrentUserIsAuthor = true;
-                }
-                else if (item.Score < minimumScore)
-                {
-                    // too many down votes to show to the user
-                    item.Collapsed = true;
-                }
-                else
-                {
-                    // the current user is not the author, and we have enough upvotes to display,
-                    // don't collapse
-                    item.Collapsed = false;
-                }
 
                 item.CanDelete = userCanMod || item.CurrentUserIsAuthor;
                 item.CanEdit = item.CurrentUserIsAuthor;

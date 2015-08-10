@@ -1,0 +1,28 @@
+﻿@using Subs.ReadModel
+@model ICommentNode
+<div class="comment" @if (Model.NodeType == NodeType.Comment) { var comment = ((CommentNode)Model).Comment; @("data-comment-id=" + comment.Comment.Id + " data-post-id=" + comment.Comment.PostId + "")  }>
+    @if (Model.NodeType == NodeType.Comment)
+    {
+        @Html.Partial("_CommentBody", (CommentNode)Model)
+    }
+    else if (Model.NodeType == NodeType.MoreRecursion)
+    {
+        var comment = ((MoreRecursionNode)Model).Comment;
+        <div class="comments-container">
+            <a href="@Url.Comment(comment.Sub.Name, comment.Post, comment.Comment)">Continue thread...</a>
+        </div>
+    }
+    else if (Model.NodeType == NodeType.MoreChildren)
+    {
+        // TODO
+        <a href="#">Load more children...</a>
+    }
+
+    @if (Model.Children != null && Model.Children.Count > 0)
+    {
+        foreach (var child in Model.Children)
+        {
+            @Html.Partial("_CommentNode", child)
+        }
+    }
+</div>

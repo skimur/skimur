@@ -152,7 +152,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, Guid id, CommentSortBy commentsSort = CommentSortBy.Best, Guid? commentId = null)
+        public ActionResult Post(string subName, Guid id, CommentSortBy commentsSort = CommentSortBy.Best, Guid? commentId = null, int? limit = 100)
         {
             var post = _postDao.GetPostById(id);
 
@@ -167,6 +167,13 @@ namespace Skimur.Web.Controllers
             if (!sub.Name.Equals(subName, StringComparison.InvariantCultureIgnoreCase))
                 throw new HttpException(404, "no post found"); // TODO: redirect to correct url
 
+            if (!limit.HasValue)
+                limit = 100;
+            if (limit < 1)
+                limit = 100;
+            if (limit > 200)
+                limit = 200;
+
             var model = new PostDetailsModel();
 
             model.Post = _postWrapper.Wrap(id, _userContext.CurrentUser);
@@ -176,8 +183,8 @@ namespace Skimur.Web.Controllers
 
             var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
             var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit:100, maxDepth:5);
-            model.Comments.Comments = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
+            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit: limit, maxDepth:5);
+            model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
             return View(model);
         }
@@ -466,7 +473,7 @@ namespace Skimur.Web.Controllers
                 {
                     success = true,
                     commentId = response.CommentId,
-                    html = RenderView("_Comment", node)
+                    html = RenderView("_CommentNode", new CommentNode(node))
                 });
             }
             catch (Exception ex)
@@ -511,7 +518,7 @@ namespace Skimur.Web.Controllers
                     });
                 }
                 
-                var html = RenderView("_CommentBody", _commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser));
+                var html = RenderView("_CommentBody", new CommentNode(_commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser)));
                 
                 return Json(new
                 {
