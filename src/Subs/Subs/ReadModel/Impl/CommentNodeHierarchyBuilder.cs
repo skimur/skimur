@@ -2,10 +2,9 @@
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Membership;
-using ServiceStack;
 using Subs.Services;
 
-namespace Subs.ReadModel
+namespace Subs.ReadModel.Impl
 {
     public class CommentNodeHierarchyBuilder : ICommentNodeHierarchyBuilder
     {

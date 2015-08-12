@@ -162,6 +162,33 @@
         });
     };
 
+    var displaySuccess = function (message) {
+        $.notify(message, {
+            type: "success",
+            placement: {
+                align: "center"
+            }
+        });
+    };
+
+    var popupError = function (title, message) {
+        swal({
+            title: title,
+            text: message,
+            type: "error",
+            confirmButtonText: "Ok"
+        });
+    };
+
+    var popupSuccess = function (title, message) {
+        swal({
+            title: title,
+            text: message,
+            type: "success",
+            confirmButtonText: "Ok"
+        });
+    };
+
     var confirmDelete = function (callback) {
         swal({
             title: "Are you sure?",
@@ -211,8 +238,11 @@
         editComment: editComment,
         deleteComment: deleteComment,
         displayError: displayError,
+        displaySuccess: displaySuccess,
         confirmDelete: confirmDelete,
-        moreComments: moreComments
+        moreComments: moreComments,
+        popupError: popupError,
+        popupSuccess : popupSuccess
     };
 
 })();

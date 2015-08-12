@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Data;
 using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
 
-namespace Subs.Services
+namespace Subs.Services.Impl
 {
     public class VoteService : IVoteService
     {

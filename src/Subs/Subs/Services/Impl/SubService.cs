@@ -8,7 +8,7 @@ using ServiceStack.OrmLite;
 using Skimur;
 using Subs.ReadModel;
 
-namespace Subs.Services
+namespace Subs.Services.Impl
 {
     public class SubService : ISubService
     {

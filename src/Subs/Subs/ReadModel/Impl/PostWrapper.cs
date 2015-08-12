@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Membership;
 
-namespace Subs.ReadModel
+namespace Subs.ReadModel.Impl
 {
     public class PostWrapper : IPostWrapper
     {

@@ -153,6 +153,16 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
 
             routes.MapRoute(
+                name: "SubBans",
+                url: "s/{subName}/bans",
+                defaults: new { controller = "SubBans", action = "Bans", title = UrlParameter.Optional });
+
+            routes.MapRoute(
+                name: "SubBan",
+                url: "s/{subName}/ban",
+                defaults: new { controller = "SubBans", action = "Ban", title = UrlParameter.Optional });
+
+            routes.MapRoute(
                 name: "MoreComments",
                 url: "morecomments",
                 defaults: new { controller = "Subs", action = "MoreComments" });

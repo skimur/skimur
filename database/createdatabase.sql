@@ -166,5 +166,19 @@ CREATE TABLE comments
   CONSTRAINT comments_pkey PRIMARY KEY (id)
 );
 
+CREATE TABLE sub_user_bans
+(
+  id uuid NOT NULL,
+  sub_id uuid,
+  user_id uuid,
+  user_name text,
+  banned_until timestamp with time zone,
+  date_banned timestamp with time zone,
+  banned_by uuid,
+  reason_private text,
+  reason_public text,
+  CONSTRAINT sub_user_bans_pkey PRIMARY KEY (id)
+);
+
 CREATE INDEX comments_score_index ON comments (hot(vote_up_count, vote_down_count, date_created), date_created);
 CREATE INDEX comments_controversy_index ON comments (controversy(vote_up_count, vote_down_count), date_created);

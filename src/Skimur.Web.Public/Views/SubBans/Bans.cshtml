@@ -1,0 +1,67 @@
+﻿@using Subs
+@model BannedUsersFromSub
+@{
+    ViewBag.Title = "Banned";
+}
+
+<form id="ban-form" class="form">
+
+    @Html.ValidationSummary("", new {@class = "text-danger"})
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BanUser.UserName, new {@class = "control-label"})
+        @Html.TextBoxFor(m => m.BanUser.UserName, new {@class = "form-control"})
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BanUser.ReasonPrivate, new {@class = "control-label"})
+        @Html.TextAreaFor(m => m.BanUser.ReasonPrivate, new {@class = "form-control"})
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BanUser.BannedUntil, new {@class = "control-label"})
+        @Html.TextBoxFor(m => m.BanUser.BannedUntil, new {@class = "form-control"})
+    </div>
+
+    <div class="form-group">
+        @Html.LabelFor(m => m.BanUser.ReasonPublic, new {@class = "control-label"})
+        @Html.TextAreaFor(m => m.BanUser.ReasonPublic, new {@class = "form-control"})
+    </div>
+
+    <div class="form-group">
+        <input id="ban-btn" type="submit" class="btn btn-default" value="Ban"/>
+    </div>
+</form>
+
+<script type="text/javascript">
+    $(function() {
+
+        $("#ban-btn").click(function (e) {
+            e.preventDefault();
+            if ($("#ban-form").valid()) {
+
+                $.ajax({
+                    type: "POST",
+                    url: "/s/@Model.Sub.Name/ban",
+                    data: {
+                        UserName: $("#@Html.IdFor(x => x.BanUser.UserName)").val(),
+                        ReasonPrivate: $("#@Html.IdFor(x => x.BanUser.ReasonPrivate)").val(),
+                        BannedUntil: $("#@Html.IdFor(x => x.BanUser.BannedUntil)").val(),
+                        ReasonPublic: $("#@Html.IdFor(x => x.BanUser.ReasonPublic)").val()
+                    },
+                    dataType: "json",
+                    success: function (result) {
+                        if (!result.success) {
+                            skimur.popupError(result.error);
+                        } else {
+                            skimur.popupSuccess("The user has been banned.");
+                        }
+                    },
+                    error: function () {
+                        //skimur.popupError(result.error);
+                    }
+                });
+            }
+        });
+    });
+</script>

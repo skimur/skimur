@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
+using Infrastructure.Membership;
+using Subs;
 using Subs.ReadModel;
 
 namespace Skimur.Web.Models
@@ -49,5 +52,26 @@ namespace Skimur.Web.Models
     {
         Sub,
         Post
+    }
+
+    public class BannedUsersFromSub
+    {
+        public Sub Sub { get; set; }
+
+        public PagedList<SubUserBanWrapped> Users { get; set; }
+
+        public BanUserModel BanUser { get; set; }
+    }
+
+    public class BanUserModel
+    {
+        [Required]
+        public string UserName { get; set; }
+
+        public DateTime? BannedUntil { get; set; }
+        
+        public string ReasonPrivate { get; set; }
+
+        public string ReasonPublic { get; set; }
     }
 }

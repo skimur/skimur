@@ -33,6 +33,8 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<CreateComment, CreateCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<EditComment, EditCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<DeleteComment, DeleteCommentResponse>, CommentCommandHandler>();
+
+            container.Register<ICommandHandlerResponse<BanUserFromSub, BanUserFromSubResponse>, SubBanning>();
         }
 
         public int Order

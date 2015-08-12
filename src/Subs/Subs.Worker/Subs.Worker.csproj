@@ -48,6 +48,7 @@
     <Compile Include="Registrar.cs" />
     <Compile Include="SubEventHandler.cs" />
     <Compile Include="SubHandler.cs" />
+    <Compile Include="SubBanning.cs" />
     <Compile Include="VoteCommandHandler.cs" />
     <Compile Include="ScoringAndSortingEventHandler.cs" />
   </ItemGroup>

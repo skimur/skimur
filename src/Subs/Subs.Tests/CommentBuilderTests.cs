@@ -12,7 +12,9 @@ using NUnit.Framework;
 using Skimur;
 using Skimur.Tests;
 using Subs.ReadModel;
+using Subs.ReadModel.Impl;
 using Subs.Services;
+using Subs.Services.Impl;
 
 namespace Subs.Tests
 {

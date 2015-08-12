@@ -1,13 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
 using Subs.Services;
+using Subs.Services.Impl;
 
-namespace Subs.ReadModel
+namespace Subs.ReadModel.Impl
 {
     public class CommentDao
         // this class temporarily implements the service, until we implement the proper read-only layer
@@ -15,16 +14,13 @@ namespace Subs.ReadModel
     {
         private readonly IDbConnectionProvider _conn;
         private readonly ICommentTreeBuilder _commentTreeBuilder;
-        private readonly ICommentTreeContextBuilder _commentTreeContextBuilder;
 
         public CommentDao(IDbConnectionProvider conn,
-            ICommentTreeBuilder commentTreeBuilder,
-            ICommentTreeContextBuilder commentTreeContextBuilder)
+            ICommentTreeBuilder commentTreeBuilder)
             : base(conn)
         {
             _conn = conn;
             _commentTreeBuilder = commentTreeBuilder;
-            _commentTreeContextBuilder = commentTreeContextBuilder;
         }
         
         public Dictionary<Guid, double> GetCommentTreeSorter(Guid postId, CommentSortBy sortBy)

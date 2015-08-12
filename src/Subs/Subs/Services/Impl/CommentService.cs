@@ -1,14 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Net.NetworkInformation;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
 using Subs.ReadModel;
 
-namespace Subs.Services
+namespace Subs.Services.Impl
 {
     public class CommentService : ICommentService
     {

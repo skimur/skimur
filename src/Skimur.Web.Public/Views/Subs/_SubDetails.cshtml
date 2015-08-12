@@ -1,19 +1,19 @@
-﻿@model SubModel
+﻿@model Subs.ReadModel.SubWrapped
            
 <div class="sub">
     <div class="sub-subunsub">
-        <a onclick="javascript:skimurui.subs.toggleSubscription(this, '@Model.Name');" class="btn btn-default btn-sub @(Model.IsSubscribed ? "subscribed" : "unsubscribed")">@(Model.IsSubscribed ? "subscribed" : "unsubscribed")</a>
+        <a onclick="javascript:skimurui.subs.toggleSubscription(this, '@Model.Sub.Name');" class="btn btn-default btn-sub @(Model.IsSubscribed ? "subscribed" : "unsubscribed")">@(Model.IsSubscribed ? "subscribed" : "unsubscribed")</a>
     </div>
     <div class="sub-body">
         <div>
             <p class="sub-title">
-                <a class="sub-link" href="@Url.Sub(Model.Name)">@Model.Name</a>
+                <a class="sub-link" href="@Url.Sub(Model.Sub.Name)">@Model.Sub.Name</a>
             </p>
             <p class="sub-description">
-                @Model.Description
+                @Model.Sub.Description
             </p>
             <p class="sub-meta">
-                @Model.NumberOfSubscribers subscribers, a community for @Html.Age(Model.CreatedDate).
+                @Model.Sub.NumberOfSubscribers subscribers, a community for @Html.Age(Model.Sub.CreatedDate).
             </p>
             <p class="sub-links">
 
