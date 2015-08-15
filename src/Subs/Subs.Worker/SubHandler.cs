@@ -238,11 +238,13 @@ namespace Subs.Worker
                 }
                 else if (command.PostType == PostType.Text)
                 {
-                    // todo: only validate this length is user is not an admin
-                    if (!string.IsNullOrEmpty(command.Content) && command.Content.Length > 40000)
+                    if (!user.IsAdmin)
                     {
-                        response.Error = "The post content is too long (maximum 40000 characters).";
-                        return response;
+                        if (!string.IsNullOrEmpty(command.Content) && command.Content.Length > 40000)
+                        {
+                            response.Error = "The post content is too long (maximum 40000 characters).";
+                            return response;
+                        }
                     }
                 }
                 else
