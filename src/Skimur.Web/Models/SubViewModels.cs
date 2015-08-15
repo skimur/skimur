@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
 using Infrastructure.Membership;
 using Subs;
@@ -60,6 +61,8 @@ namespace Skimur.Web.Models
 
         public PagedList<SubUserBanWrapped> Users { get; set; }
 
+        public string Query { get; set; }
+
         public BanUserModel BanUser { get; set; }
     }
 
@@ -67,8 +70,6 @@ namespace Skimur.Web.Models
     {
         [Required]
         public string UserName { get; set; }
-
-        public DateTime? BannedUntil { get; set; }
         
         public string ReasonPrivate { get; set; }
 

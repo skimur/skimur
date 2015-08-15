@@ -3,50 +3,99 @@
 @{
     ViewBag.Title = "Banned";
 }
-
-<form id="ban-form" class="form">
-
-    @Html.ValidationSummary("", new {@class = "text-danger"})
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.BanUser.UserName, new {@class = "control-label"})
-        @Html.TextBoxFor(m => m.BanUser.UserName, new {@class = "form-control"})
+<div class="form-group">
+    <ul class="nav nav-tabs">
+        <li role="presentation" class="active"><a href="#bans" data-toggle="tab">Bans</a></li>
+        <li role="presentation"><a href="#new-ban" data-toggle="tab">New</a></li>
+    </ul>
+</div>
+<div class="tab-content">
+    <div role="tabpanel" class="tab-pane active" id="bans">
+        <div class="panel">
+            <div class="input-group">
+                <input id="ban-search-query" type="text" class="form-control" placeholder="Search..." value="@Model.Query">
+                @if (!string.IsNullOrEmpty(Model.Query))
+                {
+                    <a href="@Url.SubBans(Model.Sub.Name)" class="input-group-addon btn btn-default"><span class="fa fa-close"></span></a>
+                }
+                <span id="ban-search-button" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
+            </div>
+        </div>
+        @foreach (var ban in Model.Users)
+        {
+            @Html.Partial("_Ban", ban)
+            if (Model.Users.IndexOf(ban) != Model.Users.Count - 1)
+            {
+                <hr />
+            }
+        }
+        <hr />
+        <div class="list-pager">
+            @Html.Pager(Model.Users)
+        </div>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.BanUser.ReasonPrivate, new {@class = "control-label"})
-        @Html.TextAreaFor(m => m.BanUser.ReasonPrivate, new {@class = "form-control"})
+    <div role="tabpanel" class="tab-pane" id="new-ban">
+        <form id="ban-form" class="form">
+            <div class="form-group">
+                <label class="control-label" for="@Html.IdFor(m => m.BanUser.UserName)">User name</label>
+                @Html.TextBoxFor(m => m.BanUser.UserName, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="@Html.IdFor(m => m.BanUser.ReasonPrivate)">Reason (not shown to user)</label>
+                @Html.TextAreaFor(m => m.BanUser.ReasonPrivate, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <label class="control-label" for="@Html.IdFor(m => m.BanUser.ReasonPublic)">Reason (sent to user)</label>
+                @Html.TextAreaFor(m => m.BanUser.ReasonPublic, new { @class = "form-control" })
+            </div>
+            <div class="form-group">
+                <input id="ban-btn" type="submit" class="btn btn-primary" value="Ban" />
+            </div>
+        </form>
     </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.BanUser.BannedUntil, new {@class = "control-label"})
-        @Html.TextBoxFor(m => m.BanUser.BannedUntil, new {@class = "form-control"})
-    </div>
-
-    <div class="form-group">
-        @Html.LabelFor(m => m.BanUser.ReasonPublic, new {@class = "control-label"})
-        @Html.TextAreaFor(m => m.BanUser.ReasonPublic, new {@class = "form-control"})
-    </div>
-
-    <div class="form-group">
-        <input id="ban-btn" type="submit" class="btn btn-default" value="Ban"/>
-    </div>
-</form>
+</div>
 
 <script type="text/javascript">
-    $(function() {
 
+    function unBanUser(element, userName) {
+        $.ajax({
+            type: "POST",
+            url: "/s/@Model.Sub.Name/unban",
+            data: {
+                UserName: userName
+            },
+            dataType: "json",
+            success: function (result) {
+                if (!result.success) {
+                    skimur.popupError(result.error);
+                } else {
+                    $(element).closest(".ban").remove();
+                    skimur.popupSuccess("The user has been unbanned.");
+                }
+            },
+            error: function () {
+                skimur.popupError("There was an error processing your request.");
+            }
+        });
+    }
+
+    function editBan(element) {
+        var $ban = $(element).closest(".ban");
+        $("#ban-edit-username").html($ban.find(".username").val());
+        $("#ban-edit-reason").val($ban.find(".private-reason").val());
+        $("#ban-edit-modal").modal("show");
+    }
+
+    $(function () {
         $("#ban-btn").click(function (e) {
             e.preventDefault();
             if ($("#ban-form").valid()) {
-
                 $.ajax({
                     type: "POST",
-                    url: "/s/@Model.Sub.Name/ban",
+                    url: "@Url.SubBan(Model.Sub.Name)",
                     data: {
                         UserName: $("#@Html.IdFor(x => x.BanUser.UserName)").val(),
                         ReasonPrivate: $("#@Html.IdFor(x => x.BanUser.ReasonPrivate)").val(),
-                        BannedUntil: $("#@Html.IdFor(x => x.BanUser.BannedUntil)").val(),
                         ReasonPublic: $("#@Html.IdFor(x => x.BanUser.ReasonPublic)").val()
                     },
                     dataType: "json",
@@ -58,10 +107,71 @@
                         }
                     },
                     error: function () {
-                        //skimur.popupError(result.error);
+                        skimur.popupError("There was an error processing your request.");
                     }
                 });
             }
         });
+        $("#ban-edit-save").click(function (e) {
+            e.preventDefault();
+            $.ajax({
+                type: "POST",
+                url: "@Url.SubUpdateBan(Model.Sub.Name)",
+                data: {
+                    userName: $("#ban-edit-username").text(),
+                    reason: $("#ban-edit-reason").val()
+                },
+                dataType: "json",
+                success: function (result) {
+                    if (!result.success) {
+                        skimur.popupError(result.error);
+                    } else {
+                        var $ban = $(result.html);
+                        var username = $ban.data("username");
+                        $(".ban-" + username).replaceWith($ban);
+                        skimur.popupSuccess("The ban has been updated.");
+                        $("#ban-edit-modal").modal("hide");
+                    }
+                },
+                error: function () {
+                    skimur.popupError("There was an error processing your request.");
+                }
+            });
+        });
+        $("#ban-search-button").click(function (e) {
+            e.preventDefault();
+            window.location = "@Url.SubBans(Model.Sub.Name)?userName=" + $("#ban-search-query").val();
+        });
+        $("#ban-search-query").enterKey(function (e) {
+            e.preventDefault();
+            $("#ban-search-button").click();
+        });
     });
 </script>
+
+
+<!-- Modal -->
+<div class="modal fade" id="ban-edit-modal">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-header">
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close"><span aria-hidden="true">&times;</span></button>
+                <h4 class="modal-title" id="myModalLabel">Modal title</h4>
+            </div>
+            <div class="modal-body">
+                <div class="form-group">
+                    <label class="control-label" for="ban-edit-username">User name</label>
+                    <p id="ban-edit-username" class="form-control-static"></p>
+                </div>
+                <div class="form-group">
+                    <label class="control-label" for="ban-edit-reason">Reason (not shown to user)</label>
+                    <textarea id="ban-edit-reason" class="form-control"></textarea>
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button id="ban-edit-save" type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>

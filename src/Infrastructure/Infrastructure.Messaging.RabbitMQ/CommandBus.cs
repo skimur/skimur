@@ -45,7 +45,7 @@ namespace Infrastructure.Messaging.RabbitMQ
                     ReplyTo = replyToMq
                 });
 
-                IMessage<TResponse> responseMsg = client.Get<TResponse>(replyToMq);
+                IMessage<TResponse> responseMsg = client.Get<TResponse>(replyToMq, TimeSpan.FromSeconds(20));
                 client.Ack(responseMsg);
                 return responseMsg.GetBody();
             }

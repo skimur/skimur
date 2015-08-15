@@ -57,6 +57,16 @@ namespace Skimur.Web
             return urlHelper.RouteUrl("SubBan", new { subName = name });
         }
 
+        public static string SubUnBan(this UrlHelper urlHelper, string name)
+        {
+            return urlHelper.RouteUrl("SubUnBan", new { subName = name });
+        }
+
+        public static string SubUpdateBan(this UrlHelper urlHelper, string name)
+        {
+            return urlHelper.RouteUrl("SubUpdateBan", new { subName = name });
+        }
+
         public static string CreatePost(this UrlHelper urlHelper)
         {
             return urlHelper.Action("CreatePost", "Subs");

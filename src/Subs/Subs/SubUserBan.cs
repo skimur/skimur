@@ -19,8 +19,6 @@ namespace Subs
 
         public string UserName { get; set; }
 
-        public DateTime? BannedUntil { get; set; }
-
         public DateTime DateBanned { get; set; }
 
         public Guid BannedBy { get; set; }

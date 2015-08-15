@@ -27,12 +27,20 @@ namespace Subs.Services.Impl
                 var totalCount = conn.Count(query);
 
                 query.Skip(skip).Take(take);
-                
+
                 return new SeekedList<SubUserBan>(conn.Select(query), skip ?? 0, take, totalCount);
             });
         }
 
-        public void BanUserFromSub(Guid subId, Guid userId, string userName, DateTime? bannedUntil, DateTime dateBanned, Guid bannedBy, string reasonPrivate, string reasonPublic)
+        public SubUserBan GetBannedUserInSub(Guid subId, Guid userId)
+        {
+            return _conn.Perform(conn =>
+            {
+                return conn.Single<SubUserBan>(x => x.SubId == subId && x.UserId == userId);
+            });
+        }
+
+        public void BanUserFromSub(Guid subId, Guid userId, string userName, DateTime dateBanned, Guid bannedBy, string reasonPrivate, string reasonPublic)
         {
             _conn.Perform(conn =>
             {
@@ -40,7 +48,6 @@ namespace Subs.Services.Impl
 
                 if (existing != null)
                 {
-                    existing.BannedUntil = bannedUntil;
                     existing.BannedBy = bannedBy;
                     existing.ReasonPrivate = reasonPrivate;
                     existing.ReasonPublic = reasonPublic;
@@ -51,7 +58,6 @@ namespace Subs.Services.Impl
                 {
                     existing = new SubUserBan();
                     existing.Id = GuidUtil.NewSequentialId();
-                    existing.BannedUntil = bannedUntil;
                     existing.BannedBy = bannedBy;
                     existing.ReasonPrivate = reasonPrivate;
                     existing.ReasonPublic = reasonPublic;
@@ -62,6 +68,16 @@ namespace Subs.Services.Impl
                     conn.Insert(existing);
                 }
             });
+        }
+
+        public void UnBanUserFromSub(Guid subId, Guid userId)
+        {
+            _conn.Perform(conn => conn.Delete<SubUserBan>(x => x.UserId == userId && x.SubId == subId));
+        }
+
+        public void UpdateSubBanForUser(Guid subId, Guid userId, string reason)
+        {
+            _conn.Perform(conn => conn.Update<SubUserBan>(new { ReasonPrivate = reason }, x => x.SubId == subId && x.UserId == userId));
         }
     }
 }

@@ -9,6 +9,7 @@ using System.Web.Mvc;
 using Infrastructure.Membership;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
+using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
 
@@ -57,11 +58,12 @@ namespace Skimur.Web.Controllers
             if (!pageNumber.HasValue)
                 pageNumber = 1;
 
-            var bannedUsers = _subUserBanDao.GetBannedUsersInSub(sub.Id, userName, (pageNumber.Value - 1)*20, 20);
+            var bannedUsers = _subUserBanDao.GetBannedUsersInSub(sub.Id, userName, (pageNumber.Value - 1)*5, 5);
 
             var model = new BannedUsersFromSub();
             model.Sub = sub;
-            model.Users = new PagedList<SubUserBanWrapped>(_subUserBanWrapper.Wrap(bannedUsers), pageNumber.Value, 20, bannedUsers.HasMore);
+            model.Users = new PagedList<SubUserBanWrapped>(_subUserBanWrapper.Wrap(bannedUsers), pageNumber.Value, 5, bannedUsers.HasMore);
+            model.Query = userName;
 
             return View(model);
         }
@@ -88,7 +90,6 @@ namespace Skimur.Web.Controllers
                     BannedBy = _userContext.CurrentUser.Id,
                     SubId = sub.Id,
                     DateBanned = Common.CurrentTime(),
-                    BannedUntil = model.BannedUntil,
                     ReasonPrivate = model.ReasonPrivate,
                     ReasonPublic = model.ReasonPublic
                 });
@@ -106,6 +107,108 @@ namespace Skimur.Web.Controllers
                 {
                     success = true,
                     error = (string)null
+                });
+            }
+            catch (Exception ex)
+            {
+                // TODO: log error
+                return Json(new
+                {
+                    success = false,
+                    error = "An unexpected error has occured."
+                });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UnBan(string subName, string userName)
+        {
+            if (string.IsNullOrEmpty(subName))
+                return Redirect(Url.Subs());
+
+            var sub = _subDao.GetSubByName(subName);
+
+            if (sub == null)
+                throw new HttpException(404, "sub not found");
+
+            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser.Id, sub.Id))
+                throw new HttpException(403, "not allowed to moderate bans");
+
+            try
+            {
+                var response = _commandBus.Send<UnBanUserFromSub, UnBanUserFromSubResponse>(new UnBanUserFromSub
+                {
+                    SubId = sub.Id,
+                    UserName = userName,
+                    UnBannedBy = _userContext.CurrentUser.Id
+                });
+
+                if (!string.IsNullOrEmpty(response.Error))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = response.Error
+                    });
+                }
+
+                return Json(new
+                {
+                    success = true,
+                    error = (string)null
+                });
+            }
+            catch (Exception ex)
+            {
+                // TODO: log error
+                return Json(new
+                {
+                    success = false,
+                    error = "An unexpected error has occured."
+                });
+            }
+        }
+
+        [HttpPost]
+        public ActionResult UpdateBan(string subName, string userName, string reason)
+        {
+            if (string.IsNullOrEmpty(subName))
+                return Redirect(Url.Subs());
+
+            var sub = _subDao.GetSubByName(subName);
+
+            if (sub == null)
+                throw new HttpException(404, "sub not found");
+
+            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser.Id, sub.Id))
+                throw new HttpException(403, "not allowed to moderate bans");
+
+            try
+            {
+                var response = _commandBus.Send<UpdateUserSubBan, UpdateUserSubBanResponse>(new UpdateUserSubBan
+                {
+                    UserName = userName,
+                    UpdatedBy = _userContext.CurrentUser.Id,
+                    SubId = sub.Id,
+                    ReasonPrivate = reason,
+                });
+
+                if (!string.IsNullOrEmpty(response.Error))
+                {
+                    return Json(new
+                    {
+                        success = false,
+                        error = response.Error
+                    });
+                }
+
+                var bannedUser = _subUserBanDao.GetBannedUserInSub(sub.Id, response.UserId);
+
+                return Json(new
+                {
+                    success = true,
+                    error = (string)null,
+                    html = RenderView("_Ban", _subUserBanWrapper.Wrap(new List<SubUserBan> {bannedUser})[0])
                 });
             }
             catch (Exception ex)

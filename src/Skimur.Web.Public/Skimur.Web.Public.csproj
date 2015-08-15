@@ -328,6 +328,7 @@
     <Content Include="Views\Subs\_CommentNode.cshtml" />
     <Content Include="Views\Subs\_CommentBody.cshtml" />
     <Content Include="Views\SubBans\Bans.cshtml" />
+    <Content Include="Views\SubBans\_Ban.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

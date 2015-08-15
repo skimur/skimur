@@ -10,5 +10,7 @@ namespace Subs.ReadModel
     public interface ISubUserBanDao
     {
         SeekedList<SubUserBan> GetBannedUsersInSub(Guid subId, string userName = null, int? skip = null, int? take = null);
+
+        SubUserBan GetBannedUserInSub(Guid subId, Guid userId);
     }
 }
