@@ -14,6 +14,8 @@ namespace Subs.Services
 
         SubUserBan GetBannedUserInSub(Guid subId, Guid userId);
 
+        bool IsUserBannedFromSub(Guid subId, Guid userId);
+
         void BanUserFromSub(Guid subId, Guid userId, string userName, DateTime dateBanned, Guid bannedBy, string reasonPrivate, string reasonPublic);
 
         void UnBanUserFromSub(Guid subId, Guid userId);

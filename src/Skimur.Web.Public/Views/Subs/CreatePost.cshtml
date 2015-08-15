@@ -10,9 +10,7 @@
 
     <h4>Create a new post.</h4>
     <hr />
-
-    @Html.ValidationSummary("", new { @class = "text-danger" })
-
+    
     <ul class="nav nav-tabs" role="tablist">
         <li id="linkpost-tab" role="presentation" class="@(Model.PostType == PostType.Link ? "active" : "")"><a href="#linkpost" aria-controls="home" role="tab" data-toggle="tab">Link</a></li>
         <li id="textpost-tab" role="presentation" class="@(Model.PostType == PostType.Text ? "active" : "")"><a href="#textpost" aria-controls="profile" role="tab" data-toggle="tab">Text</a></li>

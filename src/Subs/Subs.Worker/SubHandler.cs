@@ -28,18 +28,21 @@ namespace Subs.Worker
         private readonly IPostService _postService;
         private readonly IEventBus _eventBus;
         private readonly ICommandBus _commandBus;
+        private readonly ISubUserBanService _subUserBanService;
 
         public SubHandler(ISubService subService,
             IMembershipService membershipService,
             IPostService postService,
             IEventBus eventBus,
-            ICommandBus commandBus)
+            ICommandBus commandBus,
+            ISubUserBanService subUserBanService)
         {
             _subService = subService;
             _membershipService = membershipService;
             _postService = postService;
             _eventBus = eventBus;
             _commandBus = commandBus;
+            _subUserBanService = subUserBanService;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -182,8 +185,17 @@ namespace Subs.Worker
                     return response;
                 }
 
-                // todo: make sure that the user can post into the sub
-                // is admin? is user banned? does user look like spam? 
+                if (!user.IsAdmin)
+                {
+                    // make sure the user isn't banned from this sub
+                    if (_subUserBanService.IsUserBannedFromSub(sub.Id, user.Id))
+                    {
+                        response.Error = "You are currently banned from this sub.";
+                        return response;
+                    }
+                }
+
+                // TODO: does user look like spam? 
 
                 // todo: make sure the post type is allowed
 

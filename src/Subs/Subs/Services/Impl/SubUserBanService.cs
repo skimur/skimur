@@ -40,6 +40,11 @@ namespace Subs.Services.Impl
             });
         }
 
+        public bool IsUserBannedFromSub(Guid subId, Guid userId)
+        {
+            return _conn.Perform(conn => conn.Count<SubUserBan>(x => x.SubId == subId && x.UserId == userId)) > 0;
+        }
+
         public void BanUserFromSub(Guid subId, Guid userId, string userName, DateTime dateBanned, Guid bannedBy, string reasonPrivate, string reasonPublic)
         {
             _conn.Perform(conn =>
