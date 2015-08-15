@@ -1,29 +1,2 @@
 ﻿@model ModerationSideBarModel
 
-@if (Model.IsModerator)
-{
-    <div class="panel panel-info">
-        <div class="panel-heading">Moderation</div>
-        <div class="panel-body">
-            <a href="@Url.EditSub(Model.SubName)">Sub settings</a>
-            <a href="@Url.SubBans(Model.SubName)">Bans</a>
-        </div>
-    </div>
-}
-else
-{
-    if (Model.Moderators.Count > 0)
-    {
-        <div class="panel panel-info">
-            <div class="panel-heading">Moderators</div>
-            <div class="panel-body">
-                <ul>
-                    @foreach (var mod in Model.Moderators)
-                    {
-                        @*TODO:<li><a href="@Url.User(mod)">@mod</a></li>*@
-                    }
-                </ul>
-            </div>
-        </div>
-    }
-}

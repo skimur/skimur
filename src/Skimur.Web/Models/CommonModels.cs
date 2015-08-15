@@ -3,6 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Infrastructure.Membership;
+using Subs;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Models
 {
@@ -38,5 +41,14 @@ namespace Skimur.Web.Models
         {
             return new PagedList<T>(source.Select(select), pageNumber, pageSize, source.HasMore);
         }
+    }
+
+    public class SidebarViewModel
+    {
+        public SubWrapped CurrentSub { get; set; }
+        
+        public bool IsModerator { get; set; }
+
+        public List<User> Moderators { get; set; }
     }
 }

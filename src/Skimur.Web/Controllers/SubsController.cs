@@ -6,6 +6,7 @@ using System.Timers;
 using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
+using Infrastructure.Membership;
 using Infrastructure.Messaging;
 using Infrastructure.Utils;
 using Skimur.Web.Models;
@@ -32,6 +33,7 @@ namespace Skimur.Web.Controllers
         private readonly IPostWrapper _postWrapper;
         private readonly ISubWrapper _subWrapper;
         private readonly ICommentWrapper _commentWrapper;
+        private readonly IMembershipService _membershipService;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -46,7 +48,8 @@ namespace Skimur.Web.Controllers
             ICommentTreeContextBuilder commentTreeContextBuilder,
             IPostWrapper postWrapper,
             ISubWrapper subWrapper,
-            ICommentWrapper commentWrapper)
+            ICommentWrapper commentWrapper,
+            IMembershipService membershipService)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -62,6 +65,7 @@ namespace Skimur.Web.Controllers
             _postWrapper = postWrapper;
             _subWrapper = subWrapper;
             _commentWrapper = commentWrapper;
+            _membershipService = membershipService;
         }
 
         public ActionResult Index(string query)
@@ -614,12 +618,7 @@ namespace Skimur.Web.Controllers
                 });
             }
         }
-
-        public ActionResult SideBar()
-        {
-            return PartialView("_SideBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
-        }
-
+        
         public ActionResult TopBar()
         {
             return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
@@ -784,28 +783,27 @@ namespace Skimur.Web.Controllers
                 error = (string)null
             });
         }
-
-        public ActionResult ModerationSideBar(Guid subId)
+        
+        public ActionResult Sidebar(string subName, Guid? subId)
         {
-            var sub = _subDao.GetSubById(subId);
+            var model = new SidebarViewModel();
 
-            if (sub == null)
-                return new EmptyResult();
-
-            var model = new ModerationSideBarModel();
-            model.SubName = sub.Name;
-
-            if (_userContext.CurrentUser != null)
+            if (subId.HasValue)
+                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubById(subId.Value));
+            else if (!string.IsNullOrEmpty(subName))
+                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubByName(subName));
+            
+            if (model.CurrentSub != null)
             {
-                model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.Id, sub.Id);
+                if (_userContext.CurrentUser != null)
+                    model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.Id, model.CurrentSub.Sub.Id);
+                
+                if(!model.IsModerator)
+                    // we only show list of mods if the requesting user is not a mod of this sub
+                    model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
             }
-            else
-            {
-                // we only show list of mods if the requesting user is not a mod of this sub
-                model.Moderators.AddRange(_subDao.GetAllModsForSub(sub.Id));
-            }
-
-            return PartialView("_ModerationSideBar", model);
+            
+            return PartialView("_SideBar", model);
         }
     }
 }

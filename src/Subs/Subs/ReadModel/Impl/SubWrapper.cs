@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Infrastructure.Membership;
 
 namespace Subs.ReadModel.Impl
@@ -17,28 +18,37 @@ namespace Subs.ReadModel.Impl
 
         public List<SubWrapped> Wrap(List<Guid> subIds, User currentUser = null)
         {
-            var subs = new List<SubWrapped>();
-            foreach (var subId in subIds)
+            var subs = subIds.Select(subId => _subDao.GetSubById(subId)).Where(sub => sub != null).ToList();
+            return Wrap(subs, currentUser);
+        }
+
+        public SubWrapped Wrap(Guid subId, User currentUser = null)
+        {
+            return Wrap(new List<Guid> {subId}, currentUser)[0];
+        }
+
+        public List<SubWrapped> Wrap(List<Sub> subs, User currentUser = null)
+        {
+            var wrapped = new List<SubWrapped>();
+            foreach (var sub in subs)
             {
-                var sub = _subDao.GetSubById(subId);
-                if (sub != null)
-                    subs.Add(new SubWrapped(sub));
+                wrapped.Add(new SubWrapped(sub));
             }
-            
+
             var subscribed = currentUser != null ? _subDao.GetSubscribedSubsForUser(currentUser.Id) : new List<Guid>();
 
-            foreach (var item in subs)
+            foreach (var item in wrapped)
             {
                 if (currentUser != null)
                     item.IsSubscribed = subscribed.Contains(item.Sub.Id);
             }
 
-            return subs;
+            return wrapped;
         }
 
-        public SubWrapped Wrap(Guid subId, User currentUser = null)
+        public SubWrapped Wrap(Sub sub, User currentUser = null)
         {
-            return Wrap(new List<Guid> {subId})[0];
+            return Wrap(new List<Sub> { sub })[0];
         }
     }
 }

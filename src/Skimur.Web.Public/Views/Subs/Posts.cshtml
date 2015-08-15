@@ -1,4 +1,5 @@
-﻿@using Subs
+﻿@using ServiceStack
+@using Subs
 @using Subs.ReadModel
 @model SubPostsModel
 @{
@@ -25,7 +26,6 @@
 }
 
 @section header {
-
     @{
         string urlBase;
 
@@ -63,7 +63,6 @@
             </ul>
         </div>
     </div>
-
 }
 
 <div class="row">
@@ -85,18 +84,13 @@
         }
     </div>
     <div class="col-lg-3 col-sm-4">
-
-        @Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.Sub))
-
-        <div class="panel">
-            <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-link">Submit a new link</a>
-            <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post">Submit a new post</a>
-        </div>
-
         @if (Model.Sub != null)
         {
-            @Html.Action("ModerationSideBar", new { subId = Model.Sub.Sub.Id })
+            @Html.Action("SideBar", new { subId = Model.Sub.Sub.Id })
         }
-
+        else
+        {
+            @Html.Action("SideBar")
+        }
     </div>
 </div>

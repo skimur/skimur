@@ -1,7 +1,39 @@
-﻿<div id="sidebar-wrapper">
-    <ul class="sidebar-nav">
-        <li>
-            <a href="javascript:void(0);">todo</a>
-        </li>
-    </ul>
+﻿@model SidebarViewModel
+
+@Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub))
+
+<div class="panel">
+    <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-link">Submit a new link</a>
+    <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post">Submit a new post</a>
 </div>
+
+@if (Model.CurrentSub != null)
+{
+    if (Model.IsModerator)
+    {
+        <div class="panel panel-info">
+            <div class="panel-heading">Moderation</div>
+            <div class="panel-body">
+                <a href="@Url.EditSub(Model.CurrentSub.Sub.Name)">Sub settings</a>
+                <a href="@Url.SubBans(Model.CurrentSub.Sub.Name)">Bans</a>
+            </div>
+        </div>
+    }
+    else
+    {
+        if (Model.Moderators != null && Model.Moderators.Count > 0)
+        {
+            <div class="panel panel-info">
+                <div class="panel-heading">Moderators</div>
+                <div class="panel-body">
+                    <ul>
+                        @foreach (var mod in Model.Moderators)
+                        {
+                            <li><a href="@Url.User(mod.UserName)">@mod.UserName</a></li>
+                        }
+                    </ul>
+                </div>
+            </div>
+        }
+    }
+}
