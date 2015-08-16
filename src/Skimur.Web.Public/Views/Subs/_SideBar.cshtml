@@ -3,8 +3,8 @@
 @Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub))
 
 <div class="panel">
-    <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-link">Submit a new link</a>
-    <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post">Submit a new post</a>
+    <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-link"><span class="fa fa-external-link"></span> Share a link</a>
+    <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post"><span class="fa fa-pencil-square-o"></span> Discuss</a>
 </div>
 
 @if (Model.CurrentSub != null)
@@ -15,7 +15,7 @@
             <div class="panel-heading">Moderation</div>
             <ul class="list-group">
                 <li class="list-group-item"><a href="@Url.EditSub(Model.CurrentSub.Sub.Name)">Sub settings</a></li>
-                <li class="list-group-item"><a href="@Url.SubBans(Model.CurrentSub.Sub.Name)">Bans</a>n</li>
+                <li class="list-group-item"><a href="@Url.SubBans(Model.CurrentSub.Sub.Name)">Bans</a></li>
             </ul>
         </div>
     }

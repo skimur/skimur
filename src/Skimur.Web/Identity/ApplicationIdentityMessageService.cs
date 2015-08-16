@@ -17,7 +17,6 @@ namespace Skimur.Web.Identity
 
         public Task SendAsync(IdentityMessage message)
         {
-            //Queued email. This QueuedEmail won't have an EmailAccountId. The EmailListenerService will retrieve the default EmailAccount.
             var queuedEmail = new QueuedEmail()
             {
                 Subject = message.Subject,

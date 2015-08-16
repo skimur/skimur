@@ -18,8 +18,8 @@
     </script>
 </head>
 @{
-    var controller = ViewContext.RouteData.Values["controller"];
-    var action = ViewContext.RouteData.Values["action"];
+    var controller = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
 }
 <body class="@(controller)-@(action)">
     @Html.Action("TopBar", "Subs")
