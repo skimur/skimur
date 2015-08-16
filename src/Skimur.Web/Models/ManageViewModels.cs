@@ -81,6 +81,29 @@ namespace Skimur.Web.Models
         public string ConfirmPassword { get; set; }
     }
 
+    public class ManageEmailViewModel
+    {
+        [Required]
+        [DataType(DataType.Password)]
+        [DisplayName("Password")]
+        public string Password { get; set; }
+        
+        public string CurrentEmail { get; set; }
+
+        public bool IsCurrentEmailConfirmed { get; set; }
+
+        public bool IsPasswordSet { get; set; }
+
+        [Required]
+        [EmailAddress]
+        [DisplayName("New email")]
+        public string NewEmail { get; set; }
+
+        [DisplayName("Confirm new email")]
+        [Compare("NewEmail", ErrorMessage = "The new password and confirmation password do not match.")]
+        public string NewEmailConfirmed { get; set; }
+    }
+
     public class AddPhoneNumberViewModel
     {
         [Required]

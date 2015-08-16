@@ -15,12 +15,12 @@ namespace Skimur.Web.Controllers
     [Authorize]
     public class ManageController : BaseController
     {
-        private ApplicationSignInManager _signInManager;
+        private readonly ApplicationSignInManager _signInManager;
         private readonly IAuthenticationManager _authenticationManager;
         private readonly IUserContext _userContext;
         private readonly IMembershipService _membershipService;
         private readonly IAvatarService _avatarService;
-        private ApplicationUserManager _userManager;
+        private readonly ApplicationUserManager _userManager;
 
         public ManageController(ApplicationUserManager userManager,
             ApplicationSignInManager signInManager,
@@ -87,6 +87,87 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
+
+        #region Email
+        
+        public async Task<ActionResult> ManageEmail()
+        {
+            ViewBag.ManageNavigationKey = "Email";
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+
+            var model = new ManageEmailViewModel();
+            model.CurrentEmail = user.Email;
+            model.IsCurrentEmailConfirmed = user.EmailConfirmed;
+            model.IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageEmail(ManageEmailViewModel model)
+        {
+            ViewBag.ManageNavigationKey = "Email";
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            model.CurrentEmail = user.Email;
+            model.IsCurrentEmailConfirmed = user.EmailConfirmed;
+            model.IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash);
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if (_userManager.VerifyHashedPassword(user.PasswordHash, model.Password) != PasswordVerificationResult.Success)
+            {
+                ModelState.AddModelError(string.Empty, "The provided password is invalid.");
+                return View(model);
+            }
+
+            if (string.Equals(user.Email, model.NewEmail, StringComparison.CurrentCultureIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty, "The email provided is already set for this account.");
+                return View(model);
+            }
+
+            user.Email = model.NewEmail;
+            user.EmailConfirmed = false;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                // send a confirmation email
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Url.Scheme);
+                await _userManager.SendEmailAsync(user.Id, "Confirm your email", "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+                AddSuccessMessage("Your e-mail has been changed. A email has been sent to confirm the email address.");
+                return View(model);
+            }
+
+            foreach (var error in result.Errors)
+                ModelState.AddModelError(string.Empty, error);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReSendEmailConfirmation()
+        {
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+
+            // send a confirmation email
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Url.Scheme);
+            await _userManager.SendEmailAsync(user.Id, "Confirm your email", "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>");
+
+            AddSuccessMessage("A confirmation email has been sent.");
+
+            return RedirectToAction("ManageEmail");
+        }
+
+        #endregion
 
         #region Password
 

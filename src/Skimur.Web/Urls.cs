@@ -142,6 +142,11 @@ namespace Skimur.Web
             return urlHelper.Action("Index", "Manage");
         }
 
+        public static string ManageEmail(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("ManageEmail", "Manage");
+        }
+
         public static string ManageLogins(this UrlHelper urlHelper)
         {
             return urlHelper.Action("ManageLogins", "Manage");
