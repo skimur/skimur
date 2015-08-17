@@ -83,13 +83,20 @@ namespace Subs.Worker
                     return response;
                 }
 
+                if (_subService.GetSubByName(command.Name) != null)
+                {
+                    response.Error = "The sub already exist.";
+                    return response;
+                }
+
                 var sub = new Sub
                 {
                     Id = GuidUtil.NewSequentialId(),
                     CreatedDate = Common.CurrentTime(),
                     Name = command.Name,
                     Description = command.Description,
-                    SidebarText = command.SidebarText
+                    SidebarText = command.SidebarText,
+                    SubType = command.Type
                 };
 
                 _subService.InsertSub(sub);
@@ -145,6 +152,7 @@ namespace Subs.Worker
 
                 sub.Description = command.Description;
                 sub.SidebarText = command.SidebarText;
+                sub.SubType = command.Type;
 
                 _subService.UpdateSub(sub);
             }

@@ -375,7 +375,8 @@ namespace Skimur.Web.Controllers
                 EditedByUserId = _userContext.CurrentUser.Id,
                 Name = name,
                 Description = model.Description,
-                SidebarText = model.SidebarText
+                SidebarText = model.SidebarText,
+                Type = model.SubType
             });
 
             if (!string.IsNullOrEmpty(response.Error))
@@ -406,7 +407,8 @@ namespace Skimur.Web.Controllers
                 CreatedByUserId = _userContext.CurrentUser.Id,
                 Name = model.Name,
                 Description = model.Description,
-                SidebarText = model.SidebarText
+                SidebarText = model.SidebarText,
+                Type = model.SubType
             });
 
             if (!string.IsNullOrEmpty(response.Error))

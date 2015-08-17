@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Infrastructure.Membership;
 using Subs;
 using Subs.ReadModel;
@@ -10,12 +11,18 @@ namespace Skimur.Web.Models
 {
     public class CreateEditSubModel
     {
+        [DisplayName("Name")]
         public string Name { get; set; }
 
+        [DisplayName("Description")]
         public string Description { get; set; }
 
+        [DisplayName("Sidebar text")]
         public string SidebarText { get; set; }
 
+        [DisplayName("Type")]
+        public SubType SubType { get; set; }
+        
         public bool IsEditing { get; set; }
     }
     

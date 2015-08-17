@@ -24,5 +24,21 @@ namespace Subs
         public string Description { get; set; }
 
         public ulong NumberOfSubscribers { get; set; }
+
+        public int Type { get; set; }
+
+        [Ignore]
+        public SubType SubType
+        {
+            get { return (SubType) Type; }
+            set { Type = (int)value; }
+        }
+    }
+
+    public enum SubType
+    {
+        Public,
+        Restricted,
+        Private
     }
 }

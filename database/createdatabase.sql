@@ -85,6 +85,7 @@ CREATE TABLE subs
   sidebar_text text,
   is_default boolean,
   number_of_subscribers bigint,
+  type integer,
   CONSTRAINT subs_pkey PRIMARY KEY (id)
 );
 

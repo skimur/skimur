@@ -16,6 +16,8 @@ namespace Subs.Commands
         public string SidebarText { get; set; }
 
         public string Description { get; set; }
+
+        public SubType Type { get; set; }
     }
 
     public class EditSubResponse

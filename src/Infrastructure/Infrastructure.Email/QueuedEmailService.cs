@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Diagnostics;
 using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
@@ -44,6 +45,9 @@ namespace Infrastructure.Email
         /// <param name="queuedEmail"></param>
         public void InsertQueuedEmail(QueuedEmail queuedEmail)
         {
+            Debug.WriteLine(queuedEmail.Body);
+            return;
+
             if (queuedEmail == null) throw new Exception("Invalid QueuedEmail.");
             if(queuedEmail.Id != Guid.Empty) throw new Exception("Can not create a Queue Email with a pre-existing id.");
             queuedEmail.Id = GuidUtil.NewSequentialId();
