@@ -330,6 +330,9 @@
     <Content Include="Views\SubBans\Bans.cshtml" />
     <Content Include="Views\SubBans\_Ban.cshtml" />
     <Content Include="Views\Manage\ManageEmail.cshtml" />
+    <Content Include="Views\Policies\PrivacyPolicy.cshtml" />
+    <Content Include="Views\Policies\UserAgreement.cshtml" />
+    <Content Include="Views\Policies\ContentPolicy.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -407,6 +410,7 @@
     <Content Include="Content\bootstrap-social\bootstrap-social.less" />
     <Content Include="Content\sweet-alert\sweet-alert.less" />
     <Content Include="Content\sweet-alert\sweet-alert-animations.less" />
+    <Content Include="Content\components\policies.less" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>

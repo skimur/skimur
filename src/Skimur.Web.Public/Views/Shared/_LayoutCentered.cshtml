@@ -12,10 +12,8 @@
         @Html.SuccessMessages()
     }
     @RenderBody()
-    <hr />
-    <footer>
-        <p>&copy; @DateTime.Now.Year - Skimur</p>
-    </footer>
+    <hr/>
+    @Html.Partial("_Footer")
 </div>
 @section scripts {
     @RenderSection("scripts", false)

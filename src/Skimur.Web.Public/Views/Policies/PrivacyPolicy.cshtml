@@ -1,0 +1,86 @@
+﻿@{
+    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+    ViewBag.Title = "Privacy policy";
+}
+
+<div class="container body-content">
+    <div class="row">
+        <div class="col-md-3 body-content-side hidden-sm hidden-xs">
+            <div class="policies-sidebar">
+                <ul class="nav nav-stacked nav-pills">
+                    <li><a href="#test1">Test 1</a></li>
+                    <li><a href="#test2">Test 2</a></li>
+                    <li><a href="#test3">Test 3</a></li>
+                    <li><a href="#test4">Test 4</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 body-content-main">
+            <div class="page-header">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            <section id="test1">
+                <h3>Test 1</h3>
+                <p>Lorem ipsum dolor sit amet, mea ea maiorum complectitur, sed iuvaret accusata id. Omnesque torquatos honestatis vim ea, posse splendide nam ea. An per error mundi honestatis, eu oporteat vituperatoribus sed, euismod minimum duo eu. Aperiri laoreet tractatos mea ei, pro natum etiam habemus in. Epicuri vivendum accommodare vim ut, nam an oblique quaestio molestiae. Minimum epicurei dissentias mel ex. Idque fastidii in pro, ea eros electram iudicabit pro.</p>
+                <p>Oblique electram concludaturque cu pri, dolorem cotidieque mei te. Ea vel audire persecuti, modus mundi inciderint eam id, postea audire accumsan no eam. Persius explicari quo id, id iudico nostrud noluisse duo. Laudem intellegam eum in, duis assum lucilius pri no, in probo possim qui.</p>
+                <ul>
+                    <li>Bullet item 1</li>
+                    <li>Bullet item 2</li>
+                    <li>Bullet item 3</li>
+                </ul>
+            </section>
+            <section id="test2">
+                <h3>Test 2</h3>
+                <p>Lorem ipsum dolor sit amet, mea ea maiorum complectitur, sed iuvaret accusata id. Omnesque torquatos honestatis vim ea, posse splendide nam ea. An per error mundi honestatis, eu oporteat vituperatoribus sed, euismod minimum duo eu. Aperiri laoreet tractatos mea ei, pro natum etiam habemus in. Epicuri vivendum accommodare vim ut, nam an oblique quaestio molestiae. Minimum epicurei dissentias mel ex. Idque fastidii in pro, ea eros electram iudicabit pro.</p>
+                <p>Oblique electram concludaturque cu pri, dolorem cotidieque mei te. Ea vel audire persecuti, modus mundi inciderint eam id, postea audire accumsan no eam. Persius explicari quo id, id iudico nostrud noluisse duo. Laudem intellegam eum in, duis assum lucilius pri no, in probo possim qui.</p>
+                <ul>
+                    <li>Bullet item 1</li>
+                    <li>Bullet item 2</li>
+                    <li>Bullet item 3</li>
+                </ul>
+            </section>
+            <section id="test3">
+                <h3>Test 3</h3>
+                <p>Lorem ipsum dolor sit amet, mea ea maiorum complectitur, sed iuvaret accusata id. Omnesque torquatos honestatis vim ea, posse splendide nam ea. An per error mundi honestatis, eu oporteat vituperatoribus sed, euismod minimum duo eu. Aperiri laoreet tractatos mea ei, pro natum etiam habemus in. Epicuri vivendum accommodare vim ut, nam an oblique quaestio molestiae. Minimum epicurei dissentias mel ex. Idque fastidii in pro, ea eros electram iudicabit pro.</p>
+                <p>Oblique electram concludaturque cu pri, dolorem cotidieque mei te. Ea vel audire persecuti, modus mundi inciderint eam id, postea audire accumsan no eam. Persius explicari quo id, id iudico nostrud noluisse duo. Laudem intellegam eum in, duis assum lucilius pri no, in probo possim qui.</p>
+                <ul>
+                    <li>Bullet item 1</li>
+                    <li>Bullet item 2</li>
+                    <li>Bullet item 3</li>
+                </ul>
+            </section>
+            <section id="test4">
+                <h3>Test 4</h3>
+                <p>Lorem ipsum dolor sit amet, mea ea maiorum complectitur, sed iuvaret accusata id. Omnesque torquatos honestatis vim ea, posse splendide nam ea. An per error mundi honestatis, eu oporteat vituperatoribus sed, euismod minimum duo eu. Aperiri laoreet tractatos mea ei, pro natum etiam habemus in. Epicuri vivendum accommodare vim ut, nam an oblique quaestio molestiae. Minimum epicurei dissentias mel ex. Idque fastidii in pro, ea eros electram iudicabit pro.</p>
+                <p>Oblique electram concludaturque cu pri, dolorem cotidieque mei te. Ea vel audire persecuti, modus mundi inciderint eam id, postea audire accumsan no eam. Persius explicari quo id, id iudico nostrud noluisse duo. Laudem intellegam eum in, duis assum lucilius pri no, in probo possim qui.</p>
+                <ul>
+                    <li>Bullet item 1</li>
+                    <li>Bullet item 2</li>
+                    <li>Bullet item 3</li>
+                </ul>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function() {
+        $('.policies-sidebar').affix({
+            offset: {
+                top: $(".layout-topbar").height() + $(".layout-header").height()
+            }
+        });
+        $('.policies-sidebar a[href*=#]:not([href=#])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').stop().animate({
+                        scrollTop: target.offset().top - 50
+                    }, 1000);
+                    return false;
+                }
+            }
+        });
+    });
+</script>

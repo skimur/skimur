@@ -135,6 +135,7 @@
     <Compile Include="Avatar\IAvatarService.cs" />
     <Compile Include="Controllers\AvatarController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\PoliciesController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="HtmlHelpers.cs" />
@@ -160,6 +161,7 @@
     <Compile Include="Registrar.cs" />
     <Compile Include="Identity\ApplicationIdentityMessageService.cs" />
     <Compile Include="Urls.cs" />
+    <Compile Include="Urls.Policies.cs" />
     <Compile Include="UserContext.cs" />
     <Compile Include="Identity\WebUserStore.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />

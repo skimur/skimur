@@ -160,7 +160,7 @@ namespace Skimur.Web.Public
             routes.MapRoute(
                 name: "SubBan",
                 url: "s/{subName}/ban",
-                defaults: new { controller = "SubBans", action = "Ban"});
+                defaults: new { controller = "SubBans", action = "Ban" });
 
             routes.MapRoute(
                 name: "SubUnBan",
@@ -171,7 +171,7 @@ namespace Skimur.Web.Public
                 name: "SubUpdateBan",
                 url: "s/{subName}/updateban",
                 defaults: new { controller = "SubBans", action = "UpdateBan" });
-            
+
             routes.MapRoute(
                 name: "MoreComments",
                 url: "morecomments",
@@ -216,6 +216,21 @@ namespace Skimur.Web.Public
                 name: "Avatar",
                 url: "avatar/{key}",
                 defaults: new { controller = "Avatar", action = "Key" });
+
+            routes.MapRoute(
+                name: "PrivacyPolicy",
+                url: "help/privacypolicy",
+                defaults: new { controller = "Policies", action = "PrivacyPolicy" });
+
+            routes.MapRoute(
+                name: "UserAgreement",
+                url: "help/useragreement",
+                defaults: new { controller = "Policies", action = "UserAgreement" });
+
+            routes.MapRoute(
+                name: "ContentPolicy",
+                url: "help/contentpolicy",
+                defaults: new { controller = "Policies", action = "ContentPolicy" });
 
             routes.MapRoute(
                 name: "Default",
