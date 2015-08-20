@@ -11,16 +11,19 @@ namespace Skimur.Web.Controllers
     {
         public ActionResult PrivacyPolicy()
         {
+            ViewBag.ManageNavigationKey = "privacypolicy";
             return View();
         }
 
         public ActionResult UserAgreement()
         {
+            ViewBag.ManageNavigationKey = "useragreement";
             return View();
         }
 
         public ActionResult ContentPolicy()
         {
+            ViewBag.ManageNavigationKey = "contentpolicy";
             return View();
         }
     }

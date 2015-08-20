@@ -1,5 +1,5 @@
 ﻿@{
-    Layout = "~/Views/Shared/_LayoutEmpty.cshtml";
+    Layout = "~/Views/Shared/_LayoutCentered.cshtml";
     ViewBag.Title = "Content policy";
 }
 
@@ -70,7 +70,7 @@
                 top: $(".layout-topbar").height() + $(".layout-header").height()
             }
         });
-        $('.policies-sidebar a[href*=#]:not([href=#])').click(function () {
+        $('.policies-sidebar a[href*=#]:not([href=#])').click(function() {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
                 var target = $(this.hash);
                 target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
@@ -84,3 +84,7 @@
         });
     });
 </script>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}
