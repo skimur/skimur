@@ -64,13 +64,13 @@
 </div>
 
 <script type="text/javascript">
-    $(function() {
+    $(function () {
         $('.policies-sidebar').affix({
             offset: {
                 top: $(".layout-topbar").height() + $(".layout-header").height()
             }
         });
-        $('.policies-sidebar a[href*=#]:not([href=#])').click(function() {
+        $('.policies-sidebar a[href*=#]:not([href=#])').click(function () {
             if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
                 var target = $(this.hash);
                 target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
@@ -78,7 +78,10 @@
                     $('html,body').stop().animate({
                         scrollTop: target.offset().top - 50
                     }, 1000);
-                    return false;
+                    if (history.pushState) {
+                        history.pushState(null, null, '#' + this.hash.slice(1));
+                        return false;
+                    }
                 }
             }
         });
