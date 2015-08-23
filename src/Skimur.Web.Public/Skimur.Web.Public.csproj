@@ -334,6 +334,7 @@
     <Content Include="Views\Policies\UserAgreement.cshtml" />
     <Content Include="Views\Policies\ContentPolicy.cshtml" />
     <Content Include="Views\Policies\_HeaderNav.cshtml" />
+    <Content Include="Views\Shared\_Analytics.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
