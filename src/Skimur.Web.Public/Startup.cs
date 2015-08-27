@@ -233,6 +233,16 @@ namespace Skimur.Web.Public
                 defaults: new { controller = "Policies", action = "ContentPolicy" });
 
             routes.MapRoute(
+                name: "Submit",
+                url: "submit",
+                defaults: new { controller = "Subs", action = "CreatePost" });
+
+            routes.MapRoute(
+                name: "SubmitWithSub",
+                url: "s/{subName}/submit",
+                defaults: new { controller = "Subs", action = "CreatePost" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -71,7 +71,7 @@ namespace Skimur.Web.Controllers
         public ActionResult Index(string query)
         {
             ViewBag.Query = query;
-            
+
             return View(_subWrapper.Wrap(_subDao.GetAllSubs(query, !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers), _userContext.CurrentUser));
         }
 
@@ -94,8 +94,8 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1)*pageSize), pageSize);
-            
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize);
+
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
             model.TimeFilter = time;
@@ -162,7 +162,7 @@ namespace Skimur.Web.Controllers
 
             if (post == null)
                 throw new HttpException(404, "no post found");
-            
+
             var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
@@ -178,7 +178,7 @@ namespace Skimur.Web.Controllers
             if (limit > 200)
                 limit = 200;
 
-            if(!commentsSort.HasValue)
+            if (!commentsSort.HasValue)
                 commentsSort = CommentSortBy.Best; // TODO: get suggested sort for this link, and if none, from the sub
 
             var model = new PostDetailsModel();
@@ -190,7 +190,7 @@ namespace Skimur.Web.Controllers
 
             var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
             var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment:commentId, limit: limit, maxDepth:5);
+            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment: commentId, limit: limit, maxDepth: 5);
             commentTreeContext.Sort = model.Comments.SortBy;
             model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
 
@@ -204,10 +204,10 @@ namespace Skimur.Web.Controllers
 
             var commentTree = _commentDao.GetCommentTree(postId);
             var commentTreeSorter = _commentDao.GetCommentTreeSorter(postId, sort.Value);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, 
-                commentTreeSorter, 
-                children.Split(',').Select(x => Guid.Parse(x)).ToList(), 
-                limit: 20, 
+            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree,
+                commentTreeSorter,
+                children.Split(',').Select(x => Guid.Parse(x)).ToList(),
+                limit: 20,
                 maxDepth: 5);
             commentTreeContext.Sort = sort.Value;
 
@@ -245,7 +245,7 @@ namespace Skimur.Web.Controllers
                 pageSize = 100;
             if (pageSize < 1)
                 pageSize = 1;
-            
+
             var model = new SearchResultsModel();
             model.Query = query;
             model.SortBy = sort.Value;
@@ -302,17 +302,17 @@ namespace Skimur.Web.Controllers
                 {
                     case null:
                         postIds = _postDao.QueryPosts(query,
-                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?) null, sort.Value,
-                            time.Value, ((pageNumber - 1)*pageSize), pageSize);
-                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1)*pageSize), pageSize);
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
+                            time.Value, ((pageNumber - 1) * pageSize), pageSize);
+                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize);
                         break;
                     case SearchResultType.Post:
                         postIds = _postDao.QueryPosts(query,
-                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?) null, sort.Value, 
-                            time.Value, ((pageNumber - 1)*pageSize), pageSize);
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
+                            time.Value, ((pageNumber - 1) * pageSize), pageSize);
                         break;
                     case SearchResultType.Sub:
-                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1)*pageSize), pageSize);
+                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize);
                         break;
                     default:
                         throw new Exception("unknown result type");
@@ -337,7 +337,7 @@ namespace Skimur.Web.Controllers
 
             var randomSub = _subDao.GetSubById(randomSubId.Value);
 
-            if(randomSub == null)
+            if (randomSub == null)
                 return Redirect(Url.Subs());
 
             return Redirect(Url.Sub(randomSub.Name));
@@ -360,7 +360,7 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
-        
+
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
@@ -423,16 +423,38 @@ namespace Skimur.Web.Controllers
         }
 
         [Authorize]
-        public ActionResult CreatePost()
+        public ActionResult CreatePost(string subName = null)
         {
-            return View(new CreatePostModel());
+            SubWrapped sub = null;
+
+            if (!string.IsNullOrEmpty(subName))
+            {
+                sub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
+                if (sub == null) throw new HttpException(404, "sub not found");
+            }
+            
+            return View(new CreatePostModel
+            {
+                SubName = sub != null ? sub.Sub.Name : null,
+                Sub = sub
+            });
         }
 
         [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult CreatePost(CreatePostModel model)
+        public ActionResult CreatePost(CreatePostModel model, string subName = null)
         {
+            SubWrapped sub = null;
+
+            if (!string.IsNullOrEmpty(subName))
+            {
+                sub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
+                if (sub == null) throw new HttpException(404, "sub not found");
+            }
+
+            model.Sub = sub;
+
             var response = _commandBus.Send<CreatePost, CreatePostResponse>(new CreatePost
             {
                 CreatedByUserId = _userContext.CurrentUser.Id,
@@ -551,9 +573,9 @@ namespace Skimur.Web.Controllers
                         error = response.Error
                     });
                 }
-                
+
                 var html = RenderView("_CommentBody", new CommentNode(_commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser)));
-                
+
                 return Json(new
                 {
                     success = true,
@@ -620,7 +642,7 @@ namespace Skimur.Web.Controllers
                 });
             }
         }
-        
+
         public ActionResult TopBar()
         {
             return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
@@ -662,7 +684,7 @@ namespace Skimur.Web.Controllers
                     error = "You must be logged in subscribe to a sub."
                 });
             }
-            
+
             var response = _commandBus.Send<UnSubcribeToSub, UnSubcribeToSubResponse>(new UnSubcribeToSub
             {
                 UserId = _userContext.CurrentUser.Id,
@@ -785,26 +807,26 @@ namespace Skimur.Web.Controllers
                 error = (string)null
             });
         }
-        
-        public ActionResult Sidebar(string subName, Guid? subId)
+
+        public ActionResult SideBar(string subName, Guid? subId)
         {
             var model = new SidebarViewModel();
 
             if (subId.HasValue)
-                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubById(subId.Value));
+                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubById(subId.Value), _userContext.CurrentUser);
             else if (!string.IsNullOrEmpty(subName))
-                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubByName(subName));
-            
+                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
+
             if (model.CurrentSub != null)
             {
                 if (_userContext.CurrentUser != null)
                     model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.Id, model.CurrentSub.Sub.Id);
-                
-                if(!model.IsModerator)
+
+                if (!model.IsModerator)
                     // we only show list of mods if the requesting user is not a mod of this sub
                     model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
             }
-            
+
             return PartialView("_SideBar", model);
         }
     }

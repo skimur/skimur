@@ -16,6 +16,8 @@ namespace Skimur.Web.Models
         public string SubName { get; set; }
 
         public bool NotifyReplies { get; set; }
+
+        public SubWrapped Sub { get; set; }
     }
     
     public class PostDetailsModel

@@ -49,7 +49,7 @@ namespace Skimur.Web
 
         public static string SubBans(this UrlHelper urlHelper, string name)
         {
-            return urlHelper.RouteUrl("SubBans", new {subName = name});
+            return urlHelper.RouteUrl("SubBans", new { subName = name });
         }
 
         public static string SubBan(this UrlHelper urlHelper, string name)
@@ -67,9 +67,11 @@ namespace Skimur.Web
             return urlHelper.RouteUrl("SubUpdateBan", new { subName = name });
         }
 
-        public static string CreatePost(this UrlHelper urlHelper)
+        public static string CreatePost(this UrlHelper urlHelper, string subName = null)
         {
-            return urlHelper.Action("CreatePost", "Subs");
+            if (!string.IsNullOrEmpty(subName))
+                return urlHelper.RouteUrl("SubmitWithSub", new {subName });
+            return urlHelper.RouteUrl("Submit");
         }
 
         public static string Post(this UrlHelper urlHelper, string subName, Guid id, string title = null)
@@ -84,7 +86,7 @@ namespace Skimur.Web
 
         public static string Comment(this UrlHelper urlHelper, string subName, Post post, Comment comment)
         {
-            return urlHelper.RouteUrl("PostComment", new { subName, id = post.Id, title=post.Title.UrlFriendly(), commentId = comment.Id });
+            return urlHelper.RouteUrl("PostComment", new { subName, id = post.Id, title = post.Title.UrlFriendly(), commentId = comment.Id });
         }
 
         public static string User(this UrlHelper urlHelper, string userName)

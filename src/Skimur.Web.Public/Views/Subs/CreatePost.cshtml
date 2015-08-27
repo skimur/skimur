@@ -4,54 +4,63 @@
     ViewBag.Title = "Create";
 }
 
-@using (Html.BeginForm("CreatePost", "Subs", FormMethod.Post, new { @class = "form form-createpost", role = "form" }))
-{
-    @Html.AntiForgeryToken()
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        @using (Html.BeginForm("CreatePost", "Subs", FormMethod.Post, new { @class = "form form-createpost", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
 
-    <h4>Create a new post.</h4>
-    <hr />
-    
-    <ul class="nav nav-tabs" role="tablist">
-        <li id="linkpost-tab" role="presentation" class="@(Model.PostType == PostType.Link ? "active" : "")"><a href="#linkpost" aria-controls="home" role="tab" data-toggle="tab">Link</a></li>
-        <li id="textpost-tab" role="presentation" class="@(Model.PostType == PostType.Text ? "active" : "")"><a href="#textpost" aria-controls="profile" role="tab" data-toggle="tab">Text</a></li>
-    </ul>
+            <h4>Create a new post.</h4>
+            <hr />
 
-    @Html.HiddenFor(m => m.PostType)
-    
-    <div class="form-group">
-        @Html.LabelFor(m => m.Title, new { @class = "control-label" })
-        @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
-    </div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li id="linkpost-tab" role="presentation" class="@(Model.PostType == PostType.Link ? "active" : "")"><a href="#linkpost" aria-controls="home" role="tab" data-toggle="tab">Link</a></li>
+                <li id="textpost-tab" role="presentation" class="@(Model.PostType == PostType.Text ? "active" : "")"><a href="#textpost" aria-controls="profile" role="tab" data-toggle="tab">Text</a></li>
+            </ul>
 
-    <div class="tab-content">
-        <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Link ? "active" : "")" id="linkpost">
+            @Html.HiddenFor(m => m.PostType)
+
             <div class="form-group">
-                @Html.LabelFor(m => m.Url, new { @class = "control-label" })
-                @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+                @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
             </div>
-        </div>
-        <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Text ? "active" : "")" id="textpost">
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Link ? "active" : "")" id="linkpost">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Url, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Text ? "active" : "")" id="textpost">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Content, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.Content, new { @class = "form-control" })
+                    </div>
+                </div>
+            </div>
+
             <div class="form-group">
-                @Html.LabelFor(m => m.Content, new { @class = "control-label" })
-                @Html.TextAreaFor(m => m.Content, new { @class = "form-control" })
+                @Html.LabelFor(m => m.SubName, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.SubName, new { @class = "form-control" })
             </div>
-        </div>
-    </div>
 
-    <div class="form-group">
-        @Html.LabelFor(m => m.SubName, new { @class = "control-label" })
-        @Html.TextBoxFor(m => m.SubName, new { @class = "form-control" })
-    </div>
+            <div class="form-group">
+                @Html.CheckBoxFor(m => m.NotifyReplies)
+                @Html.LabelFor(m => m.NotifyReplies)
+            </div>
 
-    <div class="form-group">
-        @Html.CheckBoxFor(m => m.NotifyReplies)
-        @Html.LabelFor(m => m.NotifyReplies)
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Create" />
+            </div>
+        }
     </div>
+    <div class="col-lg-3 col-sm-4">
+        @Html.Action("SideBar", "Subs")
+    </div>
+</div>
 
-    <div class="form-group">
-            <input type="submit" class="btn btn-default" value="Create" />
-    </div>
-}
+
 
 <script type="text/javascript">
     $(function () {
