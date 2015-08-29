@@ -18,5 +18,12 @@ namespace Skimur
 
             return value;
         }
+
+        public static int Fuzz(int value)
+        {
+            var decay = Math.Exp((float)-value/60);
+            var jitter = (int)Math.Round(5*decay);
+            return value + new Random().Next(0, jitter);
+        }
     }
 }

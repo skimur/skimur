@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Infrastructure.Caching;
 using Infrastructure.Membership;
+using Skimur;
 
 namespace Subs.ReadModel.Impl
 {
@@ -9,11 +11,13 @@ namespace Subs.ReadModel.Impl
     {
         private readonly ISubDao _subDao;
         private readonly IVoteDao _voteDao;
+        private readonly ICache _cache;
 
-        public SubWrapper(ISubDao subDao, IVoteDao voteDao)
+        public SubWrapper(ISubDao subDao, IVoteDao voteDao, ICache cache)
         {
             _subDao = subDao;
             _voteDao = voteDao;
+            _cache = cache;
         }
 
         public List<SubWrapped> Wrap(List<Guid> subIds, User currentUser = null)
@@ -34,13 +38,18 @@ namespace Subs.ReadModel.Impl
             {
                 wrapped.Add(new SubWrapped(sub));
             }
-
+            
             var subscribed = currentUser != null ? _subDao.GetSubscribedSubsForUser(currentUser.Id) : new List<Guid>();
 
             foreach (var item in wrapped)
             {
                 if (currentUser != null)
                     item.IsSubscribed = subscribed.Contains(item.Sub.Id);
+
+                if (item.Sub.NumberOfSubscribers < 100 && !(currentUser != null && currentUser.IsAdmin))
+                {
+                    item.FuzzNumberOfSubscribers(_cache.GetAcquire("sub." + item.Sub.Id + ".fuzzed", TimeSpan.FromSeconds(30), () => Common.Fuzz(item.Sub.NumberOfSubscribers)));
+                }
             }
 
             return wrapped;
