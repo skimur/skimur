@@ -12,10 +12,10 @@ namespace Skimur.Web
     {
         public void Register(Container container)
         {
-            container.RegisterSingle<IUserStore<ApplicationUser, Guid>, ApplicationUserStore>();
-            container.RegisterSingle<IIdentityMessageService, ApplicationIdentityMessageService>();
-            container.RegisterSingle<ApplicationUserManager>();
-            container.RegisterSingle<IAvatarService, AvatarService>();
+            container.RegisterSingleton<IUserStore<ApplicationUser, Guid>, ApplicationUserStore>();
+            container.RegisterSingleton<IIdentityMessageService, ApplicationIdentityMessageService>();
+            container.RegisterSingleton<ApplicationUserManager>();
+            container.RegisterSingleton<IAvatarService, AvatarService>();
 
             container.RegisterPerWebRequest<ApplicationSignInManager>();
             container.RegisterPerWebRequest<IUserContext, UserContext>();

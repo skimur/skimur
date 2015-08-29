@@ -20,7 +20,8 @@ namespace Skimur.Tests
         [SetUp]
         protected virtual void Setup()
         {
-            _container = new Container(new ContainerOptions { AllowOverridingRegistrations = true });
+            _container = new Container();
+            _container.Options.AllowOverridingRegistrations = true;
             foreach (var registrar in GetRegistrars().OrderBy(x => x.Order))
                 registrar.Register(_container);
         }

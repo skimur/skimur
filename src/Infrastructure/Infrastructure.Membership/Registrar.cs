@@ -12,8 +12,8 @@ namespace Infrastructure.Membership
     {
         public void Register(Container container)
         {
-            container.RegisterSingle<IMembershipService, MembershipService>();
-            container.RegisterSingle<IPasswordManager, PasswordManager>();
+            container.RegisterSingleton<IMembershipService, MembershipService>();
+            container.RegisterSingleton<IPasswordManager, PasswordManager>();
         }
 
         public int Order { get { return 0; } }

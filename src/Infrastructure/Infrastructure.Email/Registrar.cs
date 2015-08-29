@@ -12,7 +12,7 @@ namespace Infrastructure.Email
     {
         public void Register(Container container)
         {
-            container.RegisterSingle<IQueuedEmailService, QueuedEmailService>();
+            container.RegisterSingleton<IQueuedEmailService, QueuedEmailService>();
         }
 
         public int Order { get { return 0; } }

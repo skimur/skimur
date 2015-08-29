@@ -10,10 +10,10 @@ namespace Infrastructure
     {
         public void Register(Container container)
         {
-            container.RegisterSingle<IMapper, Mapper>();
-            container.RegisterSingle<IConnectionStringProvider, ConnectionStringProvider>();
-            container.RegisterSingle<IDbConnectionProvider, SqlConnectionProvider>();
-            container.RegisterSingle<IEmailSender, EmailSender>();
+            container.RegisterSingleton<IMapper, Mapper>();
+            container.RegisterSingleton<IConnectionStringProvider, ConnectionStringProvider>();
+            container.RegisterSingleton<IDbConnectionProvider, SqlConnectionProvider>();
+            container.RegisterSingleton<IEmailSender, EmailSender>();
         }
 
         public int Order { get { return 0; } }

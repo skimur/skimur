@@ -14,7 +14,8 @@ namespace Skimur
             lock (_lock)
             {
                 if (_container != null) throw new Exception("The context was already initialized!");
-                _container = new Container(new ContainerOptions { AllowOverridingRegistrations = true });
+                _container = new Container();
+                _container.Options.AllowOverridingRegistrations = true;
                 foreach (var registrar in registrars.OrderBy(x => x.Order))
                 {
                     registrar.Register(_container);

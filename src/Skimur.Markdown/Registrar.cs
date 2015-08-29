@@ -10,7 +10,7 @@ namespace Skimur.Markdown
         public void Register(Container container)
         {
             container.Register<IJsEngine>(() => new V8JsEngine());
-            container.RegisterSingle<IMarkdownCompiler, MarkdownCompiler>();
+            container.RegisterSingleton<IMarkdownCompiler, MarkdownCompiler>();
         }
 
         public int Order { get { return 0; } }

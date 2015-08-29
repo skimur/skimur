@@ -319,7 +319,7 @@ namespace Skimur.Web.Public
         public void Register(Container container)
         {
             container.RegisterPerWebRequest(() => HttpContext.Current.GetOwinContext().Authentication);
-            container.RegisterSingle(_app.GetDataProtectionProvider());
+            container.RegisterSingleton(_app.GetDataProtectionProvider());
             container.RegisterMvcControllers(typeof(global::Skimur.Web.Registrar).Assembly);
         }
 

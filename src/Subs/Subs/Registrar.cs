@@ -15,25 +15,25 @@ namespace Subs
     {
         public void Register(SimpleInjector.Container container)
         {
-            container.RegisterSingle<ISubUserBanService, SubUserBanService>();
-            container.RegisterSingle<ISubUserBanDao, SubUserBanDao>();
-            container.RegisterSingle<ISubService, SubService>();
-            container.RegisterSingle<ISubDao, SubDao>();
-            container.RegisterSingle<IPostService, PostService>();
-            container.RegisterSingle<IPostDao, PostDao>();
-            container.RegisterSingle<IVoteService, VoteService>();
-            container.RegisterSingle<IVoteDao, VoteDao>();
-            container.RegisterSingle<ICommentService, CommentService>();
-            container.RegisterSingle<ICommentDao, CommentDao>();
-            container.RegisterSingle<IPermissionService, PermissionService>();
-            container.RegisterSingle<IPermissionDao, PermissionDao>();
-            container.RegisterSingle<ICommentTreeBuilder, CommentTreeBuilder>();
-            container.RegisterSingle<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
-            container.RegisterSingle<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
-            container.RegisterSingle<ICommentWrapper, CommentWrapper>();
-            container.RegisterSingle<IPostWrapper, PostWrapper>();
-            container.RegisterSingle<ISubWrapper, SubWrapper>();
-            container.RegisterSingle<ISubUserBanWrapper, SubUserBanWrapper>();
+            container.RegisterSingleton<ISubUserBanService, SubUserBanService>();
+            container.RegisterSingleton<ISubUserBanDao, SubUserBanDao>();
+            container.RegisterSingleton<ISubService, SubService>();
+            container.RegisterSingleton<ISubDao, SubDao>();
+            container.RegisterSingleton<IPostService, PostService>();
+            container.RegisterSingleton<IPostDao, PostDao>();
+            container.RegisterSingleton<IVoteService, VoteService>();
+            container.RegisterSingleton<IVoteDao, VoteDao>();
+            container.RegisterSingleton<ICommentService, CommentService>();
+            container.RegisterSingleton<ICommentDao, CommentDao>();
+            container.RegisterSingleton<IPermissionService, PermissionService>();
+            container.RegisterSingleton<IPermissionDao, PermissionDao>();
+            container.RegisterSingleton<ICommentTreeBuilder, CommentTreeBuilder>();
+            container.RegisterSingleton<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
+            container.RegisterSingleton<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
+            container.RegisterSingleton<ICommentWrapper, CommentWrapper>();
+            container.RegisterSingleton<IPostWrapper, PostWrapper>();
+            container.RegisterSingleton<ISubWrapper, SubWrapper>();
+            container.RegisterSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
         }
 
         public int Order

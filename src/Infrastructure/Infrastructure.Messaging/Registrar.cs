@@ -12,8 +12,8 @@ namespace Infrastructure.Messaging
     {
         public void Register(SimpleInjector.Container container)
         {
-            container.RegisterSingle<IEventDiscovery, EventDiscovery>();
-            container.RegisterSingle<ICommandDiscovery, CommandDiscovery>();
+            container.RegisterSingleton<IEventDiscovery, EventDiscovery>();
+            container.RegisterSingleton<ICommandDiscovery, CommandDiscovery>();
         }
 
         public int Order

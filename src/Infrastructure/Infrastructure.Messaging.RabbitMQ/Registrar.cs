@@ -11,7 +11,7 @@ namespace Infrastructure.Messaging.RabbitMQ
     {
         public void Register(Container container)
         {
-            container.RegisterSingle(() =>
+            container.RegisterSingleton(() =>
             {
                 LicenseUtils.RegisterLicense("2283-e1JlZjoyMjgzLE5hbWU6TWVkWENoYW5nZSxUeXBlOkluZGllLEhhc2g6TU" +
                 "FyaTVzNGdQcEdlc0pqd1ZIUXVlL0lacDBZcCt3TkFLY0UyMTlJblBuMzRLNWFRb" +
@@ -24,9 +24,9 @@ namespace Infrastructure.Messaging.RabbitMQ
                 if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
                 return new RabbitMqServer(rabbitMqHost);
             });
-            container.RegisterSingle<ICommandBus, CommandBus>();
-            container.RegisterSingle<IEventBus, EventBus>();
-            container.RegisterSingle<IBusLifetime, BusLifetime>();
+            container.RegisterSingleton<ICommandBus, CommandBus>();
+            container.RegisterSingleton<IEventBus, EventBus>();
+            container.RegisterSingleton<IBusLifetime, BusLifetime>();
         }
 
         public int Order
