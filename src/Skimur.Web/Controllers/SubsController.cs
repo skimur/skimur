@@ -432,7 +432,10 @@ namespace Skimur.Web.Controllers
                 sub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
                 if (sub == null) throw new HttpException(404, "sub not found");
             }
-            
+
+            // this prevents the case of the url "{subName}" to override the "SubName" property of the view model.
+            ModelState.Clear();
+
             return View(new CreatePostModel
             {
                 SubName = sub != null ? sub.Sub.Name : null,

@@ -2,7 +2,8 @@
 
     var toggleSubscription = function (button, subName) {
 
-
+        if (!skimurui.login.checkLoggedIn("You must be logged in to subscribe."))
+            return;
 
         var $button = $(button);
 

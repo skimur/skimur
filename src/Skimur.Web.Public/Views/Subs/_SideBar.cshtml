@@ -3,13 +3,22 @@
 @Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub))
 
 @*Let's only show the submit buttons if we are not on the submit page.*@
-@if (!(Context.Request.RequestContext.RouteData.Values["controller"].Equals("subs") && Context.Request.RequestContext.RouteData.Values["action"].Equals("createpost")))
+@if (!(Context.Request.RequestContext.RouteData.Values["controller"].Equals("Subs") && Context.Request.RequestContext.RouteData.Values["action"].Equals("CreatePost")))
 {
     <div class="panel">
         <a href="@Url.CreatePost(Model.CurrentSub != null ? Model.CurrentSub.Sub.Name : null)" class="btn btn-primary btn-block submit-link"><span class="fa fa-external-link"></span> Share a link</a>
         <a href="@Url.CreatePost(Model.CurrentSub != null ? Model.CurrentSub.Sub.Name : null)" class="btn btn-primary btn-block submit-post"><span class="fa fa-pencil-square-o"></span> Discuss</a>
     </div>
 }
+
+@if (Model.CurrentSub != null)
+{
+    <div class="sub-info">
+        <h1 class="sub-name">@Model.CurrentSub.Sub.Name</h1>
+        <a onclick="javascript:skimurui.subs.toggleSubscription(this, '@Model.CurrentSub.Sub.Name');" class="btn btn-default btn-sub @(Model.CurrentSub.IsSubscribed ? "subscribed" : "unsubscribed")">@(Model.CurrentSub.IsSubscribed ? "subscribed" : "unsubscribed")</a>
+    </div>
+}
+
 @if (Model.CurrentSub != null)
 {
     if (Model.IsModerator)

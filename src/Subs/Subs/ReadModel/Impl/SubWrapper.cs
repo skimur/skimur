@@ -48,7 +48,7 @@ namespace Subs.ReadModel.Impl
 
         public SubWrapped Wrap(Sub sub, User currentUser = null)
         {
-            return Wrap(new List<Sub> { sub })[0];
+            return Wrap(new List<Sub> { sub }, currentUser)[0];
         }
     }
 }
