@@ -1,7 +1,7 @@
 ﻿
 Microsoft Visual Studio Solution File, Format Version 12.00
-# Visual Studio 2013
-VisualStudioVersion = 12.0.31101.0
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
 MinimumVisualStudioVersion = 10.0.40219.1
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Infrastructure", "Infrastructure", "{0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}"
 EndProject
@@ -49,6 +49,8 @@ EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subs.Tests", "Subs\Subs.Tests\Subs.Tests.csproj", "{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29}"
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skimur.Markdown", "Skimur.Markdown\Skimur.Markdown.csproj", "{6E215BD9-7494-4C84-AF04-5E700CE945B8}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Caching", "Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj", "{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}"
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -120,6 +122,10 @@ Global
 		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6E215BD9-7494-4C84-AF04-5E700CE945B8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -140,5 +146,6 @@ Global
 		{6BBA359C-8CFF-4E55-A5C2-6ECBD2B1B6F5} = {0AC61F9B-CDDD-42E1-8FCD-378359A38975}
 		{EFFE72CE-DA71-40DA-A082-C76F24083687} = {20FC42D2-5944-4CAA-B1D6-AFF34174C386}
 		{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29} = {8BBD123F-1480-40B9-8306-5F1C81497E80}
+		{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
 	EndGlobalSection
 EndGlobal

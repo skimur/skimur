@@ -131,6 +131,10 @@
     <Compile Include="Vote.cs" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
+      <Project>{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}</Project>
+      <Name>Infrastructure.Caching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Membership\Infrastructure.Membership.csproj">
       <Project>{DE3DDE25-3119-4BAE-8422-D387C2A86FA3}</Project>
       <Name>Infrastructure.Membership</Name>

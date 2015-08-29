@@ -8,6 +8,7 @@ namespace Subs.Worker.Cons
         static void Main(string[] args)
         {
             Skimur.SkimurContext.Initialize(new Infrastructure.Registrar(),
+                new Infrastructure.Caching.Registrar(),
                 new Infrastructure.Membership.Registrar(),
                 new Infrastructure.Email.Registrar(),
                 new Infrastructure.Messaging.Registrar(),

@@ -416,6 +416,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
+      <Project>{9aef4e4b-8584-4a15-91a2-9bdb05a4ec1a}</Project>
+      <Name>Infrastructure.Caching</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.Email\Infrastructure.Email.csproj">
       <Project>{09714176-2e5c-4343-ae4f-92703a570eae}</Project>
       <Name>Infrastructure.Email</Name>
