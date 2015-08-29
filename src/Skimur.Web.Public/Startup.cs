@@ -40,6 +40,7 @@ namespace Skimur.Web.Public
         public void ConfigureContainer()
         {
             SkimurContext.Initialize(new Infrastructure.Registrar(),
+                new Infrastructure.Settings.Registrar(),
                 new Infrastructure.Caching.Registrar(),
                 new Infrastructure.Membership.Registrar(),
                 new Infrastructure.Email.Registrar(),

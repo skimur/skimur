@@ -1,5 +1,6 @@
 ﻿using System;
 using Infrastructure.Messaging;
+using Skimur;
 
 namespace Subs.Worker.Cons
 {
@@ -7,7 +8,8 @@ namespace Subs.Worker.Cons
     {
         static void Main(string[] args)
         {
-            Skimur.SkimurContext.Initialize(new Infrastructure.Registrar(),
+            SkimurContext.Initialize(new Infrastructure.Registrar(),
+                new Infrastructure.Settings.Registrar(),
                 new Infrastructure.Caching.Registrar(),
                 new Infrastructure.Membership.Registrar(),
                 new Infrastructure.Email.Registrar(),
@@ -16,8 +18,8 @@ namespace Subs.Worker.Cons
                 new Skimur.Markdown.Registrar(),
                 new Subs.Registrar(),
                 new Registrar());
-
-            using (Skimur.SkimurContext.Resolve<IBusLifetime>())
+            
+            using (SkimurContext.Resolve<IBusLifetime>())
             {
                 Console.WriteLine("Press enter to end process...");
                 Console.ReadLine();

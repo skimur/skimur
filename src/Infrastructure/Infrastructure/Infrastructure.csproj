@@ -68,6 +68,7 @@
     <Reference Include="System" />
     <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -84,7 +85,9 @@
     <Compile Include="Email\IEmailSender.cs" />
     <Compile Include="IAggregateRoot.cs" />
     <Compile Include="IMapper.cs" />
+    <Compile Include="IPathResolver.cs" />
     <Compile Include="Mapper.cs" />
+    <Compile Include="PathResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="Utils\GuidUtil.cs" />

@@ -14,6 +14,7 @@ namespace Infrastructure
             container.RegisterSingleton<IConnectionStringProvider, ConnectionStringProvider>();
             container.RegisterSingleton<IDbConnectionProvider, SqlConnectionProvider>();
             container.RegisterSingleton<IEmailSender, EmailSender>();
+            container.RegisterSingleton<IPathResolver, PathResolver>();
         }
 
         public int Order { get { return 0; } }
