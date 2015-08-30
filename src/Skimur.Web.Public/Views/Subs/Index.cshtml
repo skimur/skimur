@@ -35,7 +35,7 @@
     <div class="col-lg-3 col-sm-4">
 
         <div class="panel">
-            @Html.ActionLink("Create a sub", "Create", null, new { @class = "btn btn-primary btn-block" })
+            <a href="@Url.CreateSub()" class="btn btn-primary btn-block createsub-post"><span class="fa fa-pencil-square-o"></span> Create sub</a>
         </div>
 
         <div class="panel">
@@ -50,7 +50,6 @@
 </div>
 
 @section scripts
-{
     <script type="text/javascript">
         $(function () {
             $("#subQuerySearch").click(function (e) {

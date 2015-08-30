@@ -50,5 +50,9 @@ namespace Skimur.Web.Models
         public bool IsModerator { get; set; }
 
         public List<User> Moderators { get; set; }
+
+        public bool ShowSubmit { get; set; }
+
+        public bool ShowCreateSub { get; set; }
     }
 }

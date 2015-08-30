@@ -1,19 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Diagnostics;
 using System.Linq;
-using System.Timers;
 using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
 using Infrastructure.Membership;
 using Infrastructure.Messaging;
-using Infrastructure.Utils;
+using Infrastructure.Settings;
 using Skimur.Web.Models;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
-using Subs.Services;
 
 namespace Skimur.Web.Controllers
 {
@@ -34,6 +31,7 @@ namespace Skimur.Web.Controllers
         private readonly ISubWrapper _subWrapper;
         private readonly ICommentWrapper _commentWrapper;
         private readonly IMembershipService _membershipService;
+        private readonly ISettingsProvider<SubSettings> _subSettings;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -49,7 +47,8 @@ namespace Skimur.Web.Controllers
             IPostWrapper postWrapper,
             ISubWrapper subWrapper,
             ICommentWrapper commentWrapper,
-            IMembershipService membershipService)
+            IMembershipService membershipService,
+            ISettingsProvider<SubSettings> subSettings)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -66,6 +65,7 @@ namespace Skimur.Web.Controllers
             _subWrapper = subWrapper;
             _commentWrapper = commentWrapper;
             _membershipService = membershipService;
+            _subSettings = subSettings;
         }
 
         public ActionResult Index(string query)
@@ -815,6 +815,11 @@ namespace Skimur.Web.Controllers
         {
             var model = new SidebarViewModel();
 
+            var currentUser = _userContext.CurrentUser;
+
+            var currentController = (string)Request.RequestContext.RouteData.Values["controller"];
+            var currentAction = (string)Request.RequestContext.RouteData.Values["action"];
+
             if (subId.HasValue)
                 model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubById(subId.Value), _userContext.CurrentUser);
             else if (!string.IsNullOrEmpty(subName))
@@ -830,6 +835,18 @@ namespace Skimur.Web.Controllers
                     model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
             }
 
+            if (currentController.Equals("Subs") && currentAction.Equals("CreatePost"))
+                model.ShowSubmit = false;
+            else
+                model.ShowSubmit = true;
+
+            if (currentUser != null)
+            {
+                var age = Common.CurrentTime() - currentUser.CreatedDate;
+                if (currentUser.IsAdmin || age.TotalDays >= _subSettings.Settings.MinUserAgeCreateSub)
+                    model.ShowCreateSub = true;
+            }
+            
             return PartialView("_SideBar", model);
         }
     }

@@ -2,12 +2,18 @@
 
 @Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub))
 
-@*Let's only show the submit buttons if we are not on the submit page.*@
-@if (!(Context.Request.RequestContext.RouteData.Values["controller"].Equals("Subs") && Context.Request.RequestContext.RouteData.Values["action"].Equals("CreatePost")))
+@if (Model.ShowSubmit || Model.ShowCreateSub)
 {
     <div class="panel">
-        <a href="@Url.CreatePost(Model.CurrentSub != null ? Model.CurrentSub.Sub.Name : null)" class="btn btn-primary btn-block submit-link"><span class="fa fa-external-link"></span> Share a link</a>
-        <a href="@Url.CreatePost(Model.CurrentSub != null ? Model.CurrentSub.Sub.Name : null)" class="btn btn-primary btn-block submit-post"><span class="fa fa-pencil-square-o"></span> Discuss</a>
+        @if (Model.ShowSubmit)
+        {
+            <a href="@Url.CreatePost(Model.CurrentSub != null ? Model.CurrentSub.Sub.Name : null)" class="btn btn-primary btn-block submit-link"><span class="fa fa-external-link"></span> Share a link</a>
+            <a href="@Url.CreatePost(Model.CurrentSub != null ? Model.CurrentSub.Sub.Name : null)" class="btn btn-primary btn-block submit-post"><span class="fa fa-pencil-square-o"></span> Discuss</a>
+        }
+        @if (Model.ShowCreateSub)
+        {
+            <a href="@Url.CreateSub()" class="btn btn-primary btn-block createsub-post"><span class="fa fa-pencil-square-o"></span> Create sub</a>
+        }
     </div>
 }
 

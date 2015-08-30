@@ -335,6 +335,7 @@
     <Content Include="Views\Policies\ContentPolicy.cshtml" />
     <Content Include="Views\Policies\_HeaderNav.cshtml" />
     <Content Include="Views\Shared\_Analytics.cshtml" />
+    <Content Include="Settings\SubSettings.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
