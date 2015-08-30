@@ -54,5 +54,9 @@ namespace Skimur.Web.Models
         public bool ShowSubmit { get; set; }
 
         public bool ShowCreateSub { get; set; }
+
+        public bool CanCreateSub { get; set; }
+        
+        public bool ShowSearch { get; set; }
     }
 }

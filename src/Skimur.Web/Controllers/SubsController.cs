@@ -810,16 +810,16 @@ namespace Skimur.Web.Controllers
                 error = (string)null
             });
         }
-
-        public ActionResult SideBar(string subName, Guid? subId)
+        
+        public ActionResult SideBar(string subName, Guid? subId, bool showSearch = true, bool showCreateSub = true, bool showSubmit = true)
         {
             var model = new SidebarViewModel();
+            model.ShowSearch = showSearch;
+            model.ShowCreateSub = showCreateSub;
+            model.ShowSubmit = showSubmit;
 
             var currentUser = _userContext.CurrentUser;
-
-            var currentController = (string)Request.RequestContext.RouteData.Values["controller"];
-            var currentAction = (string)Request.RequestContext.RouteData.Values["action"];
-
+            
             if (subId.HasValue)
                 model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubById(subId.Value), _userContext.CurrentUser);
             else if (!string.IsNullOrEmpty(subName))
@@ -835,16 +835,14 @@ namespace Skimur.Web.Controllers
                     model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
             }
 
-            if (currentController.Equals("Subs") && currentAction.Equals("CreatePost"))
-                model.ShowSubmit = false;
-            else
-                model.ShowSubmit = true;
-
-            if (currentUser != null)
+            if (model.ShowCreateSub)
             {
-                var age = Common.CurrentTime() - currentUser.CreatedDate;
-                if (currentUser.IsAdmin || age.TotalDays >= _subSettings.Settings.MinUserAgeCreateSub)
-                    model.ShowCreateSub = true;
+                if (currentUser != null)
+                {
+                    var age = Common.CurrentTime() - currentUser.CreatedDate;
+                    if (currentUser.IsAdmin || age.TotalDays >= _subSettings.Settings.MinUserAgeCreateSub)
+                        model.CanCreateSub = true;
+                }
             }
             
             return PartialView("_SideBar", model);

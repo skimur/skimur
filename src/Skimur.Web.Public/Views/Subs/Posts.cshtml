@@ -84,13 +84,6 @@
         }
     </div>
     <div class="col-lg-3 col-sm-4">
-        @if (Model.Sub != null)
-        {
-            @Html.Action("SideBar", new { subId = Model.Sub.Sub.Id })
-        }
-        else
-        {
-            @Html.Action("SideBar")
-        }
+        @{Html.RenderSideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null);}
     </div>
 </div>

@@ -6,7 +6,7 @@
     @if (Request.IsAuthenticated)
     {
         // only show sidebar of subscribed subs if authenticated
-        @Html.Action("SideBar", "Subs")
+        @{Html.RenderSideBar();}
     }
     <div id="page-content-wrapper">
         <div class="container-fluid">
