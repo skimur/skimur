@@ -1,6 +1,6 @@
 ﻿@model SidebarViewModel
 
-@Html.Partial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub))
+@if(Model.ShowSearch) { Html.RenderPartial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub)); }
 
 @if (Model.ShowSubmit || Model.ShowCreateSub)
 {
