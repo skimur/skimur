@@ -1,6 +1,6 @@
 ﻿@model SidebarViewModel
 
-@if(Model.ShowSearch) { Html.RenderPartial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub)); }
+@if (Model.ShowSearch) { Html.RenderPartial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub)); }
 
 @if (Model.ShowSubmit || Model.ShowCreateSub)
 {
@@ -22,6 +22,7 @@
     <div class="sub-info">
         <h1 class="sub-name">@Model.CurrentSub.Sub.Name</h1>
         <a onclick="javascript:skimurui.subs.toggleSubscription(this, '@Model.CurrentSub.Sub.Name');" class="btn btn-default btn-sub @(Model.CurrentSub.IsSubscribed ? "subscribed" : "unsubscribed")">@(Model.CurrentSub.IsSubscribed ? "subscribed" : "unsubscribed")</a>
+        <span class="sub-scribers"><span class="number">@Model.CurrentSub.NumberOfSubscribers.ToString("n0")</span> <span class="word">readers</span></span>
     </div>
 }
 
