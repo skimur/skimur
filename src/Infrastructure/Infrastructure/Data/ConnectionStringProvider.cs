@@ -25,14 +25,14 @@ namespace Infrastructure.Data
         /// </summary>
         public ConnectionStringProvider()
         {
-            var connection = System.Configuration.ConfigurationManager.ConnectionStrings["Skimur"];
+            var connection = System.Configuration.ConfigurationManager.AppSettings["Postgres"];
 
             if(connection == null) return;
 
-            if (string.IsNullOrEmpty(connection.ConnectionString))
+            if (string.IsNullOrEmpty(connection))
                 return;
 
-            _connectionString = connection.ConnectionString == "registry" ? GetConnectionStringFromRegistry() : connection.ConnectionString;
+            _connectionString = connection == "registry" ? GetConnectionStringFromRegistry() : connection;
         }
 
         #endregion
