@@ -1,4 +1,5 @@
-﻿using Infrastructure.Settings;
+﻿using System;
+using Infrastructure.Settings;
 
 namespace Subs
 {
@@ -6,9 +7,12 @@ namespace Subs
     {
         public SubSettings()
         {
-            MinUserAgeCreateSub = 30;
+            MinUserAgeCreateSub = 0;
+            ActivityExpirationSeconds = 10;
         }
 
         public int MinUserAgeCreateSub { get; set; }
+
+        public int ActivityExpirationSeconds { get; set; }
     }
 }

@@ -11,6 +11,7 @@ using Skimur.Web.Models;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
+using Subs.Services;
 
 namespace Skimur.Web.Controllers
 {
@@ -32,6 +33,7 @@ namespace Skimur.Web.Controllers
         private readonly ICommentWrapper _commentWrapper;
         private readonly IMembershipService _membershipService;
         private readonly ISettingsProvider<SubSettings> _subSettings;
+        private readonly ISubActivityService _subActivityService;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -48,7 +50,8 @@ namespace Skimur.Web.Controllers
             ISubWrapper subWrapper,
             ICommentWrapper commentWrapper,
             IMembershipService membershipService,
-            ISettingsProvider<SubSettings> subSettings)
+            ISettingsProvider<SubSettings> subSettings,
+            ISubActivityService subActivityService)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -66,6 +69,7 @@ namespace Skimur.Web.Controllers
             _commentWrapper = commentWrapper;
             _membershipService = membershipService;
             _subSettings = subSettings;
+            _subActivityService = subActivityService;
         }
 
         public ActionResult Index(string query)
@@ -126,6 +130,9 @@ namespace Skimur.Web.Controllers
 
                 if (sub == null)
                     return Redirect(Url.Subs(name));
+
+                if(_userContext.CurrentUser != null)
+                    _subActivityService.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
 
                 subs.Add(sub.Id);
             }
@@ -833,6 +840,8 @@ namespace Skimur.Web.Controllers
                 if (!model.IsModerator)
                     // we only show list of mods if the requesting user is not a mod of this sub
                     model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
+
+                model.NumberOfActiveUsers = _subActivityService.GetActiveNumberOfUsersForSub(model.CurrentSub.Sub.Id);
             }
 
             if (model.ShowCreateSub)

@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using SimpleInjector;
 
@@ -9,6 +10,8 @@ namespace Skimur
         private static Container _container;
         private static object _lock = new object();
 
+        public static event Action<Container> ContainerInitialized = delegate { };
+
         public static void Initialize(params IRegistrar[] registrars)
         {
             lock (_lock)
@@ -17,9 +20,8 @@ namespace Skimur
                 _container = new Container();
                 _container.Options.AllowOverridingRegistrations = true;
                 foreach (var registrar in registrars.OrderBy(x => x.Order))
-                {
                     registrar.Register(_container);
-                }
+                ContainerInitialized(_container);
             }
         }
 

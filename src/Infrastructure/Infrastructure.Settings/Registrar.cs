@@ -8,7 +8,6 @@ namespace Infrastructure.Settings
     {
         public void Register(SimpleInjector.Container container)
         {
-            var o = new object();
             container.RegisterSingleton(typeof (ISettingsProvider<>), typeof (JsonFileSettingsProvider<>));
         }
 

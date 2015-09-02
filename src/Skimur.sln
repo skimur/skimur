@@ -54,6 +54,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Caching", "I
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Settings", "Infrastructure\Infrastructure.Settings\Infrastructure.Settings.csproj", "{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Cassandra", "Infrastructure\Infrastructure.Cassandra\Infrastructure.Cassandra.csproj", "{85E9DA82-E70C-48D6-B95E-37343A0A2349}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Logging", "Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj", "{BBE64678-393A-46E3-996F-99314FEB68EE}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -132,6 +136,14 @@ Global
 		{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF}.Release|Any CPU.Build.0 = Release|Any CPU
+		{85E9DA82-E70C-48D6-B95E-37343A0A2349}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{85E9DA82-E70C-48D6-B95E-37343A0A2349}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{85E9DA82-E70C-48D6-B95E-37343A0A2349}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{85E9DA82-E70C-48D6-B95E-37343A0A2349}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BBE64678-393A-46E3-996F-99314FEB68EE}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BBE64678-393A-46E3-996F-99314FEB68EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BBE64678-393A-46E3-996F-99314FEB68EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BBE64678-393A-46E3-996F-99314FEB68EE}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -154,5 +166,7 @@ Global
 		{65D7CBD0-84AC-42E8-979D-4FE7EAE7FA29} = {8BBD123F-1480-40B9-8306-5F1C81497E80}
 		{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
 		{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
+		{85E9DA82-E70C-48D6-B95E-37343A0A2349} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
+		{BBE64678-393A-46E3-996F-99314FEB68EE} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
 	EndGlobalSection
 EndGlobal

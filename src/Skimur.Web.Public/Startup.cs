@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using BundleTransformer.Core.Transformers;
+using Infrastructure.Cassandra.Migrations;
 using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
@@ -39,6 +40,7 @@ namespace Skimur.Web.Public
 
         public void ConfigureContainer()
         {
+            SkimurContext.ContainerInitialized += Migrations.Run;
             SkimurContext.Initialize(new Infrastructure.Registrar(),
                 new Infrastructure.Settings.Registrar(),
                 new Infrastructure.Caching.Registrar(),
@@ -46,6 +48,8 @@ namespace Skimur.Web.Public
                 new Infrastructure.Email.Registrar(),
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
+                new Infrastructure.Cassandra.Registrar(),
+                new Infrastructure.Logging.Registrar(),
                 new Registrar(),
                 new Markdown.Registrar(),
                 new Subs.Registrar(),

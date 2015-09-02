@@ -47,6 +47,8 @@ namespace Skimur.Web.Models
     {
         public SubWrapped CurrentSub { get; set; }
         
+        public int? NumberOfActiveUsers { get; set; }
+
         public bool IsModerator { get; set; }
 
         public List<User> Moderators { get; set; }

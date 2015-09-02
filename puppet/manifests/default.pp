@@ -36,7 +36,7 @@ node skimurcassandra {
 
 node skimurdev {
 
-  # class { 'skimur::cassandra': }
+  class { 'skimur::cassandra': }
   class { 'skimur::postgres': }
   class { 'skimur::rabbitmq': }
   class { 'skimur::redis': }

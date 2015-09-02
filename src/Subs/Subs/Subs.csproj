@@ -30,6 +30,14 @@
     <WarningLevel>4</WarningLevel>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cassandra, Version=2.6.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\CassandraCSharpDriver.2.6.0\lib\net40\Cassandra.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LZ4, Version=1.0.5.93, Culture=neutral, PublicKeyToken=fd2bda0a70c5a705, processorArchitecture=MSIL">
+      <HintPath>..\..\packages\lz4net.1.0.5.93\lib\net40-client\LZ4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="ServiceStack.Common, Version=4.0.42.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\..\packages\ServiceStack.Common.4.0.42\lib\net40\ServiceStack.Common.dll</HintPath>
       <Private>True</Private>
@@ -73,6 +81,7 @@
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <None Include="CommentBuilder.cs" />
     <Compile Include="Commands\UpdateUserSubBan.cs" />
+    <Compile Include="Db\Cassandra\Migrations\_0001_SubActivityMigration.cs" />
     <Compile Include="Events\CommentDeleted.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
@@ -97,8 +106,10 @@
     <Compile Include="ReadModel\ICommentNodeHierarchyBuilder.cs" />
     <Compile Include="Services\ICommentTreeBuilder.cs" />
     <Compile Include="ReadModel\ICommentTreeContextBuilder.cs" />
+    <Compile Include="Services\ISubActivityService.cs" />
     <Compile Include="Services\ISubUserBanService.cs" />
     <Compile Include="Services\Impl\SubUserBanService.cs" />
+    <Compile Include="Services\Impl\SubActivityService.cs" />
     <Compile Include="Sorting.cs" />
     <Compile Include="Comment.cs" />
     <Compile Include="ReadModel\Impl\CommentDao.cs" />
@@ -135,6 +146,10 @@
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
       <Project>{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}</Project>
       <Name>Infrastructure.Caching</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Cassandra\Infrastructure.Cassandra.csproj">
+      <Project>{85e9da82-e70c-48d6-b95e-37343a0a2349}</Project>
+      <Name>Infrastructure.Cassandra</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Membership\Infrastructure.Membership.csproj">
       <Project>{DE3DDE25-3119-4BAE-8422-D387C2A86FA3}</Project>
