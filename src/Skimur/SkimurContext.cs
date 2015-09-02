@@ -18,7 +18,9 @@ namespace Skimur
             {
                 if (_container != null) throw new Exception("The context was already initialized!");
                 _container = new Container();
-                _container.Options.AllowOverridingRegistrations = true;
+                // Leaving out until SimpleInjector fixes an issue with 3.0.4.
+                // https://github.com/simpleinjector/SimpleInjector/issues/116
+                //_container.Options.AllowOverridingRegistrations = true;
                 foreach (var registrar in registrars.OrderBy(x => x.Order))
                     registrar.Register(_container);
                 ContainerInitialized(_container);

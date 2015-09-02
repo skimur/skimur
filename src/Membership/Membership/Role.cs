@@ -1,7 +1,7 @@
 ﻿using System;
 using ServiceStack.DataAnnotations;
 
-namespace Infrastructure.Membership
+namespace Membership
 {
     [Alias("Roles")]
     public class Role

@@ -8,7 +8,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using ImageResizer;
-using Infrastructure.Membership;
 
 namespace Skimur.Web.Avatar
 {

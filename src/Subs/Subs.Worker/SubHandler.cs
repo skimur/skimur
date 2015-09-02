@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.IO;
-using System.Linq;
-using System.Text;
 using System.Text.RegularExpressions;
-using System.Threading.Tasks;
-using Infrastructure.Membership;
 using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
+using Membership.Services;
 using Skimur;
 using Subs.Commands;
 using Subs.Events;

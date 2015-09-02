@@ -44,7 +44,6 @@ namespace Skimur.Web.Public
             SkimurContext.Initialize(new Infrastructure.Registrar(),
                 new Infrastructure.Settings.Registrar(),
                 new Infrastructure.Caching.Registrar(),
-                new Infrastructure.Membership.Registrar(),
                 new Infrastructure.Email.Registrar(),
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
@@ -55,6 +54,7 @@ namespace Skimur.Web.Public
                 new Markdown.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(), // TODO: split this into separate exe via a build script
+                new Membership.Registrar(),
                 this);
         }
 

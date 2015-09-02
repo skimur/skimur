@@ -1,13 +1,6 @@
-﻿using System;
-using System.CodeDom;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Data;
-using Infrastructure.Membership;
-using Infrastructure.Messaging;
+﻿using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
+using Membership.Services;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;

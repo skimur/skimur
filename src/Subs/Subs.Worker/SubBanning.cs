@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Membership;
 using Infrastructure.Messaging.Handling;
+using Membership.Services;
 using Subs.Commands;
-using Subs.ReadModel;
 using Subs.Services;
 
 namespace Subs.Worker

@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Infrastructure.Membership
+namespace Membership
 {
     public class Login
     {

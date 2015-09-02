@@ -3,7 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using Infrastructure;
-using Infrastructure.Membership;
+using Membership;
+using Membership.Services;
 using Microsoft.AspNet.Identity;
 
 namespace Skimur.Web.Identity

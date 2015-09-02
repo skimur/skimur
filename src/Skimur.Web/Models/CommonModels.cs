@@ -1,10 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Membership;
-using Subs;
+using Membership;
 using Subs.ReadModel;
 
 namespace Skimur.Web.Models

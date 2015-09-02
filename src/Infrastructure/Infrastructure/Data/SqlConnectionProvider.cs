@@ -1,15 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Data;
 using System.Data.Common;
-using System.Data.SqlClient;
-using System.Linq;
-using System.Linq.Expressions;
-using System.Text;
-using System.Threading.Tasks;
+using Npgsql;
 using ServiceStack;
 using ServiceStack.OrmLite;
-using ServiceStack.OrmLite.SqlServer;
 
 namespace Infrastructure.Data
 {
@@ -30,7 +24,7 @@ namespace Infrastructure.Data
 
             OrmLiteConfig.DialectProvider = PostgreSqlDialect.Provider;
             //OrmLiteConfig.DialectProvider.NamingStrategy = new NamingStrategy();
-            _factory = Npgsql.NpgsqlFactory.Instance;
+            _factory = NpgsqlFactory.Instance;
         }
 
         public IDbConnection OpenConnection()

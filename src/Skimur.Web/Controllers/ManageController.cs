@@ -2,8 +2,8 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Infrastructure.Membership;
 using Infrastructure.Utils;
+using Membership.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
 using Skimur.Web.Avatar;

@@ -1,4 +1,4 @@
-﻿using Infrastructure.Membership;
+﻿using Membership;
 
 namespace Skimur.Web
 {

@@ -1,12 +1,13 @@
-﻿using System;
+﻿using Skimur;
+using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Membership.Services;
 using SimpleInjector;
-using Skimur;
 
-namespace Infrastructure.Membership
+namespace Membership
 {
     public class Registrar : IRegistrar
     {
@@ -16,6 +17,9 @@ namespace Infrastructure.Membership
             container.RegisterSingleton<IPasswordManager, PasswordManager>();
         }
 
-        public int Order { get { return 0; } }
+        public int Order
+        {
+            get { return 0; }
+        }
     }
 }

@@ -1,6 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
-using Infrastructure.Membership;
+using Membership;
 using Subs.Services;
 
 namespace Subs.ReadModel

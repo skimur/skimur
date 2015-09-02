@@ -1,9 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Collections.ObjectModel;
 using ServiceStack.DataAnnotations;
 
-namespace Infrastructure.Membership
+namespace Membership
 {
     /// <summary>
     /// Represents a user of the system

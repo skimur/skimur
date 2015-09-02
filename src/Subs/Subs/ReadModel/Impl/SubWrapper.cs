@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Infrastructure.Caching;
-using Infrastructure.Membership;
+using Membership;
 using Skimur;
 
 namespace Subs.ReadModel.Impl

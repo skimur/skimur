@@ -34,10 +34,10 @@ namespace Skimur.Tests
             result.AddRange(new List<IRegistrar>
             {
                 new Infrastructure.Registrar(),
-                new Infrastructure.Membership.Registrar(),
                 new Infrastructure.Email.Registrar(),
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
+                new Membership.Registrar()
             });
 
             return result;

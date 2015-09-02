@@ -1,6 +1,7 @@
 ﻿using System.Web;
-using Infrastructure.Membership;
 using Infrastructure.Utils;
+using Membership;
+using Membership.Services;
 using Microsoft.AspNet.Identity;
 
 namespace Skimur.Web

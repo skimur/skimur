@@ -1,9 +1,6 @@
 ﻿using System;
 using System.Linq;
 using Cassandra;
-using Cassandra.Data.Linq;
-using Cassandra.Mapping;
-using Infrastructure.Membership;
 using Infrastructure.Settings;
 
 namespace Subs.Services.Impl

@@ -1,5 +1,5 @@
 ﻿using System;
-using Infrastructure.Membership;
+using Membership;
 using Microsoft.AspNet.Identity;
 
 namespace Skimur.Web.Identity
