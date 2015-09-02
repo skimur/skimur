@@ -8,6 +8,11 @@ namespace Infrastructure.Postgres.Migrations
         {
             var resources = new MigrationResources();
 
+            var ensureLoaded = Type.GetType("Migrations.Empty, Migrations");
+
+            if(ensureLoaded == null)
+                throw new Exception("Couldn't find the Migrations.dll");
+
             foreach (var assembly in AppDomain.CurrentDomain.GetAssemblies())
             {
                 foreach (var type in assembly.GetTypes())

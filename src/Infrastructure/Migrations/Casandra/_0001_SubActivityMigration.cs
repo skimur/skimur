@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cassandra;
+﻿using Cassandra;
 using Infrastructure.Cassandra.Migrations;
 
-namespace Subs.Db.Cassandra.Migrations
+namespace Migrations.Casandra
 {
     // ReSharper disable once InconsistentNaming
     internal class _0001_SubActivityMigration : Migration

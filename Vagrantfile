@@ -16,8 +16,6 @@ Vagrant.configure("2") do |config|
     dev.vm.network :forwarded_port, guest: 6379, host: 6379, id: "skimurredis"
     dev.vm.network :forwarded_port, guest: 9042, host: 9042, id: "skimurcassandra"
 
-    dev.vm.synced_folder "database", "/database"
-
   end
 
   config.vm.define "postgres", autostart: false do |postgres|
@@ -26,8 +24,6 @@ Vagrant.configure("2") do |config|
 
     postgres.vm.network :private_network, ip: "192.168.10.201"
     postgres.vm.network :forwarded_port, guest: 5656, host: 5656, id: "skimurpostgres"
-
-    postgres.vm.synced_folder "database", "/database"
 
   end
 

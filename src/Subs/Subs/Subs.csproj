@@ -81,7 +81,6 @@
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <None Include="CommentBuilder.cs" />
     <Compile Include="Commands\UpdateUserSubBan.cs" />
-    <Compile Include="Db\Cassandra\Migrations\_0001_SubActivityMigration.cs" />
     <Compile Include="Events\CommentDeleted.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />

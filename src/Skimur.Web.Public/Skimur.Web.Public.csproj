@@ -453,6 +453,10 @@
       <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
       <Name>Infrastructure</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Migrations\Migrations.csproj">
+      <Project>{dda1dcba-4ee4-4d86-9748-02dd9ef1767d}</Project>
+      <Name>Migrations</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Membership\Membership\Membership.csproj">
       <Project>{64ac9cb0-b80b-449a-9c75-fe45f8745fdf}</Project>
       <Name>Membership</Name>
