@@ -8,7 +8,7 @@ namespace Subs
         public SubSettings()
         {
             MinUserAgeCreateSub = 0;
-            ActivityExpirationSeconds = 10;
+            ActivityExpirationSeconds = (int)TimeSpan.FromMinutes(15).TotalSeconds;
         }
 
         public int MinUserAgeCreateSub { get; set; }

@@ -58,6 +58,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Cassandra", 
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Logging", "Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj", "{BBE64678-393A-46E3-996F-99314FEB68EE}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Postgres", "Infrastructure\Infrastructure.Postgres\Infrastructure.Postgres.csproj", "{5183BFB2-2537-465C-B89D-E407B8EE8F13}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -144,6 +146,10 @@ Global
 		{BBE64678-393A-46E3-996F-99314FEB68EE}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{BBE64678-393A-46E3-996F-99314FEB68EE}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{BBE64678-393A-46E3-996F-99314FEB68EE}.Release|Any CPU.Build.0 = Release|Any CPU
+		{5183BFB2-2537-465C-B89D-E407B8EE8F13}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{5183BFB2-2537-465C-B89D-E407B8EE8F13}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{5183BFB2-2537-465C-B89D-E407B8EE8F13}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{5183BFB2-2537-465C-B89D-E407B8EE8F13}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -168,5 +174,6 @@ Global
 		{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
 		{85E9DA82-E70C-48D6-B95E-37343A0A2349} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
 		{BBE64678-393A-46E3-996F-99314FEB68EE} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
+		{5183BFB2-2537-465C-B89D-E407B8EE8F13} = {0C8BBA97-CBA9-47F7-9178-9EC87A16C9A3}
 	EndGlobalSection
 EndGlobal

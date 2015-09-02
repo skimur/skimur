@@ -1,14 +1,10 @@
 ﻿using System;
-using System.CodeDom.Compiler;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cassandra;
-using Infrastructure.Cassandra.Migrations.DB;
+using Infrastructure.Data;
 using Infrastructure.Logging;
+using Infrastructure.Postgres.Migrations.DB;
+using ServiceStack.Caching;
 
-namespace Infrastructure.Cassandra.Migrations
+namespace Infrastructure.Postgres.Migrations
 {
     public class MigrationEngine : IMigrationEngine
     {
@@ -19,13 +15,13 @@ namespace Infrastructure.Cassandra.Migrations
             _logger = logger;
         }
 
-        public bool Execute(ISession session, MigrationResources resources)
+        public bool Execute(IDbConnectionProvider conn, MigrationResources resources)
         {
             _logger.Debug("Initialize database versioner");
-            var versioner = new Versioner(session, new Logger<Version>());
+            var versioner = new Versioner(conn, new Logger<Version>());
 
             _logger.Debug("Initialize executor");
-            var executor = new Executor(session, versioner, new Logger<Executor>());
+            var executor = new Executor(conn, versioner, new Logger<Executor>());
 
             _logger.Debug("Execute migrations");
             return executor.Execute(resources);

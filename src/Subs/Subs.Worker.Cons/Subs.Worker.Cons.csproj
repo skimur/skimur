@@ -86,6 +86,10 @@
       <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>
       <Name>Infrastructure.Messaging</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Postgres\Infrastructure.Postgres.csproj">
+      <Project>{5183bfb2-2537-465c-b89d-e407b8ee8f13}</Project>
+      <Name>Infrastructure.Postgres</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Settings\Infrastructure.Settings.csproj">
       <Project>{88f01eb4-4319-43db-ac7c-7f79be5b15df}</Project>
       <Name>Infrastructure.Settings</Name>

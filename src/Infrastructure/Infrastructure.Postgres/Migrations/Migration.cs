@@ -1,11 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cassandra;
+﻿using Infrastructure.Data;
 
-namespace Infrastructure.Cassandra.Migrations
+namespace Infrastructure.Postgres.Migrations
 {
     public abstract class Migration
     {
@@ -19,7 +14,7 @@ namespace Infrastructure.Cassandra.Migrations
         
         public int Version { get; private set; }
         
-        public abstract void Execute(ISession session);
+        public abstract void Execute(IDbConnectionProvider conn);
         
         public abstract string GetDescription();
     }

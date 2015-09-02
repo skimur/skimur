@@ -18,6 +18,7 @@ namespace Subs.Worker.Cons
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
                 new Infrastructure.Cassandra.Registrar(),
+                new Infrastructure.Postgres.Registrar(),
                 new Infrastructure.Logging.Registrar(),
                 new Skimur.Markdown.Registrar(),
                 new Subs.Registrar(),

@@ -6,19 +6,9 @@ using System.Threading.Tasks;
 
 namespace Infrastructure.Cassandra.Migrations
 {
-    /// <summary>
-    /// Defines type of database migration
-    /// </summary>
     public enum MigrationType : short
     {
-        /// <summary>
-        /// Schema migration
-        /// </summary>
-        Schema = 1,
-
-        /// <summary>
-        /// Data migration
-        /// </summary>
-        Data
+        Data = 0,
+        Schema = 1
     }
 }
