@@ -36,5 +36,10 @@ namespace Subs.ReadModel
 
             _fuzzedNumberOfSubscribers = fuzzed;
         }
+
+        public bool IsNumberOfSubscribersFuzzed
+        {
+            get { return _fuzzedNumberOfSubscribers.HasValue; }
+        }
     }
 }

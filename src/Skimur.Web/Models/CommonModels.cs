@@ -49,7 +49,7 @@ namespace Skimur.Web.Models
         
         public int? NumberOfActiveUsers { get; set; }
 
-        public bool NumberOfActiveUsersFuzzed { get; set; }
+        public bool IsNumberOfActiveUsersFuzzed { get; set; }
 
         public bool IsModerator { get; set; }
 

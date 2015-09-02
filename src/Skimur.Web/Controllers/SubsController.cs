@@ -849,7 +849,7 @@ namespace Skimur.Web.Controllers
                 {
                     bool wasFuzzed;
                     model.NumberOfActiveUsers = _subActivityDao.GetActiveNumberOfUsersForSubFuzzed(model.CurrentSub.Sub.Id, out wasFuzzed);
-                    model.NumberOfActiveUsersFuzzed = wasFuzzed;
+                    model.IsNumberOfActiveUsersFuzzed = wasFuzzed;
                 }
             }
 
