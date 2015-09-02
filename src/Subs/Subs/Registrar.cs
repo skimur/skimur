@@ -16,6 +16,7 @@ namespace Subs
         public void Register(SimpleInjector.Container container)
         {
             container.RegisterSingleton<ISubActivityService, SubActivityService>();
+            container.RegisterSingleton<ISubActivityDao, SubActivityDao>();
             container.RegisterSingleton<ISubUserBanService, SubUserBanService>();
             container.RegisterSingleton<ISubUserBanDao, SubUserBanDao>();
             container.RegisterSingleton<ISubService, SubService>();

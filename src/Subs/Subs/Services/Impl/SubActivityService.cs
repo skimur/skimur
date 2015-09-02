@@ -21,7 +21,7 @@ namespace Subs.Services.Impl
             _subSettings = subSettings;
         }
 
-        public void MarkSubActive(Guid userId, Guid subId)
+        public virtual void MarkSubActive(Guid userId, Guid subId)
         {
             if (_insertStatement == null)
                 _insertStatement = _session.Prepare(
@@ -32,7 +32,7 @@ namespace Subs.Services.Impl
             _session.Execute(bound);
         }
 
-        public int GetActiveNumberOfUsersForSub(Guid subId)
+        public virtual int GetActiveNumberOfUsersForSub(Guid subId)
         {
             if (_countStatement == null)
                 _countStatement = _session.Prepare("SELECT COUNT(*) FROM ActivityBySub WHERE subId = ?");

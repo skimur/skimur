@@ -33,7 +33,7 @@ namespace Skimur.Web.Controllers
         private readonly ICommentWrapper _commentWrapper;
         private readonly IMembershipService _membershipService;
         private readonly ISettingsProvider<SubSettings> _subSettings;
-        private readonly ISubActivityService _subActivityService;
+        private readonly ISubActivityDao _subActivityDao;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -51,7 +51,7 @@ namespace Skimur.Web.Controllers
             ICommentWrapper commentWrapper,
             IMembershipService membershipService,
             ISettingsProvider<SubSettings> subSettings,
-            ISubActivityService subActivityService)
+            ISubActivityDao subActivityDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -69,7 +69,7 @@ namespace Skimur.Web.Controllers
             _commentWrapper = commentWrapper;
             _membershipService = membershipService;
             _subSettings = subSettings;
-            _subActivityService = subActivityService;
+            _subActivityDao = subActivityDao;
         }
 
         public ActionResult Index(string query)
@@ -132,7 +132,7 @@ namespace Skimur.Web.Controllers
                     return Redirect(Url.Subs(name));
 
                 if(_userContext.CurrentUser != null)
-                    _subActivityService.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
+                    _subActivityDao.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
 
                 subs.Add(sub.Id);
             }
@@ -841,7 +841,16 @@ namespace Skimur.Web.Controllers
                     // we only show list of mods if the requesting user is not a mod of this sub
                     model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
 
-                model.NumberOfActiveUsers = _subActivityService.GetActiveNumberOfUsersForSub(model.CurrentSub.Sub.Id);
+                // get the number of active users currently viewing this sub.
+                // for normal users, this number may be fuzzed (if low enough) for privacy reasons.
+                if (_userContext.CurrentUser != null && _userContext.CurrentUser.IsAdmin)
+                    model.NumberOfActiveUsers = _subActivityDao.GetActiveNumberOfUsersForSub(model.CurrentSub.Sub.Id);
+                else
+                {
+                    bool wasFuzzed;
+                    model.NumberOfActiveUsers = _subActivityDao.GetActiveNumberOfUsersForSubFuzzed(model.CurrentSub.Sub.Id, out wasFuzzed);
+                    model.NumberOfActiveUsersFuzzed = wasFuzzed;
+                }
             }
 
             if (model.ShowCreateSub)
