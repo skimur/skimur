@@ -75,6 +75,7 @@
     <Compile Include="Casandra\_0001_SubActivityMigration.cs" />
     <Compile Include="Empty.cs" />
     <Compile Include="Postgres\_0001_InitialSchema.cs" />
+    <Compile Include="Postgres\_0002_PostModeration.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

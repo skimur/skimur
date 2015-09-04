@@ -136,8 +136,10 @@
     <Compile Include="Controllers\AvatarController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
+    <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Identity\ApplicationSignInManager.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />

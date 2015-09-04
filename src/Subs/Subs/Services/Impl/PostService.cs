@@ -175,7 +175,7 @@ namespace Subs.Services.Impl
                 return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
-
+        
         public void UpdatePostVotes(Guid postId, int? upVotes, int? downVotes)
         {
             if (downVotes.HasValue || upVotes.HasValue)
@@ -196,6 +196,27 @@ namespace Subs.Services.Impl
                     }
                 });
             }
+        }
+
+        public SeekedList<Guid> GetUnmoderatedPosts(List<Guid> subs = null, int? skip = null, int? take = null)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Post>();
+
+                if (subs != null && subs.Count > 0)
+                    query.Where(x => subs.Contains(x.SubId));
+
+                query.Where(x => x.Verdict == (int)Verdict.None);
+
+                var totalCount = conn.Count(query);
+                
+                query.Skip(skip).Take(take);
+                query.OrderByDescending(x => x.DateCreated);
+                query.SelectExpression = "SELECT \"id\"";
+
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
         }
     }
 }

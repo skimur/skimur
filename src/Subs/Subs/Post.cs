@@ -27,6 +27,13 @@ namespace Subs
 
         public int Type { get; set; }
 
+        [Ignore]
+        public PostType PostType
+        {
+            get { return (PostType)Type; }
+            set { Type = (int)value; }
+        }
+
         public string Title { get; set; }
 
         public string Content { get; set; }
@@ -41,11 +48,19 @@ namespace Subs
 
         public int VoteDownCount { get; set; }
 
+        public int Verdict { get; set; }
+
+        public string VerdictMessage { get; set; }
+
+        public Guid? ApprovedBy { get; set; }
+
+        public Guid? RemovedBy { get; set; }
+        
         [Ignore]
-        public PostType PostType
+        public Verdict PostVerdict
         {
-            get { return (PostType) Type; }
-            set { Type = (int)value; }
+            get { return (Verdict)Verdict; }
+            set { Verdict = (int)value; }
         }
     }
 
@@ -53,5 +68,12 @@ namespace Subs
     {
         Link,
         Text
+    }
+
+    public enum Verdict
+    {
+        None = 0,
+        ModApproved = 1,
+        ModRemoved = 2
     }
 }

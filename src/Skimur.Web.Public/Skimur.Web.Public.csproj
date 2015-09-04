@@ -314,7 +314,7 @@
     <Content Include="Views\Subs\_ModerationSideBar.cshtml" />
     <Content Include="Views\Users\User.cshtml" />
     <Content Include="Views\Subs\_SubDetails.cshtml" />
-    <Content Include="Views\Subs\_Post.cshtml" />
+    <Content Include="Views\Shared\_Post.cshtml" />
     <Content Include="Views\Subs\_SideBarSearch.cshtml" />
     <Content Include="Views\Subs\Search.cshtml" />
     <Content Include="Views\Subs\Post.cshtml" />
@@ -336,6 +336,7 @@
     <Content Include="Views\Policies\_HeaderNav.cshtml" />
     <Content Include="Views\Shared\_Analytics.cshtml" />
     <Content Include="Settings\SubSettings.json" />
+    <Content Include="Views\Posts\Unmoderated.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

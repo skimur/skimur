@@ -12,8 +12,10 @@ namespace Subs.ReadModel
         Post GetPostById(Guid id);
 
         SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
-
+        
         SeekedList<Guid> QueryPosts(string query, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
+
+        SeekedList<Guid> GetUnmoderatedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
     }
 
     public enum PostsSearchSortBy
