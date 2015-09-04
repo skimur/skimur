@@ -1,4 +1,5 @@
 ﻿using System;
+using Membership;
 
 namespace Subs.Services.Impl
 {
@@ -6,34 +7,38 @@ namespace Subs.Services.Impl
     {
         private readonly ISubService _subService;
 
-        public PermissionService(ISubService subService, ICommentService commentService)
+        public PermissionService(ISubService subService)
         {
             _subService = subService;
         }
 
-        public bool CanUserDeleteComment(Guid userId, Comment comment)
+        public bool CanUserDeleteComment(User user, Comment comment)
         {
-            if (comment.AuthorUserId == userId)
+            if (user == null) return false;
+
+            if (comment.AuthorUserId == user.Id)
                 return true;
 
-            // TODO: is user an admin?
-
-            return _subService.CanUserModerateSub(userId, comment.SubId);
+            if (user.IsAdmin) return true;
+            
+            return CanUserModerateSub(user, comment.SubId);
         }
 
-        public bool CanUserMarkCommentAsSpam(Guid userId, Comment comment)
+        public bool CanUserMarkCommentAsSpam(User user, Comment comment)
         {
-            return CanUserModerateSub(userId, comment.SubId);
+            return CanUserModerateSub(user, comment.SubId);
         }
 
-        public bool CanUserMarkPostAsSpam(Guid userId, Post post)
+        public bool CanUserMarkPostAsSpam(User user, Post post)
         {
-            return CanUserModerateSub(userId, post.SubId);
+            return CanUserModerateSub(user, post.SubId);
         }
 
-        public bool CanUserModerateSub(Guid userId, Guid subId)
+        public bool CanUserModerateSub(User user, Guid subId)
         {
-            return _subService.CanUserModerateSub(userId, subId);
+            if (user.IsAdmin) return true;
+
+            return _subService.CanUserModerateSub(user.Id, subId);
         }
     }
 }

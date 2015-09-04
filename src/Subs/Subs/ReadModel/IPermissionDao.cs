@@ -1,15 +1,16 @@
 ﻿using System;
+using Membership;
 
 namespace Subs.ReadModel
 {
     public interface IPermissionDao
     {
-        bool CanUserDeleteComment(Guid userId, Comment comment);
+        bool CanUserDeleteComment(User user, Comment comment);
 
-        bool CanUserMarkCommentAsSpam(Guid userId, Comment comment);
+        bool CanUserMarkCommentAsSpam(User user, Comment comment);
 
-        bool CanUserMarkPostAsSpam(Guid userId, Post post);
+        bool CanUserMarkPostAsSpam(User user, Post post);
 
-        bool CanUserModerateSub(Guid userId, Guid subId);
+        bool CanUserModerateSub(User user, Guid subId);
     }
 }
