@@ -37,6 +37,9 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<BanUserFromSub, BanUserFromSubResponse>, SubBanning>();
             container.Register<ICommandHandlerResponse<UnBanUserFromSub, UnBanUserFromSubResponse>, SubBanning>();
             container.Register<ICommandHandlerResponse<UpdateUserSubBan, UpdateUserSubBanResponse>, SubBanning>();
+
+            container.Register<ICommandHandlerResponse<ApprovePost, ApprovePostResponse>, PostModerationHandler>();
+            container.Register<ICommandHandlerResponse<RemovePost, RemovePostResponse>, PostModerationHandler>();
         }
 
         public int Order

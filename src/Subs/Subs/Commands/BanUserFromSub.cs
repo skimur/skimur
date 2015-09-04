@@ -7,7 +7,7 @@ using Infrastructure.Messaging;
 
 namespace Subs.Commands
 {
-    public class BanUserFromSub : ICommandReturns<BanUserFromSub>, ICommandReturns<BanUserFromSubResponse>
+    public class BanUserFromSub : ICommandReturns<BanUserFromSubResponse>
     {
         public Guid? UserId { get; set; }
 

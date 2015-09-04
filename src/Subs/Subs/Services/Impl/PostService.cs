@@ -94,7 +94,7 @@ namespace Subs.Services.Impl
                     default:
                         throw new Exception("uknown sort");
                 }
-                
+
                 query.SelectExpression = "SELECT \"id\"";
 
                 return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
@@ -114,7 +114,7 @@ namespace Subs.Services.Impl
                     query.Where(x => x.SubId == subId);
                 }
 
-                if(!string.IsNullOrEmpty(text))
+                if (!string.IsNullOrEmpty(text))
                 {
                     query.Where(x => x.Title.Contains(text) || x.Content.Contains(text));
                 }
@@ -169,13 +169,13 @@ namespace Subs.Services.Impl
                     default:
                         throw new Exception("unknown sort");
                 }
-                
+
                 query.SelectExpression = "SELECT \"id\"";
 
                 return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
-        
+
         public void UpdatePostVotes(Guid postId, int? upVotes, int? downVotes)
         {
             if (downVotes.HasValue || upVotes.HasValue)
@@ -210,12 +210,28 @@ namespace Subs.Services.Impl
                 query.Where(x => x.Verdict == (int)Verdict.None);
 
                 var totalCount = conn.Count(query);
-                
+
                 query.Skip(skip).Take(take);
                 query.OrderByDescending(x => x.DateCreated);
                 query.SelectExpression = "SELECT \"id\"";
 
                 return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
+
+        public void ApprovePost(Guid postId, Guid userId)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Post>(new { ApprovedBy = userId, Verdict = (int)Verdict.ModApproved }, x => x.Id == postId);
+            });
+        }
+
+        public void RemovePost(Guid postId, Guid userId)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Post>(new { RemovedBy = userId, Verdict = (int)Verdict.ModRemoved }, x => x.Id == postId);
             });
         }
     }

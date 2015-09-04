@@ -6,8 +6,6 @@
     <title>@ViewBag.Title - Skimur</title>
     @Styles.Render("~/bundles/styles")
     <script type="text/javascript">
-        var skimurui = {};
-        skimurui.isLoggedIn = @Request.IsAuthenticated.ToString().ToLower();
         window.q = [];
         window.$ = function (f) {
             q.push(f);
@@ -41,6 +39,7 @@
     @Scripts.Render("~/bundles/scripts")
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
+        skimurui.isLoggedIn = @Request.IsAuthenticated.ToString().ToLower();
         $.each(q, function(index, f) {
             $(f);
         });

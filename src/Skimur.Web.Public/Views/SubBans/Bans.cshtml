@@ -67,14 +67,14 @@
             dataType: "json",
             success: function (result) {
                 if (!result.success) {
-                    skimur.popupError(result.error);
+                    skimurui.popupError(result.error);
                 } else {
                     $(element).closest(".ban").remove();
-                    skimur.popupSuccess("The user has been unbanned.");
+                    skimurui.popupSuccess("The user has been unbanned.");
                 }
             },
             error: function () {
-                skimur.popupError("There was an error processing your request.");
+                skimurui.popupError("There was an error processing your request.");
             }
         });
     }
@@ -101,13 +101,13 @@
                     dataType: "json",
                     success: function (result) {
                         if (!result.success) {
-                            skimur.popupError(result.error);
+                            skimurui.popupError(result.error);
                         } else {
-                            skimur.popupSuccess("The user has been banned.");
+                            skimurui.popupSuccess("The user has been banned.");
                         }
                     },
                     error: function () {
-                        skimur.popupError("There was an error processing your request.");
+                        skimurui.popupError("There was an error processing your request.");
                     }
                 });
             }
@@ -124,17 +124,17 @@
                 dataType: "json",
                 success: function (result) {
                     if (!result.success) {
-                        skimur.popupError(result.error);
+                        skimurui.popupError(result.error);
                     } else {
                         var $ban = $(result.html);
                         var username = $ban.data("username");
                         $(".ban-" + username).replaceWith($ban);
-                        skimur.popupSuccess("The ban has been updated.");
+                        skimurui.popupSuccess("The ban has been updated.");
                         $("#ban-edit-modal").modal("hide");
                     }
                 },
                 error: function () {
-                    skimur.popupError("There was an error processing your request.");
+                    skimurui.popupError("There was an error processing your request.");
                 }
             });
         });

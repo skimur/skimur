@@ -20,5 +20,9 @@ namespace Subs.Services
         void UpdatePostVotes(Guid postId, int? upVotes, int? downVotes);
 
         SeekedList<Guid> GetUnmoderatedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
+
+        void ApprovePost(Guid postId, Guid userId);
+
+        void RemovePost(Guid postId, Guid userId);
     }
 }

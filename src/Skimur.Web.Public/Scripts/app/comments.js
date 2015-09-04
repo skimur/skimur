@@ -37,7 +37,7 @@
                     votes.html(+votes.html() - 1);
                     $voting.removeClass("voted-up").removeClass("voted-down");
                 } else {
-                    skimur.displayError(result.error);
+                    skimurui.displayError(result.error);
                 }
             });
         } else {
@@ -50,7 +50,7 @@
                     votes.html(+votes.html() + 1 + ($voting.hasClass("voted-down") ? 1 : 0));
                     $voting.addClass("voted-up").removeClass("voted-down");
                 } else {
-                    skimur.displayError(result.error);
+                    skimurui.displayError(result.error);
                 }
             });
         }
@@ -76,7 +76,7 @@
                     votes.html(+votes.html() + 1);
                     $voting.removeClass("voted-up").removeClass("voted-down");
                 } else {
-                    skimur.displayError(result.error);
+                    skimurui.displayError(result.error);
                 }
             });
         } else {
@@ -89,7 +89,7 @@
                     votes.html(+votes.html() - 1 - ($voting.hasClass("voted-up") ? 1 : 0));
                     $voting.removeClass("voted-up").addClass("voted-down");
                 } else {
-                    skimur.displayError(result.error);
+                    skimurui.displayError(result.error);
                 }
             });
         }
@@ -116,7 +116,7 @@
                     if (result.success) {
                         $(result.html).insertAfter($("> .comment-body", comment.comment));
                     } else {
-                        skimur.displayError(result.error);
+                        skimurui.displayError(result.error);
                     }
                 });
             });
@@ -153,7 +153,7 @@
                     if (result.success) {
                         comment.comment.find("> .comment-body").replaceWith($(result.html));
                     } else {
-                        skimur.displayError(result.error);
+                        skimurui.displayError(result.error);
                     }
                 });
             });
@@ -185,13 +185,13 @@
     var deleteComment = function (element) {
         var $comment = getComment(element);
 
-        skimur.confirmDelete(function (result) {
+        skimurui.confirmDelete(function (result) {
             if (result.confirmed) {
                 skimur.deleteComment($comment.data("comment-id"), null, function (deleteResult) {
                     if (deleteResult.success) {
                         $("> .comment-body", $comment).find(".delete, .reply, .edit").remove();
                     } else {
-                        skimur.displayError(deleteResult.error);
+                        skimurui.displayError(deleteResult.error);
                     }
                 });
             }
