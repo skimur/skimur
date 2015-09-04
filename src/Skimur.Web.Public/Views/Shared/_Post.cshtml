@@ -2,7 +2,7 @@
 @using Subs.ReadModel
 @model PostWrapped
 
-<div class="post row" data-post-id="@Model.Post.Id">
+<div class="post row @ApprovedRemovedClass(Model)" data-post-id="@Model.Post.Id">
 
     <div class="post-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
         <span class="up login-required" onclick="return skimurui.posts.voteUp(this)"></span>
@@ -23,10 +23,10 @@
                 </li>
                 @if (Model.CanManagePost)
                 {
-                    <li>
+                    <li class="remove">
                         <a href="javascript:void(0);" onclick="return skimurui.posts.remove(this)" class="delete">remove</a>
                     </li>
-                    <li>
+                    <li class="approve">
                         <a href="javascript:void(0);" onclick="return skimurui.posts.approve(this)" class="delete">approve</a>
                     </li>
                 }
@@ -35,28 +35,43 @@
     </div>
 </div>
 
-@helper DomainLink(PostWrapped post)
+@helper ApprovedRemovedClass(PostWrapped post)
 {
-if (post.Post.PostType == PostType.Link)
-{
-    if (!string.IsNullOrEmpty(post.Post.Domain))
+    if (post.CanManagePost)
     {
-            <a class="post-domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
+        if (post.Post.PostVerdict == Verdict.ModApproved)
+        {
+            @("approved")
+        }
+        else if (post.Post.PostVerdict == Verdict.ModRemoved)
+        {
+            @("removed")
+        }
     }
 }
-else if (post.Post.PostType == PostType.Text)
+
+@helper DomainLink(PostWrapped post)
 {
-        <a class="post-domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
-}
+    if (post.Post.PostType == PostType.Link)
+    {
+        if (!string.IsNullOrEmpty(post.Post.Domain))
+        {
+                <a class="post-domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
+        }
+    }
+    else if (post.Post.PostType == PostType.Text)
+    {
+            <a class="post-domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
+    }
 }
 @helper PostUrl(PostWrapped post)
 {
-if (post.Post.PostType == PostType.Link)
-{
-        @post.Post.Url
-}
-else if (post.Post.PostType == PostType.Text)
-{
-        @Url.Post(post.Sub, post.Post)
-}
+    if (post.Post.PostType == PostType.Link)
+    {
+            @post.Post.Url
+    }
+    else if (post.Post.PostType == PostType.Text)
+    {
+            @Url.Post(post.Sub, post.Post)
+    }
 }

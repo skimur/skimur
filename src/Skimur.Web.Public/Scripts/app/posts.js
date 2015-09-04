@@ -89,6 +89,7 @@
                 skimur.approvePost($post.data("post-id"), function (result) {
                     if (result.success) {
                         skimurui.displaySuccess("The post has been approved.");
+                        $post.removeClass("removed").addClass("approved");
                     } else {
                         skimurui.displayError(result.error);
                     }
@@ -104,6 +105,7 @@
                 skimur.removePost($post.data("post-id"), function (result) {
                     if (result.success) {
                         skimurui.displaySuccess("The post has been removed.");
+                        $post.removeClass("approved").addClass("removed");
                     } else {
                         skimurui.displayError(result.error);
                     }

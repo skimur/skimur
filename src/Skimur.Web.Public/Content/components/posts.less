@@ -80,6 +80,7 @@
         .post-options {
             margin: 0;
             padding: 0;
+            margin-bottom:20px;
             font-size: @font-size-small;
 
             > li {
@@ -98,6 +99,25 @@
             }
 
             list-style-type: none;
+        }
+    }
+
+    &.removed {
+        .post-body {
+            .post-options {
+                .remove {
+                    display:none;
+                }
+            }
+        }
+    }
+    &.approved {
+        .post-body {
+            .post-options {
+                .approve {
+                    display:none;
+                }
+            }
         }
     }
 }
