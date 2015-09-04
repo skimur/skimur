@@ -86,7 +86,7 @@
         var $post = getPost(element);
         skimurui.confirmInfo("Are you sure?", "Yes, approve it!", function (confirmResult) {
             if (confirmResult.confirmed) {
-                skimur.removePost($post.data("post-id"), function (result) {
+                skimur.approvePost($post.data("post-id"), function (result) {
                     if (result.success) {
                         skimurui.displaySuccess("The post has been approved.");
                     } else {

@@ -38,10 +38,10 @@
 
     var confirm = function (type, title, buttonText, callback) {
         swal({
-            title: "Are you sure?",
-            type: "warning",
+            title: title,
+            type: type,
             showCancelButton: true,
-            confirmButtonClass: "btn-danger",
+            confirmButtonClass: "btn-" + type,
             confirmButtonText: buttonText,
             cancelButtonText: "Cancel",
             closeOnConfirm: true,

@@ -98,7 +98,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, ((pageNumber - 1) * pageSize), pageSize);
 
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
@@ -152,7 +152,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, ((pageNumber - 1) * pageSize), pageSize);
 
             var model = new SubPostsModel();
             model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;

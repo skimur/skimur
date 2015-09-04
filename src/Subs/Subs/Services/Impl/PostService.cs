@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
 using System.Linq;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
@@ -32,7 +33,7 @@ namespace Subs.Services.Impl
             return _conn.Perform(conn => conn.SingleById<Post>(id));
         }
 
-        public SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortBy = PostsSortBy.Hot, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        public SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -71,11 +72,14 @@ namespace Subs.Services.Impl
                     query.Where(x => x.DateCreated >= from);
                 }
 
+                if (hideRemovedPosts)
+                    query.Where(x => x.Verdict != (int)Verdict.ModRemoved);
+
                 var totalCount = conn.Count(query);
 
                 query.Skip(skip).Take(take);
 
-                switch (sortBy)
+                switch (sortby)
                 {
                     case PostsSortBy.Hot:
                         query.OrderByExpression = "ORDER BY (hot(vote_up_count, vote_down_count, date_created), date_created) DESC";
