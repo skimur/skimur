@@ -3,10 +3,11 @@
 @model PostWrapped
 
 <div class="post row" data-post-id="@Model.Post.Id">
+
     <div class="post-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
-        <span class="up login-required"></span>
+        <span class="up login-required" onclick="return skimurui.posts.voteUp(this)"></span>
         <span class="votes">@(Model.Post.VoteUpCount - Model.Post.VoteDownCount)</span>
-        <span class="down login-required"></span>
+        <span class="down login-required" onclick="return skimurui.posts.voteDown(this)"></span>
     </div>
     <div class="post-body">
         <div>

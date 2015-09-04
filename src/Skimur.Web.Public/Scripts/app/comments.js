@@ -216,15 +216,3 @@
     };
 
 })();
-
-$(function () {
-
-    $.fn.comment = function () {
-        return this.each(function () {
-
-        });
-    };
-
-    $(".comment").comment();
-
-});
