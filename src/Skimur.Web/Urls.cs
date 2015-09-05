@@ -75,7 +75,7 @@ namespace Skimur.Web
         public static string CreatePost(this UrlHelper urlHelper, string subName = null)
         {
             if (!string.IsNullOrEmpty(subName))
-                return urlHelper.RouteUrl("SubmitWithSub", new {subName });
+                return urlHelper.RouteUrl("SubmitWithSub", new { subName });
             return urlHelper.RouteUrl("Submit");
         }
 
@@ -165,6 +165,11 @@ namespace Skimur.Web
                 return urlHelper.Content("~/content/img/avatar.jpg");
 
             return urlHelper.Content("~/avatar/" + avatarIdentifier);
+        }
+
+        public static string Unmoderated(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("SubsUnModerated", new { subName });
         }
     }
 }

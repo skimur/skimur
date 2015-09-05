@@ -102,6 +102,11 @@ namespace Skimur.Web
                defaults: new { controller = "Subs", action = "SearchSub" });
 
             routes.MapRoute(
+                name: "SubsUnmoderated",
+                url: "s/{subName}/details/unmoderated",
+                defaults: new {controller = "Posts", action = "Unmoderated"});
+
+            routes.MapRoute(
                 name: "Post",
                 url: "s/{subName}/post/{id}/{title}",
                 defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });

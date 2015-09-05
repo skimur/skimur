@@ -60,6 +60,19 @@
                 font-size: @font-size-large;
             }
 
+            .post-verdict {
+                &.approved{
+                    color:green;
+                    .fa;
+                    .fa-mixin-icon(check);
+                }
+                &.removed {
+                    color:red;
+                    .fa;
+                    .fa-mixin-icon(ban);
+                }
+            }
+
             .post-domain {
                 font-size: @font-size-small;
                 color: @gray;
@@ -77,7 +90,47 @@
             color: @gray;
         }
 
-        .post-links {
+        .post-options {
+            margin: 0;
+            padding: 0;
+            margin-bottom:20px;
+            font-size: @font-size-small;
+
+            > li {
+                display: inline-block;
+                white-space: nowrap;
+                margin-left: 10px;
+
+                &.first {
+                    margin-left: 0px;
+                }
+
+                a {
+                    color: lighten(@gray, 25%);
+                    font-weight:bold;
+                }
+            }
+
+            list-style-type: none;
+        }
+    }
+
+    &.removed {
+        .post-body {
+            .post-options {
+                .remove {
+                    display:none;
+                }
+            }
+        }
+    }
+    &.approved {
+        .post-body {
+            .post-options {
+                .approve {
+                    display:none;
+                }
+            }
         }
     }
 }

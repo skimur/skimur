@@ -10,7 +10,8 @@ namespace Subs.Worker.Cons
     {
         static void Main(string[] args)
         {
-            SkimurContext.ContainerInitialized += Migrations.Run;
+            SkimurContext.ContainerInitialized += Infrastructure.Cassandra.Migrations.Migrations.Run;
+            SkimurContext.ContainerInitialized += Infrastructure.Postgres.Migrations.Migrations.Run;
             SkimurContext.Initialize(new Infrastructure.Registrar(),
                 new Infrastructure.Settings.Registrar(),
                 new Infrastructure.Caching.Registrar(),

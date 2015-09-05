@@ -1,0 +1,93 @@
+﻿@using Subs
+@using Subs.ReadModel
+@model PostWrapped
+
+<div class="post row @ApprovedRemovedClass(Model)" data-post-id="@Model.Post.Id">
+
+    <div class="post-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+        <span class="up login-required" onclick="return skimurui.posts.voteUp(this)"></span>
+        <span class="votes">@(Model.Post.VoteUpCount - Model.Post.VoteDownCount)</span>
+        <span class="down login-required" onclick="return skimurui.posts.voteDown(this)"></span>
+    </div>
+    <div class="post-body">
+        <div>
+            <p class="post-title">
+                <a class="post-link" href="@PostUrl(Model)">@Model.Post.Title</a> 
+                @if (Model.Verdict.HasValue)
+                {
+                    if (Model.Verdict == Verdict.ModApproved)
+                    {
+                        <span class="post-verdict approved"></span>
+                    }
+                    else if (Model.Verdict == Verdict.ModRemoved)
+                    {
+                        <span class="post-verdict removed"></span>
+                    }
+                    else
+                    {
+                        <span class="post-verdict none"></span>
+                    }
+                }
+                @(DomainLink(Model))
+            </p>
+            <p class="post-meta">
+                Posted @Html.Age(Model.Post.DateCreated) ago  to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
+            </p>
+            <ul class="post-options">
+                <li class="first">
+                    <a href="@Url.Post(Model.Sub, Model.Post)">comments</a>
+                </li>
+                @if (Model.CanManagePost)
+                {
+                    <li class="remove">
+                        <a href="javascript:void(0);" onclick="return skimurui.posts.remove(this)" class="delete">remove</a>
+                    </li>
+                    <li class="approve">
+                        <a href="javascript:void(0);" onclick="return skimurui.posts.approve(this)" class="delete">approve</a>
+                    </li>
+                }
+            </ul>
+        </div>
+    </div>
+</div>
+
+@helper ApprovedRemovedClass(PostWrapped post)
+{
+    if (post.Verdict.HasValue)
+    {
+        if (post.Verdict == Verdict.ModApproved)
+        {
+            @("approved")
+        }
+        else if (post.Verdict == Verdict.ModRemoved)
+        {
+            @("removed")
+        }
+    }
+}
+
+@helper DomainLink(PostWrapped post)
+{
+    if (post.Post.PostType == PostType.Link)
+    {
+        if (!string.IsNullOrEmpty(post.Post.Domain))
+        {
+                <a class="post-domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
+        }
+    }
+    else if (post.Post.PostType == PostType.Text)
+    {
+            <a class="post-domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
+    }
+}
+@helper PostUrl(PostWrapped post)
+{
+    if (post.Post.PostType == PostType.Link)
+    {
+            @post.Post.Url
+    }
+    else if (post.Post.PostType == PostType.Text)
+    {
+            @Url.Post(post.Sub, post.Post)
+    }
+}

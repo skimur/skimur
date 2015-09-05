@@ -78,6 +78,7 @@ namespace Skimur.Web.Public
                 "~/Scripts/bootstrap-notify.js",
                 "~/Scripts/sweet-alert.js",
                 "~/Scripts/app/api.js",
+                "~/Scripts/app/ui.js",
                 "~/Scripts/app/login.js",
                 "~/Scripts/app/misc.js",
                 "~/Scripts/app/comments.js",

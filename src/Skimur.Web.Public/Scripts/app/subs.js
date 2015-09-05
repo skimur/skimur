@@ -18,7 +18,7 @@
                     $button.removeClass("subscribed").addClass("unsubscribed");
                     $button.html("unsubscribed");
                 } else {
-                    skimur.displayError(result.error);
+                    skimurui.displayError(result.error);
                 }
             });
         } else if ($button.hasClass("unsubscribed")) {
@@ -29,7 +29,7 @@
                     $button.removeClass("unsubscribed").addClass("subscribed");
                     $button.html("subscribed");
                 } else {
-                    skimur.displayError(result.error);
+                    skimurui.displayError(result.error);
                 }
             });
         }

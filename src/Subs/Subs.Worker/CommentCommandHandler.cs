@@ -177,7 +177,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_permissionService.CanUserDeleteComment(user.Id, comment))
+                if (!_permissionService.CanUserDeleteComment(user, comment))
                 {
                     response.Error = "You are not allowed to delete this comment.";
                     return response;

@@ -136,8 +136,10 @@
     <Compile Include="Controllers\AvatarController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
+    <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
+    <Compile Include="Exceptions.cs" />
     <Compile Include="HtmlHelpers.cs" />
     <Compile Include="Identity\ApplicationSignInManager.cs" />
     <Compile Include="Identity\ApplicationUserManager.cs" />
@@ -175,6 +177,10 @@
     <ProjectReference Include="..\Infrastructure\Infrastructure.Email\Infrastructure.Email.csproj">
       <Project>{09714176-2E5C-4343-AE4F-92703A570EAE}</Project>
       <Name>Infrastructure.Email</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj">
+      <Project>{bbe64678-393a-46e3-996f-99314feb68ee}</Project>
+      <Name>Infrastructure.Logging</Name>
     </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
       <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>

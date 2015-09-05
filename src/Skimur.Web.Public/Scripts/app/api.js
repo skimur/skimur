@@ -153,65 +153,45 @@
         });
     }
 
-    var displayError = function (message) {
-        $.notify(message, {
-            type: "danger",
-            placement: {
-                align: "center"
-            }
-        });
-    };
-
-    var displaySuccess = function (message) {
-        $.notify(message, {
-            type: "success",
-            placement: {
-                align: "center"
-            }
-        });
-    };
-
-    var popupError = function (title, message) {
-        swal({
-            title: title,
-            text: message,
-            type: "error",
-            confirmButtonText: "Ok"
-        });
-    };
-
-    var popupSuccess = function (title, message) {
-        swal({
-            title: title,
-            text: message,
-            type: "success",
-            confirmButtonText: "Ok"
-        });
-    };
-
-    var confirmDelete = function (callback) {
-        swal({
-            title: "Are you sure?",
-            type: "warning",
-            showCancelButton: true,
-            confirmButtonClass: "btn-danger",
-            confirmButtonText: "Yes, delete it!",
-            cancelButtonText: "Cancel",
-            closeOnConfirm: true,
-            closeOnCancel: true
-        },
-        function (isConfirm) {
-            callback({
-                confirmed: isConfirm
-            });
-        });
-    }
-
     var moreComments = function (postId, sort, children, depth, callback) {
         $.ajax({
             type: "POST",
             url: "/morecomments",
             data: { postId: postId, sort: sort, children: children, depth: depth },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var approvePost = function (postId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/posts/approve",
+            data: { postId: postId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var removePost = function (postId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/posts/remove",
+            data: { postId: postId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -237,12 +217,9 @@
         createComment: createComment,
         editComment: editComment,
         deleteComment: deleteComment,
-        displayError: displayError,
-        displaySuccess: displaySuccess,
-        confirmDelete: confirmDelete,
         moreComments: moreComments,
-        popupError: popupError,
-        popupSuccess : popupSuccess
+        approvePost: approvePost,
+        removePost: removePost
     };
 
 })();

@@ -67,6 +67,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="Commands\ApprovePost.cs" />
     <Compile Include="Commands\BanUserFromSub.cs" />
     <Compile Include="Commands\CastVoteForPost.cs" />
     <Compile Include="Commands\CastVoteForComment.cs" />
@@ -76,6 +77,7 @@
     <Compile Include="Commands\DeleteComment.cs" />
     <Compile Include="Commands\EditComment.cs" />
     <Compile Include="Commands\EditSub.cs" />
+    <Compile Include="Commands\RemovePost.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnBanUserFromSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
