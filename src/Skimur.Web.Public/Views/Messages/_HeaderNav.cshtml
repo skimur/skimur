@@ -1,0 +1,24 @@
+﻿@{
+    var navigationKey = ViewBag.ManageNavigationKey;
+}
+<div class="header-nav">
+    <div class="hidden-xs">
+        <ul class="nav nav-tabs">
+            <li class="@(navigationKey == "compose" ? "active" : null)"><a href="@Url.Compose()">Send a message</a></li>
+            <li class="@(navigationKey == "inbox" ? "active" : null)"><a href="@Url.Inbox()">Inbox</a></li>
+        </ul>
+    </div>
+    <div class="visible-xs-block">
+        <ul class="nav nav-tabs">
+            <li class="dropdown active">
+                <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
+                    @ViewBag.Title <span class="caret"></span>
+                </a>
+                <ul class="dropdown-menu">
+                    <li class="@(navigationKey == "compose" ? "active" : null)"><a href="@Url.Compose()">Send a message</a></li>
+                    <li class="@(navigationKey == "inbox" ? "active" : null)"><a href="@Url.Inbox()">Inbox</a></li>
+                </ul>
+            </li>
+        </ul>
+    </div>
+</div>

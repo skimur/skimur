@@ -20,19 +20,14 @@
     var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
 }
 <body class="@(controller)-@(action)">
-    @Html.Action("TopBar", "Subs")
+    @{ Html.RenderAction("TopBar", "Common"); }
     <div class="layout-header navbar">
         <div class="navbar-header">
-            <a href="/" class="navbar-brand"><img src="/content/img/logo.png" /></a>
+            <a href="/" class="navbar-brand"><img src="/content/img/logo.png"/></a>
             @RenderSection("header", false)
         </div>
         <div class="navbar-collapse collapse">
-            @*<ul class="nav navbar-nav">
-                    <li>@Html.ActionLink("Home", "Index", "Home")</li>
-                    <li>@Html.ActionLink("About", "About", "Home")</li>
-                    <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
-                </ul>*@
-            @Html.Partial("_LoginPartial")
+            @{ Html.RenderAction("Account", "Common");}
         </div>
     </div>
     @RenderBody()
@@ -44,7 +39,7 @@
             $(f);
         });
     </script>
-    @Html.Partial("_Analytics")
-    @Html.Partial("_LoginModal", new LoginViewModel())
+    @{ Html.RenderPartial("_Analytics"); }
+    @{ Html.RenderPartial("_LoginModal", new LoginViewModel()); }
 </body>
 </html>

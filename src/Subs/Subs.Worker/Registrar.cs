@@ -40,6 +40,8 @@ namespace Subs.Worker
 
             container.Register<ICommandHandlerResponse<ApprovePost, ApprovePostResponse>, PostModerationHandler>();
             container.Register<ICommandHandlerResponse<RemovePost, RemovePostResponse>, PostModerationHandler>();
+
+            container.Register<ICommandHandlerResponse<SendMessage, SendMessageResponse>, MessagesHandler>();
         }
 
         public int Order

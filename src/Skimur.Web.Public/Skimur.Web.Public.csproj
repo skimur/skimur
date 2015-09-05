@@ -338,6 +338,12 @@
     <Content Include="Views\Shared\_Analytics.cshtml" />
     <Content Include="Settings\SubSettings.json" />
     <Content Include="Views\Posts\Unmoderated.cshtml" />
+    <Content Include="Views\Messages\Compose.cshtml" />
+    <Content Include="Views\Messages\_HeaderNav.cshtml" />
+    <Content Include="Views\Messages\Inbox.cshtml" />
+    <Content Include="Views\Common\Header.cshtml" />
+    <Content Include="Views\Common\TopBar.cshtml" />
+    <Content Include="Views\Common\Account.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

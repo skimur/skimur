@@ -1,5 +1,6 @@
-﻿@using Microsoft.AspNet.Identity
-@if (Request.IsAuthenticated)
+﻿@model AccountViewModel
+
+@if (Model.CurrentUser != null)
 {
     using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
     {
@@ -7,9 +8,15 @@
 
         <ul class="nav navbar-nav navbar-right">
             <li>
-                @Html.ActionLink("Hello " + User.Identity.GetUserName() + "!", "Index", "Manage", routeValues: null, htmlAttributes: new {title = "Manage"})
+                @Html.ActionLink("Hello " + Model.CurrentUser.UserName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
             </li>
-            <li><a href="@Url.Inbox()">Inbox</a></li>
+            <li><a href="@Url.Inbox()">
+                Inbox
+                @if (Model.NumberOfUnreadMessages > 0)
+                {
+                    <span class="inbox-count">@Model.NumberOfUnreadMessages</span>
+                }
+            </a></li>
             <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
         </ul>
     }

@@ -3,9 +3,11 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using ServiceStack.DataAnnotations;
 
 namespace Subs
 {
+    [Alias("Messages")]
     public class Message
     {
         public Guid Id { get; set; }
@@ -33,5 +35,7 @@ namespace Subs
         public string Subject { get; set; }
 
         public string Body { get; set; }
+
+        public string BodyFormatted { get; set; }
     }
 }

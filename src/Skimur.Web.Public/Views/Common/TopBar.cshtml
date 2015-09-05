@@ -1,0 +1,22 @@
+﻿@model TopBarViewModel
+
+<div class="layout-topbar">
+    <ul>
+        <li>
+            <a href="/">front</a>
+        </li>
+        <li>
+            <a href="/s/all">all</a>
+        </li>
+        <li>
+            <a href="/s/random">random</a>
+        </li>
+        @foreach (var sub in Model.SubscibedSubs)
+        {
+            <li>
+                <a href="@Url.Sub(sub)">@sub</a>
+            </li>
+        }
+    </ul>
+    <a class="topbar-edit" href="@Url.Subs()">Edit</a>
+</div>

@@ -60,4 +60,21 @@ namespace Skimur.Web.Models
         
         public bool ShowSearch { get; set; }
     }
+
+    public class TopBarViewModel
+    {
+        public TopBarViewModel()
+        {
+            SubscibedSubs = new List<string>();
+        }
+
+        public List<string> SubscibedSubs { get; set; }
+    }
+
+    public class AccountViewModel
+    {
+        public User CurrentUser { get; set; }
+
+        public int NumberOfUnreadMessages { get; set; }
+    }
 }

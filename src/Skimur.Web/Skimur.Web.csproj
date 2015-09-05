@@ -135,6 +135,8 @@
     <Compile Include="Avatar\IAvatarService.cs" />
     <Compile Include="Controllers\AvatarController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
+    <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
@@ -154,6 +156,7 @@
     <Compile Include="Models\CommentModels.cs" />
     <Compile Include="Models\CommonModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
+    <Compile Include="Models\MessageModels.cs" />
     <Compile Include="Models\ModerationSideBarModel.cs" />
     <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\SubViewModels.cs" />
@@ -164,6 +167,7 @@
     <Compile Include="Identity\ApplicationIdentityMessageService.cs" />
     <Compile Include="Routes.cs" />
     <Compile Include="Urls.cs" />
+    <Compile Include="Urls.Messages.cs" />
     <Compile Include="Urls.Policies.cs" />
     <Compile Include="UserContext.cs" />
     <Compile Include="Identity\WebUserStore.cs" />

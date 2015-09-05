@@ -8,5 +8,8 @@ namespace Subs.Services
 {
     public interface IMessageService
     {
+        void InsertMessage(Message message);
+
+        int GetNumberOfUnreadMessagesForUser(Guid userId);
     }
 }

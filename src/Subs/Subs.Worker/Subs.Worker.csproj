@@ -44,6 +44,7 @@
   </ItemGroup>
   <ItemGroup>
     <Compile Include="CommentCommandHandler.cs" />
+    <Compile Include="MessagesHandler.cs" />
     <Compile Include="PostModerationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />

@@ -1,0 +1,37 @@
+﻿@model HeaderViewModel
+
+<div class="layout-topbar">
+    <ul>
+        <li>
+            <a href="/">front</a>
+        </li>
+        <li>
+            <a href="/s/all">all</a>
+        </li>
+        <li>
+            <a href="/s/random">random</a>
+        </li>
+        @foreach (var sub in Model.SubscibedSubs)
+        {
+            <li>
+                <a href="@Url.Sub(sub)">@sub</a>
+            </li>
+        }
+    </ul>
+    <a class="topbar-edit" href="@Url.Subs()">Edit</a>
+</div>
+
+<div class="layout-header navbar">
+    <div class="navbar-header">
+        <a href="/" class="navbar-brand"><img src="/content/img/logo.png" /></a>
+        @RenderSection("header", false)
+    </div>
+    <div class="navbar-collapse collapse">
+        @*<ul class="nav navbar-nav">
+                <li>@Html.ActionLink("Home", "Index", "Home")</li>
+                <li>@Html.ActionLink("About", "About", "Home")</li>
+                <li>@Html.ActionLink("Contact", "Contact", "Home")</li>
+            </ul>*@
+        @Html.Partial("_LoginPartial")
+    </div>
+</div>

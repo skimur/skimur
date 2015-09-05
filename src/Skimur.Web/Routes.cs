@@ -104,7 +104,7 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "SubsUnmoderated",
                 url: "s/{subName}/details/unmoderated",
-                defaults: new {controller = "Posts", action = "Unmoderated"});
+                defaults: new { controller = "Posts", action = "Unmoderated" });
 
             routes.MapRoute(
                 name: "Post",
@@ -205,6 +205,16 @@ namespace Skimur.Web
                 name: "SubmitWithSub",
                 url: "s/{subName}/submit",
                 defaults: new { controller = "Subs", action = "CreatePost" });
+
+            routes.MapRoute(
+                name: "MessageCompose",
+                url: "messages/compose",
+                defaults: new { controller = "Messages", action = "Compose" });
+
+            routes.MapRoute(
+                name: "MessageInbox",
+                url: "messages/inbox",
+                defaults: new { controller = "Messages", action = "Inbox" });
 
             routes.MapRoute(
                 name: "Default",
