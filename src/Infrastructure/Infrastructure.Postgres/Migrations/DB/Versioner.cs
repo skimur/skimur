@@ -18,7 +18,16 @@ namespace Infrastructure.Postgres.Migrations.DB
             _logger = logger;
             
             _logger.Debug("Create mapper and table instances");
-            _conn.Perform(conn => conn.CreateTableIfNotExists<DatabaseVersion>());
+            _conn.Perform(conn =>
+            {
+                conn.ExecuteSql(@"CREATE TABLE IF NOT EXISTS database_version
+(
+  type text NOT NULL,
+  version integer NOT NULL,
+  timestamp bigint NOT NULL,
+  description text
+)");
+            });
         }
 
         public int CurrentVersion(MigrationType type)

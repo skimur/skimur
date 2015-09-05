@@ -23,7 +23,7 @@ namespace Infrastructure.Postgres.Migrations
         public bool Execute(MigrationResources resources)
         {
             _logger.Debug("Start executing migrations");
-            return resources.Migrations.All(Execute);
+            return resources.Migrations.OrderBy(x => x.Version).All(Execute);
         }
 
         private bool Execute(Migration migration)
