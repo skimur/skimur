@@ -87,6 +87,7 @@
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
+    <Compile Include="Message.cs" />
     <Compile Include="ReadModel\Impl\CommentNodeHierarchyBuilder.cs" />
     <Compile Include="ReadModel\CommentWrapped.cs" />
     <Compile Include="ReadModel\Impl\CommentWrapper.cs" />
@@ -104,6 +105,7 @@
     <Compile Include="ReadModel\SubUserBanWrapped.cs" />
     <Compile Include="ReadModel\SubWrapped.cs" />
     <Compile Include="ReadModel\Impl\SubWrapper.cs" />
+    <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Services\Impl\CommentTreeBuilder.cs" />
     <Compile Include="ReadModel\CommentTreeContextBuilder.cs" />
     <Compile Include="ReadModel\ICommentNodeHierarchyBuilder.cs" />
