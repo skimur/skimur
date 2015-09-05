@@ -90,6 +90,7 @@
                     if (result.success) {
                         skimurui.displaySuccess("The post has been approved.");
                         $post.removeClass("removed").addClass("approved");
+                        $(".post-verdict", $post).removeClass("removed").addClass("approved");
                     } else {
                         skimurui.displayError(result.error);
                     }
@@ -106,6 +107,7 @@
                     if (result.success) {
                         skimurui.displaySuccess("The post has been removed.");
                         $post.removeClass("approved").addClass("removed");
+                        $(".post-verdict", $post).removeClass("approved").addClass("removed");
                     } else {
                         skimurui.displayError(result.error);
                     }

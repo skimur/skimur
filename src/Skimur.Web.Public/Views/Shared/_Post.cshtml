@@ -12,7 +12,23 @@
     <div class="post-body">
         <div>
             <p class="post-title">
-                <a class="post-link" href="@PostUrl(Model)">@Model.Post.Title</a> @(DomainLink(Model))
+                <a class="post-link" href="@PostUrl(Model)">@Model.Post.Title</a> 
+                @if (Model.Verdict.HasValue)
+                {
+                    if (Model.Verdict == Verdict.ModApproved)
+                    {
+                        <span class="post-verdict approved"></span>
+                    }
+                    else if (Model.Verdict == Verdict.ModRemoved)
+                    {
+                        <span class="post-verdict removed"></span>
+                    }
+                    else
+                    {
+                        <span class="post-verdict none"></span>
+                    }
+                }
+                @(DomainLink(Model))
             </p>
             <p class="post-meta">
                 Posted @Html.Age(Model.Post.DateCreated) ago  to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
@@ -37,13 +53,13 @@
 
 @helper ApprovedRemovedClass(PostWrapped post)
 {
-    if (post.CanManagePost)
+    if (post.Verdict.HasValue)
     {
-        if (post.Post.PostVerdict == Verdict.ModApproved)
+        if (post.Verdict == Verdict.ModApproved)
         {
             @("approved")
         }
-        else if (post.Post.PostVerdict == Verdict.ModRemoved)
+        else if (post.Verdict == Verdict.ModRemoved)
         {
             @("removed")
         }

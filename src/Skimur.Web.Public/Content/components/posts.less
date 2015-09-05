@@ -60,6 +60,19 @@
                 font-size: @font-size-large;
             }
 
+            .post-verdict {
+                &.approved{
+                    color:green;
+                    .fa;
+                    .fa-mixin-icon(check);
+                }
+                &.removed {
+                    color:red;
+                    .fa;
+                    .fa-mixin-icon(ban);
+                }
+            }
+
             .post-domain {
                 font-size: @font-size-small;
                 color: @gray;

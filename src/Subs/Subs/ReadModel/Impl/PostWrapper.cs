@@ -58,6 +58,7 @@ namespace Subs.ReadModel.Impl
                 {
                     // this user can approve/disapprove of a post, mark it NSFW, etc
                     item.CanManagePost = true;
+                    item.Verdict = item.Post.PostVerdict;
                 }
             }
 

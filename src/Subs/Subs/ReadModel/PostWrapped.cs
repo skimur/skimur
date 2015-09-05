@@ -16,6 +16,8 @@ namespace Subs.ReadModel
         public User Author { get; set; }
         
         public VoteType? CurrentUserVote;
+        
+        public Verdict? Verdict { get; set; }
 
         public bool CanManagePost { get; set; }
     }
