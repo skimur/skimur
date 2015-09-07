@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Skimur.Web.Models;
 
 namespace Skimur.Web
 {
@@ -212,9 +213,34 @@ namespace Skimur.Web
                 defaults: new { controller = "Messages", action = "Compose" });
 
             routes.MapRoute(
-                name: "MessageInbox",
+                name: "MessageAll",
                 url: "messages/inbox",
-                defaults: new { controller = "Messages", action = "Inbox" });
+                defaults: new { controller = "Messages", action = "Inbox", type= InboxType.All });
+
+            routes.MapRoute(
+                name: "MessageUnread",
+                url: "messages/unread",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Unread });
+
+            routes.MapRoute(
+                name: "MessagePrivate",
+                url: "messages/messages",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Messages });
+
+            routes.MapRoute(
+                name: "MessageCommentReplies",
+                url: "messages/comments",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.CommentReplies });
+
+            routes.MapRoute(
+                name: "MessagePostReplies",
+                url: "messages/posts",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.PostReplies });
+
+            routes.MapRoute(
+                name: "MessageMentions",
+                url: "messages/mentions",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Mentions });
 
             routes.MapRoute(
                 name: "Default",

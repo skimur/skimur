@@ -38,6 +38,7 @@ namespace Subs
             container.RegisterSingleton<IPostWrapper, PostWrapper>();
             container.RegisterSingleton<ISubWrapper, SubWrapper>();
             container.RegisterSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
+            container.RegisterSingleton<IMessageWrapper, MessageWrapper>();
         }
 
         public int Order

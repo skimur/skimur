@@ -90,11 +90,13 @@
     <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ReadModel\IMessageDao.cs" />
+    <Compile Include="ReadModel\IMessageWrapper.cs" />
     <Compile Include="ReadModel\Impl\CommentNodeHierarchyBuilder.cs" />
     <Compile Include="ReadModel\CommentWrapped.cs" />
     <Compile Include="ReadModel\Impl\CommentWrapper.cs" />
     <Compile Include="ReadModel\ICommentWrapper.cs" />
     <Compile Include="ReadModel\Impl\MessageDao.cs" />
+    <Compile Include="ReadModel\Impl\MessageWrapper.cs" />
     <Compile Include="ReadModel\Impl\SubActivityDao.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanWrapper.cs" />
     <Compile Include="ReadModel\IPostWrapper.cs" />
@@ -102,6 +104,7 @@
     <Compile Include="ReadModel\ISubUserBanDao.cs" />
     <Compile Include="ReadModel\ISubUserBanWrapper.cs" />
     <Compile Include="ReadModel\ISubWrapper.cs" />
+    <Compile Include="ReadModel\MessageWrapped.cs" />
     <Compile Include="ReadModel\PostWrapped.cs" />
     <Compile Include="ReadModel\Impl\PostWrapper.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanDao.cs" />

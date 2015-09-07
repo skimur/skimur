@@ -14,6 +14,8 @@ namespace Subs
         
         public DateTime DateCreated { get; set; }
 
+        public int Type { get; set; }
+
         public Guid? ParentId { get; set; }
 
         public Guid? FirstMessage { get; set; }
@@ -37,5 +39,20 @@ namespace Subs
         public string Body { get; set; }
 
         public string BodyFormatted { get; set; }
+
+        [Ignore]
+        public MessageType MessageType
+        {
+            get { return (MessageType) Type; }
+            set { Type = (int)value; }
+        }
+    }
+
+    public enum MessageType
+    {
+        Private,
+        CommentReply,
+        PostReply,
+        Mention
     }
 }

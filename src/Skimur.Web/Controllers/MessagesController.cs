@@ -8,6 +8,7 @@ using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
 using Subs.Commands;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Controllers
 {
@@ -17,23 +18,69 @@ namespace Skimur.Web.Controllers
         private readonly ICommandBus _commandBus;
         private readonly ILogger<MessagesController> _logger;
         private readonly IUserContext _userContext;
+        private readonly IMessageDao _messageDao;
+        private readonly IMessageWrapper _messageWrapper;
 
-        public MessagesController(ICommandBus commandBus, 
+        public MessagesController(ICommandBus commandBus,
             ILogger<MessagesController> logger,
-            IUserContext userContext)
+            IUserContext userContext,
+            IMessageDao messageDao,
+            IMessageWrapper messageWrapper)
         {
             _commandBus = commandBus;
             _logger = logger;
             _userContext = userContext;
+            _messageDao = messageDao;
+            _messageWrapper = messageWrapper;
         }
 
-        public ActionResult Inbox()
+        public ActionResult Inbox(InboxType type, int? pageNumber, int? pageSize)
         {
             ViewBag.ManageNavigationKey = "inbox";
 
-            // TODO
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
 
-            return View(new InboxViewModel());
+            var skip = (pageNumber - 1)*pageSize;
+            var take = pageSize;
+
+            SeekedList<Guid> messages;
+
+            switch (type)
+            {
+                case InboxType.All:
+                    messages = _messageDao.GetAllMessagesForUser(_userContext.CurrentUser.Id, skip, take);
+                    break;
+                case InboxType.Unread:
+                    messages = _messageDao.GetUnreadMessagesForUser(_userContext.CurrentUser.Id, skip, take);
+                    break;
+                case InboxType.Messages:
+                    messages = _messageDao.GetPrivateMessagesForUser(_userContext.CurrentUser.Id, skip, take);
+                    break;
+                case InboxType.CommentReplies:
+                    messages = _messageDao.GetCommentRepliesForUser(_userContext.CurrentUser.Id, skip, take);
+                    break;
+                case InboxType.PostReplies:
+                    messages = _messageDao.GetPostRepliesForUser(_userContext.CurrentUser.Id, skip, take);
+                    break;
+                case InboxType.Mentions:
+                    messages = _messageDao.GetMentionsForUser(_userContext.CurrentUser.Id, skip, take);
+                    break;
+                default:
+                    throw new Exception("Unknown inbox type");
+            }
+
+            var model = new InboxViewModel();
+            model.InboxType = type;
+            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages), 0, 30, messages.HasMore);
+
+            return View(model);
         }
 
         public ActionResult Compose(string to = null, string subject = null, string message = null)
@@ -78,7 +125,7 @@ namespace Skimur.Web.Controllers
                 _logger.Error("An error occured sending a message.", ex);
                 AddErrorMessage("An unknown error occured.");
             }
-            
+
             if (string.IsNullOrEmpty(response.Error))
             {
                 AddSuccessMessage("Your message has been sent.");

@@ -2,7 +2,14 @@
 
 <div class="row">
     <div class="col-sm-12">
-        TODO
+        <ul class="nav nav-tabs" role="tablist">
+            <li class="@(Model.InboxType == InboxType.All ? "active" : "")"><a href="@Url.MessagesAll()">All</a></li>
+            <li class="@(Model.InboxType == InboxType.Unread ? "active" : "")"><a href="@Url.MessagesUnread()">Unread</a></li>
+            <li class="@(Model.InboxType == InboxType.Messages ? "active" : "")"><a href="@Url.MessagesPrivate()">Messages</a></li>
+            <li class="@(Model.InboxType == InboxType.CommentReplies ? "active" : "")"><a href="@Url.MessagesCommentReplies()">Comments replies</a></li>
+            <li class="@(Model.InboxType == InboxType.PostReplies ? "active" : "")"><a href="@Url.MessagesPostReplies()">Post replies</a></li>
+            <li class="@(Model.InboxType == InboxType.Mentions ? "active" : "")"><a href="@Url.MessagesMentions()">Mentions</a></li>
+        </ul>
     </div>
 </div>
 
