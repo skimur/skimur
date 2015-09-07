@@ -34,6 +34,16 @@ namespace Subs.Services.Impl
             });
         }
 
+        public List<Message> GetMessagesByIds(List<Guid> ids)
+        {
+            return _conn.Perform(conn => conn.SelectByIds<Message>(ids));
+        }
+
+        public Message GetMessageById(Guid id)
+        {
+            return _conn.Perform(conn => conn.SingleById<Message>(id));
+        }
+
         public SeekedList<Guid> GetAllMessagesForUser(Guid userId, int? skip = null, int? take = null)
         {
             return QueryMessagesForUser(userId, query => {}, skip, take);

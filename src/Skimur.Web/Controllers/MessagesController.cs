@@ -78,7 +78,7 @@ namespace Skimur.Web.Controllers
 
             var model = new InboxViewModel();
             model.InboxType = type;
-            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages), 0, 30, messages.HasMore);
+            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), 0, 30, messages.HasMore);
 
             return View(model);
         }

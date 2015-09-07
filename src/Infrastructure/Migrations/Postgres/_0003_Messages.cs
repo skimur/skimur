@@ -27,6 +27,7 @@ CREATE TABLE messages
 (
   id uuid NOT NULL,
   date_created timestamp with time zone NOT NULL,
+  type integer,
   parent_id uuid,
   first_message uuid,
   deleted boolean,
@@ -38,6 +39,7 @@ CREATE TABLE messages
   from_sub uuid,
   subject text,
   body text,
+  body_formatted text,
   CONSTRAINT messages_pkey PRIMARY KEY (id)
 );");
             });

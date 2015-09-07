@@ -9,8 +9,8 @@ namespace Subs.ReadModel
 {
     public interface IMessageWrapper
     {
-        List<MessageWrapped> Wrap(List<Guid> messageIds);
+        List<MessageWrapped> Wrap(List<Guid> messageIds, User currentUser);
 
-        MessageWrapped Wrap(Guid messageId);
+        MessageWrapped Wrap(Guid messageId, User currentUser);
     }
 }

@@ -13,6 +13,10 @@ namespace Subs.Services
 
         int GetNumberOfUnreadMessagesForUser(Guid userId);
 
+        List<Message> GetMessagesByIds(List<Guid> ids);
+
+        Message GetMessageById(Guid id);
+
         SeekedList<Guid> GetAllMessagesForUser(Guid userId, int? skip = null, int? take = null);
 
         SeekedList<Guid> GetUnreadMessagesForUser(Guid userId, int? skip = null, int? take = null);
