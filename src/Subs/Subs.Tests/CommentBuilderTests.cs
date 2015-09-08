@@ -211,6 +211,7 @@ namespace Subs.Tests
             _commentDao = new Mock<ICommentDao>();
             _membershipService = new Mock<IMembershipService>();
             _subDao = new Mock<ISubDao>();
+            _postDao = new Mock<IPostDao>();
             _permissionDao = new Mock<IPermissionDao>();
             _voteDao = new Mock<IVoteDao>();
             _commentWrapper = new CommentWrapper(_commentDao.Object, _membershipService.Object, _subDao.Object, _postDao.Object, _permissionDao.Object, _voteDao.Object);

@@ -20,11 +20,25 @@ namespace Skimur.Tests
         {
         }
 
+        [Alias("ensure_default_user_created")]
+        public class EnsureDefaultUserFunction
+        {
+            
+        }
+
         protected override void Setup()
         {
             base.Setup();
+
+            Infrastructure.Cassandra.Migrations.Migrations.Run(_container);
+            Infrastructure.Postgres.Migrations.Migrations.Run(_container);
+
             _conn = _container.GetInstance<IDbConnectionProvider>();
-            _conn.Perform(conn => conn.ExecuteProcedure(new ClearDatabaseFunction()));
+            _conn.Perform(conn =>
+            {
+                conn.ExecuteProcedure(new ClearDatabaseFunction());
+                conn.ExecuteProcedure(new EnsureDefaultUserFunction());
+            });
         }
 
         protected override List<IRegistrar> GetRegistrars()
@@ -34,9 +48,17 @@ namespace Skimur.Tests
             result.AddRange(new List<IRegistrar>
             {
                 new Infrastructure.Registrar(),
+                new Infrastructure.Settings.Registrar(),
+                new Infrastructure.Caching.Registrar(),
                 new Infrastructure.Email.Registrar(),
                 new Infrastructure.Messaging.Registrar(),
                 new Infrastructure.Messaging.RabbitMQ.Registrar(),
+                new Infrastructure.Cassandra.Registrar(),
+                new Infrastructure.Postgres.Registrar(),
+                new Infrastructure.Logging.Registrar(),
+                new Markdown.Registrar(),
+                new Subs.Registrar(),
+                new Subs.Worker.Registrar(),
                 new Membership.Registrar()
             });
 

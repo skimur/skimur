@@ -25,5 +25,11 @@ namespace Subs.ReadModel
         public Sub ToSub { get; set; }
         
         public bool CanReply { get; set; }
+
+        public bool UserIsRecipiant { get; set; }
+
+        public bool UserIsSender { get; set; }
+
+        public bool CanUserView { get; set; }
     }
 }

@@ -87,6 +87,17 @@ namespace Subs.Services.Impl
             });
         }
 
+        public List<Guid> GetMessagesForThread(Guid messageId)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Message>();
+                query.Where(x => x.FirstMessage == messageId || x.Id == messageId);
+                query.SelectExpression = "SELECT \"id\"";
+                return conn.Select(query).Select(x => x.Id).ToList();
+            });
+        }
+
         private SeekedList<Guid> QueryMessagesForUser(Guid userId, Action<SqlExpression<Message>> query, int? skip, int? take)
         {
             return _conn.Perform(conn =>

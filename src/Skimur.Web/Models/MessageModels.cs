@@ -15,6 +15,8 @@ namespace Skimur.Web.Models
             Messages = new List<MessageWrapped>();
         }
 
+        public MessageWrapped FirstMessage { get; set; }
+
         public MessageWrapped ContextMessage { get; set; }
 
         public List<MessageWrapped> Messages { get; set; } 

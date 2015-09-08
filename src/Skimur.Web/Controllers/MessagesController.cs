@@ -208,7 +208,22 @@ namespace Skimur.Web.Controllers
         {
             var message = _messageDao.GetMessageById(id);
 
+            if (message.FirstMessage.HasValue)
+            {
+                // the user is looking at the wrong page.
+                // the user should never get here
+                return Redirect(Url.MessageDetails(message));
+            }
+
+            // this will return all the messages for this thread, including the first message that started the conversation
+            var messages = _messageDao.GetMessagesForThread(message.Id);
+
             var model = new MessageThreadViewModel();
+            model.Messages.AddRange(_messageWrapper.Wrap(messages, _userContext.CurrentUser));
+            if (context.HasValue)
+                model.ContextMessage = model.Messages.SingleOrDefault(x => x.Message.Id == context.Value);
+            model.FirstMessage = model.Messages.Single(x => !x.Message.FirstMessage.HasValue);
+
             return View(model);
         }
     }

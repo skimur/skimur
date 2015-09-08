@@ -88,6 +88,18 @@ namespace Subs.ReadModel.Impl
                     // this message was sent to a sub, and this user is a moderator with the correct permissions to reply.
                     message.CanReply = true;
                 }
+
+                if (message.Author.Id == currentUser.Id)
+                {
+                    message.UserIsSender = true;
+                }
+                else if(message.ToUser != null && message.ToUser.Id == currentUser.Id)
+                {
+                    message.UserIsRecipiant = true;
+                }else if (message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
+                {
+                    message.UserIsRecipiant = true;
+                }
             }
 
             return messages;

@@ -30,5 +30,7 @@ namespace Subs.Services
         SeekedList<Guid> GetMentionsForUser(Guid userId, int? skip = null, int? take = null);
 
         SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip, int? take);
+
+        List<Guid> GetMessagesForThread(Guid messageId);
     }
 }
