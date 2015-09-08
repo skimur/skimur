@@ -15,7 +15,9 @@ using Subs.Services;
 
 namespace Subs.Worker
 {
-    public class MessagesHandler : ICommandHandlerResponse<SendMessage, SendMessageResponse>
+    public class MessagesHandler : 
+        ICommandHandlerResponse<SendMessage, SendMessageResponse>,
+        ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>
     {
         private readonly ILogger<MessagesHandler> _logger;
         private readonly IMembershipService _membershipService;
@@ -130,6 +132,105 @@ namespace Subs.Worker
                     ToSub = sendingToSub != null ? sendingToSub.Id : (Guid?)null,
                     FromSub = sendAsSub != null ? sendAsSub.Id : (Guid?)null,
                     Subject = command.Subject,
+                    Body = command.Body,
+                    BodyFormatted = _markdownCompiler.Compile(command.Body),
+                };
+
+                _messageService.InsertMessage(message);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error sending a message.", ex);
+                response.Error = "An unknown error occured.";
+            }
+
+            return response;
+        }
+
+        public ReplyMessageResponse Handle(ReplyMessage command)
+        {
+            var response = new ReplyMessageResponse();
+
+            try
+            {
+                var author = _membershipService.GetUserById(command.Author);
+
+                if (author == null)
+                {
+                    response.Error = "No author provided.";
+                    return response;
+                }
+
+                var replyToMessage = _messageService.GetMessageById(command.ReplyToMessageId);
+
+                if (replyToMessage == null)
+                {
+                    response.Error = "Invalid message.";
+                    return response;
+                }
+
+                if (replyToMessage.MessageType != MessageType.Private)
+                    throw new Exception("An attempt was made to reply to a message that wasn't a private message.");
+
+                // let's determine if the user has adequate permissions to reply to this message
+                if (replyToMessage.ToUser.HasValue && replyToMessage.ToUser.Value == author.Id)
+                {
+                    // the user is replying to a message that was sent to him/her.
+                }else if (replyToMessage.ToSub.HasValue &&
+                          // TODO: use a narrower set of permissions
+                          _permissionService.CanUserModerateSub(author, replyToMessage.ToSub.Value))
+                {
+                    // the user is replying to a sub message, and the user is allowed to moderate this sub!
+                }
+                else
+                {
+                    // the current user is not allowed to reply to this message.
+                    response.Error = "Not authorized.";
+                    return response;
+                }
+
+                Sub sendingToSub = null;
+                User sendingToUser = null;
+
+                if (replyToMessage.FromSub.HasValue)
+                {
+                    sendingToSub = _subService.GetSubById(replyToMessage.FromSub.Value);
+                    if (sendingToSub == null) throw new Exception("Couldn't get the sub");
+                }
+                else
+                {
+                    sendingToUser = _membershipService.GetUserById(replyToMessage.AuthorId);
+                    if (sendingToUser == null) throw new Exception("Couldn't get the user");
+                }
+
+                Sub sendAsSub = null;
+
+                if (replyToMessage.ToSub.HasValue)
+                {
+                    // the user originally sent this message to a sub, so reply as a sub
+                    sendAsSub = _subService.GetSubById(replyToMessage.ToSub.Value);
+                    if(sendAsSub == null) throw new Exception("Couldn't get the sub");
+                } 
+
+                var subject = replyToMessage.Subject;
+
+                if (!subject.StartsWith("re: "))
+                    subject = "re: " + subject;
+
+                var message = new Message
+                {
+                    Id = GuidUtil.NewSequentialId(),
+                    DateCreated = Common.CurrentTime(),
+                    MessageType = MessageType.Private,
+                    ParentId = replyToMessage.Id,
+                    FirstMessage = replyToMessage.FirstMessage.HasValue ? replyToMessage.FirstMessage.Value : replyToMessage.Id,
+                    AuthorId = author.Id,
+                    AuthorIp = command.AuthorIp,
+                    IsNew = true,
+                    ToUser = sendingToUser != null ? sendingToUser.Id : (Guid?)null,
+                    ToSub = sendingToSub != null ? sendingToSub.Id : (Guid?)null,
+                    FromSub = sendAsSub != null ? sendAsSub.Id : (Guid?)null,
+                    Subject = subject,
                     Body = command.Body,
                     BodyFormatted = _markdownCompiler.Compile(command.Body),
                 };

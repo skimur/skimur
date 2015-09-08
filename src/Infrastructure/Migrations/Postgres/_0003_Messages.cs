@@ -42,6 +42,12 @@ CREATE TABLE messages
   body_formatted text,
   CONSTRAINT messages_pkey PRIMARY KEY (id)
 );");
+
+                x.Execute(@"
+CREATE INDEX messages_datecreated_index ON messages(date_created);
+");
+
+                
             });
         }
 

@@ -77,28 +77,25 @@ namespace Skimur.Web.Public
                 "~/Scripts/respond.js",
                 "~/Scripts/bootstrap-notify.js",
                 "~/Scripts/sweet-alert.js",
+                "~/Scripts/markdown.js",
+                "~/Scripts/to-markdown.js",
+                "~/Scripts/bootstrap-markdown.js",
                 "~/Scripts/app/api.js",
                 "~/Scripts/app/ui.js",
                 "~/Scripts/app/login.js",
                 "~/Scripts/app/misc.js",
                 "~/Scripts/app/comments.js",
                 "~/Scripts/app/posts.js",
-                "~/Scripts/app/subs.js");
-
-            var markdownBundle = new ScriptBundle("~/bundles/editor").Include(
-                "~/Scripts/markdown.js",
-                "~/Scripts/to-markdown.js",
-                "~/Scripts/bootstrap-markdown.js");
-
+                "~/Scripts/app/subs.js",
+                "~/Scripts/app/messages.js");
+            
             var stylesBundle = new StyleBundle("~/bundles/styles").Include(
                 "~/Content/site.less");
 
             scriptsBundle.Transforms.Add(scriptTransformer);
-            markdownBundle.Transforms.Add(scriptTransformer);
             stylesBundle.Transforms.Add(new StyleTransformer());
 
             bundles.Add(scriptsBundle);
-            bundles.Add(markdownBundle);
             bundles.Add(stylesBundle);
         }
 

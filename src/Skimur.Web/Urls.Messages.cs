@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Subs;
 
 namespace Skimur.Web
 {
@@ -11,7 +12,7 @@ namespace Skimur.Web
     {
         public static string Compose(this UrlHelper urlHelper, string to = null, string subject = null, string body = null)
         {
-            return urlHelper.RouteUrl("MessageCompose", new {to, subject, body});
+            return urlHelper.RouteUrl("MessageCompose", new { to, subject, body });
         }
 
         public static string Inbox(this UrlHelper urlHelper)
@@ -47,6 +48,21 @@ namespace Skimur.Web
         public static string MessagesMentions(this UrlHelper urlHelper)
         {
             return urlHelper.RouteUrl("MessageMentions");
+        }
+
+        public static string MessageDetails(this UrlHelper urlHelper, Guid messageId, Guid? context = null)
+        {
+            return urlHelper.RouteUrl("MessageDetails", new { id = messageId, context });
+        }
+
+        public static string MessageDetails(this UrlHelper urlHelper, Message message)
+        {
+            return message.FirstMessage.HasValue ? MessageDetails(urlHelper, message.FirstMessage.Value, message.Id) : MessageDetails(urlHelper, message.Id);
+        }
+
+        public static string Sent(this UrlHelper urlHelper)
+        {
+            return urlHelper.RouteUrl("MessageSent");
         }
     }
 }

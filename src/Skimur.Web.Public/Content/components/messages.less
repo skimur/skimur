@@ -1,0 +1,148 @@
+﻿.message {
+    position: relative;
+
+    .message {
+        margin-left: 15px;
+        margin-bottom: 0px;
+        padding-left: 10px;
+        border-left: 1px dotted #DDF;
+    }
+
+    &.alternate {
+    }
+
+    &.collapsed {
+        .message, .message-md, .message-options {
+            display: none;
+        }
+
+        .message-voting {
+            visibility: hidden;
+            height: 1px;
+        }
+
+        .message-tagline {
+            color: lighten(@text-color, 40%);
+            font-style: italic;
+
+            a {
+                color: lighten(@text-color, 40%);
+                text-decoration: none;
+            }
+        }
+    }
+
+    .message-voting {
+        color: @gray-light;
+        font-size: ceil((@font-size-base * 1.2));
+        float: left;
+        margin-right: 15px;
+        margin-bottom: 10px;
+
+        .up, .votes, .down {
+            display: block !important;
+            margin-left: auto;
+            margin-right: auto;
+            text-align: center;
+        }
+
+        .up, .down {
+            .fa;
+            cursor: pointer;
+        }
+
+        .votes {
+            cursor: default;
+        }
+
+        .up {
+            .fa-mixin-icon(chevron-up);
+        }
+
+        .down {
+            .fa-mixin-icon(chevron-down);
+        }
+
+        &.voted-up {
+            .up, .votes {
+                color: @brand-success;
+            }
+
+            .down {
+                color: lighten(@gray-light, 40%);
+            }
+        }
+
+        &.voted-down {
+            .down, .votes {
+                color: @brand-danger;
+            }
+
+            .up {
+                color: lighten(@gray-light, 40%);
+            }
+        }
+    }
+
+    .message-content {
+        overflow: hidden;
+        margin-bottom: 15px;
+
+        .message-tagline {
+            font-size: @font-size-small;
+
+            .expand {
+                margin-right: 3px;
+                padding: 1px;
+            }
+        }
+
+        .message-md {
+            margin-top: 5px;
+            margin-bottom: 5px;
+
+            > :first-child {
+                margin-top: 0px;
+            }
+
+            & > :last-child {
+                margin-bottom: 0px;
+            }
+        }
+
+        .message-options {
+            margin: 0;
+            padding: 0;
+            font-size: @font-size-small;
+
+            > li {
+                display: inline-block;
+                white-space: nowrap;
+                margin-left: 10px;
+
+                &.first {
+                    margin-left: 0px;
+                }
+
+                a {
+                    color: lighten(@gray, 25%);
+                    font-weight:bold;
+                }
+            }
+
+            list-style-type: none;
+        }
+
+        &:hover {
+            .message-options {
+
+                > li {
+
+                    a {
+                        color: @gray;
+                    }
+                }
+            }
+        }
+    }
+}

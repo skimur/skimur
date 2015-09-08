@@ -42,6 +42,7 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<RemovePost, RemovePostResponse>, PostModerationHandler>();
 
             container.Register<ICommandHandlerResponse<SendMessage, SendMessageResponse>, MessagesHandler>();
+            container.Register<ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>, MessagesHandler>();
         }
 
         public int Order

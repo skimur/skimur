@@ -78,6 +78,7 @@
     <Compile Include="Commands\EditComment.cs" />
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\RemovePost.cs" />
+    <Compile Include="Commands\ReplyMessage.cs" />
     <Compile Include="Commands\SendMessage.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnBanUserFromSub.cs" />

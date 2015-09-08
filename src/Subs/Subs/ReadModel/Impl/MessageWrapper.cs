@@ -13,14 +13,17 @@ namespace Subs.ReadModel.Impl
         private readonly IMessageDao _messageDao;
         private readonly IMembershipService _membershipService;
         private readonly ISubDao _subDao;
+        private readonly IPermissionDao _permissionDao;
 
         public MessageWrapper(IMessageDao messageDao, 
             IMembershipService membershipService,
-            ISubDao subDao)
+            ISubDao subDao,
+            IPermissionDao permissionDao)
         {
             _messageDao = messageDao;
             _membershipService = membershipService;
             _subDao = subDao;
+            _permissionDao = permissionDao;
         }
 
         public List<MessageWrapped> Wrap(List<Guid> messageIds, User currentUser)
@@ -38,6 +41,13 @@ namespace Subs.ReadModel.Impl
 
             var users = new Dictionary<Guid, User>();
             var subs = new Dictionary<Guid, Sub>();
+
+            var subsCanModerate = new HashSet<Guid>();
+            foreach (var sub in subs.Keys)
+            {
+                if (_permissionDao.CanUserModerateSub(currentUser, sub))
+                    subsCanModerate.Add(sub);
+            }
 
             foreach (var message in messages)
             {
@@ -68,7 +78,16 @@ namespace Subs.ReadModel.Impl
                 message.ToUser = message.Message.ToUser.HasValue ? users[message.Message.ToUser.Value] : null;
                 message.ToSub = message.Message.ToSub.HasValue ? subs[message.Message.ToSub.Value] : null;
 
-
+                if (message.ToUser != null && message.ToUser.Id == currentUser.Id)
+                {
+                    // this was a message to the current user, so the current user can reply to it.
+                    message.CanReply = true;
+                }
+                else if(message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
+                {
+                    // this message was sent to a sub, and this user is a moderator with the correct permissions to reply.
+                    message.CanReply = true;
+                }
             }
 
             return messages;

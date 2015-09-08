@@ -215,7 +215,7 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "MessageAll",
                 url: "messages/inbox",
-                defaults: new { controller = "Messages", action = "Inbox", type= InboxType.All });
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.All });
 
             routes.MapRoute(
                 name: "MessageUnread",
@@ -241,6 +241,16 @@ namespace Skimur.Web
                 name: "MessageMentions",
                 url: "messages/mentions",
                 defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Mentions });
+
+            routes.MapRoute(
+                name: "MessageDetails",
+                url: "messages/details/{id}",
+                defaults: new { controller = "Messages", action = "Details" });
+
+            routes.MapRoute(
+                name: "MessageSent",
+                url: "messages/sent",
+                defaults: new { controller = "Messages", action = "Sent" });
 
             routes.MapRoute(
                 name: "Default",

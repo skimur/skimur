@@ -78,7 +78,7 @@ namespace Skimur.Web.Controllers
 
             var model = new InboxViewModel();
             model.InboxType = type;
-            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), 0, 30, messages.HasMore);
+            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
         }
@@ -93,6 +93,31 @@ namespace Skimur.Web.Controllers
             model.To = to;
             model.Subject = subject;
             model.Message = message;
+
+            return View(model);
+        }
+
+        public ActionResult Sent(int? pageNumber, int? pageSize)
+        {
+            ViewBag.ManageNavigationKey = "sent";
+
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
+            var skip = (pageNumber - 1) * pageSize;
+            var take = pageSize;
+
+            var messages = _messageDao.GetSentMessagesForUser(_userContext.CurrentUser.Id, skip, take);
+            
+            var model = new InboxViewModel();
+            model.InboxType = InboxType.Sent;
+            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
         }
@@ -135,6 +160,55 @@ namespace Skimur.Web.Controllers
                 AddErrorMessage(response.Error);
             }
 
+            return View(model);
+        }
+
+        [HttpPost]
+        public ActionResult Reply(ReplyMessageViewModel model)
+        {
+            ReplyMessageResponse response = null;
+
+            try
+            {
+                response = _commandBus.Send<ReplyMessage, ReplyMessageResponse>(new ReplyMessage
+                {
+                    Author = _userContext.CurrentUser.Id,
+                    AuthorIp = Request.UserHostAddress,
+                    ReplyToMessageId = model.ReplyToMessage,
+                    Body = model.Body
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("An error occured sending a message.", ex);
+                return Json(new
+                {
+                    success = false,
+                    error = "An unknown error occured."
+                });
+            }
+
+            if (!string.IsNullOrEmpty(response.Error))
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = response.Error
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+        
+        public ActionResult Details(Guid id, Guid? context = null)
+        {
+            var message = _messageDao.GetMessageById(id);
+
+            var model = new MessageThreadViewModel();
             return View(model);
         }
     }

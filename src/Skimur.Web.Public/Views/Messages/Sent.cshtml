@@ -1,0 +1,20 @@
+﻿@model InboxViewModel
+
+@{
+    ViewBag.Title = "Sent";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="messages-container">
+            @foreach (var message in Model.Messages)
+            {
+                @Html.Partial("_Message", message)
+            }
+        </div>
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

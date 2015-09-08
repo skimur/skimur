@@ -28,5 +28,7 @@ namespace Subs.Services
         SeekedList<Guid> GetPostRepliesForUser(Guid userId, int? skip = null, int? take = null);
 
         SeekedList<Guid> GetMentionsForUser(Guid userId, int? skip = null, int? take = null);
+
+        SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip, int? take);
     }
 }

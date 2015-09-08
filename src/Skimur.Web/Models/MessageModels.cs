@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -7,6 +8,25 @@ using Subs.ReadModel;
 
 namespace Skimur.Web.Models
 {
+    public class MessageThreadViewModel
+    {
+        public MessageThreadViewModel()
+        {
+            Messages = new List<MessageWrapped>();
+        }
+
+        public MessageWrapped ContextMessage { get; set; }
+
+        public List<MessageWrapped> Messages { get; set; } 
+    }
+
+    public class ReplyMessageViewModel
+    {
+        public Guid ReplyToMessage { get; set; }
+        
+        public string Body { get; set; }
+    }
+
     public class ComposeMessageViewModel
     {
         public string To { get; set; }
@@ -30,6 +50,7 @@ namespace Skimur.Web.Models
         Messages,
         CommentReplies,
         PostReplies,
-        Mentions
+        Mentions,
+        Sent
     }
 }

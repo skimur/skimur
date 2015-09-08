@@ -278,6 +278,7 @@
     <Content Include="Content\bootstrap\utilities.less" />
     <Content Include="Content\bootstrap\variables.less" />
     <Content Include="Content\bootstrap\wells.less" />
+    <None Include="Content\components\messages.less" />
     <Content Include="Content\img\avatar.jpg" />
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\logo.png" />
@@ -289,6 +290,7 @@
     <Compile Include="Startup.cs" />
     <Content Include="Scripts\app\api.js" />
     <Content Include="Scripts\app\comments.js" />
+    <Content Include="Scripts\app\messages.js" />
     <Content Include="Scripts\app\ui.js" />
     <Content Include="Scripts\app\login.js" />
     <Content Include="Scripts\app\misc.js" />
@@ -344,6 +346,9 @@
     <Content Include="Views\Common\Header.cshtml" />
     <Content Include="Views\Common\TopBar.cshtml" />
     <Content Include="Views\Common\Account.cshtml" />
+    <Content Include="Views\Messages\_Message.cshtml" />
+    <Content Include="Views\Messages\Details.cshtml" />
+    <Content Include="Views\Messages\Sent.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

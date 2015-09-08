@@ -74,6 +74,19 @@ namespace Subs.Services.Impl
             return QueryMessagesForUser(userId, query => query.Where(x => x.Type == (int)MessageType.Mention), skip, take);
         }
 
+        public SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip, int? take)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Message>().Where(x => x.AuthorId == userId);
+                var totalCount = conn.Count(query);
+                query.Skip(skip).Take(take);
+                query.SelectExpression = "SELECT \"id\"";
+                query.OrderByDescending(x => x.DateCreated);
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
+
         private SeekedList<Guid> QueryMessagesForUser(Guid userId, Action<SqlExpression<Message>> query, int? skip, int? take)
         {
             return _conn.Perform(conn =>
@@ -84,6 +97,7 @@ namespace Subs.Services.Impl
                 var totalCount = conn.Count(q);
                 q.Skip(skip).Take(take);
                 q.SelectExpression = "SELECT \"id\"";
+                q.OrderByDescending(x => x.DateCreated);
                 return new SeekedList<Guid>(conn.Select(q).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         } 
