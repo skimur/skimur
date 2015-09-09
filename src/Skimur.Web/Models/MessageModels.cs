@@ -62,6 +62,7 @@ namespace Skimur.Web.Models
         Mentions,
         Sent,
         ModeratorMail,
-        ModeratorMailUnread
+        ModeratorMailUnread,
+        ModeratorMailSent
     }
 }

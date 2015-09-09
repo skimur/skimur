@@ -30,6 +30,7 @@
             <ul class="nav nav-tabs" role="tablist">
                 <li class="@(Model.InboxType == InboxType.ModeratorMail ? "active" : "")"><a href="@Url.MessagesForModeratedSubs()">All</a></li>
                 <li class="@(Model.InboxType == InboxType.ModeratorMailUnread ? "active" : "")"><a href="@Url.MessagesForModeratedSubsUnread()">Unread</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMailSent ? "active" : "")"><a href="@Url.MessagesForModeratedSubsSent()">Sent</a></li>
             </ul>
         </div>
         <div class="messages-container">

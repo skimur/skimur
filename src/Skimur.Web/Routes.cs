@@ -255,23 +255,33 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "MessageForSub",
                 url: "s/{subName}/messages",
-                defaults: new { controller = "Messages", action = "ModeratorMail" });
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMail });
 
             routes.MapRoute(
-                name: "MessageForSubUnRead",
+                name: "MessageForSubUnread",
                 url: "s/{subName}/messages",
-                defaults: new { controller = "Messages", action = "ModeratorMail", unread = true });
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailUnread });
+
+            routes.MapRoute(
+              name: "MessageForSubSent",
+              url: "s/{subName}/messages",
+              defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent });
 
             routes.MapRoute(
                 name: "MessageForModerator",
                 url: "messages/moderated",
-                defaults: new { controller = "Messages", action = "ModeratorMail" });
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMail });
 
             routes.MapRoute(
                 name: "MessageForModeratorUnread",
                 url: "messages/moderated/unread",
-                defaults: new { controller = "Messages", action = "ModeratorMail", unread = true });
-            
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailUnread });
+
+            routes.MapRoute(
+                name: "MessageForModeratorSent",
+                url: "messages/moderated/sent",
+                defaults: new {controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent});
+
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

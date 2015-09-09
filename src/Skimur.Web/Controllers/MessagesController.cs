@@ -135,7 +135,7 @@ namespace Skimur.Web.Controllers
         {
             ViewBag.ManageNavigationKey = "compose";
             model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
-            
+
             if (!ModelState.IsValid)
                 return View(model);
 
@@ -234,7 +234,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult ModeratorMail(bool unread = false, string subName = null, int? pageNumber = null, int? pageSize = null)
+        public ActionResult ModeratorMail(InboxType type, string subName = null, int? pageNumber = null, int? pageSize = null)
         {
             ViewBag.ManageNavigationKey = "moderatormail";
 
@@ -252,9 +252,9 @@ namespace Skimur.Web.Controllers
 
             var moderatingSubs = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id);
 
-            var model = new InboxViewModel { InboxType = unread ? InboxType.ModeratorMailUnread : InboxType.ModeratorMail };
+            var model = new InboxViewModel { InboxType = type };
             model.IsModerator = moderatingSubs.Count > 0;
-            
+
             if (!string.IsNullOrEmpty(subName))
             {
                 var sub = _subDao.GetSubByName(subName);
@@ -267,15 +267,28 @@ namespace Skimur.Web.Controllers
             {
                 model.ModeratorMailForSubs = moderatingSubs;
             }
-            
+
+
+
             SeekedList<Guid> messages;
             if (moderatingSubs.Count == 0)
                 messages = new SeekedList<Guid>();
             else
-                messages = unread
-                        ? _messageDao.GetUnreadModeratorMailForSubs(moderatingSubs, skip, take)
-                        : _messageDao.GetModeratorMailForSubs(moderatingSubs, skip, take);
-            
+                switch (type)
+                {
+                    case InboxType.ModeratorMail:
+                        messages = _messageDao.GetModeratorMailForSubs(moderatingSubs, skip, take);
+                        break;
+                    case InboxType.ModeratorMailUnread:
+                        messages = _messageDao.GetUnreadModeratorMailForSubs(moderatingSubs, skip, take);
+                        break;
+                    case InboxType.ModeratorMailSent:
+                        messages = _messageDao.GetSentModeratorMailForSubs(moderatingSubs, skip, take);
+                        break;
+                    default:
+                        throw new Exception("invalid type");
+                }
+
             model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
