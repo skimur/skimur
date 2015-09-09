@@ -42,13 +42,6 @@ namespace Subs.ReadModel.Impl
             var users = new Dictionary<Guid, User>();
             var subs = new Dictionary<Guid, Sub>();
 
-            var subsCanModerate = new HashSet<Guid>();
-            foreach (var sub in subs.Keys)
-            {
-                if (_permissionDao.CanUserModerateSub(currentUser, sub))
-                    subsCanModerate.Add(sub);
-            }
-
             foreach (var message in messages)
             {
                 if (!users.ContainsKey(message.Message.AuthorId))
@@ -59,6 +52,13 @@ namespace Subs.ReadModel.Impl
                     subs.Add(message.Message.FromSub.Value, null);
                 if (message.Message.ToSub.HasValue && !subs.ContainsKey(message.Message.ToSub.Value))
                     subs.Add(message.Message.ToSub.Value, null);
+            }
+
+            var subsCanModerate = new HashSet<Guid>();
+            foreach (var sub in subs.Keys)
+            {
+                if (_permissionDao.CanUserModerateSub(currentUser, sub))
+                    subsCanModerate.Add(sub);
             }
 
             foreach (var userId in users.Keys.ToList())

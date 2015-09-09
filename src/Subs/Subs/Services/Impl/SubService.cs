@@ -219,8 +219,8 @@ namespace Subs.Services.Impl
             {
                 var query = conn.From<SubAdmin>();
                 query.Where(x => x.UserId == userId);
-                query.SelectExpression = "SELECT \"id\"";
-                return conn.Select(query).Select(x => x.Id).ToList();
+                query.SelectExpression = "SELECT \"sub_id\"";
+                return conn.Select(query).Select(x => x.SubId).ToList();
             });
         }
     }
