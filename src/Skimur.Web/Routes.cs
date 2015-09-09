@@ -271,9 +271,7 @@ namespace Skimur.Web
                 name: "MessageForModeratorUnread",
                 url: "messages/moderated/unread",
                 defaults: new { controller = "Messages", action = "ModeratorMail", unread = true });
-
-            //public ActionResult ModeratorMail(bool unread = false, string subName = null, int? pageNumber = null, int? pageSize = null)
-
+            
             routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",

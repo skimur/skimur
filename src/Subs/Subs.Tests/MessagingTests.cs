@@ -66,6 +66,34 @@ namespace Subs.Tests
             Assert.That(user2Messages, Has.Count.EqualTo(1));
         }
 
+        [Test]
+        public void A_message_to_a_user_is_marked_as_unread()
+        {
+            // arrange
+            var user1 = _membershipService.GetUserByUserName("skimur");
+            var user2 = new User
+            {
+                UserName = "user"
+            };
+            _membershipService.InsertUser(user2);
+
+            // act
+            var sendResponse = _sendMessageHandler.Handle(new SendMessage
+            {
+                Author = user1.Id,
+                Subject = "subject",
+                Body = "body",
+                To = user2.UserName
+            });
+
+            // assert
+            Assert.That(string.IsNullOrEmpty(sendResponse.Error));
+            var user1Messages = _messageService.GetUnreadMessagesForUser(user1.Id);
+            var user2Messages = _messageService.GetUnreadMessagesForUser(user2.Id);
+            Assert.That(user1Messages, Has.Count.EqualTo(0));
+            Assert.That(user2Messages, Has.Count.EqualTo(1));
+        }
+
         protected override void Setup()
         {
             base.Setup();
