@@ -7,6 +7,7 @@ using System.Web.Mvc;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
+using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
 
@@ -20,18 +21,21 @@ namespace Skimur.Web.Controllers
         private readonly IUserContext _userContext;
         private readonly IMessageDao _messageDao;
         private readonly IMessageWrapper _messageWrapper;
+        private readonly ISubDao _subDao;
 
         public MessagesController(ICommandBus commandBus,
             ILogger<MessagesController> logger,
             IUserContext userContext,
             IMessageDao messageDao,
-            IMessageWrapper messageWrapper)
+            IMessageWrapper messageWrapper,
+            ISubDao subDao)
         {
             _commandBus = commandBus;
             _logger = logger;
             _userContext = userContext;
             _messageDao = messageDao;
             _messageWrapper = messageWrapper;
+            _subDao = subDao;
         }
 
         public ActionResult Inbox(InboxType type, int? pageNumber, int? pageSize)
@@ -47,7 +51,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var skip = (pageNumber - 1)*pageSize;
+            var skip = (pageNumber - 1) * pageSize;
             var take = pageSize;
 
             SeekedList<Guid> messages;
@@ -78,6 +82,7 @@ namespace Skimur.Web.Controllers
 
             var model = new InboxViewModel();
             model.InboxType = type;
+            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
@@ -93,6 +98,7 @@ namespace Skimur.Web.Controllers
             model.To = to;
             model.Subject = subject;
             model.Message = message;
+            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
 
             return View(model);
         }
@@ -114,9 +120,10 @@ namespace Skimur.Web.Controllers
             var take = pageSize;
 
             var messages = _messageDao.GetSentMessagesForUser(_userContext.CurrentUser.Id, skip, take);
-            
+
             var model = new InboxViewModel();
             model.InboxType = InboxType.Sent;
+            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
@@ -127,11 +134,10 @@ namespace Skimur.Web.Controllers
         public ActionResult Compose(ComposeMessageViewModel model)
         {
             ViewBag.ManageNavigationKey = "compose";
-
+            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
+            
             if (!ModelState.IsValid)
-            {
                 return View(model);
-            }
 
             SendMessageResponse response = null;
 
@@ -203,7 +209,7 @@ namespace Skimur.Web.Controllers
                 error = (string)null
             });
         }
-        
+
         public ActionResult Details(Guid id, Guid? context = null)
         {
             var message = _messageDao.GetMessageById(id);
@@ -219,10 +225,58 @@ namespace Skimur.Web.Controllers
             var messages = _messageDao.GetMessagesForThread(message.Id);
 
             var model = new MessageThreadViewModel();
+            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages.AddRange(_messageWrapper.Wrap(messages, _userContext.CurrentUser));
             if (context.HasValue)
                 model.ContextMessage = model.Messages.SingleOrDefault(x => x.Message.Id == context.Value);
             model.FirstMessage = model.Messages.Single(x => !x.Message.FirstMessage.HasValue);
+
+            return View(model);
+        }
+
+        public ActionResult ModeratorMail(bool unread = false, string subName = null, int? pageNumber = null, int? pageSize = null)
+        {
+            ViewBag.ManageNavigationKey = "moderatormail";
+
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
+            var skip = (pageNumber - 1) * pageSize;
+            var take = pageSize;
+
+            var moderatingSubs = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id);
+
+            var model = new InboxViewModel { InboxType = unread ? InboxType.ModeratorMailUnread : InboxType.ModeratorMail };
+            model.IsModerator = moderatingSubs.Count > 0;
+            
+            if (!string.IsNullOrEmpty(subName))
+            {
+                var sub = _subDao.GetSubByName(subName);
+                if (sub == null) throw new NotFoundException();
+                if (!moderatingSubs.Contains(sub.Id)) throw new UnauthorizedException();
+                model.Sub = sub;
+                model.ModeratorMailForSubs = new List<Guid> { sub.Id };
+            }
+            else
+            {
+                model.ModeratorMailForSubs = moderatingSubs;
+            }
+            
+            SeekedList<Guid> messages;
+            if (moderatingSubs.Count == 0)
+                messages = new SeekedList<Guid>();
+            else
+                messages = unread
+                        ? _messageDao.GetUnreadModeratorMailForSubs(moderatingSubs, skip, take)
+                        : _messageDao.GetModeratorMailForSubs(moderatingSubs, skip, take);
+            
+            model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
         }

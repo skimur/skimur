@@ -1,15 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel.DataAnnotations;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+using Subs;
 using Subs.ReadModel;
 
 namespace Skimur.Web.Models
 {
     public class MessageThreadViewModel
     {
+        public bool IsModerator { get; set; }
+
         public MessageThreadViewModel()
         {
             Messages = new List<MessageWrapped>();
@@ -31,6 +30,8 @@ namespace Skimur.Web.Models
 
     public class ComposeMessageViewModel
     {
+        public bool IsModerator { get; set; }
+
         public string To { get; set; }
 
         public string Subject { get; set; }
@@ -43,6 +44,12 @@ namespace Skimur.Web.Models
         public InboxType InboxType { get; set; }
 
         public PagedList<MessageWrapped> Messages { get; set; }
+
+        public List<Guid> ModeratorMailForSubs { get; set; } 
+
+        public Sub Sub { get; set; }
+
+        public bool IsModerator { get; set; }
     }
 
     public enum InboxType
@@ -53,6 +60,8 @@ namespace Skimur.Web.Models
         CommentReplies,
         PostReplies,
         Mentions,
-        Sent
+        Sent,
+        ModeratorMail,
+        ModeratorMailUnread
     }
 }

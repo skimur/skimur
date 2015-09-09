@@ -28,12 +28,8 @@
     <div class="col-sm-12">
         <div class="form-group">
             <ul class="nav nav-tabs" role="tablist">
-                <li class="@(Model.InboxType == InboxType.All ? "active" : "")"><a href="@Url.MessagesAll()">All</a></li>
-                <li class="@(Model.InboxType == InboxType.Unread ? "active" : "")"><a href="@Url.MessagesUnread()">Unread</a></li>
-                <li class="@(Model.InboxType == InboxType.Messages ? "active" : "")"><a href="@Url.MessagesPrivate()">Messages</a></li>
-                <li class="@(Model.InboxType == InboxType.CommentReplies ? "active" : "")"><a href="@Url.MessagesCommentReplies()">Comments replies</a></li>
-                <li class="@(Model.InboxType == InboxType.PostReplies ? "active" : "")"><a href="@Url.MessagesPostReplies()">Post replies</a></li>
-                <li class="@(Model.InboxType == InboxType.Mentions ? "active" : "")"><a href="@Url.MessagesMentions()">Mentions</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMail ? "active" : "")"><a href="@Url.MessagesForModeratedSubs()">All</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMailUnread ? "active" : "")"><a href="@Url.MessagesForModeratedSubsUnread()">Unread</a></li>
             </ul>
         </div>
         <div class="messages-container">

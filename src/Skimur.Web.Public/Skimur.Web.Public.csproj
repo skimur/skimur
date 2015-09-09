@@ -349,6 +349,7 @@
     <Content Include="Views\Messages\_Message.cshtml" />
     <Content Include="Views\Messages\Details.cshtml" />
     <Content Include="Views\Messages\Sent.cshtml" />
+    <Content Include="Views\Messages\ModeratorMail.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

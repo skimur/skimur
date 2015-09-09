@@ -28,6 +28,8 @@ namespace Subs.ReadModel
         bool CanUserModerateSub(Guid userId, Guid subId);
 
         List<Guid> GetAllModsForSub(Guid subId);
+
+        List<Guid> GetSubsModeratoredByUser(Guid userId);
     }
 
     public enum SubsSortBy

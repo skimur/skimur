@@ -253,6 +253,28 @@ namespace Skimur.Web
                 defaults: new { controller = "Messages", action = "Sent" });
 
             routes.MapRoute(
+                name: "MessageForSub",
+                url: "s/{subName}/messages",
+                defaults: new { controller = "Messages", action = "ModeratorMail" });
+
+            routes.MapRoute(
+                name: "MessageForSubUnRead",
+                url: "s/{subName}/messages",
+                defaults: new { controller = "Messages", action = "ModeratorMail", unread = true });
+
+            routes.MapRoute(
+                name: "MessageForModerator",
+                url: "messages/moderated",
+                defaults: new { controller = "Messages", action = "ModeratorMail" });
+
+            routes.MapRoute(
+                name: "MessageForModeratorUnread",
+                url: "messages/moderated/unread",
+                defaults: new { controller = "Messages", action = "ModeratorMail", unread = true });
+
+            //public ActionResult ModeratorMail(bool unread = false, string subName = null, int? pageNumber = null, int? pageSize = null)
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

@@ -14,7 +14,7 @@
 </div>
 
 @section header {
-    @Html.Partial("_HeaderNav")
+    @Html.Partial("_HeaderNav", Model.IsModerator)
 }
 
 @helper FromLink(MessageWrapped message)

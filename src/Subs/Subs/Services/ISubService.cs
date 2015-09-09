@@ -42,5 +42,7 @@ namespace Subs.Services
         void RemoveModFromSub(Guid userId, Guid subId);
 
         void UpdateNumberOfSubscribers(Guid subId, out ulong totalNumber);
+
+        List<Guid> GetSubsModeratoredByUser(Guid userId);
     }
 }

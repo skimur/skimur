@@ -64,5 +64,26 @@ namespace Skimur.Web
         {
             return urlHelper.RouteUrl("MessageSent");
         }
+
+        public static string MessagesForSub(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("MessageForSub", new { subName });
+        }
+
+        public static string MessagesForSubUnread(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("MessageForSubUnRead", new { subName });
+        }
+
+
+        public static string MessagesForModeratedSubs(this UrlHelper urlHelper)
+        {
+            return urlHelper.RouteUrl("MessageForModerator");
+        }
+
+        public static string MessagesForModeratedSubsUnread(this UrlHelper urlHelper)
+        {
+            return urlHelper.RouteUrl("MessageForModeratorUnread");
+        }
     }
 }

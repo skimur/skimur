@@ -1,4 +1,6 @@
-﻿@{
+﻿@model bool
+@{
+    // the model is a boolean indicating if we are a mod or not
     var navigationKey = ViewBag.ManageNavigationKey;
 }
 <div class="header-nav">
@@ -7,6 +9,10 @@
             <li class="@(navigationKey == "compose" ? "active" : null)"><a href="@Url.Compose()">Send a message</a></li>
             <li class="@(navigationKey == "inbox" ? "active" : null)"><a href="@Url.Inbox()">Inbox</a></li>
             <li class="@(navigationKey == "sent" ? "active" : null)"><a href="@Url.Sent()">Sent</a></li>
+            @if (Model)
+            {
+                <li class="@(navigationKey == "moderatormail" ? "active" : null)"><a href="@Url.MessagesForModeratedSubs()">Moderator Mail</a></li>
+            }
         </ul>
     </div>
     <div class="visible-xs-block">
@@ -19,6 +25,10 @@
                     <li class="@(navigationKey == "compose" ? "active" : null)"><a href="@Url.Compose()">Send a message</a></li>
                     <li class="@(navigationKey == "inbox" ? "active" : null)"><a href="@Url.Inbox()">Inbox</a></li>
                     <li class="@(navigationKey == "sent" ? "active" : null)"><a href="@Url.Sent()">Sent</a></li>
+                    @if (Model)
+                    {
+                        <li class="@(navigationKey == "moderatormail" ? "active" : null)"><a href="@Url.MessagesForModeratedSubs()">Moderator mail</a></li>
+                    }
                 </ul>
             </li>
         </ul>
@@ -37,6 +47,9 @@
             break;
         case "sent":
                 <text>Sent</text>
+            break;
+        case "moderatormail":
+                <text>Moderator mail</text>
             break;
     }
 }

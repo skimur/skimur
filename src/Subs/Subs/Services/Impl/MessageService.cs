@@ -98,6 +98,34 @@ namespace Subs.Services.Impl
             });
         }
 
+        public SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip, int? take)
+        {
+            if(subs == null) throw new ArgumentNullException("subs");
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Message>();
+                query.Where(x => subs.Contains((Guid)x.ToSub));
+                var totalCount = conn.Count(query);
+                query.SelectExpression = "SELECT \"id\"";
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
+
+        public SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip, int? take)
+        {
+            if (subs == null) throw new ArgumentNullException("subs");
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Message>();
+                query.Where(x => subs.Contains((Guid)x.ToSub) && x.IsNew);
+                var totalCount = conn.Count(query);
+                query.SelectExpression = "SELECT \"id\"";
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
+
         private SeekedList<Guid> QueryMessagesForUser(Guid userId, Action<SqlExpression<Message>> query, int? skip, int? take)
         {
             return _conn.Perform(conn =>

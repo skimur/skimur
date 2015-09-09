@@ -50,10 +50,11 @@ namespace Skimur.Web.Public
                 new Infrastructure.Cassandra.Registrar(),
                 new Infrastructure.Postgres.Registrar(),
                 new Infrastructure.Logging.Registrar(),
+                new Registrar(),
                 new Markdown.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),
-                new Membership.Registrar(),
+                new Membership.Registrar(), 
                 this);
         }
         
