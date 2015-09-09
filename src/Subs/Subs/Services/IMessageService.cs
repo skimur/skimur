@@ -35,6 +35,8 @@ namespace Subs.Services
 
         SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null);
 
+        SeekedList<Guid> GetSentModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null);
+
         SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null);
     }
 }

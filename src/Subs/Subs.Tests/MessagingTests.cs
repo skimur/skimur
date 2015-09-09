@@ -116,7 +116,7 @@ namespace Subs.Tests
             // act
             var sendResponse = _sendMessageHandler.Handle(new SendMessage
             {
-                Author = user2.Id,
+                Author = userId,
                 Subject = "subject",
                 Body = "body",
                 To = "/s/testsub"
@@ -126,7 +126,12 @@ namespace Subs.Tests
             Assert.That(string.IsNullOrEmpty(sendResponse.Error));
             Assert.That(_messageService.GetSentMessagesForUser(userId), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
             Assert.That(_messageService.GetPrivateMessagesForUser(userId), Has.Count.EqualTo(0));
-            Assert.That(_messageService.GetModeratorMailForSubs(new List<Guid> {subId}), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
+            Assert.That(_messageService.GetModeratorMailForSubs(new List<Guid> { subId }), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
+            var message = _messageService.GetMessageById(sendResponse.MessageId);
+            Assert.That(message.AuthorId, Is.EqualTo(userId));
+            Assert.That(message.FromSub, Is.Null);
+            Assert.That(message.ToSub, Is.Not.Null.And.EqualTo(subId));
+            Assert.That(message.ToUser, Is.Null);
 
             #endregion
 
@@ -144,6 +149,27 @@ namespace Subs.Tests
             Assert.That(string.IsNullOrEmpty(replyResponse.Error));
             Assert.That(_messageService.GetSentMessagesForUser(userId), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
             Assert.That(_messageService.GetPrivateMessagesForUser(userId), Has.Count.EqualTo(1).And.Contains(replyResponse.MessageId));
+            message = _messageService.GetMessageById(replyResponse.MessageId);
+            Assert.That(message.AuthorId, Is.EqualTo(moderatorId));
+            Assert.That(message.FromSub, Is.Not.Null.And.EqualTo(subId));
+            Assert.That(message.ToSub, Is.Null);
+            Assert.That(message.ToUser, Is.Not.Null.And.EqualTo(userId));
+
+            #endregion
+
+            #region moderator replies dont show in personal inboxes
+
+            // assert
+            Assert.That(_messageService.GetSentMessagesForUser(moderatorId), Has.Count.EqualTo(0));
+            Assert.That(_messageService.GetPrivateMessagesForUser(moderatorId), Has.Count.EqualTo(0));
+
+            #endregion
+
+            #region moderator mail shows on in the correct moderator inboxes
+
+            // assert
+            Assert.That(_messageService.GetModeratorMailForSubs(new List<Guid> { subId }), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
+            Assert.That(_messageService.GetSentModeratorMailForSubs(new List<Guid> { subId }), Has.Count.EqualTo(1).And.Contains(replyResponse.MessageId));
 
             #endregion
         }

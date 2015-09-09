@@ -78,7 +78,10 @@ namespace Subs.Services.Impl
         {
             return _conn.Perform(conn =>
             {
-                var query = conn.From<Message>().Where(x => x.AuthorId == userId);
+                var query = conn.From<Message>().Where(x => x.AuthorId == userId 
+                    // if the user sent this message as a moderator, hide it.
+                    // it will be visible in the moderator mail
+                    && x.FromSub == null);
                 var totalCount = conn.Count(query);
                 query.Skip(skip).Take(take);
                 query.SelectExpression = "SELECT \"id\"";
@@ -112,6 +115,20 @@ namespace Subs.Services.Impl
             });
         }
 
+        public SeekedList<Guid> GetSentModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null)
+        {
+            if (subs == null) throw new ArgumentNullException("subs");
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Message>();
+                query.Where(x => subs.Contains((Guid)x.FromSub));
+                var totalCount = conn.Count(query);
+                query.SelectExpression = "SELECT \"id\"";
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
+
         public SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null)
         {
             if (subs == null) throw new ArgumentNullException("subs");
@@ -132,7 +149,10 @@ namespace Subs.Services.Impl
             {
                 var q = conn.From<Message>();
                 query(q);
-                q.Where(x => x.ToUser == userId);
+                q.Where(x => x.ToUser == userId 
+                    // if the user was sent this message as a mod of a sub,
+                    // then don't show it. it is visible in moderator mail
+                    && x.ToSub == null);
                 var totalCount = conn.Count(q);
                 q.Skip(skip).Take(take);
                 q.SelectExpression = "SELECT \"id\"";
