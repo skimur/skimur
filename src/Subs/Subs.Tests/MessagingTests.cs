@@ -174,6 +174,49 @@ namespace Subs.Tests
             #endregion
         }
 
+        [Test]
+        public void User_cant_respond_to_incoming_mod_mail_unless_moderator()
+        {
+            // arrange
+            var user1 = _membershipService.GetUserByUserName("skimur");
+            var user2 = new User
+            {
+                UserName = "user2"
+            };
+            _membershipService.InsertUser(user2);
+            var user3 = new User
+            {
+                UserName = "user3"
+            };
+            _membershipService.InsertUser(user3);
+            var createSubResponse = _createSubHandler.Handle(new CreateSub { Name = "testsub", CreatedByUserId = user1.Id, Description = "testsub", Type = SubType.Public });
+            Assert.That(string.IsNullOrEmpty(createSubResponse.Error));
+            var subId = createSubResponse.SubId;
+            var moderatorId = user1.Id;
+            var userId = user2.Id;
+            var invalidUserId = user3.Id;
+            // setup the initial message that will get an attempted illegal reply
+            var sendResponse = _sendMessageHandler.Handle(new SendMessage
+            {
+                Author = userId,
+                To = "/s/testsub",
+                Subject = "subject",
+                Body = "body"
+            });
+            Assert.That(string.IsNullOrEmpty(sendResponse.Error));
+
+            // act
+            var replyResponse = _replyMessageHandler.Handle(new ReplyMessage
+            {
+                ReplyToMessageId = sendResponse.MessageId,
+                Author = invalidUserId, // this user isn't a moderator, nor is he involved in the discussion
+                Body = "response"
+            });
+
+            // assert
+            Assert.That(!string.IsNullOrEmpty(replyResponse.Error));
+        }
+
         protected override void Setup()
         {
             base.Setup();
