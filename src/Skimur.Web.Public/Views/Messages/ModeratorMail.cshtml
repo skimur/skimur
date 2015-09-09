@@ -25,12 +25,12 @@
 }
 
 <div class="row">
-    <div class="col-sm-12">
+    <div class="@(Model.Sub == null ? "col-md-12" : "col-md-9")">
         <div class="form-group">
             <ul class="nav nav-tabs" role="tablist">
-                <li class="@(Model.InboxType == InboxType.ModeratorMail ? "active" : "")"><a href="@Url.MessagesForModeratedSubs()">All</a></li>
-                <li class="@(Model.InboxType == InboxType.ModeratorMailUnread ? "active" : "")"><a href="@Url.MessagesForModeratedSubsUnread()">Unread</a></li>
-                <li class="@(Model.InboxType == InboxType.ModeratorMailSent ? "active" : "")"><a href="@Url.MessagesForModeratedSubsSent()">Sent</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMail ? "active" : "")"><a href="@(Model.Sub != null ? Url.MessagesForSub(Model.Sub.Name) : Url.MessagesForModeratedSubs())">All</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMailUnread ? "active" : "")"><a href="@(Model.Sub != null ? Url.MessagesForSubUnread(Model.Sub.Name) : Url.MessagesForModeratedSubsUnread())">Unread</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMailSent ? "active" : "")"><a href="@(Model.Sub != null ? Url.MessagesForSubSent(Model.Sub.Name) : Url.MessagesForModeratedSubsSent())">Sent</a></li>
             </ul>
         </div>
         <div class="messages-container">
@@ -39,7 +39,21 @@
                 @Html.Partial("_Message", message)
             }
         </div>
+        @if (Model.Messages.HasPreviousPage || Model.Messages.HasNextPage)
+        {
+            <div class="row">
+                <div class="list-pager">
+                    @Html.Pager(Model.Messages)
+                </div>
+            </div>
+        }
     </div>
+    @if (Model.Sub != null)
+    {
+        <div class="col-md-3">
+            @{ Html.RenderSideBar(subId: Model.Sub.Id); }
+        </div>
+                }
 </div>
 
 @section header {

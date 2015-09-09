@@ -42,6 +42,14 @@
                 @Html.Partial("_Message", message)
             }
         </div>
+        @if (Model.Messages.HasPreviousPage || Model.Messages.HasNextPage)
+        {
+            <div class="row">
+                <div class="list-pager">
+                    @Html.Pager(Model.Messages)
+                </div>
+            </div>
+        }
     </div>
 </div>
 

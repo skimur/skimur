@@ -259,12 +259,12 @@ namespace Skimur.Web
 
             routes.MapRoute(
                 name: "MessageForSubUnread",
-                url: "s/{subName}/messages",
+                url: "s/{subName}/messages/unread",
                 defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailUnread });
 
             routes.MapRoute(
               name: "MessageForSubSent",
-              url: "s/{subName}/messages",
+              url: "s/{subName}/messages/sent",
               defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent });
 
             routes.MapRoute(
