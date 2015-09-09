@@ -29,12 +29,12 @@ namespace Subs.Services
 
         SeekedList<Guid> GetMentionsForUser(Guid userId, int? skip = null, int? take = null);
 
-        SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip, int? take);
+        SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip = null, int? take = null);
 
         List<Guid> GetMessagesForThread(Guid messageId);
 
-        SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip, int? take);
+        SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null);
 
-        SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip, int? take);
+        SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null);
     }
 }

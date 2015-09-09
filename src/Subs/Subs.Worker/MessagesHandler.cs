@@ -137,6 +137,8 @@ namespace Subs.Worker
                 };
 
                 _messageService.InsertMessage(message);
+
+                response.MessageId = message.Id;
             }
             catch (Exception ex)
             {
@@ -236,6 +238,8 @@ namespace Subs.Worker
                 };
 
                 _messageService.InsertMessage(message);
+
+                response.MessageId = message.Id;
             }
             catch (Exception ex)
             {

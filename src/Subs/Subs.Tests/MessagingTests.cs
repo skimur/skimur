@@ -18,6 +18,7 @@ namespace Subs.Tests
     public class MessagingTests : DataTestBase
     {
         private IMembershipService _membershipService;
+        private ISubService _subService;
         private ICommandHandlerResponse<CreateSub, CreateSubResponse> _createSubHandler;
         private ICommandHandlerResponse<SendMessage, SendMessageResponse> _sendMessageHandler;
         private ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse> _replyMessageHandler;
@@ -92,6 +93,59 @@ namespace Subs.Tests
             var user2Messages = _messageService.GetUnreadMessagesForUser(user2.Id);
             Assert.That(user1Messages, Has.Count.EqualTo(0));
             Assert.That(user2Messages, Has.Count.EqualTo(1));
+        }
+
+        [Test]
+        public void User_can_send_and_received_messages_to_a_sub()
+        {
+            // arrange
+            var user1 = _membershipService.GetUserByUserName("skimur");
+            var user2 = new User
+            {
+                UserName = "user"
+            };
+            _membershipService.InsertUser(user2);
+            var createSubResponse = _createSubHandler.Handle(new CreateSub { Name = "testsub", CreatedByUserId = user1.Id, Description = "testsub", Type = SubType.Public });
+            Assert.That(string.IsNullOrEmpty(createSubResponse.Error));
+            var subId = createSubResponse.SubId;
+            var moderatorId = user1.Id;
+            var userId = user2.Id;
+
+            #region sending message from user to sub
+
+            // act
+            var sendResponse = _sendMessageHandler.Handle(new SendMessage
+            {
+                Author = user2.Id,
+                Subject = "subject",
+                Body = "body",
+                To = "/s/testsub"
+            });
+
+            // assert
+            Assert.That(string.IsNullOrEmpty(sendResponse.Error));
+            Assert.That(_messageService.GetSentMessagesForUser(userId), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
+            Assert.That(_messageService.GetPrivateMessagesForUser(userId), Has.Count.EqualTo(0));
+            Assert.That(_messageService.GetModeratorMailForSubs(new List<Guid> {subId}), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
+
+            #endregion
+
+            #region reply to user from sub
+
+            // act
+            var replyResponse = _replyMessageHandler.Handle(new ReplyMessage
+            {
+                Author = moderatorId,
+                ReplyToMessageId = sendResponse.MessageId,
+                Body = "response"
+            });
+
+            // assert
+            Assert.That(string.IsNullOrEmpty(replyResponse.Error));
+            Assert.That(_messageService.GetSentMessagesForUser(userId), Has.Count.EqualTo(1).And.Contains(sendResponse.MessageId));
+            Assert.That(_messageService.GetPrivateMessagesForUser(userId), Has.Count.EqualTo(1).And.Contains(replyResponse.MessageId));
+
+            #endregion
         }
 
         protected override void Setup()

@@ -74,7 +74,7 @@ namespace Subs.Services.Impl
             return QueryMessagesForUser(userId, query => query.Where(x => x.Type == (int)MessageType.Mention), skip, take);
         }
 
-        public SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip, int? take)
+        public SeekedList<Guid> GetSentMessagesForUser(Guid userId, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -98,7 +98,7 @@ namespace Subs.Services.Impl
             });
         }
 
-        public SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip, int? take)
+        public SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null)
         {
             if(subs == null) throw new ArgumentNullException("subs");
 
@@ -112,7 +112,7 @@ namespace Subs.Services.Impl
             });
         }
 
-        public SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip, int? take)
+        public SeekedList<Guid> GetUnreadModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null)
         {
             if (subs == null) throw new ArgumentNullException("subs");
 

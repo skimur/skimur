@@ -21,5 +21,7 @@ namespace Subs.Commands
     public class ReplyMessageResponse
     {
         public string Error { get; set; }
+
+        public Guid MessageId { get; set; }
     }
 }
