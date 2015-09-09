@@ -11,13 +11,22 @@ namespace Infrastructure.Cassandra.Migrations.DB
     {
         private readonly IMapper _mapper;
         private readonly ILogger<Version> _logger;
+        private static bool _didRegisterMapping = false;
+        private static object _registrationLock = new object();
 
         public Versioner(ISession session, ILogger<Version> logger)
         {
             _logger = logger;
 
             _logger.Debug("Define global mappings");
-            MappingConfiguration.Global.Define<PocoMapper>();
+            lock (_registrationLock)
+            {
+                if (!_didRegisterMapping)
+                {
+                    MappingConfiguration.Global.Define<PocoMapper>();
+                    _didRegisterMapping = true;
+                }
+            }
 
             _logger.Debug("Create mapper and table instances");
             _mapper = new Mapper(session);

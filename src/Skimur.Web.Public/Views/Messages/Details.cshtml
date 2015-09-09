@@ -1,0 +1,30 @@
+﻿@using Subs.ReadModel
+@model MessageThreadViewModel
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="message-header">@FromLink(Model.FirstMessage)</div>
+        <div class="messages-container">
+            @foreach (var message in Model.Messages)
+            {
+                @Html.Partial("_Message", message)
+            }
+        </div>
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav", Model.IsModerator)
+}
+
+@helper FromLink(MessageWrapped message)
+{
+    if (message.FromSub != null)
+    {
+        <a href="@Url.Sub(message.FromSub.Name)" class="author">@message.FromSub.Name</a>
+    }
+    else if (message.Author != null)
+    {
+        <a href="@Url.User(message.Author.UserName)" class="author">@message.Author.UserName</a>
+    }
+}

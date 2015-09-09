@@ -204,6 +204,23 @@
         });
     };
 
+    var replyToMessage = function (messageId, body, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/messages/reply",
+            data: { replyToMessage: messageId, body : body },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -219,7 +236,8 @@
         deleteComment: deleteComment,
         moreComments: moreComments,
         approvePost: approvePost,
-        removePost: removePost
+        removePost: removePost,
+        replyToMessage: replyToMessage
     };
 
 })();

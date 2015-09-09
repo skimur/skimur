@@ -41,16 +41,34 @@ CREATE OR REPLACE FUNCTION clear_database() RETURNS void AS $$
 DECLARE
 BEGIN
     DELETE FROM votes;
-                DELETE FROM posts;
-                DELETE FROM sub_scriptions;
-                DELETE FROM sub_admins;
-                DELETE FROM subs;
-                DELETE FROM user_logins;
-                DELETE FROM user_roles;
-                DELETE FROM roles;
-                DELETE from users;
-                END;
+	DELETE FROM votes;
+	DELETE FROM posts;
+	DELETE FROM comments;
+	DELETE FROM messages;
+	DELETE FROM sub_scriptions;
+	DELETE FROM sub_admins;
+	DELETE FROM sub_user_bans;
+	DELETE FROM subs;
+	DELETE FROM user_logins;
+	DELETE FROM user_roles;
+	DELETE FROM roles;
+	DELETE from users;
+END;
 $$ LANGUAGE plpgsql;");
+
+            conn.Execute(@"
+CREATE OR REPLACE FUNCTION ensure_default_user_exists() RETURNS void AS $$
+DECLARE
+BEGIN
+
+IF NOT EXISTS (SELECT 1 FROM users WHERE user_name = 'skimur') 
+THEN
+  INSERT INTO users (id, created_date, user_name, password_hash) values ('81e2d7a7-1e56-e511-84d5-5404a632cbf7', '2015-09-08 11:42:17.961907+00', 'skimur', 'AEX8cmLa7jBdhKaG5Gh8I5IIlWF6GBc5pmcED5QIdRZ45qOwky5GhvXkCTYo3Aey7A==');
+END IF;
+
+END;
+$$ LANGUAGE plpgsql;
+");
 
             conn.Execute(@"
 create or replace function hot(ups integer, downs integer, date timestamp with time zone) returns numeric as $$

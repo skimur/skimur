@@ -1,0 +1,40 @@
+﻿@using Subs.ReadModel
+@model MessageWrapped
+
+<div class="message" data-message-id="@Model.Message.Id">
+    <div class="message-body">
+        <div class="message-content">
+            <div class="message-tagline">
+                <a href="javascript:void(0)" class="expand" onclick="return skimurui.messages.toggleExpand(this)">[–]</a> @FromLink(Model) <time class="timestamp">@Html.Age(Model.Message.DateCreated) ago</time>
+            </div>
+            <div class="message-md">
+                @Html.Raw(Model.Message.BodyFormatted)
+            </div>
+            <textarea class="message-md-unformatted hidden">@Html.Raw(Model.Message.Body)</textarea>
+            <ul class="message-options">
+                <li class="first">
+                    <a href="@Url.MessageDetails(Model.Message)">permalink</a>
+                </li>
+                @if (Model.CanReply)
+                {
+                    <li>
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.startReply(this)" class="reply">reply</a>
+                    </li>
+                }
+            </ul>
+            <div class="message-staging hidden"></div>
+        </div>
+    </div>
+</div>
+
+@helper FromLink(MessageWrapped message)
+{
+    if (message.FromSub != null)
+    {
+        <a href="@Url.Sub(message.FromSub.Name)" class="author">@message.FromSub.Name</a>
+    }
+    else if (message.Author != null)
+    {
+        <a href="@Url.User(message.Author.UserName)" class="author">@message.Author.UserName</a>
+    }
+}

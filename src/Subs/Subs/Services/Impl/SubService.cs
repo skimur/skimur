@@ -212,5 +212,16 @@ namespace Subs.Services.Impl
             });
             totalNumber = temp;
         }
+
+        public List<Guid> GetSubsModeratoredByUser(Guid userId)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<SubAdmin>();
+                query.Where(x => x.UserId == userId);
+                query.SelectExpression = "SELECT \"sub_id\"";
+                return conn.Select(query).Select(x => x.SubId).ToList();
+            });
+        }
     }
 }

@@ -29,6 +29,8 @@ namespace Subs
             container.RegisterSingleton<ICommentDao, CommentDao>();
             container.RegisterSingleton<IPermissionService, PermissionService>();
             container.RegisterSingleton<IPermissionDao, PermissionDao>();
+            container.RegisterSingleton<IMessageService, MessageService>();
+            container.RegisterSingleton<IMessageDao, MessageDao>();
             container.RegisterSingleton<ICommentTreeBuilder, CommentTreeBuilder>();
             container.RegisterSingleton<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
             container.RegisterSingleton<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
@@ -36,6 +38,7 @@ namespace Subs
             container.RegisterSingleton<IPostWrapper, PostWrapper>();
             container.RegisterSingleton<ISubWrapper, SubWrapper>();
             container.RegisterSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
+            container.RegisterSingleton<IMessageWrapper, MessageWrapper>();
         }
 
         public int Order

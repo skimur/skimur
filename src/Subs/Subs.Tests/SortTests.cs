@@ -13,21 +13,6 @@ namespace Subs.Tests
     [TestFixture]
     public class SortTests
     {
-        public class JsonPost
-        {
-            [JsonProperty("title")]
-            public string Title { get; set; }
-
-            [JsonProperty("score")]
-            public int Score { get; set; }
-
-            [JsonProperty("created")]
-            public DateTime Created { get; set; }
-
-            [JsonIgnore]
-            public double EffectiveScore { get; set; }
-        }
-
         [Test]
         public void Can_calculate_hot()
         {
@@ -60,16 +45,6 @@ namespace Subs.Tests
             Assert.That(Sorting.Qa(4, 30, 40, 500), Is.EqualTo(44.544855173920155));
             Assert.That(Sorting.Qa(4, 30, 50, 500), Is.EqualTo(54.544855173920155));
             Assert.That(Sorting.Qa(4, 4, 4, new List<Comment> { new Comment { VoteUpCount = 5, VoteDownCount = 5, Body = "12345" } }), Is.EqualTo(0.7966983754040223));
-        }
-
-        private List<JsonPost> SortPosts(DateTime now, List<JsonPost> posts)
-        {
-            foreach (var post in posts)
-            {
-                post.EffectiveScore = Sorting.Hot(post.Score, post.Created.ToUnixTime());
-            }
-
-            return posts.OrderByDescending(x => x.EffectiveScore).ToList();
         }
     }
 }

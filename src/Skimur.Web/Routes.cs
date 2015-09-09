@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using System.Web.Routing;
+using Skimur.Web.Models;
 
 namespace Skimur.Web
 {
@@ -104,7 +105,7 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "SubsUnmoderated",
                 url: "s/{subName}/details/unmoderated",
-                defaults: new {controller = "Posts", action = "Unmoderated"});
+                defaults: new { controller = "Posts", action = "Unmoderated" });
 
             routes.MapRoute(
                 name: "Post",
@@ -205,6 +206,81 @@ namespace Skimur.Web
                 name: "SubmitWithSub",
                 url: "s/{subName}/submit",
                 defaults: new { controller = "Subs", action = "CreatePost" });
+
+            routes.MapRoute(
+                name: "MessageCompose",
+                url: "messages/compose",
+                defaults: new { controller = "Messages", action = "Compose" });
+
+            routes.MapRoute(
+                name: "MessageAll",
+                url: "messages/inbox",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.All });
+
+            routes.MapRoute(
+                name: "MessageUnread",
+                url: "messages/unread",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Unread });
+
+            routes.MapRoute(
+                name: "MessagePrivate",
+                url: "messages/messages",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Messages });
+
+            routes.MapRoute(
+                name: "MessageCommentReplies",
+                url: "messages/comments",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.CommentReplies });
+
+            routes.MapRoute(
+                name: "MessagePostReplies",
+                url: "messages/posts",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.PostReplies });
+
+            routes.MapRoute(
+                name: "MessageMentions",
+                url: "messages/mentions",
+                defaults: new { controller = "Messages", action = "Inbox", type = InboxType.Mentions });
+
+            routes.MapRoute(
+                name: "MessageDetails",
+                url: "messages/details/{id}",
+                defaults: new { controller = "Messages", action = "Details" });
+
+            routes.MapRoute(
+                name: "MessageSent",
+                url: "messages/sent",
+                defaults: new { controller = "Messages", action = "Sent" });
+
+            routes.MapRoute(
+                name: "MessageForSub",
+                url: "s/{subName}/messages",
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMail });
+
+            routes.MapRoute(
+                name: "MessageForSubUnread",
+                url: "s/{subName}/messages",
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailUnread });
+
+            routes.MapRoute(
+              name: "MessageForSubSent",
+              url: "s/{subName}/messages",
+              defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent });
+
+            routes.MapRoute(
+                name: "MessageForModerator",
+                url: "messages/moderated",
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMail });
+
+            routes.MapRoute(
+                name: "MessageForModeratorUnread",
+                url: "messages/moderated/unread",
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailUnread });
+
+            routes.MapRoute(
+                name: "MessageForModeratorSent",
+                url: "messages/moderated/sent",
+                defaults: new {controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent});
 
             routes.MapRoute(
                 name: "Default",

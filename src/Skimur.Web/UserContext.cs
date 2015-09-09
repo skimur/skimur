@@ -1,4 +1,5 @@
-﻿using System.Web;
+﻿using System;
+using System.Web;
 using Infrastructure.Utils;
 using Membership;
 using Membership.Services;
@@ -26,6 +27,9 @@ namespace Skimur.Web
                     return null;
 
                 _currentUser = _membershipService.GetUserById(HttpContext.Current.User.Identity.GetUserId().ParseGuid());
+
+                if(_currentUser == null)
+                    throw new Exception("Auth cookie exists for an invalid user. UserId=" + HttpContext.Current.User.Identity.GetUserId());
 
                 return _currentUser;
             }

@@ -1,0 +1,47 @@
+﻿@model InboxViewModel
+
+@{
+    switch (Model.InboxType)
+    {
+        case InboxType.All:
+            ViewBag.Title = "All";
+            break;
+        case InboxType.Unread:
+            ViewBag.Title = "Unread";
+            break;
+        case InboxType.Messages:
+            ViewBag.Title = "Messages";
+            break;
+        case InboxType.CommentReplies:
+            ViewBag.Title = "Comment replies";
+            break;
+        case InboxType.PostReplies:
+            ViewBag.Title = "Post replies";
+            break;
+        case InboxType.Mentions:
+            ViewBag.Title = "Mentions";
+            break;
+    }
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-group">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="@(Model.InboxType == InboxType.ModeratorMail ? "active" : "")"><a href="@Url.MessagesForModeratedSubs()">All</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMailUnread ? "active" : "")"><a href="@Url.MessagesForModeratedSubsUnread()">Unread</a></li>
+                <li class="@(Model.InboxType == InboxType.ModeratorMailSent ? "active" : "")"><a href="@Url.MessagesForModeratedSubsSent()">Sent</a></li>
+            </ul>
+        </div>
+        <div class="messages-container">
+            @foreach (var message in Model.Messages)
+            {
+                @Html.Partial("_Message", message)
+            }
+        </div>
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav", Model.IsModerator)
+}
