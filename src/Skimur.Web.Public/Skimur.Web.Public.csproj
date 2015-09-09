@@ -305,12 +305,10 @@
     <Content Include="Views\Shared\_LayoutCentered.cshtml" />
     <Content Include="Views\Shared\_LayoutEmpty.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
-    <Content Include="Views\Subs\_SideBar.cshtml" />
     <Content Include="Views\Subs\Index.cshtml" />
     <Content Include="Views\Subs\Create.cshtml" />
     <Content Include="Views\Subs\Edit.cshtml" />
     <Content Include="Views\Subs\Posts.cshtml" />
-    <Content Include="Views\Subs\_SubCreateEdit.cshtml" />
     <Content Include="Views\Subs\_TopBar.cshtml" />
     <Content Include="Views\Subs\CreatePost.cshtml" />
     <Content Include="Views\Shared\_LayoutFull.cshtml" />
@@ -318,7 +316,7 @@
     <Content Include="Views\Users\User.cshtml" />
     <Content Include="Views\Subs\_SubDetails.cshtml" />
     <Content Include="Views\Shared\_Post.cshtml" />
-    <Content Include="Views\Subs\_SideBarSearch.cshtml" />
+    <Content Include="Views\Common\_SideBarSearch.cshtml" />
     <Content Include="Views\Subs\Search.cshtml" />
     <Content Include="Views\Subs\Post.cshtml" />
     <Content Include="Views\Subs\_CommentNodes.cshtml" />
@@ -350,6 +348,7 @@
     <Content Include="Views\Messages\Details.cshtml" />
     <Content Include="Views\Messages\Sent.cshtml" />
     <Content Include="Views\Messages\ModeratorMail.cshtml" />
+    <Content Include="Views\Common\SideBar.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

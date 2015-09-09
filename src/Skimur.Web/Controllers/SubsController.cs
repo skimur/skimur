@@ -817,53 +817,5 @@ namespace Skimur.Web.Controllers
                 error = (string)null
             });
         }
-        
-        public ActionResult SideBar(string subName, Guid? subId, bool showSearch = true, bool showCreateSub = true, bool showSubmit = true)
-        {
-            var model = new SidebarViewModel();
-            model.ShowSearch = showSearch;
-            model.ShowCreateSub = showCreateSub;
-            model.ShowSubmit = showSubmit;
-
-            var currentUser = _userContext.CurrentUser;
-            
-            if (subId.HasValue)
-                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubById(subId.Value), _userContext.CurrentUser);
-            else if (!string.IsNullOrEmpty(subName))
-                model.CurrentSub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
-
-            if (model.CurrentSub != null)
-            {
-                if (_userContext.CurrentUser != null)
-                    model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.Id, model.CurrentSub.Sub.Id);
-
-                if (!model.IsModerator)
-                    // we only show list of mods if the requesting user is not a mod of this sub
-                    model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
-
-                // get the number of active users currently viewing this sub.
-                // for normal users, this number may be fuzzed (if low enough) for privacy reasons.
-                if (_userContext.CurrentUser != null && _userContext.CurrentUser.IsAdmin)
-                    model.NumberOfActiveUsers = _subActivityDao.GetActiveNumberOfUsersForSub(model.CurrentSub.Sub.Id);
-                else
-                {
-                    bool wasFuzzed;
-                    model.NumberOfActiveUsers = _subActivityDao.GetActiveNumberOfUsersForSubFuzzed(model.CurrentSub.Sub.Id, out wasFuzzed);
-                    model.IsNumberOfActiveUsersFuzzed = wasFuzzed;
-                }
-            }
-
-            if (model.ShowCreateSub)
-            {
-                if (currentUser != null)
-                {
-                    var age = Common.CurrentTime() - currentUser.CreatedDate;
-                    if (currentUser.IsAdmin || age.TotalDays >= _subSettings.Settings.MinUserAgeCreateSub)
-                        model.CanCreateSub = true;
-                }
-            }
-            
-            return PartialView("_SideBar", model);
-        }
     }
 }
