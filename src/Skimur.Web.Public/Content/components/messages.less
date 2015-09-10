@@ -1,11 +1,18 @@
 ﻿.message {
     position: relative;
 
-    .message {
-        margin-left: 15px;
-        margin-bottom: 0px;
-        padding-left: 10px;
-        border-left: 1px dotted #DDF;
+    &.message-unread {
+        background:@gray-lighter;
+
+        .message-options .mark-unread {
+            display:none;
+        }
+    }
+
+    &.message-read {
+        .message-options .mark-read {
+            display:none;
+        }
     }
 
     &.alternate {

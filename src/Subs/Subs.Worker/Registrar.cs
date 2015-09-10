@@ -43,6 +43,8 @@ namespace Subs.Worker
 
             container.Register<ICommandHandlerResponse<SendMessage, SendMessageResponse>, MessagesHandler>();
             container.Register<ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>, MessagesHandler>();
+            container.Register<ICommandHandler<MarkMessagesAsRead>, MessagesHandler>();
+            container.Register<ICommandHandler<MarkMessagesAsUnread>, MessagesHandler>();
         }
 
         public int Order

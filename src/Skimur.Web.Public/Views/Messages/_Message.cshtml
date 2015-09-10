@@ -1,7 +1,7 @@
 ﻿@using Subs.ReadModel
 @model MessageWrapped
 
-<div class="message" data-message-id="@Model.Message.Id">
+<div class="message @(Model.IsUnread.HasValue ? Model.IsUnread.Value ? "message-unread" : "message-read" : "")" data-message-id="@Model.Message.Id" onclick="skimurui.messages.messageClicked(this);">
     <div class="message-body">
         <div class="message-content">
             <div class="message-tagline">
@@ -17,8 +17,17 @@
                 </li>
                 @if (Model.CanReply)
                 {
-                    <li>
+                    <li class="reply">
                         <a href="javascript:void(0);" onclick="return skimurui.messages.startReply(this)" class="reply">reply</a>
+                    </li>
+                }
+                @if (Model.CanMarkRead)
+                {
+                    <li class="mark-unread">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                    </li>
+                    <li class="mark-read">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
                     </li>
                 }
             </ul>

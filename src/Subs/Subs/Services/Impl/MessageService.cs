@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
@@ -159,6 +160,28 @@ namespace Subs.Services.Impl
                 q.OrderByDescending(x => x.DateCreated);
                 return new SeekedList<Guid>(conn.Select(q).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
-        } 
+        }
+
+        public void MarkMessagesAsRead(List<Guid> messages)
+        {
+            if(messages == null || messages.Count == 0)
+                return;
+
+            _conn.Perform(conn =>
+            {
+                conn.Update<Message>(new {IsNew = false}, x => messages.Contains(x.Id));
+            });
+        }
+
+        public void MarkMessagesAsUnread(List<Guid> messages)
+        {
+            if (messages == null || messages.Count == 0)
+                return;
+
+            _conn.Perform(conn =>
+            {
+                conn.Update<Message>(new { IsNew = true }, x => messages.Contains(x.Id));
+            });
+        }
     }
 }

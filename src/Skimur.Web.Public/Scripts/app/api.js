@@ -221,6 +221,40 @@
         });
     };
 
+    var markMessagesAsRead = function(messages, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/messages/markmessagesasread",
+            data: { messages: messages },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var markMessagesAsUnread = function (messages, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/messages/markmessagesasunread",
+            data: { messages: messages },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -237,7 +271,9 @@
         moreComments: moreComments,
         approvePost: approvePost,
         removePost: removePost,
-        replyToMessage: replyToMessage
+        replyToMessage: replyToMessage,
+        markMessagesAsRead: markMessagesAsRead,
+        markMessagesAsUnread: markMessagesAsUnread
     };
 
 })();

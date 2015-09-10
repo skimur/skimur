@@ -11,13 +11,16 @@ using Membership.Services;
 using Skimur;
 using Skimur.Markdown;
 using Subs.Commands;
+using Subs.ReadModel;
 using Subs.Services;
 
 namespace Subs.Worker
 {
     public class MessagesHandler : 
         ICommandHandlerResponse<SendMessage, SendMessageResponse>,
-        ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>
+        ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>,
+        ICommandHandler<MarkMessagesAsRead>,
+        ICommandHandler<MarkMessagesAsUnread>
     {
         private readonly ILogger<MessagesHandler> _logger;
         private readonly IMembershipService _membershipService;
@@ -25,13 +28,15 @@ namespace Subs.Worker
         private readonly IPermissionService _permissionService;
         private readonly IMessageService _messageService;
         private readonly IMarkdownCompiler _markdownCompiler;
+        private readonly IPermissionDao _permissionDao;
 
         public MessagesHandler(ILogger<MessagesHandler> logger,
             IMembershipService membershipService,
             ISubService subService,
             IPermissionService permissionService,
             IMessageService messageService,
-            IMarkdownCompiler markdownCompiler)
+            IMarkdownCompiler markdownCompiler,
+            IPermissionDao permissionDao)
         {
             _logger = logger;
             _membershipService = membershipService;
@@ -39,6 +44,7 @@ namespace Subs.Worker
             _permissionService = permissionService;
             _messageService = messageService;
             _markdownCompiler = markdownCompiler;
+            _permissionDao = permissionDao;
         }
 
         public SendMessageResponse Handle(SendMessage command)
@@ -248,6 +254,93 @@ namespace Subs.Worker
             }
 
             return response;
+        }
+
+        public void Handle(MarkMessagesAsRead command)
+        {
+            if (command.Messages == null || command.Messages.Count == 0)
+                return;
+
+            var user = _membershipService.GetUserById(command.UserId);
+            if (user == null) return;
+
+            var messages = _messageService.GetMessagesByIds(command.Messages);
+            var subs = new List<Guid>();
+
+            foreach (var message in messages)
+            {
+                if (message.ToSub.HasValue && !subs.Contains(message.ToSub.Value))
+                    subs.Add(message.ToSub.Value);
+            }
+
+            var subsCanModerate = new List<Guid>();
+            foreach (var sub in subs)
+            {
+                // TODO: check for a narrower set of permissions
+                if (_permissionDao.CanUserModerateSub(user, sub))
+                    subsCanModerate.Add(sub);
+            }
+
+            var messagesToMarkAsRead = new List<Guid>();
+            foreach (var message in messages)
+            {
+                if (message.ToUser.HasValue && message.ToUser == user.Id)
+                {
+                    // this message was sent to this user
+                    messagesToMarkAsRead.Add(message.Id);
+                }else if (message.ToSub.HasValue && subsCanModerate.Contains(message.ToSub.Value))
+                {
+                    // this message was sent to a sub that the user is a moderator of
+                    messagesToMarkAsRead.Add(message.Id);
+                }
+            }
+
+            if (messagesToMarkAsRead.Count > 0)
+                _messageService.MarkMessagesAsRead(messagesToMarkAsRead);
+        }
+
+        public void Handle(MarkMessagesAsUnread command)
+        {
+            if (command.Messages == null || command.Messages.Count == 0)
+                return;
+
+            var user = _membershipService.GetUserById(command.UserId);
+            if (user == null) return;
+
+            var messages = _messageService.GetMessagesByIds(command.Messages);
+            var subs = new List<Guid>();
+
+            foreach (var message in messages)
+            {
+                if (message.ToSub.HasValue && !subs.Contains(message.ToSub.Value))
+                    subs.Add(message.ToSub.Value);
+            }
+
+            var subsCanModerate = new List<Guid>();
+            foreach (var sub in subs)
+            {
+                // TODO: check for a narrower set of permissions
+                if (_permissionDao.CanUserModerateSub(user, sub))
+                    subsCanModerate.Add(sub);
+            }
+
+            var messagesToMarkAsRead = new List<Guid>();
+            foreach (var message in messages)
+            {
+                if (message.ToUser.HasValue && message.ToUser == user.Id)
+                {
+                    // this message was sent to this user
+                    messagesToMarkAsRead.Add(message.Id);
+                }
+                else if (message.ToSub.HasValue && subsCanModerate.Contains(message.ToSub.Value))
+                {
+                    // this message was sent to a sub that the user is a moderator of
+                    messagesToMarkAsRead.Add(message.Id);
+                }
+            }
+
+            if (messagesToMarkAsRead.Count > 0)
+                _messageService.MarkMessagesAsUnread(messagesToMarkAsRead);
         }
     }
 }

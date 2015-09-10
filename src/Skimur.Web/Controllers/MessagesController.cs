@@ -170,8 +170,18 @@ namespace Skimur.Web.Controllers
         }
 
         [HttpPost]
+        [AllowAnonymous]
         public ActionResult Reply(ReplyMessageViewModel model)
         {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    succes = false,
+                    error = "You must be logged in to reply."
+                });
+            }
+
             ReplyMessageResponse response = null;
 
             try
@@ -292,6 +302,76 @@ namespace Skimur.Web.Controllers
             model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult MarkMessagesAsRead(List<Guid> messages)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    succes = false,
+                    error = "You must be logged in to mark messages as read."
+                });
+            }
+
+            if (messages == null || messages.Count == 0)
+            {
+                return Json(new
+                {
+                    success = true,
+                    error= (string)null
+                });
+            }
+
+            _commandBus.Send(new MarkMessagesAsRead
+            {
+                UserId = _userContext.CurrentUser.Id,
+                Messages = messages
+            });
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
+        [HttpPost]
+        [AllowAnonymous]
+        public ActionResult MarkMessagesAsUnread(List<Guid> messages)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    succes = false,
+                    error = "You must be logged in to mark messages as read."
+                });
+            }
+
+            if (messages == null || messages.Count == 0)
+            {
+                return Json(new
+                {
+                    success = true,
+                    error = (string)null
+                });
+            }
+
+            _commandBus.Send(new MarkMessagesAsUnread
+            {
+                UserId = _userContext.CurrentUser.Id,
+                Messages = messages
+            });
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
         }
     }
 }

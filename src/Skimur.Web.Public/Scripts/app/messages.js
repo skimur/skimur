@@ -64,9 +64,51 @@
         $textArea.focus();
     };
 
+    var markAsRead = function(element) {
+        var $message = getMessage(element);
+        if ($message.hasClass("message-read")) return;
+
+        var messages = [];
+        messages.push($message.data("message-id"));
+
+        skimur.markMessagesAsRead(messages, function (result) {
+            if (result.success) {
+                $message.removeClass("message-unread").addClass("message-read");
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
+    var markAsUnread = function(element) {
+        var $message = getMessage(element);
+        if ($message.hasClass("message-unread")) return;
+
+        var messages = [];
+        messages.push($message.data("message-id"));
+
+        skimur.markMessagesAsUnread(messages, function (result) {
+            if (result.success) {
+                $message.removeClass("message-read").addClass("message-unread");
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
+    var messageClicked = function(element) {
+        var $message = getMessage(element);
+        if ($message.hasClass("message-unread")) {
+            markAsRead(element);
+        }
+    };
+
     return {
         toggleExpand: toggleExpand,
-        startReply: startReply
+        startReply: startReply,
+        markAsRead : markAsRead,
+        markAsUnread: markAsUnread,
+        messageClicked: messageClicked
     };
 
 })();

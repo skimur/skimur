@@ -77,6 +77,8 @@
     <Compile Include="Commands\DeleteComment.cs" />
     <Compile Include="Commands\EditComment.cs" />
     <Compile Include="Commands\EditSub.cs" />
+    <Compile Include="Commands\MarkMessagesAsRead.cs" />
+    <Compile Include="Commands\MarkMessagesAsUnread.cs" />
     <Compile Include="Commands\RemovePost.cs" />
     <Compile Include="Commands\ReplyMessage.cs" />
     <Compile Include="Commands\SendMessage.cs" />

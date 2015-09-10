@@ -100,6 +100,14 @@ namespace Subs.ReadModel.Impl
                 {
                     message.UserIsRecipiant = true;
                 }
+
+                if (message.ToUser != null && message.ToUser.Id == currentUser.Id)
+                    message.CanMarkRead = true;
+                else if (message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
+                    message.CanMarkRead = true;
+
+                if (message.CanMarkRead)
+                    message.IsUnread = message.Message.IsNew;
             }
 
             return messages;
