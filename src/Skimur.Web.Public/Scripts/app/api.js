@@ -255,15 +255,49 @@
         });
     }
 
+    var reportPost = function(postId, type, reason, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/reportpost",
+            data: { postId, type, reason },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var reportComment = function (commentId, type, reason, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/reportcomment",
+            data: { commentId, type, reason },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
         votePost: votePost,
-        upvotePost: function (postId, callback) { votePost(postId, 1, callback); },
-        downvotePost: function (postId, callback) { votePost(postId, 0, callback); },
+        upvotePost: function(postId, callback) { votePost(postId, 1, callback); },
+        downvotePost: function(postId, callback) { votePost(postId, 0, callback); },
         unvotePost: unvotePost,
-        upvoteComment: function (commentId, callback) { voteComment(commentId, 1, callback); },
-        downvoteComment: function (commentId, callback) { voteComment(commentId, 0, callback); },
+        upvoteComment: function(commentId, callback) { voteComment(commentId, 1, callback); },
+        downvoteComment: function(commentId, callback) { voteComment(commentId, 0, callback); },
         unvoteComment: unvoteComment,
         createComment: createComment,
         editComment: editComment,
@@ -273,7 +307,9 @@
         removePost: removePost,
         replyToMessage: replyToMessage,
         markMessagesAsRead: markMessagesAsRead,
-        markMessagesAsUnread: markMessagesAsUnread
+        markMessagesAsUnread: markMessagesAsUnread,
+        reportPost: reportPost,
+        reportComment: reportComment
     };
 
 })();

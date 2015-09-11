@@ -56,6 +56,10 @@ namespace Subs
 
         public Guid? RemovedBy { get; set; }
         
+        public int NumberOfReports { get; set; }
+
+        public bool IgnoreReports { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {

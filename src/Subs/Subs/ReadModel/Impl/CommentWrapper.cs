@@ -64,6 +64,9 @@ namespace Subs.ReadModel.Impl
 
                 item.CanDelete = userCanMod || item.CurrentUserIsAuthor;
                 item.CanEdit = item.CurrentUserIsAuthor;
+
+                if (currentUser != null)
+                    item.CanReport = true;
             }
 
             return result;

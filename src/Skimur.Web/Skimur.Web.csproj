@@ -139,6 +139,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Exceptions.cs" />

@@ -20,5 +20,7 @@ namespace Subs.ReadModel
         public Verdict? Verdict { get; set; }
 
         public bool CanManagePost { get; set; }
+
+        public bool CanReport { get; set; }
     }
 }

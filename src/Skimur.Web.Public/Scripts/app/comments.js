@@ -205,6 +205,11 @@
         });
     }
 
+    var report = function(element) {
+        var comment = cancel(element);
+
+    };
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -212,7 +217,8 @@
         startEdit: startEdit,
         toggleExpand: toggleExpand,
         delete: deleteComment,
-        moreChildren: moreChildren
+        moreChildren: moreChildren,
+        report : report
     };
 
 })();

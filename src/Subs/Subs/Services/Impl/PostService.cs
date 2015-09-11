@@ -238,5 +238,15 @@ namespace Subs.Services.Impl
                 conn.Update<Post>(new { RemovedBy = userId, Verdict = (int)Verdict.ModRemoved }, x => x.Id == postId);
             });
         }
+
+        public void UpdateNumberOfReportsForPost(Guid postId, int numberOfReports)
+        {
+            _conn.Perform(conn => conn.Update<Post>(new { NumberOfReports = numberOfReports }, x => x.Id == postId));
+        }
+
+        public void SetIgnoreReportsForPost(Guid postId, bool ignoreReports)
+        {
+            _conn.Perform(conn => conn.Update<Post>(new { IgnoreReports = ignoreReports }, x => x.Id == postId));
+        }
     }
 }

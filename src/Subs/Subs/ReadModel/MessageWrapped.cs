@@ -33,6 +33,7 @@ namespace Subs.ReadModel
         public bool CanUserView { get; set; }
 
         public bool CanMarkRead { get; set; }
+
         public bool? IsUnread { get; set; }
     }
 }

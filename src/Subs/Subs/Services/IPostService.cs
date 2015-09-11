@@ -24,5 +24,9 @@ namespace Subs.Services
         void ApprovePost(Guid postId, Guid userId);
 
         void RemovePost(Guid postId, Guid userId);
+
+        void UpdateNumberOfReportsForPost(Guid postId, int numberOfReports);
+
+        void SetIgnoreReportsForPost(Guid postId, bool ignoreReports);
     }
 }

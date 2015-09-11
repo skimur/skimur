@@ -81,7 +81,10 @@
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />
     <Compile Include="Commands\RemovePost.cs" />
     <Compile Include="Commands\ReplyMessage.cs" />
+    <Compile Include="Commands\ReportComment.cs" />
+    <Compile Include="Commands\ReportPost.cs" />
     <Compile Include="Commands\SendMessage.cs" />
+    <Compile Include="Commands\ConfigureReportIgnoring.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
     <Compile Include="Commands\UnBanUserFromSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
@@ -114,6 +117,7 @@
     <Compile Include="ReadModel\SubUserBanWrapped.cs" />
     <Compile Include="ReadModel\SubWrapped.cs" />
     <Compile Include="ReadModel\Impl\SubWrapper.cs" />
+    <Compile Include="Report.cs" />
     <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Services\Impl\CommentTreeBuilder.cs" />
     <Compile Include="ReadModel\CommentTreeContextBuilder.cs" />
@@ -121,6 +125,8 @@
     <Compile Include="Services\ICommentTreeBuilder.cs" />
     <Compile Include="ReadModel\ICommentTreeContextBuilder.cs" />
     <Compile Include="Services\Impl\MessageService.cs" />
+    <Compile Include="Services\Impl\ReportService.cs" />
+    <Compile Include="Services\IReportService.cs" />
     <Compile Include="Services\ISubActivityService.cs" />
     <Compile Include="Services\ISubUserBanService.cs" />
     <Compile Include="Services\Impl\SubUserBanService.cs" />

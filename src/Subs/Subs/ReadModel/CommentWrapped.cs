@@ -26,5 +26,7 @@ namespace Subs.ReadModel
         public bool CanEdit { get; set; }
         
         public Post Post { get; set; }
+
+        public bool CanReport { get; set; }
     }
 }

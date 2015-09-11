@@ -60,6 +60,8 @@ namespace Subs.ReadModel.Impl
                     item.CanManagePost = true;
                     item.Verdict = item.Post.PostVerdict;
                 }
+                if (currentUser != null)
+                    item.CanReport = true;
             }
 
             return posts;

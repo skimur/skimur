@@ -159,5 +159,15 @@ namespace Subs.Services.Impl
                     x => x.Id == commentId);
             });
         }
+
+        public void UpdateNumberOfReportsForComment(Guid commentId, int numberOfReports)
+        {
+            _conn.Perform(conn => conn.Update<Comment>(new { NumberOfReports = numberOfReports }, x => x.Id == commentId));
+        }
+
+        public void SetIgnoreReportsForComment(Guid commentId, bool ignoreReports)
+        {
+            _conn.Perform(conn => conn.Update<Comment>(new { IgnoreReports = ignoreReports }, x => x.Id == commentId));
+        }
     }
 }

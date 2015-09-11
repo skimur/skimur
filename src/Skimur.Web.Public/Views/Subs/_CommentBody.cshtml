@@ -34,7 +34,6 @@
             }
             @if (Model.Parent != null)
             {
-
                 <li>
                     @if (Model.IsParentVisible)
                     {
@@ -47,8 +46,26 @@
 
                 </li>
             }
-
+            @if (Model.Comment.CanReport)
+            {
+                <li>
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.report(this);"></a>
+                </li>
+            }
         </ul>
-        <div class="comment-staging hidden"></div>
+        <div class="comment-staging">
+            <div class="btn-group-vertical">
+                <label class="btn btn-default">
+                    <input type="radio" name="options" id="option1"> Option 1
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="options" id="option2"> Option 2
+                </label>
+                <label class="btn btn-default">
+                    <input type="radio" name="options" id="option3"> Option 3
+                </label>
+                <input class="input-control" type="text" />
+            </div>
+        </div>
     </div>
 </div>
