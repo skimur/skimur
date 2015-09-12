@@ -49,6 +49,7 @@ namespace Subs.Worker
             container.Register<ICommandHandler<ReportComment>, ReportHandler>();
             container.Register<ICommandHandler<ReportPost>, ReportHandler>();
             container.Register<ICommandHandler<ConfigureReportIgnoring>, ReportHandler>();
+            container.Register<ICommandHandler<ClearReports>, ReportHandler>();
         }
 
         public int Order

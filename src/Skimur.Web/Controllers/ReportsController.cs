@@ -126,6 +126,119 @@ namespace Skimur.Web.Controllers
             });
         }
 
+        public ActionResult Clear(Guid? postId, Guid? commentId)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to clear reports."
+                });
+            }
+            
+            try
+            {
+                _commandBus.Send(new ClearReports
+                {
+                    UserId = _userContext.CurrentUser.Id,
+                    PostId = postId,
+                    CommentId = commentId
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error clearing reports.", ex);
+                return Json(new
+                {
+                    success = false,
+                    error = "An unknown error occured."
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
+        public ActionResult Ignore(Guid? postId, Guid? commentId)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to ignore reports."
+                });
+            }
+
+            try
+            {
+                _commandBus.Send(new ConfigureReportIgnoring
+                {
+                    UserId = _userContext.CurrentUser.Id,
+                    PostId = postId,
+                    CommentId = commentId,
+                    IgnoreReports = true
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error ignoring reports.", ex);
+                return Json(new
+                {
+                    success = false,
+                    error = "An unknown error occured."
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
+        public ActionResult Unignore(Guid? postId, Guid? commentId)
+        {
+            if (!Request.IsAuthenticated)
+            {
+                return Json(new
+                {
+                    success = false,
+                    error = "You must be logged in to unignore reports."
+                });
+            }
+
+            try
+            {
+                _commandBus.Send(new ConfigureReportIgnoring
+                {
+                    UserId = _userContext.CurrentUser.Id,
+                    PostId = postId,
+                    CommentId = commentId,
+                    IgnoreReports = false
+                });
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error unignoring reports.", ex);
+                return Json(new
+                {
+                    success = false,
+                    error = "An unknown error occured."
+                });
+            }
+
+            return Json(new
+            {
+                success = true,
+                error = (string)null
+            });
+        }
+
         private string BuildReasonFromType(ReasonType type, string reason)
         {
             if (string.IsNullOrEmpty(reason))

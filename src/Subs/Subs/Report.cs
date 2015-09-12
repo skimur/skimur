@@ -17,7 +17,7 @@ namespace Subs
         public Guid ReportedBy { get; set; }
         
         public string Reason { get; set; }
-
+        
         [Alias("ReportedPosts")]
         public class PostReport : Report
         {

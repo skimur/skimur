@@ -124,12 +124,13 @@
                     }
                 }
             }
-            .disc-reports{
+
+            .disc-reports {
                 .report-summary {
                     .alert;
                     .alert-danger;
-                    margin-bottom:0;
-                    padding:5px;
+                    margin-bottom: 0;
+                    padding: 5px;
                 }
             }
         }
@@ -164,6 +165,30 @@
             a {
                 color: lighten(@text-color, 40%);
                 text-decoration: none;
+            }
+        }
+    }
+
+    &.reports-ignored {
+        .disc-body {
+            .disc-main {
+                .disc-options {
+                    > li.ignore-reports {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &.reports-unignored {
+        .disc-body {
+            .disc-main {
+                .disc-options {
+                    > li.unignore-reports {
+                        display: none;
+                    }
+                }
             }
         }
     }

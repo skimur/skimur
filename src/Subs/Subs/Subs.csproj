@@ -71,6 +71,7 @@
     <Compile Include="Commands\BanUserFromSub.cs" />
     <Compile Include="Commands\CastVoteForPost.cs" />
     <Compile Include="Commands\CastVoteForComment.cs" />
+    <Compile Include="Commands\ClearReports.cs" />
     <Compile Include="Commands\CreateComment.cs" />
     <Compile Include="Commands\CreatePost.cs" />
     <Compile Include="Commands\CreateSub.cs" />

@@ -2,7 +2,7 @@
 @using Subs.ReadModel
 @model PostWrapped
 
-<div class="disc post @ApprovedRemovedClass(Model)" data-post-id="@Model.Post.Id">
+<div class="disc post @ApprovedRemovedClass(Model) @IgnoreUnignoredClass(Model)" data-post-id="@Model.Post.Id">
     <div class="disc-body">
         <div class="disc-left">
             <div class="disc-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
@@ -53,13 +53,22 @@
                         <a href="javascript:void(0);" onclick="return skimurui.posts.report(this);">report</a>
                     </li>
                 }
-                @if (Model.CanManagePost && Model.Reports != null && Model.Reports.Count > 0)
+                @if (Model.CanManagePost)
                 {
-                    <li class="reports">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.toggleReports(this);">reports (@Model.Reports.Count)</a>
-                    </li>
+                    if (Model.Reports != null && Model.Reports.Count > 0)
+                    {
+                        <li class="reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleReports(this);">reports (@Model.Reports.Count)</a>
+                        </li>
+                        <li class="clear-reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.clearReports(this);">clear reports</a>
+                        </li>
+                    }
                     <li class="ignore-reports">
                         <a href="javascript:void(0);" onclick="return skimurui.posts.ignoreReports(this);">ignore reports</a>
+                    </li>
+                    <li class="unignore-reports">
+                        <a href="javascript:void(0);" onclick="return skimurui.posts.unignoreReports(this);">unignore reports</a>
                     </li>
                 }
             </ul>
@@ -79,50 +88,56 @@
                     }
                 </div>
             }
-            <div class="disc-staging">
-
-            </div>
+            <div class="disc-staging"></div>
         </div>
     </div>
 </div>
 
 @helper ApprovedRemovedClass(PostWrapped post)
 {
-if (post.Verdict.HasValue)
-{
-    if (post.Verdict == Verdict.ModApproved)
+    if (post.Verdict.HasValue)
     {
+        if (post.Verdict == Verdict.ModApproved)
+        {
             @("approved")
-    }
-    else if (post.Verdict == Verdict.ModRemoved)
-    {
+        }
+        else if (post.Verdict == Verdict.ModRemoved)
+        {
             @("removed")
+        }
     }
 }
+
+@helper IgnoreUnignoredClass(PostWrapped post)
+{
+    if (post.CanManagePost)
+    {
+        @(post.Post.IgnoreReports ? "reports-ignored" : "reports-unignored")
+    }
 }
 
 @helper DomainLink(PostWrapped post)
 {
-if (post.Post.PostType == PostType.Link)
-{
-    if (!string.IsNullOrEmpty(post.Post.Domain))
+    if (post.Post.PostType == PostType.Link)
     {
+        if (!string.IsNullOrEmpty(post.Post.Domain))
+        {
             <a class="domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
+        }
     }
-}
-else if (post.Post.PostType == PostType.Text)
-{
+    else if (post.Post.PostType == PostType.Text)
+    {
         <a class="domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
-}
+    }
 }
 @helper PostUrl(PostWrapped post)
 {
-if (post.Post.PostType == PostType.Link)
-{
+    if (post.Post.PostType == PostType.Link)
+    {
         @post.Post.Url
-}
-else if (post.Post.PostType == PostType.Text)
-{
+    }
+    else if (post.Post.PostType == PostType.Text)
+    {
         @Url.Post(post.Sub, post.Post)
-}
+    }
 }

@@ -158,14 +158,48 @@
     };
 
     var toggleReports = function(element) {
-        var post = getPost(element);
-        var reports = $(".disc-reports", post.post);
-        if (reports.hasClass("hidden")) {
-            reports.removeClass("hidden");
+        var $post = getPost(element);
+        var $reports = $(".disc-reports", $post);
+        if ($reports.hasClass("hidden")) {
+            $reports.removeClass("hidden");
         } else {
-            reports.addClass("hidden");
+            $reports.addClass("hidden");
         }
     };
+
+    var clearReports = function(element) {
+        var $post = getPost(element);
+        skimur.clearReportsForPost($post.data("post-id"), function(result) {
+            if (result.success) {
+                $(".disc-reports, .disc-options .reports, .disc-options .clear-reports", $post).remove();
+
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
+    var ignoreReports = function(element) {
+        var $post = getPost(element);
+        skimur.ignoreReportsForPost($post.data("post-id"), function(result) {
+            if (result.success) {
+                $post.removeClass("reports-unignored").addClass("reports-ignored");
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
+    var unignoreReports = function (element) {
+        var $post = getPost(element);
+        skimur.unignoreReportsForPost($post.data("post-id"), function (result) {
+            if (result.success) {
+                $post.removeClass("reports-ignored").addClass("reports-unignored");
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
 
     return {
         voteUp: voteUp,
@@ -173,7 +207,10 @@
         approve: approve,
         remove: remove,
         report: report,
-        toggleReports: toggleReports
+        toggleReports: toggleReports,
+        clearReports: clearReports,
+        ignoreReports: ignoreReports,
+        unignoreReports: unignoreReports
     };
 
 })();

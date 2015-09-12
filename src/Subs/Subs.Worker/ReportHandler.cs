@@ -13,7 +13,8 @@ namespace Subs.Worker
     public class ReportHandler : 
         ICommandHandler<ReportComment>,
         ICommandHandler<ReportPost>,
-        ICommandHandler<ConfigureReportIgnoring>
+        ICommandHandler<ConfigureReportIgnoring>,
+        ICommandHandler<ClearReports>
     {
         private readonly IMembershipService _membershipService;
         private readonly ICommentService _commentService;
@@ -90,7 +91,7 @@ namespace Subs.Worker
 
             _postService.UpdateNumberOfReportsForPost(post.Id, currentReports.Count + 1);
         }
-
+        
         public void Handle(ConfigureReportIgnoring command)
         {
             if (!command.PostId.HasValue && !command.CommentId.HasValue) return;
@@ -132,6 +133,41 @@ namespace Subs.Worker
                 if (command.IgnoreReports)
                 {
                     // delete any existing reports
+                    _reportService.RemoveReportsForComment(comment.Id);
+                    _commentService.UpdateNumberOfReportsForComment(comment.Id, 0);
+                }
+            }
+        }
+
+        public void Handle(ClearReports command)
+        {
+            if (!command.PostId.HasValue && !command.CommentId.HasValue)
+                return;
+
+            var user = _membershipService.GetUserById(command.UserId);
+            if (user == null) return;
+
+            if (command.PostId.HasValue)
+            {
+                var post = _postService.GetPostById(command.PostId.Value);
+                if (post == null) return;
+
+                // TODO: check for a narrower set of permissions
+                if (_permissionService.CanUserModerateSub(user, post.SubId))
+                {
+                    _reportService.RemoveReportsForPost(post.Id);
+                    _postService.UpdateNumberOfReportsForPost(post.Id, 0);
+                }
+            }
+
+            if (command.CommentId.HasValue)
+            {
+                var comment = _commentService.GetCommentById(command.CommentId.Value);
+                if (comment == null) return;
+
+                // TODO: check for a narrower set of permissions
+                if (_permissionService.CanUserModerateSub(user, comment.SubId))
+                {
                     _reportService.RemoveReportsForComment(comment.Id);
                     _commentService.UpdateNumberOfReportsForComment(comment.Id, 0);
                 }
