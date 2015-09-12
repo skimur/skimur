@@ -1,0 +1,162 @@
+﻿.disc-container {
+    margin-bottom: 20px;
+}
+
+.disc {
+    position: relative;
+
+    .disc-body {
+        // the left side of the message (fit width)
+        .disc-left {
+            float: left;
+
+            .disc-voting {
+                color: @gray-light;
+                font-size: ceil((@font-size-base * 1.2));
+                margin-right: 15px;
+                margin-bottom: 10px;
+
+                .up, .votes, .down {
+                    display: block !important;
+                    margin-left: auto;
+                    margin-right: auto;
+                    text-align: center;
+                }
+
+                .up, .down {
+                    .fa;
+                    cursor: pointer;
+                }
+
+                .votes {
+                    cursor: default;
+                }
+
+                .up {
+                    .fa-mixin-icon(chevron-up);
+                }
+
+                .down {
+                    .fa-mixin-icon(chevron-down);
+                }
+
+                &.voted-up {
+                    .up, .votes {
+                        color: @brand-success;
+                    }
+
+                    .down {
+                        color: lighten(@gray-light, 40%);
+                    }
+                }
+
+                &.voted-down {
+                    .down, .votes {
+                        color: @brand-danger;
+                    }
+
+                    .up {
+                        color: lighten(@gray-light, 40%);
+                    }
+                }
+            }
+        }
+        // the right side of the message (auto width)
+        .disc-main {
+            overflow: hidden;
+            margin-bottom: 15px;
+            // and headers for the message (if any).
+            // posts of headings, comments/messages don't
+            .disc-heading {
+            }
+            // some quick info about the message (author, time, points, etc)
+            .disc-tagline {
+                font-size: @font-size-small;
+
+                .expand {
+                    margin-right: 3px;
+                    padding: 1px;
+                }
+            }
+            // the actual content of the message the user will want to read (rendered markdown mostly)
+            .disc-content {
+                margin-top: 5px;
+                margin-bottom: 5px;
+
+                > :first-child {
+                    margin-top: 0px;
+                }
+
+                & > :last-child {
+                    margin-bottom: 0px;
+                }
+            }
+            // some options/actions for the message, such as reply, edit, report, spam, perma, etc
+            .disc-options {
+                margin: 0;
+                padding: 0;
+                font-size: @font-size-small;
+
+                > li {
+                    display: inline-block;
+                    white-space: nowrap;
+                    margin-left: 10px;
+
+                    &.first {
+                        margin-left: 0px;
+                    }
+
+                    a {
+                        color: lighten(@gray, 25%);
+                        font-weight: bold;
+                    }
+                }
+
+                list-style-type: none;
+            }
+            // when users hover over the main body of the message (heading/tagline/message), make the options a little more prominant
+            &:hover {
+                .disc-options {
+                    > li {
+                        a {
+                            color: @gray;
+                        }
+                    }
+                }
+            }
+        }
+    }
+    // nested messages get a little indented
+    .disc {
+        margin-left: 15px;
+        margin-bottom: 0px;
+        padding-left: 10px;
+        border-left: 1px dotted #DDF;
+    }
+
+    &.alternate {
+    }
+
+    &.collapsed {
+        // when this comment is collapsed, hide all child messages, content, options, except the tagline
+        .disc, .disc-content, .disc-content-unformatted, .disc-options {
+            display: none;
+        }
+        // the left content will also probally want to be hidden (if available)
+        // no need to vote (etc) on content you can't read
+        .disc-left {
+            visibility: hidden;
+            height: 1px;
+        }
+        // make the only visible content (the tagline) visible, but make it clear that it hides collapsed content
+        .disc-tagline {
+            color: lighten(@text-color, 40%);
+            font-style: italic;
+
+            a {
+                color: lighten(@text-color, 40%);
+                text-decoration: none;
+            }
+        }
+    }
+}

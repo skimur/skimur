@@ -1,17 +1,17 @@
 ﻿@using Subs.ReadModel
 @model MessageWrapped
 
-<div class="message @(Model.IsUnread.HasValue ? Model.IsUnread.Value ? "message-unread" : "message-read" : "")" data-message-id="@Model.Message.Id" onclick="skimurui.messages.messageClicked(this);">
-    <div class="message-body">
-        <div class="message-content">
-            <div class="message-tagline">
+<div class="disc message @(Model.IsUnread.HasValue ? Model.IsUnread.Value ? "message-unread" : "message-read" : "")" data-message-id="@Model.Message.Id" onclick="skimurui.messages.messageClicked(this);">
+    <div class="disc-body">
+        <div class="disc-main">
+            <div class="disc-tagline">
                 <a href="javascript:void(0)" class="expand" onclick="return skimurui.messages.toggleExpand(this)">[–]</a> @FromLink(Model) <time class="timestamp">@Html.Age(Model.Message.DateCreated) ago</time>
             </div>
-            <div class="message-md">
+            <div class="disc-content">
                 @Html.Raw(Model.Message.BodyFormatted)
             </div>
-            <textarea class="message-md-unformatted hidden">@Html.Raw(Model.Message.Body)</textarea>
-            <ul class="message-options">
+            <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Message.Body)</textarea>
+            <ul class="disc-options">
                 <li class="first">
                     <a href="@Url.MessageDetails(Model.Message)">permalink</a>
                 </li>
@@ -31,7 +31,7 @@
                     </li>
                 }
             </ul>
-            <div class="message-staging hidden"></div>
+            <div class="disc-staging hidden"></div>
         </div>
     </div>
 </div>

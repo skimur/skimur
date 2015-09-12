@@ -9,7 +9,7 @@
         var $comment = getComment(element);
 
         // hide any content that may be staged (editing/banning/etc).
-        var $staging = $comment.find("> .comment-body .comment-staging").addClass("hidden").empty();
+        var $staging = $comment.find("> .disc-body .disc-staging").addClass("hidden").empty();
 
         return {
             comment: $comment,
@@ -23,7 +23,7 @@
             return;
 
         var $comment = getComment(element);
-        var $voting = $("> .comment-body .comment-voting", $comment);
+        var $voting = $("> .disc-body .disc-voting", $comment);
 
         // the user wants to upvote a post!
         if ($voting.hasClass("vote-processing")) return;
@@ -62,7 +62,7 @@
             return;
 
         var $comment = getComment(element);
-        var $voting = $("> .comment-body .comment-voting", $comment);
+        var $voting = $("> .disc-body .disc-voting", $comment);
 
         // the user wants to downvote a post!
         if ($voting.hasClass("vote-processing")) return;
@@ -114,7 +114,7 @@
                 skimur.createComment(comment.comment.data("post-id"), comment.comment.data("comment-id"), $textArea.val(), function (result) {
                     cancel(element);
                     if (result.success) {
-                        $(result.html).insertAfter($("> .comment-body", comment.comment));
+                        $(result.html).insertAfter($("> .disc-body", comment.comment));
                     } else {
                         skimurui.displayError(result.error);
                     }
@@ -138,7 +138,7 @@
         var comment = cancel(element);
         var $textArea = $("<textarea />")
             .appendTo(comment.staging)
-            .val(comment.comment.find("> .comment-body .comment-md-unformatted").val());
+            .val(comment.comment.find("> .disc-body .disc-content-unformatted").val());
 
         $textArea.markdown({ iconlibrary: "fa", width: "form-group" });
 
@@ -151,7 +151,7 @@
                 skimur.editComment(comment.comment.data("comment-id"), $textArea.val(), function (result) {
                     cancel(element);
                     if (result.success) {
-                        comment.comment.find("> .comment-body").replaceWith($(result.html));
+                        comment.comment.find("> .disc-body").replaceWith($(result.html));
                     } else {
                         skimurui.displayError(result.error);
                     }
@@ -189,7 +189,7 @@
             if (result.confirmed) {
                 skimur.deleteComment($comment.data("comment-id"), null, function (deleteResult) {
                     if (deleteResult.success) {
-                        $("> .comment-body", $comment).find(".delete, .reply, .edit").remove();
+                        $("> .disc-body", $comment).find(".delete, .reply, .edit").remove();
                     } else {
                         skimurui.displayError(deleteResult.error);
                     }

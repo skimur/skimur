@@ -10,7 +10,7 @@
             return;
 
         var $post = getPost(element);
-        var $voting = $(".post-voting", $post);
+        var $voting = $(".disc-voting", $post);
 
         // the user wants to upvote a post!
         if ($voting.hasClass("vote-processing")) return;
@@ -49,7 +49,7 @@
             return;
 
         var $post = getPost(element);
-        var $voting = $(".post-voting", $post);
+        var $voting = $(".disc-voting", $post);
 
         // the user wants to downvote a post!
         if ($voting.hasClass("vote-processing")) return;
@@ -90,7 +90,7 @@
                     if (result.success) {
                         skimurui.displaySuccess("The post has been approved.");
                         $post.removeClass("removed").addClass("approved");
-                        $(".post-verdict", $post).removeClass("removed").addClass("approved");
+                        $(".verdict", $post).removeClass("removed").addClass("approved");
                     } else {
                         skimurui.displayError(result.error);
                     }
@@ -107,7 +107,7 @@
                     if (result.success) {
                         skimurui.displaySuccess("The post has been removed.");
                         $post.removeClass("approved").addClass("removed");
-                        $(".post-verdict", $post).removeClass("approved").addClass("removed");
+                        $(".verdict", $post).removeClass("approved").addClass("removed");
                     } else {
                         skimurui.displayError(result.error);
                     }
