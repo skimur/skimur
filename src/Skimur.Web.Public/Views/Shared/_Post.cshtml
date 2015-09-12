@@ -47,7 +47,16 @@
                         <a href="javascript:void(0);" onclick="return skimurui.posts.approve(this)" class="delete">approve</a>
                     </li>
                 }
+                @if (Model.CanReport)
+                {
+                    <li class="report">
+                        <a href="javascript:void(0);" onclick="return skimurui.posts.report(this);">report</a>
+                    </li>
+                }
             </ul>
+            <div class="disc-staging">
+
+            </div>
         </div>
     </div>
 </div>
