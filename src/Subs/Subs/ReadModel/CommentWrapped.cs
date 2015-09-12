@@ -1,4 +1,5 @@
-﻿using Membership;
+﻿using System.Collections.Generic;
+using Membership;
 
 namespace Subs.ReadModel
 {
@@ -28,5 +29,7 @@ namespace Subs.ReadModel
         public Post Post { get; set; }
 
         public bool CanReport { get; set; }
+
+        public List<ReportSummary> Reports { get; set; } 
     }
 }

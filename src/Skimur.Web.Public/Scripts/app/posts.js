@@ -157,12 +157,23 @@
         post.staging.removeClass("hidden");
     };
 
+    var toggleReports = function(element) {
+        var post = getPost(element);
+        var reports = $(".disc-reports", post.post);
+        if (reports.hasClass("hidden")) {
+            reports.removeClass("hidden");
+        } else {
+            reports.addClass("hidden");
+        }
+    };
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
         approve: approve,
         remove: remove,
-        report: report
+        report: report,
+        toggleReports: toggleReports
     };
 
 })();

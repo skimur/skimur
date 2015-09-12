@@ -14,8 +14,15 @@ namespace Subs.ReadModel.Impl
         private readonly IPostDao _postDao;
         private readonly IPermissionDao _permissionDao;
         private readonly IVoteDao _voteDao;
+        private readonly IReportDao _reportDao;
 
-        public CommentWrapper(ICommentDao commentDao, IMembershipService membershipService, ISubDao subDao, IPostDao postDao, IPermissionDao permissionDao, IVoteDao voteDao)
+        public CommentWrapper(ICommentDao commentDao, 
+            IMembershipService membershipService, 
+            ISubDao subDao, 
+            IPostDao postDao, 
+            IPermissionDao permissionDao, 
+            IVoteDao voteDao,
+            IReportDao reportDao)
         {
             _commentDao = commentDao;
             _membershipService = membershipService;
@@ -23,6 +30,7 @@ namespace Subs.ReadModel.Impl
             _postDao = postDao;
             _permissionDao = permissionDao;
             _voteDao = voteDao;
+            _reportDao = reportDao;
         }
 
         public List<CommentWrapped> Wrap(List<Guid> commentIds, User currentUser = null)
@@ -67,6 +75,23 @@ namespace Subs.ReadModel.Impl
 
                 if (currentUser != null)
                     item.CanReport = true;
+
+                if (userCanMod && item.Comment.NumberOfReports > 0)
+                {
+                    var reports = _reportDao.GetReportsForComment(item.Comment.Id);
+                    item.Reports = new List<ReportSummary>();
+                    foreach (var report in reports)
+                    {
+                        var summary = new ReportSummary();
+                        if (!authors.ContainsKey(report.ReportedBy))
+                            authors.Add(report.ReportedBy, _membershipService.GetUserById(report.ReportedBy));
+                        var user = authors[report.ReportedBy];
+                        if (user != null)
+                            summary.UserName = user.UserName;
+                        summary.Reason = report.Reason;
+                        item.Reports.Add(summary);
+                    }
+                }
             }
 
             return result;

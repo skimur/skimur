@@ -103,9 +103,11 @@
     <Compile Include="ReadModel\ICommentWrapper.cs" />
     <Compile Include="ReadModel\Impl\MessageDao.cs" />
     <Compile Include="ReadModel\Impl\MessageWrapper.cs" />
+    <Compile Include="ReadModel\Impl\ReportDao.cs" />
     <Compile Include="ReadModel\Impl\SubActivityDao.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanWrapper.cs" />
     <Compile Include="ReadModel\IPostWrapper.cs" />
+    <Compile Include="ReadModel\IReportDao.cs" />
     <Compile Include="ReadModel\ISubActivityDao.cs" />
     <Compile Include="ReadModel\ISubUserBanDao.cs" />
     <Compile Include="ReadModel\ISubUserBanWrapper.cs" />
@@ -114,6 +116,7 @@
     <Compile Include="ReadModel\PostWrapped.cs" />
     <Compile Include="ReadModel\Impl\PostWrapper.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanDao.cs" />
+    <Compile Include="ReadModel\ReportSummary.cs" />
     <Compile Include="ReadModel\SubUserBanWrapped.cs" />
     <Compile Include="ReadModel\SubWrapped.cs" />
     <Compile Include="ReadModel\Impl\SubWrapper.cs" />
