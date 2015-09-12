@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
+using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
 
@@ -32,6 +33,7 @@ namespace Subs.Services.Impl
         {
             _conn.Perform(conn => conn.Insert(new Report.CommentReport
             {
+                Id = GuidUtil.NewSequentialId(),
                 CreatedDate = Common.CurrentTime(),
                 ReportedBy = reportBy,
                 Reason = reason,
@@ -43,6 +45,7 @@ namespace Subs.Services.Impl
         {
             _conn.Perform(conn => conn.Insert(new Report.PostReport
             {
+                Id = GuidUtil.NewSequentialId(),
                 CreatedDate = Common.CurrentTime(),
                 ReportedBy = reportBy,
                 Reason = reason,

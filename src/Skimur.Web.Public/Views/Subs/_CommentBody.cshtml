@@ -10,7 +10,7 @@
     <div class="disc-main">
         <div class="disc-tagline">
             <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
-            {<em>*</em>}
+                                                                                                                                                                                                                                                                                                                                                            {<em>*</em>}
         </div>
         <div class="disc-content">
             @Html.Raw(Model.Comment.Comment.BodyFormatted)
@@ -51,10 +51,31 @@
             @if (Model.Comment.CanReport)
             {
                 <li>
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.report(this);"></a>
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.report(this);">report</a>
                 </li>
             }
         </ul>
-        <div class="disc-staging hidden"></div>
+        <div class="disc-staging">
+            
+        </div>
     </div>
 </div>
+
+@*<script type="text/javascript">
+    $(function() {
+        $(".type").click(function (e) {
+            var $form = $(this).closest(".report-form");
+            
+            // enable/disable the 'other' box
+            if ($(this).hasClass("other")) {
+                $form.find(".other .form-control").prop("disabled", false).focus();
+            } else {
+                $form.find(".other .form-control").prop("disabled", true);
+            }
+
+            $(".type.selected", $form).removeClass("selected");
+            $(this).addClass("selected");
+            $("input", this).prop("checked", true);
+        });
+    });
+</script>*@

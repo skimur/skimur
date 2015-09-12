@@ -163,12 +163,12 @@ namespace Skimur.Web.Controllers
 
         public enum ReasonType
         {
-            Spam,
-            VoteManipulation,
-            PersonalInformation,
-            SexualizingMinors,
-            BreakingSkimur,
-            Other
+            Spam = 0,
+            VoteManipulation = 1,
+            PersonalInformation = 2,
+            SexualizingMinors = 3,
+            BreakingSkimur = 4,
+            Other = 5
         }
     }
 }

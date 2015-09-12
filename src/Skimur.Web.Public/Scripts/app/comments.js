@@ -205,9 +205,32 @@
         });
     }
 
-    var report = function(element) {
+    var report = function (element) {
+
+        if (!skimurui.login.checkLoggedIn("You must be logged in to report."))
+            return;
+
         var comment = cancel(element);
 
+        var $form = skimurui.buildReportForm().appendTo(comment.staging);
+
+        $(".report", $form).click(function(e) {
+            skimur.reportComment(comment.comment.data("comment-id"), $("input[type='radio']:checked", $form).val(), $("input[type='text']", $form).val(), function(result) {
+                console.log(result);
+                if (result.success) {
+                    skimurui.displaySuccess("The comment has been reported.");
+                    cancel(element);
+                } else {
+                    skimurui.displayError(result.error);
+                }
+            });
+        });
+
+        $(".cancel", $form).click(function (e) {
+            cancel(element);
+        });
+
+        comment.staging.removeClass("hidden");
     };
 
     return {
