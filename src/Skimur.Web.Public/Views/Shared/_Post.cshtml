@@ -38,7 +38,7 @@
                 <li class="first comments">
                     <a href="@Url.Post(Model.Sub, Model.Post)">comments</a>
                 </li>
-                @if (Model.CanManagePost)
+                @if (Model.CanManage)
                 {
                     <li class="remove">
                         <a href="javascript:void(0);" onclick="return skimurui.posts.remove(this)" class="delete">remove</a>
@@ -53,7 +53,7 @@
                         <a href="javascript:void(0);" onclick="return skimurui.posts.report(this);">report</a>
                     </li>
                 }
-                @if (Model.CanManagePost)
+                @if (Model.CanManage)
                 {
                     if (Model.Reports != null && Model.Reports.Count > 0)
                     {
@@ -72,7 +72,7 @@
                     </li>
                 }
             </ul>
-            @if (Model.CanManagePost && Model.Reports != null && Model.Reports.Count > 0)
+            @if (Model.CanManage && Model.Reports != null && Model.Reports.Count > 0)
             {
                 <div class="disc-reports hidden">
                     @foreach (var report in Model.Reports)
@@ -110,7 +110,7 @@
 
 @helper IgnoreUnignoredClass(PostWrapped post)
 {
-    if (post.CanManagePost)
+    if (post.CanManage)
     {
         @(post.Post.IgnoreReports ? "reports-ignored" : "reports-unignored")
     }

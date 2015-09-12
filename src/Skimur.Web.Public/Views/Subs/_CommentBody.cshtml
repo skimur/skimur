@@ -9,7 +9,8 @@
     </div>
     <div class="disc-main">
         <div class="disc-tagline">
-            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)                                                                                                                                                                                                                                                                                                                                       {<em>*</em>}
+            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
+            {<em>*</em>}
         </div>
         <div class="disc-content">
             @Html.Raw(Model.Comment.Comment.BodyFormatted)
@@ -53,28 +54,41 @@
                     <a href="javascript:void(0);" onclick="return skimurui.comments.report(this);">report</a>
                 </li>
             }
+            @if (Model.Comment.CanManage)
+            {
+                if (Model.Comment.Reports != null && Model.Comment.Reports.Count > 0)
+                {
+                    <li class="reports">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.toggleReports(this);">reports (@Model.Comment.Reports.Count)</a>
+                    </li>
+                    <li class="clear-reports">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.clearReports(this);">clear reports</a>
+                    </li>
+                }
+                <li class="ignore-reports">
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.ignoreReports(this);">ignore reports</a>
+                </li>
+                <li class="unignore-reports">
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.unignoreReports(this);">unignore reports</a>
+                </li>
+            }
         </ul>
-        <div class="disc-staging">
-            
-        </div>
+        @if (Model.Comment.CanManage && Model.Comment.Reports != null && Model.Comment.Reports.Count > 0)
+        {
+            <div class="disc-reports hidden">
+                @foreach (var report in Model.Comment.Reports)
+                {
+                    <div class="report-summary">
+                        <b>Reports:</b><br />
+                        @report.Reason&nbsp;
+                        @if (!string.IsNullOrEmpty(report.UserName))
+                        {
+                            <text>(reported by <a href="@Url.User(report.UserName)">@report.UserName</a>)</text>
+                        }
+                    </div>
+                }
+            </div>
+        }
+        <div class="disc-staging"></div>
     </div>
 </div>
-
-@*<script type="text/javascript">
-    $(function() {
-        $(".type").click(function (e) {
-            var $form = $(this).closest(".report-form");
-            
-            // enable/disable the 'other' box
-            if ($(this).hasClass("other")) {
-                $form.find(".other .form-control").prop("disabled", false).focus();
-            } else {
-                $form.find(".other .form-control").prop("disabled", true);
-            }
-
-            $(".type.selected", $form).removeClass("selected");
-            $(this).addClass("selected");
-            $("input", this).prop("checked", true);
-        });
-    });
-</script>*@

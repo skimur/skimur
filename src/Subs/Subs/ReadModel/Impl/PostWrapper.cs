@@ -60,7 +60,7 @@ namespace Subs.ReadModel.Impl
                 if (canManagePosts.Contains(item.Post.SubId))
                 {
                     // this user can approve/disapprove of a post, mark it NSFW, etc
-                    item.CanManagePost = true;
+                    item.CanManage = true;
                     item.Verdict = item.Post.PostVerdict;
 
                     if (item.Post.NumberOfReports > 0)

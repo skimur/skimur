@@ -66,17 +66,18 @@ namespace Subs.ReadModel.Impl
                 item.Post = posts.ContainsKey(item.Comment.PostId) ? posts[item.Comment.PostId] : null;
 
                 var userCanMod = item.Sub != null && userCanModInSubs.Contains(item.Sub.Id);
-                
+                item.CanManage = userCanMod;
+
                 if ((item.Author != null && currentUser != null) && currentUser.Id == item.Author.Id)
                     item.CurrentUserIsAuthor = true;
 
-                item.CanDelete = userCanMod || item.CurrentUserIsAuthor;
+                item.CanDelete = item.CanManage || item.CurrentUserIsAuthor;
                 item.CanEdit = item.CurrentUserIsAuthor;
 
                 if (currentUser != null)
                     item.CanReport = true;
-
-                if (userCanMod && item.Comment.NumberOfReports > 0)
+                
+                if (item.CanManage && item.Comment.NumberOfReports > 0)
                 {
                     var reports = _reportDao.GetReportsForComment(item.Comment.Id);
                     item.Reports = new List<ReportSummary>();
