@@ -1,41 +1,43 @@
 ﻿@using Subs
 @model Subs.ReadModel.CommentNode
-<div class="comment-body">
-    <div class="comment-voting @(Model.Comment.CurrentUserVote != null ? Model.Comment.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
-        <span class="up login-required" onclick="return skimurui.comments.voteUp(this)"></span>
-        <span class="down login-required" onclick="return skimurui.comments.voteDown(this)"></span>
-    </div>
-    <div class="comment-content">
-        <div class="comment-tagline">
-            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue) {<em>*</em>}
+<div class="disc-body">
+    <div class="disc-left">
+        <div class="disc-voting @(Model.Comment.CurrentUserVote != null ? Model.Comment.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+            <span class="up login-required" onclick="return skimurui.comments.voteUp(this)"></span>
+            <span class="down login-required" onclick="return skimurui.comments.voteDown(this)"></span>
         </div>
-        <div class="comment-md">
+    </div>
+    <div class="disc-main">
+        <div class="disc-tagline">
+            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/u/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
+            {<em>*</em>}
+        </div>
+        <div class="disc-content">
             @Html.Raw(Model.Comment.Comment.BodyFormatted)
         </div>
-        <textarea class="comment-md-unformatted hidden">@Html.Raw(Model.Comment.Comment.Body)</textarea>
-        <ul class="comment-options">
+        <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Comment.Comment.Body)</textarea>
+        <ul class="disc-options">
             <li class="first">
                 <a href="@Url.Comment(Model.Comment.Sub.Name, Model.Comment.Post, Model.Comment.Comment)">permalink</a>
             </li>
             @if (Model.Comment.CanDelete)
             {
-                <li>
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.delete(this)" class="delete">delete</a>
+                <li class="delete">
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.delete(this)">delete</a>
                 </li>
             }
-            <li>
-                <a href="javascript:void(0);" onclick="return skimurui.comments.startReply(this)" class="reply">reply</a>
+            <li class="reply">
+                <a href="javascript:void(0);" onclick="return skimurui.comments.startReply(this)">reply</a>
             </li>
             @if (Model.Comment.CanEdit)
             {
-                <li>
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.startEdit(this)" class="edit">edit</a>
+                <li class="edit">
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.startEdit(this)">edit</a>
                 </li>
             }
             @if (Model.Parent != null)
             {
-
-                <li>
+                <li class="perma">
                     @if (Model.IsParentVisible)
                     {
                         <a href="#@Model.Parent.Comment.Id">parent</a>
@@ -44,11 +46,9 @@
                     {
                         <a href="@Url.Comment(Model.Parent.Sub.Name, Model.Parent.Post, Model.Parent.Comment)">parent</a>
                     }
-
                 </li>
             }
-
         </ul>
-        <div class="comment-staging hidden"></div>
+        <div class="disc-staging hidden"></div>
     </div>
 </div>

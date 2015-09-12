@@ -2,39 +2,40 @@
 @using Subs.ReadModel
 @model PostWrapped
 
-<div class="post row @ApprovedRemovedClass(Model)" data-post-id="@Model.Post.Id">
-
-    <div class="post-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
-        <span class="up login-required" onclick="return skimurui.posts.voteUp(this)"></span>
-        <span class="votes">@(Model.Post.VoteUpCount - Model.Post.VoteDownCount)</span>
-        <span class="down login-required" onclick="return skimurui.posts.voteDown(this)"></span>
-    </div>
-    <div class="post-body">
-        <div>
-            <p class="post-title">
-                <a class="post-link" href="@PostUrl(Model)">@Model.Post.Title</a> 
+<div class="disc post @ApprovedRemovedClass(Model)" data-post-id="@Model.Post.Id">
+    <div class="disc-body">
+        <div class="disc-left">
+            <div class="disc-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+                <span class="up login-required" onclick="return skimurui.posts.voteUp(this)"></span>
+                <span class="votes">@(Model.Post.VoteUpCount - Model.Post.VoteDownCount)</span>
+                <span class="down login-required" onclick="return skimurui.posts.voteDown(this)"></span>
+            </div>
+        </div>
+        <div class="disc-main">
+            <div class="disc-heading">
+                <a class="link" href="@PostUrl(Model)">@Model.Post.Title</a>
                 @if (Model.Verdict.HasValue)
                 {
                     if (Model.Verdict == Verdict.ModApproved)
                     {
-                        <span class="post-verdict approved"></span>
+                        <span class="verdict approved"></span>
                     }
                     else if (Model.Verdict == Verdict.ModRemoved)
                     {
-                        <span class="post-verdict removed"></span>
+                        <span class="verdict removed"></span>
                     }
                     else
                     {
-                        <span class="post-verdict none"></span>
+                        <span class="verdict none"></span>
                     }
                 }
                 @(DomainLink(Model))
-            </p>
-            <p class="post-meta">
-                Posted @Html.Age(Model.Post.DateCreated) ago  to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
-            </p>
-            <ul class="post-options">
-                <li class="first">
+            </div>
+            <div class="disc-tagline">
+                Posted @Html.Age(Model.Post.DateCreated) ago to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
+            </div>
+            <ul class="disc-options">
+                <li class="first comments">
                     <a href="@Url.Post(Model.Sub, Model.Post)">comments</a>
                 </li>
                 @if (Model.CanManagePost)
@@ -72,22 +73,22 @@
     {
         if (!string.IsNullOrEmpty(post.Post.Domain))
         {
-                <a class="post-domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
+            <a class="domain" href="@Url.Domain(post.Post.Domain)">(@post.Post.Domain)</a>
         }
     }
     else if (post.Post.PostType == PostType.Text)
     {
-            <a class="post-domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
+        <a class="domain" href="@Url.Post(Model.Sub, Model.Post)">(self.@post.Sub.Name)</a>
     }
 }
 @helper PostUrl(PostWrapped post)
 {
     if (post.Post.PostType == PostType.Link)
     {
-            @post.Post.Url
+        @post.Post.Url
     }
     else if (post.Post.PostType == PostType.Text)
     {
-            @Url.Post(post.Sub, post.Post)
+        @Url.Post(post.Sub, post.Post)
     }
 }
