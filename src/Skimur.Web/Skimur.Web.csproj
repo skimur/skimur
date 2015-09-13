@@ -162,7 +162,7 @@
     <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Models\SubViewModels.cs" />
-    <Compile Include="Models\UserViewModels.cs" />
+    <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Mvc\JsonNetResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />

@@ -1,4 +1,24 @@
-﻿@model CreateEditSubModel
+﻿@model UserViewModel
 @{
-    ViewBag.Title = "User";
+    ViewBag.Title = Model.User.UserName;
 }
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+      Stay tuned. Work-in-progress.
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @if (Model.IsModerator && Model.ModeratingSubs != null && Model.ModeratingSubs.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">Currently moderating</div>
+                <ul class="list-group">
+                    @foreach (var sub in Model.ModeratingSubs)
+                    {
+                        <li class="list-group-item"><a href="@Url.Sub(sub)">@sub</a></li>
+                    }
+                </ul>
+            </div>
+        }
+    </div>
+</div>
