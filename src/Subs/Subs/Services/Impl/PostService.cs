@@ -223,6 +223,26 @@ namespace Subs.Services.Impl
             });
         }
 
+        public SeekedList<Guid> GetReportedPosts(List<Guid> subs = null, int? skip = null, int? take = null)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Post>();
+
+                if (subs != null && subs.Count > 0)
+                    query.Where(x => subs.Contains(x.SubId));
+
+                query.Where(x => x.NumberOfReports > 0);
+
+                var totalCount = conn.Count(query);
+
+                query.Skip(skip).Take(take);
+                query.OrderByDescending(x => x.DateCreated);
+                query.SelectExpression = "SELECT \"id\"";
+
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
         public void ApprovePost(Guid postId, Guid userId)
         {
             _conn.Perform(conn =>

@@ -171,5 +171,15 @@ namespace Skimur.Web
         {
             return urlHelper.RouteUrl("SubsUnModerated", new { subName });
         }
+
+        public static string ReportedPosts(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("SubsReportedPosts", new { subName });
+        }
+
+        public static string ReportedComments(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("SubsReportedComments", new { subName });
+        }
     }
 }

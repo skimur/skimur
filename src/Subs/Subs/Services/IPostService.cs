@@ -21,6 +21,8 @@ namespace Subs.Services
 
         SeekedList<Guid> GetUnmoderatedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
 
+        SeekedList<Guid> GetReportedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
+
         void ApprovePost(Guid postId, Guid userId);
 
         void RemovePost(Guid postId, Guid userId);

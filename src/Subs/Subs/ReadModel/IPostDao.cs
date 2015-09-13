@@ -16,6 +16,8 @@ namespace Subs.ReadModel
         SeekedList<Guid> QueryPosts(string query, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null);
 
         SeekedList<Guid> GetUnmoderatedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
+
+        SeekedList<Guid> GetReportedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
     }
 
     public enum PostsSearchSortBy

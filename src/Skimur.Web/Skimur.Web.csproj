@@ -160,6 +160,7 @@
     <Compile Include="Models\MessageModels.cs" />
     <Compile Include="Models\ModerationSideBarModel.cs" />
     <Compile Include="Models\PostViewModels.cs" />
+    <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Models\SubViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Mvc\JsonNetResult.cs" />

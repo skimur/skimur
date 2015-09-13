@@ -7,7 +7,9 @@ using System.Threading.Tasks;
 using System.Web.Mvc;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
+using Skimur.Web.Models;
 using Subs.Commands;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Controllers
 {
@@ -16,14 +18,35 @@ namespace Skimur.Web.Controllers
         private readonly ILogger<ReportsController> _logger;
         private readonly ICommandBus _commandBus;
         private readonly IUserContext _userContext;
+        private readonly ISubDao _subDao;
+        private readonly ISubWrapper _subWrapper;
+        private readonly IPermissionDao _permissionDao;
+        private readonly IPostDao _postDao;
+        private readonly IPostWrapper _postWrapper;
+        private readonly ICommentDao _commentDao;
+        private readonly ICommentWrapper _commentWrapper;
 
         public ReportsController(ILogger<ReportsController> logger,
             ICommandBus commandBus,
-            IUserContext userContext)
+            IUserContext userContext,
+            ISubDao subDao,
+            ISubWrapper subWrapper,
+            IPermissionDao permissionDao,
+            IPostDao postDao,
+            IPostWrapper postWrapper,
+            ICommentDao commentDao,
+            ICommentWrapper commentWrapper)
         {
             _logger = logger;
             _commandBus = commandBus;
             _userContext = userContext;
+            _subDao = subDao;
+            _subWrapper = subWrapper;
+            _permissionDao = permissionDao;
+            _postDao = postDao;
+            _postWrapper = postWrapper;
+            _commentDao = commentDao;
+            _commentWrapper = commentWrapper;
         }
 
         public ActionResult ReportComment(Guid commentId, ReasonType type, string reason)
@@ -237,6 +260,52 @@ namespace Skimur.Web.Controllers
                 success = true,
                 error = (string)null
             });
+        }
+
+        [Authorize]
+        public ActionResult ReportedPosts(string subName)
+        {
+            if (string.IsNullOrEmpty(subName))
+                throw new NotFoundException();
+
+            var sub = _subDao.GetSubByName(subName);
+
+            if (sub == null)
+                throw new NotFoundException();
+
+            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+                throw new UnauthorizedException();
+
+            var postIds = _postDao.GetReportedPosts(new List<Guid> { sub.Id }, take: 30);
+
+            var model = new ReportedPostsViewModel();
+            model.Sub = sub;
+            model.Posts = new PagedList<PostWrapped>(_postWrapper.Wrap(postIds, _userContext.CurrentUser), 0, 30, postIds.HasMore);
+
+            return View(model);
+        }
+
+        [Authorize]
+        public ActionResult ReportedComments(string subName)
+        {
+            if (string.IsNullOrEmpty(subName))
+                throw new NotFoundException();
+
+            var sub = _subDao.GetSubByName(subName);
+
+            if (sub == null)
+                throw new NotFoundException();
+
+            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+                throw new UnauthorizedException();
+
+            var commentIds = _commentDao.GetReportedComments(new List<Guid> { sub.Id }, take: 30);
+
+            var model = new ReportedCommentsViewModel();
+            model.Sub = sub;
+            model.Comments = new PagedList<CommentWrapped>(_commentWrapper.Wrap(commentIds, _userContext.CurrentUser), 0, 30, commentIds.HasMore);
+
+            return View(model);
         }
 
         private string BuildReasonFromType(ReasonType type, string reason)
