@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using Skimur;
 using Subs.ReadModel;
 
 namespace Subs.Services
@@ -24,5 +25,11 @@ namespace Subs.Services
         void UpdateCommentSorting(Guid commentId, double? confidence, double? qa);
 
         void DeleteComment(Guid commentId, DateTime deletedOn);
+
+        void UpdateNumberOfReportsForComment(Guid commentId, int numberOfReports);
+
+        void SetIgnoreReportsForComment(Guid commentId, bool ignoreReports);
+
+        SeekedList<Guid> GetReportedComments(List<Guid> subs = null, int? skip = null, int? take = null);
     }
 }

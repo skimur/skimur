@@ -1,4 +1,5 @@
-﻿using Membership;
+﻿using System.Collections.Generic;
+using Membership;
 
 namespace Subs.ReadModel
 {
@@ -19,6 +20,10 @@ namespace Subs.ReadModel
         
         public Verdict? Verdict { get; set; }
 
-        public bool CanManagePost { get; set; }
+        public bool CanManage { get; set; }
+
+        public bool CanReport { get; set; }
+
+        public List<ReportSummary> Reports { get; set; }
     }
 }

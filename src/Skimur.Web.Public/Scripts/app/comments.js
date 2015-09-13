@@ -205,6 +205,78 @@
         });
     }
 
+    var report = function (element) {
+
+        if (!skimurui.login.checkLoggedIn("You must be logged in to report."))
+            return;
+
+        var comment = cancel(element);
+
+        var $form = skimurui.buildReportForm().appendTo(comment.staging);
+
+        $(".report", $form).click(function(e) {
+            skimur.reportComment(comment.comment.data("comment-id"), $("input[type='radio']:checked", $form).val(), $("input[type='text']", $form).val(), function(result) {
+                console.log(result);
+                if (result.success) {
+                    skimurui.displaySuccess("The comment has been reported.");
+                    cancel(element);
+                } else {
+                    skimurui.displayError(result.error);
+                }
+            });
+        });
+
+        $(".cancel", $form).click(function (e) {
+            cancel(element);
+        });
+
+        comment.staging.removeClass("hidden");
+    };
+
+    var toggleReports = function (element) {
+        var $comment = getComment(element);
+        var $reports = $("> .disc-body .disc-reports", $comment);
+        if ($reports.hasClass("hidden")) {
+            $reports.removeClass("hidden");
+        } else {
+            $reports.addClass("hidden");
+        }
+    };
+
+    var clearReports = function (element) {
+        var $comment = getComment(element);
+        skimur.clearReportsForComment($comment.data("comment-id"), function (result) {
+            if (result.success) {
+                $(".disc-reports, .disc-options .reports, .disc-options .clear-reports", $comment.find("> .disc-body")).remove();
+
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
+    var ignoreReports = function (element) {
+        var $comment = getComment(element);
+        skimur.ignoreReportsForComment($comment.data("comment-id"), function (result) {
+            if (result.success) {
+                $comment.removeClass("reports-unignored").addClass("reports-ignored");
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
+    var unignoreReports = function (element) {
+        var $comment = getComment(element);
+        skimur.unignoreReportsForComment($comment.data("comment-id"), function (result) {
+            if (result.success) {
+                $comment.removeClass("reports-ignored").addClass("reports-unignored");
+            } else {
+                skimurui.displayError(result.error);
+            }
+        });
+    }
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -212,7 +284,12 @@
         startEdit: startEdit,
         toggleExpand: toggleExpand,
         delete: deleteComment,
-        moreChildren: moreChildren
+        moreChildren: moreChildren,
+        report: report,
+        toggleReports: toggleReports,
+        clearReports: clearReports,
+        ignoreReports: ignoreReports,
+        unignoreReports: unignoreReports
     };
 
 })();

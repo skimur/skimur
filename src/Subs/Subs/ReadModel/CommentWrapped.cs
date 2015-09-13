@@ -1,4 +1,5 @@
-﻿using Membership;
+﻿using System.Collections.Generic;
+using Membership;
 
 namespace Subs.ReadModel
 {
@@ -20,11 +21,17 @@ namespace Subs.ReadModel
         public int Score { get; set; }
 
         public bool CurrentUserIsAuthor { get; set; }
+        
+        public Post Post { get; set; }
+
+        public bool CanReport { get; set; }
+
+        public bool CanManage { get; set; }
 
         public bool CanDelete { get; set; }
 
         public bool CanEdit { get; set; }
-        
-        public Post Post { get; set; }
+
+        public List<ReportSummary> Reports { get; set; } 
     }
 }

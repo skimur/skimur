@@ -1,5 +1,6 @@
 ﻿.list-pager {
     .pager;
+
     @media (min-width: @screen-sm-min) {
         text-align: left;
     }
@@ -9,7 +10,7 @@
     > thead, tbody {
         > tr {
             > th, td {
-                 vertical-align:middle !important;
+                vertical-align: middle !important;
             }
         }
     }
@@ -18,12 +19,33 @@
 
 .header-nav {
     float: left;
-    margin-top:10px;
+    margin-top: 10px;
+
     .nav-tabs {
         border-bottom: none;
+
         .dropdown-menu {
             border-top: none;
             margin: 0px;
+        }
+    }
+}
+
+.report-form {
+    .types {
+        margin-bottom: 15px;
+
+        .type {
+            text-align: left;
+        }
+
+        .btn-group-vertical {
+            display: block;
+            /*large*/
+            @media (min-width: @screen-lg-min) {
+                display: inline-block;
+                width: 500px;
+            }
         }
     }
 }

@@ -139,6 +139,7 @@
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
     <Compile Include="Controllers\PostsController.cs" />
+    <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Exceptions.cs" />
@@ -159,6 +160,7 @@
     <Compile Include="Models\MessageModels.cs" />
     <Compile Include="Models\ModerationSideBarModel.cs" />
     <Compile Include="Models\PostViewModels.cs" />
+    <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Models\SubViewModels.cs" />
     <Compile Include="Models\UserViewModels.cs" />
     <Compile Include="Mvc\JsonNetResult.cs" />

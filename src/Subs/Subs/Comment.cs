@@ -98,5 +98,15 @@ namespace Subs
         /// Values used to sort the top comments for a QA-style thread.
         /// </summary>
         public decimal SortQa { get; set; }
+
+        /// <summary>
+        /// How many reports are there currently for this comment?
+        /// </summary>
+        public int NumberOfReports { get; set; }
+        
+        /// <summary>
+        /// Should we ignore reports for this comment?
+        /// </summary>
+        public bool IgnoreReports { get; set; }
     }
 }

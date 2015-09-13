@@ -13,18 +13,21 @@ namespace Subs.ReadModel.Impl
         private readonly ISubDao _subDao;
         private readonly IVoteDao _voteDao;
         private readonly IPermissionDao _permissionDao;
+        private readonly IReportDao _reportDao;
 
         public PostWrapper(IPostDao postDao, 
             IMembershipService membershipService, 
             ISubDao subDao, 
             IVoteDao voteDao,
-            IPermissionDao permissionDao)
+            IPermissionDao permissionDao,
+            IReportDao reportDao)
         {
             _postDao = postDao;
             _membershipService = membershipService;
             _subDao = subDao;
             _voteDao = voteDao;
             _permissionDao = permissionDao;
+            _reportDao = reportDao;
         }
 
         public List<PostWrapped> Wrap(List<Guid> postIds, User currentUser = null)
@@ -57,9 +60,28 @@ namespace Subs.ReadModel.Impl
                 if (canManagePosts.Contains(item.Post.SubId))
                 {
                     // this user can approve/disapprove of a post, mark it NSFW, etc
-                    item.CanManagePost = true;
+                    item.CanManage = true;
                     item.Verdict = item.Post.PostVerdict;
+
+                    if (item.Post.NumberOfReports > 0)
+                    {
+                        var reports = _reportDao.GetReportsForPost(item.Post.Id);
+                        item.Reports = new List<ReportSummary>();
+                        foreach (var report in reports)
+                        {
+                            var summary = new ReportSummary();
+                            if (!authors.ContainsKey(report.ReportedBy))
+                                authors.Add(report.ReportedBy, _membershipService.GetUserById(report.ReportedBy));
+                            var user = authors[report.ReportedBy];
+                            if (user != null)
+                                summary.UserName = user.UserName;
+                            summary.Reason = report.Reason;
+                            item.Reports.Add(summary);
+                        }
+                    }
                 }
+                if (currentUser != null)
+                    item.CanReport = true;
             }
 
             return posts;

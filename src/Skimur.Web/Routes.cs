@@ -108,6 +108,16 @@ namespace Skimur.Web
                 defaults: new { controller = "Posts", action = "Unmoderated" });
 
             routes.MapRoute(
+                 name: "SubsReportedPosts",
+                 url: "s/{subName}/reported/posts",
+                 defaults: new { controller = "Reports", action = "ReportedPosts" });
+
+            routes.MapRoute(
+                name: "SubsReportedComments",
+                url: "s/{subName}/reported/comments",
+                defaults: new { controller = "Reports", action = "ReportedComments" });
+            
+            routes.MapRoute(
                 name: "Post",
                 url: "s/{subName}/post/{id}/{title}",
                 defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
@@ -280,7 +290,7 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "MessageForModeratorSent",
                 url: "messages/moderated/sent",
-                defaults: new {controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent});
+                defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent });
 
             routes.MapRoute(
                 name: "Default",

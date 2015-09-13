@@ -1,7 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Linq;
 using Infrastructure.Data;
 using ServiceStack.OrmLite;
+using Skimur;
 using Subs.ReadModel;
 
 namespace Subs.Services.Impl
@@ -157,6 +159,37 @@ namespace Subs.Services.Impl
                         BodyFormatted = "deleted"
                     },
                     x => x.Id == commentId);
+            });
+        }
+
+        public void UpdateNumberOfReportsForComment(Guid commentId, int numberOfReports)
+        {
+            _conn.Perform(conn => conn.Update<Comment>(new { NumberOfReports = numberOfReports }, x => x.Id == commentId));
+        }
+
+        public void SetIgnoreReportsForComment(Guid commentId, bool ignoreReports)
+        {
+            _conn.Perform(conn => conn.Update<Comment>(new { IgnoreReports = ignoreReports }, x => x.Id == commentId));
+        }
+
+        public SeekedList<Guid> GetReportedComments(List<Guid> subs = null, int? skip = null, int? take = null)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Comment>();
+
+                if (subs != null && subs.Count > 0)
+                    query.Where(x => subs.Contains(x.SubId));
+
+                query.Where(x => x.NumberOfReports > 0);
+
+                var totalCount = conn.Count(query);
+
+                query.Skip(skip).Take(take);
+                query.OrderByDescending(x => x.DateCreated);
+                query.SelectExpression = "SELECT \"id\"";
+
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
     }

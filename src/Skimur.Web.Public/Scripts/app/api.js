@@ -208,7 +208,7 @@
         $.ajax({
             type: "POST",
             url: "/messages/reply",
-            data: { replyToMessage: messageId, body : body },
+            data: { replyToMessage: messageId, body: body },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -221,7 +221,7 @@
         });
     };
 
-    var markMessagesAsRead = function(messages, callback) {
+    var markMessagesAsRead = function (messages, callback) {
         $.ajax({
             type: "POST",
             url: "/messages/markmessagesasread",
@@ -255,6 +255,108 @@
         });
     }
 
+    var reportPost = function (postId, type, reason, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/reportpost",
+            data: { postId, type, reason },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var reportComment = function (commentId, type, reason, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/reportcomment",
+            data: { commentId, type, reason },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var clearReportsForPost = function (postId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/clear",
+            data: { postId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var clearReportsForComment = function (commentId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/clear",
+            data: { commentId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var ignoreReports = function (commentId, postId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/ignore",
+            data: { commentId, postId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var unignoreReports = function (commentId, postId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/reports/unignore",
+            data: { commentId, postId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -273,7 +375,15 @@
         removePost: removePost,
         replyToMessage: replyToMessage,
         markMessagesAsRead: markMessagesAsRead,
-        markMessagesAsUnread: markMessagesAsUnread
+        markMessagesAsUnread: markMessagesAsUnread,
+        reportPost: reportPost,
+        reportComment: reportComment,
+        clearReportsForComment: clearReportsForComment,
+        clearReportsForPost: clearReportsForPost,
+        ignoreReportsForPost: function (postId, callback) { return ignoreReports(null, postId, callback); },
+        ignoreReportsForComment: function (commentId, callback) { return ignoreReports(commentId, null, callback); },
+        unignoreReportsForPost: function (postId, callback) { return unignoreReports(null, postId, callback); },
+        unignoreReportsForComment: function (commentId, callback) { return unignoreReports(commentId, null, callback); }
     };
 
 })();

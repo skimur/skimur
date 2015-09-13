@@ -320,15 +320,15 @@
     <Content Include="Views\Common\_SideBarSearch.cshtml" />
     <Content Include="Views\Subs\Search.cshtml" />
     <Content Include="Views\Subs\Post.cshtml" />
-    <Content Include="Views\Subs\_CommentNodes.cshtml" />
+    <Content Include="Views\Shared\_CommentNodes.cshtml" />
     <Content Include="Views\Shared\_LoginModal.cshtml" />
     <Content Include="Views\Shared\LoginModal\Register.cshtml" />
     <Content Include="Views\Shared\LoginModal\SignIn.cshtml" />
     <Content Include="Views\Manage\_ManageNavigation.cshtml" />
     <Content Include="Views\Manage\_LayoutManageAccount.cshtml" />
     <Content Include="Views\Shared\_Avatar.cshtml" />
-    <Content Include="Views\Subs\_CommentNode.cshtml" />
-    <Content Include="Views\Subs\_CommentBody.cshtml" />
+    <Content Include="Views\Shared\_CommentNode.cshtml" />
+    <Content Include="Views\Shared\_CommentBody.cshtml" />
     <Content Include="Views\SubBans\Bans.cshtml" />
     <Content Include="Views\SubBans\_Ban.cshtml" />
     <Content Include="Views\Manage\ManageEmail.cshtml" />
@@ -350,6 +350,8 @@
     <Content Include="Views\Messages\Sent.cshtml" />
     <Content Include="Views\Messages\ModeratorMail.cshtml" />
     <Content Include="Views\Common\SideBar.cshtml" />
+    <Content Include="Views\Reports\ReportedPosts.cshtml" />
+    <Content Include="Views\Reports\ReportedComments.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
