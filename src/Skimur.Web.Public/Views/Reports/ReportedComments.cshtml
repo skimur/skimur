@@ -6,6 +6,12 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
+        <div class="form-group">
+            <ul class="nav nav-tabs">
+                <li class="@(ViewBag.ManageNavigationKey == "reportedposts" ? "active" : "")"><a href="@Url.ReportedPosts(Model.Sub.Name)">Posts</a></li>
+                <li class="@(ViewBag.ManageNavigationKey == "reportedcomments" ? "active" : "")"><a href="@Url.ReportedComments(Model.Sub.Name)">Comments</a></li>
+            </ul>
+        </div>
         @if (Model.Comments != null && Model.Comments.Count > 0)
         {
             foreach (var comment in Model.Comments)

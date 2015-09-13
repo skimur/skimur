@@ -265,6 +265,8 @@ namespace Skimur.Web.Controllers
         [Authorize]
         public ActionResult ReportedPosts(string subName)
         {
+            ViewBag.ManageNavigationKey = "reportedposts";
+
             if (string.IsNullOrEmpty(subName))
                 throw new NotFoundException();
 
@@ -288,6 +290,8 @@ namespace Skimur.Web.Controllers
         [Authorize]
         public ActionResult ReportedComments(string subName)
         {
+            ViewBag.ManageNavigationKey = "reportedcomments";
+
             if (string.IsNullOrEmpty(subName))
                 throw new NotFoundException();
 
