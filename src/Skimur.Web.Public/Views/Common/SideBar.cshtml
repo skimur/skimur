@@ -53,9 +53,10 @@
                 <div class="panel-heading">Moderators</div>
                 <ul class="list-group">
                     @foreach (var mod in Model.Moderators)
-                        {
+                    {
                         <li class="list-group-item"><a href="@Url.User(mod.UserName)">@mod.UserName</a></li>
                     }
+                    <li class="list-group-item"><a href="@Url.Compose(to:"/s/" + Model.CurrentSub.Sub.Name)" class="btn btn-default btn-sm">Send message</a></li>
                 </ul>
             </div>
         }
