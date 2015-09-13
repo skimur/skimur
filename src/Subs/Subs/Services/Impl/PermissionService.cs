@@ -5,11 +5,11 @@ namespace Subs.Services.Impl
 {
     public class PermissionService : IPermissionService
     {
-        private readonly ISubService _subService;
+        private readonly ISubModerationService _subModerationService;
 
-        public PermissionService(ISubService subService)
+        public PermissionService(ISubModerationService subModerationService)
         {
-            _subService = subService;
+            _subModerationService = subModerationService;
         }
 
         public bool CanUserDeleteComment(User user, Comment comment)
@@ -38,7 +38,7 @@ namespace Subs.Services.Impl
         {
             if (user.IsAdmin) return true;
 
-            return _subService.CanUserModerateSub(user.Id, subId);
+            return _subModerationService.CanUserModerateSub(user.Id, subId);
         }
     }
 }

@@ -22,6 +22,7 @@ namespace Skimur.Web.Controllers
         private readonly IMembershipService _membershipService;
         private readonly ISubActivityDao _subActivityDao;
         private readonly ISettingsProvider<SubSettings> _subSettings;
+        private readonly ISubModerationDao _subModerationDao;
 
         public CommonController(IContextService contextService,
             ISubDao subDao,
@@ -30,7 +31,8 @@ namespace Skimur.Web.Controllers
             ISubWrapper subWrapper,
             IMembershipService membershipService,
             ISubActivityDao subActivityDao,
-            ISettingsProvider<SubSettings> subSettings)
+            ISettingsProvider<SubSettings> subSettings,
+            ISubModerationDao subModerationDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -40,6 +42,7 @@ namespace Skimur.Web.Controllers
             _membershipService = membershipService;
             _subActivityDao = subActivityDao;
             _subSettings = subSettings;
+            _subModerationDao = subModerationDao;
         }
         
         public ActionResult TopBar()
@@ -75,11 +78,11 @@ namespace Skimur.Web.Controllers
             if (model.CurrentSub != null)
             {
                 if (_userContext.CurrentUser != null)
-                    model.IsModerator = _subDao.CanUserModerateSub(_userContext.CurrentUser.Id, model.CurrentSub.Sub.Id);
+                    model.IsModerator = _subModerationDao.CanUserModerateSub(_userContext.CurrentUser.Id, model.CurrentSub.Sub.Id);
 
                 if (!model.IsModerator)
                     // we only show list of mods if the requesting user is not a mod of this sub
-                    model.Moderators = _membershipService.GetUsersByIds(_subDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
+                    model.Moderators = _membershipService.GetUsersByIds(_subModerationDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
 
                 // get the number of active users currently viewing this sub.
                 // for normal users, this number may be fuzzed (if low enough) for privacy reasons.

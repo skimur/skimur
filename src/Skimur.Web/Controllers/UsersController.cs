@@ -15,12 +15,15 @@ namespace Skimur.Web.Controllers
     {
         private readonly IMembershipService _membershipService;
         private readonly ISubDao _subDao;
+        private readonly ISubModerationDao _subModerationDao;
 
         public UsersController(IMembershipService membershipService,
-            ISubDao subDao)
+            ISubDao subDao,
+            ISubModerationDao subModerationDao)
         {
             _membershipService = membershipService;
             _subDao = subDao;
+            _subModerationDao = subModerationDao;
         }
 
         public ActionResult User(string userName)
@@ -33,7 +36,7 @@ namespace Skimur.Web.Controllers
             var model = new UserViewModel();
             model.User = user;
             
-            var moderatedSubs = _subDao.GetSubsModeratoredByUser(user.Id);
+            var moderatedSubs = _subModerationDao.GetSubsModeratoredByUser(user.Id);
 
             if (moderatedSubs.Count > 0)
             {

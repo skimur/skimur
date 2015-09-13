@@ -8,8 +8,8 @@ using ServiceStack.DataAnnotations;
 
 namespace Subs
 {
-    [Alias("SubAdmins")]
-    public class SubAdmin : IAggregateRoot
+    [Alias("Moderators")]
+    public class Moderator : IAggregateRoot
     {
         public virtual Guid Id { get; set; }
 
@@ -20,5 +20,7 @@ namespace Subs
         public Guid? AddedBy { get; set; }
 
         public DateTime AddedOn { get; set; }
+
+        public ModeratorPermissions Permissions { get; set; }
     }
 }

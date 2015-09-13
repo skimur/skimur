@@ -158,50 +158,7 @@ namespace Subs.Services.Impl
         {
             return _conn.Perform(conn => conn.SingleById<Sub>(id));
         }
-
-        public bool CanUserModerateSub(Guid userId, Guid subId)
-        {
-            return _conn.Perform(conn =>
-            {
-                return conn.Count(conn.From<SubAdmin>().Where(x => x.UserId == userId && x.SubId == subId)) > 0;
-            });
-        }
-
-        public List<Guid> GetAllModsForSub(Guid subId)
-        {
-            return _conn.Perform(conn =>
-            {
-                return conn.Select(conn.From<SubAdmin>().Where(x => x.SubId == subId).Select(x => x.UserId))
-                    .Select(x => x.UserId).ToList();
-            });
-        }
-
-        public void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null)
-        {
-            _conn.Perform(conn =>
-            {
-                if (conn.Count<SubAdmin>(x => x.UserId == userId && x.SubId == subId) > 0)
-                    return;
-                
-                conn.Insert(new SubAdmin
-                {
-                    Id = GuidUtil.NewSequentialId(),
-                    UserId = userId,
-                    SubId = subId,
-                    AddedOn = Common.CurrentTime(),
-                    AddedBy = addedBy
-                });
-            });
-        }
-
-        public void RemoveModFromSub(Guid userId, Guid subId)
-        {
-            _conn.Perform(conn =>
-            {
-                conn.Delete<SubAdmin>(x => x.UserId == userId && x.SubId == subId);
-            });
-        }
-
+        
         public void UpdateNumberOfSubscribers(Guid subId, out ulong totalNumber)
         {
             ulong temp = 0;
@@ -211,17 +168,6 @@ namespace Subs.Services.Impl
                 conn.Update<Sub>(new { NumberOfSubscribers = temp }, x => x.Id == subId);
             });
             totalNumber = temp;
-        }
-
-        public List<Guid> GetSubsModeratoredByUser(Guid userId)
-        {
-            return _conn.Perform(conn =>
-            {
-                var query = conn.From<SubAdmin>();
-                query.Where(x => x.UserId == userId);
-                query.SelectExpression = "SELECT \"sub_id\"";
-                return conn.Select(query).Select(x => x.SubId).ToList();
-            });
         }
     }
 }

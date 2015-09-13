@@ -96,6 +96,7 @@
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="ModeratorPermissions.cs" />
     <Compile Include="ReadModel\IMessageDao.cs" />
     <Compile Include="ReadModel\IMessageWrapper.cs" />
     <Compile Include="ReadModel\Impl\CommentNodeHierarchyBuilder.cs" />
@@ -106,10 +107,12 @@
     <Compile Include="ReadModel\Impl\MessageWrapper.cs" />
     <Compile Include="ReadModel\Impl\ReportDao.cs" />
     <Compile Include="ReadModel\Impl\SubActivityDao.cs" />
+    <Compile Include="ReadModel\Impl\SubModerationDao.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanWrapper.cs" />
     <Compile Include="ReadModel\IPostWrapper.cs" />
     <Compile Include="ReadModel\IReportDao.cs" />
     <Compile Include="ReadModel\ISubActivityDao.cs" />
+    <Compile Include="ReadModel\ISubModerationDao.cs" />
     <Compile Include="ReadModel\ISubUserBanDao.cs" />
     <Compile Include="ReadModel\ISubUserBanWrapper.cs" />
     <Compile Include="ReadModel\ISubWrapper.cs" />
@@ -130,8 +133,10 @@
     <Compile Include="ReadModel\ICommentTreeContextBuilder.cs" />
     <Compile Include="Services\Impl\MessageService.cs" />
     <Compile Include="Services\Impl\ReportService.cs" />
+    <Compile Include="Services\Impl\SubModerationService.cs" />
     <Compile Include="Services\IReportService.cs" />
     <Compile Include="Services\ISubActivityService.cs" />
+    <Compile Include="Services\ISubModerationService.cs" />
     <Compile Include="Services\ISubUserBanService.cs" />
     <Compile Include="Services\Impl\SubUserBanService.cs" />
     <Compile Include="Services\Impl\SubActivityService.cs" />
@@ -160,7 +165,7 @@
     <Compile Include="Services\Impl\PostService.cs" />
     <Compile Include="Services\Impl\VoteService.cs" />
     <Compile Include="Sub.cs" />
-    <Compile Include="SubAdmin.cs" />
+    <Compile Include="Moderator.cs" />
     <Compile Include="SubScription.cs" />
     <Compile Include="Services\Impl\SubService.cs" />
     <Compile Include="SubSettings.cs" />

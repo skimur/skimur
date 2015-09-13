@@ -24,13 +24,15 @@ namespace Subs.Worker
         private readonly IEventBus _eventBus;
         private readonly ICommandBus _commandBus;
         private readonly ISubUserBanService _subUserBanService;
+        private readonly ISubModerationService _subModerationService;
 
         public SubHandler(ISubService subService,
             IMembershipService membershipService,
             IPostService postService,
             IEventBus eventBus,
             ICommandBus commandBus,
-            ISubUserBanService subUserBanService)
+            ISubUserBanService subUserBanService,
+            ISubModerationService subModerationService)
         {
             _subService = subService;
             _membershipService = membershipService;
@@ -38,6 +40,7 @@ namespace Subs.Worker
             _eventBus = eventBus;
             _commandBus = commandBus;
             _subUserBanService = subUserBanService;
+            _subModerationService = subModerationService;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -100,7 +103,7 @@ namespace Subs.Worker
                 response.SubName = sub.Name;
 
                 _subService.SubscribeToSub(user.Id, sub.Id);
-                _subService.AddModToSub(user.Id, sub.Id);
+                _subModerationService.AddModToSub(user.Id, sub.Id);
             }
             catch (Exception ex)
             {
@@ -133,7 +136,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_subService.CanUserModerateSub(user.Id, sub.Id))
+                if (!_subModerationService.CanUserModerateSub(user.Id, sub.Id))
                 {
                     response.Error = "You are not allowed to modify this sub.";
                     return response;
