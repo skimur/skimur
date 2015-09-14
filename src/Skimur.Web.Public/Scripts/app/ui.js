@@ -1,5 +1,12 @@
 ﻿; skimurui = (function () {
 
+    var permissionsFlagAll = 1;
+    var permissionsFlagAccess = 2;
+    var permissionsFlagConfig = 4;
+    var permissionsFlagFlair = 8;
+    var permissionsFlagMail = 10;
+    var permissionsFlagPosts = 20;
+
     var displayError = function (message) {
         $.notify(message, {
             type: "danger",
@@ -74,7 +81,7 @@
         confirmWarning("Are you sure?", "Yes, delete it!", callback);
     }
 
-    var buildReportForm = function() {
+    var buildReportForm = function () {
         var $form = $("<div class='report-form'>" +
                 "<div class='types'>" +
                     "<div class='btn-group-vertical'>" +
@@ -106,7 +113,7 @@
             "</div>");
 
         $(".type", $form).click(function (e) {
-          
+
             // enable/disable the 'other' box
             if ($(this).hasClass("other")) {
                 $form.find(".other .form-control").prop("disabled", false).focus();
@@ -122,6 +129,101 @@
         return $form;
     }
 
+    var buildModPermissionsForm = function (currentPermissions) {
+        var $form = $(
+        "<div class='permissions'>" +
+            "<label class='permission full'>" +
+                "<input type='checkbox' name='full'> Full" +
+            "</label>" +
+            "<hr />" +
+            "<label class='permission access'>" +
+                "<input type='checkbox' name='access'> Access" +
+            "</label>" +
+            "<label class='permission config'>" +
+                "<input type='checkbox' name='config'> Config" +
+            "</label>" +
+            "<label class='permission flair'>" +
+                "<input type='checkbox' name='flair'> Flair" +
+            "</label>" +
+            "<label class='permission mail'>" +
+                "<input type='checkbox' name='mail'> Mail" +
+            "</label>" +
+            "<label class='permission posts'>" +
+                "<input type='checkbox' name='posts'> Posts" +
+            "</label>" +
+        "</div>");
+
+        $(".permission input", $form).click(function (e) {
+            var isChecked = $(this).prop("checked");
+            var $permission = $(this).closest(".permission");
+            if ($permission.hasClass("full")) {
+                var items = $(".access, .config, .flair, .mail, .posts").each(function (index, element) {
+                    var $element = $(element);
+                    if (isChecked) {
+                        $element.addClass("disabled").find("input").attr("disabled", true).attr("checked", false);
+                    } else {
+                        $element.removeClass("disabled").find("input").attr("disabled", false).attr("checked", false);
+                    }
+                });
+                if (isChecked) {
+                    items.addClass("disabled");
+                } else {
+                    items.removeClass("disabled");
+                }
+            }
+        });
+
+        if (currentPermissions !== -1) {
+            // and check our current permissions
+            if ((currentPermissions & permissionsFlagAll) !== 0) {
+                $(".permission.full input", $form).click();
+            } else {
+                if ((currentPermissions & permissionsFlagAccess) !== 0) {
+                    $(".permission.access input", $form).click();
+                }
+                if ((currentPermissions & permissionsFlagConfig) !== 0) {
+                    $(".permission.config input", $form).click();
+                }
+                if ((currentPermissions & permissionsFlagFlair) !== 0) {
+                    $(".permission.flair input", $form).click();
+                }
+                if ((currentPermissions & permissionsFlagMail) !== 0) {
+                    $(".permission.mail input", $form).click();
+                }
+                if ((currentPermissions & permissionsFlagPosts) !== 0) {
+                    $(".permission.posts input", $form).click();
+                }
+            }
+        }
+
+
+        return $form;
+    };
+
+    var getModPermissionsFromForm = function($form) {
+        if ($(".permission.full input", $form).is(":checked")) {
+            return permissionsFlagAll;
+        } else {
+            var permissions = 0;
+            if ($(".permission.access input", $form).is(":checked")) {
+                permissions |= permissionsFlagAccess;
+            }
+            if ($(".permission.config input", $form).is(":checked")) {
+                permissions |= permissionsFlagConfig;
+            }
+            if ($(".permission.flair input", $form).is(":checked")) {
+                permissions |= permissionsFlagFlair;
+            }
+            if ($(".permission.mail input", $form).is(":checked")) {
+                permissions |= permissionsFlagMail;
+            }
+            if ($(".permission.posts input", $form).is(":checked")) {
+                permissions |= permissionsFlagPosts;
+            }
+            return permissions;
+        }
+    };
+
     return {
         displayError: displayError,
         displaySuccess: displaySuccess,
@@ -133,7 +235,9 @@
         confirmInfo: confirmInfo,
         confirmSuccess: confirmSuccess,
         confirmDelete: confirmDelete,
-        buildReportForm: buildReportForm
+        buildReportForm: buildReportForm,
+        buildModPermissionsForm: buildModPermissionsForm,
+        getModPermissionsFromForm : getModPermissionsFromForm
     };
 
 })();

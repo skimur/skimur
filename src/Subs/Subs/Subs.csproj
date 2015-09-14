@@ -71,6 +71,7 @@
     <Compile Include="Commands\BanUserFromSub.cs" />
     <Compile Include="Commands\CastVoteForPost.cs" />
     <Compile Include="Commands\CastVoteForComment.cs" />
+    <Compile Include="Commands\ChangeModPermissionsForSub.cs" />
     <Compile Include="Commands\ClearReports.cs" />
     <Compile Include="Commands\CreateComment.cs" />
     <Compile Include="Commands\CreatePost.cs" />
@@ -80,6 +81,7 @@
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\MarkMessagesAsRead.cs" />
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />
+    <Compile Include="Commands\RemoveModFromSub.cs" />
     <Compile Include="Commands\RemovePost.cs" />
     <Compile Include="Commands\ReplyMessage.cs" />
     <Compile Include="Commands\ReportComment.cs" />

@@ -9,7 +9,6 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-
         @if (Model.Moderators != null && Model.Moderators.Count > 0)
         {
             <table class="table table-condensed">
@@ -23,19 +22,19 @@
                 </thead>
                 <tbody>
                     @foreach (var moderator in Model.Moderators)
-                {
-                        <tr>
+                    {
+                        <tr class="moderator" data-sub-name="@moderator.Sub.Name" data-user-id="@moderator.User.Id" data-permissions="@((int)moderator.Moderator.Permissions)">
                             <td>@moderator.User.UserName</td>
                             <td>@Html.Age(moderator.Moderator.AddedOn) ago</td>
                             <td>@PermissionsText(moderator)</td>
                             <td>
                                 @if (moderator.CanChangePermissions)
                                 {
-                                    <a href="javascript:void(0);" class="btn btn-default btn-sm">Change</a>
+                                    <a href="javascript:void(0);" onclick="return skimurui.moderators.changePermissions(this);" class="btn btn-default btn-sm">Change</a>
                                 }
                                 @if (moderator.CanRemove)
                                 {
-                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm">Remove</a>
+                                    <a href="javascript:void(0);" onclick="return skimurui.moderators.removeMod(this);" class="btn btn-danger btn-sm">Remove</a>
                                 }
                             </td>
                         </tr>
@@ -58,30 +57,52 @@
 if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.All))
 {
         <text>Full</text>
-    }
-    else
-    {
-        var permissions = new List<string>();
-        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Access))
-        {
-            permissions.Add("Access");
-        }
-        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Config))
-        {
-            permissions.Add("Config");
-        }
-        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Flair))
-        {
-            permissions.Add("Flair");
-        }
-        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Mail))
-        {
-            permissions.Add("Mail");
-        }
-        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Posts))
-        {
-            permissions.Add("Posts");
-        }
-        <text>@string.Join(", ", permissions)</text>
-    }
 }
+else
+{
+    var permissions = new List<string>();
+    if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Access))
+    {
+        permissions.Add("Access");
+    }
+    if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Config))
+    {
+        permissions.Add("Config");
+    }
+    if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Flair))
+    {
+        permissions.Add("Flair");
+    }
+    if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Mail))
+    {
+        permissions.Add("Mail");
+    }
+    if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Posts))
+    {
+        permissions.Add("Posts");
+    }
+    <text>@string.Join(", ", permissions)</text>
+}
+}
+
+@*<button type="button" class="btn btn-primary btn-lg" data-toggle="modal" data-target="#permissions-modal">
+    Launch demo modal
+</button>
+
+<div id="permissions-modal" class="modal fade">
+    <div class="modal-dialog">
+        <div class="modal-content">
+            <div class="modal-body">
+                <p>One fine body&hellip;</p>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-default" data-dismiss="modal">Cancel</button>
+                <button type="button" class="btn btn-primary">Save</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    
+</script>*@

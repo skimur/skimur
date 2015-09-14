@@ -357,6 +357,40 @@
         });
     }
 
+    var removeModFromSub = function (subName, subId, userId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/removemodfromsub",
+            data: { subName, subId, userId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
+    var changeModPermissionsForSub = function (subName, subId, userId, permissions, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/changemodpermissions",
+            data: { subName, subId, userId, permissions },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    }
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -383,7 +417,9 @@
         ignoreReportsForPost: function (postId, callback) { return ignoreReports(null, postId, callback); },
         ignoreReportsForComment: function (commentId, callback) { return ignoreReports(commentId, null, callback); },
         unignoreReportsForPost: function (postId, callback) { return unignoreReports(null, postId, callback); },
-        unignoreReportsForComment: function (commentId, callback) { return unignoreReports(commentId, null, callback); }
+        unignoreReportsForComment: function (commentId, callback) { return unignoreReports(commentId, null, callback); },
+        removeModFromSub: removeModFromSub,
+        changeModPermissionsForSub: changeModPermissionsForSub
     };
 
 })();

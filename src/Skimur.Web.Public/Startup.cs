@@ -87,7 +87,8 @@ namespace Skimur.Web.Public
                 "~/Scripts/app/comments.js",
                 "~/Scripts/app/posts.js",
                 "~/Scripts/app/subs.js",
-                "~/Scripts/app/messages.js");
+                "~/Scripts/app/messages.js",
+                "~/Scripts/app/moderators.js");
             
             var stylesBundle = new StyleBundle("~/bundles/styles").Include(
                 "~/Content/site.less");

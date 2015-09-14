@@ -292,6 +292,7 @@
     <Content Include="Scripts\app\api.js" />
     <Content Include="Scripts\app\comments.js" />
     <Content Include="Scripts\app\messages.js" />
+    <Content Include="Scripts\app\moderators.js" />
     <Content Include="Scripts\app\ui.js" />
     <Content Include="Scripts\app\login.js" />
     <Content Include="Scripts\app\misc.js" />
