@@ -36,35 +36,35 @@ namespace Subs.Services.Impl
         {
             var permissions = GetUserPermissionsForSub(user, subId);
             if (permissions == null) return false;
-            return permissions.Value.HasFlag(ModeratorPermissions.Access);
+            return permissions.HasPermission(ModeratorPermissions.Access);
         }
 
         public bool CanUserManageSubConfig(User user, Guid subId)
         {
             var permissions = GetUserPermissionsForSub(user, subId);
             if (permissions == null) return false;
-            return permissions.Value.HasFlag(ModeratorPermissions.Config);
+            return permissions.HasPermission(ModeratorPermissions.Config);
         }
 
         public bool CanUserManageSubFlair(User user, Guid subId)
         {
             var permissions = GetUserPermissionsForSub(user, subId);
             if (permissions == null) return false;
-            return permissions.Value.HasFlag(ModeratorPermissions.Flair);
+            return permissions.HasPermission(ModeratorPermissions.Flair);
         }
 
         public bool CanUserManageSubMail(User user, Guid subId)
         {
             var permissions = GetUserPermissionsForSub(user, subId);
             if (permissions == null) return false;
-            return permissions.Value.HasFlag(ModeratorPermissions.Mail);
+            return permissions.HasPermission(ModeratorPermissions.Mail);
         }
 
         public bool CanUserManageSubPosts(User user, Guid subId)
         {
             var permissions = GetUserPermissionsForSub(user, subId);
             if (permissions == null) return false;
-            return permissions.Value.HasFlag(ModeratorPermissions.Posts);
+            return permissions.HasPermission(ModeratorPermissions.Posts);
         }
 
         public ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId)

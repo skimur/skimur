@@ -38,6 +38,7 @@
             <div class="panel-heading">Moderation</div>
             <ul class="list-group">
                 <li class="list-group-item"><a href="@Url.EditSub(Model.CurrentSub.Sub.Name)">Sub settings</a></li>
+                <li class="list-group-item"><a href="@Url.Moderators(Model.CurrentSub.Sub.Name)">Moderators</a></li>
                 <li class="list-group-item"><a href="@Url.MessagesForSub(Model.CurrentSub.Sub.Name)">Moderator mail</a></li>
                 <li class="list-group-item"><a href="@Url.SubBans(Model.CurrentSub.Sub.Name)">Bans</a></li>
                 <li class="list-group-item"><a href="@Url.Unmoderated(Model.CurrentSub.Sub.Name)">Unmoderated links</a></li>
@@ -56,6 +57,7 @@
                     {
                         <li class="list-group-item"><a href="@Url.User(mod.UserName)">@mod.UserName</a></li>
                     }
+                    <li class="list-group-item"><a href="@Url.Moderators(Model.CurrentSub.Sub.Name)" class="btn btn-default btn-sm">View more</a></li>
                     <li class="list-group-item"><a href="@Url.Compose(to:"/s/" + Model.CurrentSub.Sub.Name)" class="btn btn-default btn-sm">Send message</a></li>
                 </ul>
             </div>

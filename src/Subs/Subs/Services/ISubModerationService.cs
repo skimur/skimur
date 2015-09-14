@@ -11,7 +11,7 @@ namespace Subs.Services
     {
         bool CanUserModerateSub(Guid userId, Guid subId);
 
-        List<Guid> GetAllModsForSub(Guid subId);
+        List<Moderator> GetAllModsForSub(Guid subId);
 
         void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null);
 
@@ -20,5 +20,7 @@ namespace Subs.Services
         List<Guid> GetSubsModeratoredByUser(Guid userId);
 
         ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId);
+
+        Moderator GetModeratorInfoForUserInSub(Guid userId, Guid subId);
     }
 }

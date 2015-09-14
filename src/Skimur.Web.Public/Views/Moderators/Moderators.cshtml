@@ -1,0 +1,87 @@
+﻿@using System.Web.UI.WebControls
+@using Subs
+@using Subs.ReadModel
+@model ModeratorsViewModel
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    ViewBag.Title = "Moderators of /s/" + Model.Sub.Name;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+
+        @if (Model.Moderators != null && Model.Moderators.Count > 0)
+        {
+            <table class="table table-condensed">
+                <thead>
+                    <tr>
+                        <th>User</th>
+                        <th>Moderator since</th>
+                        <th>Permissions</th>
+                        <th></th>
+                    </tr>
+                </thead>
+                <tbody>
+                    @foreach (var moderator in Model.Moderators)
+                {
+                        <tr>
+                            <td>@moderator.User.UserName</td>
+                            <td>@Html.Age(moderator.Moderator.AddedOn) ago</td>
+                            <td>@PermissionsText(moderator)</td>
+                            <td>
+                                @if (moderator.CanChangePermissions)
+                                {
+                                    <a href="javascript:void(0);" class="btn btn-default btn-sm">Change</a>
+                                }
+                                @if (moderator.CanRemove)
+                                {
+                                    <a href="javascript:void(0);" class="btn btn-danger btn-sm">Remove</a>
+                                }
+                            </td>
+                        </tr>
+                    }
+                </tbody>
+            </table>
+        }
+        else
+        {
+            <p>There are no moderators to display.</p>
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @{Html.RenderSideBar(subId: Model.Sub.Id);}
+    </div>
+</div>
+
+@helper PermissionsText(ModeratorWrapped moderator)
+{
+if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.All))
+{
+        <text>Full</text>
+    }
+    else
+    {
+        var permissions = new List<string>();
+        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Access))
+        {
+            permissions.Add("Access");
+        }
+        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Config))
+        {
+            permissions.Add("Config");
+        }
+        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Flair))
+        {
+            permissions.Add("Flair");
+        }
+        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Mail))
+        {
+            permissions.Add("Mail");
+        }
+        if (moderator.Moderator.Permissions.HasPermission(ModeratorPermissions.Posts))
+        {
+            permissions.Add("Posts");
+        }
+        <text>@string.Join(", ", permissions)</text>
+    }
+}

@@ -352,6 +352,7 @@
     <Content Include="Views\Common\SideBar.cshtml" />
     <Content Include="Views\Reports\ReportedPosts.cshtml" />
     <Content Include="Views\Reports\ReportedComments.cshtml" />
+    <Content Include="Views\Moderators\Moderators.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

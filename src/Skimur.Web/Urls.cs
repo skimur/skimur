@@ -181,5 +181,10 @@ namespace Skimur.Web
         {
             return urlHelper.RouteUrl("SubsReportedComments", new { subName });
         }
+
+        public static string Moderators(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("SubModerators", new { subName });
+        }
     }
 }

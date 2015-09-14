@@ -23,24 +23,14 @@ namespace Migrations.Postgres
             conn.Perform(x =>
             {
                 x.Execute("ALTER TABLE sub_admins RENAME TO moderators");
-                x.Execute("ALTER TABLE moderators ADD COLUMN permissions integer DEFAULT " + (int)ModeratorPermissions.All + ";");
+                // "1" is "All" permission
+                x.Execute("ALTER TABLE moderators ADD COLUMN permissions integer DEFAULT 1");
             });
         }
 
         public override string GetDescription()
         {
             return "Rename the 'sub_admins' table to 'moderators'. Also, add a permissions field to the table.";
-        }
-
-        [Flags]
-        enum ModeratorPermissions
-        {
-            Access = 1,
-            Config = 1 << 1,
-            Flair = 1 << 2,
-            Mail = 1 << 3,
-            Posts = 1 << 4,
-            All = Access | Config | Flair | Mail | Posts
         }
     }
 }

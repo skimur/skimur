@@ -28,12 +28,11 @@ namespace Subs.Services.Impl
             });
         }
 
-        public List<Guid> GetAllModsForSub(Guid subId)
+        public List<Moderator> GetAllModsForSub(Guid subId)
         {
             return _conn.Perform(conn =>
             {
-                return conn.Select(conn.From<Moderator>().Where(x => x.SubId == subId).Select(x => x.UserId))
-                    .Select(x => x.UserId).ToList();
+                return conn.Select(conn.From<Moderator>().Where(x => x.SubId == subId));
             });
         }
 
@@ -88,6 +87,14 @@ namespace Subs.Services.Impl
                 if (result == null)
                     return (ModeratorPermissions?)null;
                 return result.Permissions;
+            });
+        }
+
+        public Moderator GetModeratorInfoForUserInSub(Guid userId, Guid subId)
+        {
+            return _conn.Perform(conn =>
+            {
+                return conn.Single(conn.From<Moderator>().Where(x => x.UserId == userId && x.SubId == subId));
             });
         }
     }

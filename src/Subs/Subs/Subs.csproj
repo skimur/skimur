@@ -99,12 +99,14 @@
     <Compile Include="ModeratorPermissions.cs" />
     <Compile Include="ReadModel\IMessageDao.cs" />
     <Compile Include="ReadModel\IMessageWrapper.cs" />
+    <Compile Include="ReadModel\IModeratorWrapper.cs" />
     <Compile Include="ReadModel\Impl\CommentNodeHierarchyBuilder.cs" />
     <Compile Include="ReadModel\CommentWrapped.cs" />
     <Compile Include="ReadModel\Impl\CommentWrapper.cs" />
     <Compile Include="ReadModel\ICommentWrapper.cs" />
     <Compile Include="ReadModel\Impl\MessageDao.cs" />
     <Compile Include="ReadModel\Impl\MessageWrapper.cs" />
+    <Compile Include="ReadModel\Impl\ModeratorWrapper.cs" />
     <Compile Include="ReadModel\Impl\ReportDao.cs" />
     <Compile Include="ReadModel\Impl\SubActivityDao.cs" />
     <Compile Include="ReadModel\Impl\SubModerationDao.cs" />
@@ -117,6 +119,7 @@
     <Compile Include="ReadModel\ISubUserBanWrapper.cs" />
     <Compile Include="ReadModel\ISubWrapper.cs" />
     <Compile Include="ReadModel\MessageWrapped.cs" />
+    <Compile Include="ReadModel\ModeratorWrapped.cs" />
     <Compile Include="ReadModel\PostWrapped.cs" />
     <Compile Include="ReadModel\Impl\PostWrapper.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanDao.cs" />
@@ -166,6 +169,7 @@
     <Compile Include="Services\Impl\VoteService.cs" />
     <Compile Include="Sub.cs" />
     <Compile Include="Moderator.cs" />
+    <Compile Include="SubExtensions.cs" />
     <Compile Include="SubScription.cs" />
     <Compile Include="Services\Impl\SubService.cs" />
     <Compile Include="SubSettings.cs" />

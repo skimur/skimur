@@ -82,7 +82,7 @@ namespace Skimur.Web.Controllers
 
                 if (!model.IsModerator)
                     // we only show list of mods if the requesting user is not a mod of this sub
-                    model.Moderators = _membershipService.GetUsersByIds(_subModerationDao.GetAllModsForSub(model.CurrentSub.Sub.Id));
+                    model.Moderators = _membershipService.GetUsersByIds(_subModerationDao.GetAllModsForSub(model.CurrentSub.Sub.Id).Select(x => x.UserId).ToList());
 
                 // get the number of active users currently viewing this sub.
                 // for normal users, this number may be fuzzed (if low enough) for privacy reasons.
