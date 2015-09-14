@@ -47,7 +47,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 throw new HttpException(404, "sub not found");
 
-            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
 
             if (!pageNumber.HasValue)
@@ -74,7 +74,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 throw new HttpException(404, "sub not found");
 
-            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
 
             try
@@ -126,7 +126,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 throw new HttpException(404, "sub not found");
 
-            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
 
             try
@@ -175,7 +175,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 throw new HttpException(404, "sub not found");
 
-            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
 
             try

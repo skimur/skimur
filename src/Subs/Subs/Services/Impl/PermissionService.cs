@@ -18,27 +18,58 @@ namespace Subs.Services.Impl
 
             if (comment.AuthorUserId == user.Id)
                 return true;
-
-            if (user.IsAdmin) return true;
             
-            return CanUserModerateSub(user, comment.SubId);
+            return CanUserManageSubPosts(user, comment.SubId);
         }
 
         public bool CanUserMarkCommentAsSpam(User user, Comment comment)
         {
-            return CanUserModerateSub(user, comment.SubId);
+            return CanUserManageSubPosts(user, comment.SubId);
         }
 
         public bool CanUserMarkPostAsSpam(User user, Post post)
         {
-            return CanUserModerateSub(user, post.SubId);
+            return CanUserManageSubPosts(user, post.SubId);
         }
 
-        public bool CanUserModerateSub(User user, Guid subId)
+        public bool CanUserManageSubAccess(User user, Guid subId)
         {
-            if (user.IsAdmin) return true;
+            var permissions = GetUserPermissionsForSub(user, subId);
+            if (permissions == null) return false;
+            return permissions.Value.HasFlag(ModeratorPermissions.Access);
+        }
 
-            return _subModerationService.CanUserModerateSub(user.Id, subId);
+        public bool CanUserManageSubConfig(User user, Guid subId)
+        {
+            var permissions = GetUserPermissionsForSub(user, subId);
+            if (permissions == null) return false;
+            return permissions.Value.HasFlag(ModeratorPermissions.Config);
+        }
+
+        public bool CanUserManageSubFlair(User user, Guid subId)
+        {
+            var permissions = GetUserPermissionsForSub(user, subId);
+            if (permissions == null) return false;
+            return permissions.Value.HasFlag(ModeratorPermissions.Flair);
+        }
+
+        public bool CanUserManageSubMail(User user, Guid subId)
+        {
+            var permissions = GetUserPermissionsForSub(user, subId);
+            if (permissions == null) return false;
+            return permissions.Value.HasFlag(ModeratorPermissions.Mail);
+        }
+
+        public bool CanUserManageSubPosts(User user, Guid subId)
+        {
+            var permissions = GetUserPermissionsForSub(user, subId);
+            if (permissions == null) return false;
+            return permissions.Value.HasFlag(ModeratorPermissions.Posts);
+        }
+
+        public ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId)
+        {
+            return _subModerationService.GetUserPermissionsForSub(user, subId);
         }
     }
 }

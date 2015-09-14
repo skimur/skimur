@@ -5,6 +5,7 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
 using Infrastructure.Utils;
+using Membership;
 using ServiceStack.OrmLite;
 using Skimur;
 
@@ -71,6 +72,22 @@ namespace Subs.Services.Impl
                 query.Where(x => x.UserId == userId);
                 query.SelectExpression = "SELECT \"sub_id\"";
                 return conn.Select(query).Select(x => x.SubId).ToList();
+            });
+        }
+
+        public ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId)
+        {
+            if (user == null) return null;
+            if(user.IsAdmin) return ModeratorPermissions.All;
+
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Moderator>().Where(x => x.UserId == user.Id && x.SubId == subId);
+                query.SelectExpression = "SELECT \"permissions\"";
+                var result = conn.Single(query);
+                if (result == null)
+                    return (ModeratorPermissions?)null;
+                return result.Permissions;
             });
         }
     }

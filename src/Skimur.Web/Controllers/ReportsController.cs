@@ -275,7 +275,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 throw new NotFoundException();
 
-            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubPosts(_userContext.CurrentUser, sub.Id))
                 throw new UnauthorizedException();
 
             var postIds = _postDao.GetReportedPosts(new List<Guid> { sub.Id }, take: 30);
@@ -300,7 +300,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 throw new NotFoundException();
 
-            if (!_permissionDao.CanUserModerateSub(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubPosts(_userContext.CurrentUser, sub.Id))
                 throw new UnauthorizedException();
 
             var commentIds = _commentDao.GetReportedComments(new List<Guid> { sub.Id }, take: 30);

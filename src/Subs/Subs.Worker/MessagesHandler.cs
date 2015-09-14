@@ -77,8 +77,7 @@ namespace Subs.Worker
                     
                     // the user is trying to send this message as a sub moderator.
                     // let's make sure that this user has this permission for the sub.
-                    // TODO: narrow the permission set to be only a "mail" permission.
-                    if (!_permissionService.CanUserModerateSub(author, command.SendAsSub.Value))
+                    if (!_permissionService.CanUserManageSubMail(author, command.SendAsSub.Value))
                     {
                         response.Error = "You are not authorized to send a message as a sub moderator.";
                         return response;
@@ -185,8 +184,7 @@ namespace Subs.Worker
                 {
                     // the user is replying to a message that was sent to him/her.
                 }else if (replyToMessage.ToSub.HasValue &&
-                          // TODO: use a narrower set of permissions
-                          _permissionService.CanUserModerateSub(author, replyToMessage.ToSub.Value))
+                          _permissionService.CanUserManageSubMail(author, replyToMessage.ToSub.Value))
                 {
                     // the user is replying to a sub message, and the user is allowed to moderate this sub!
                 }
@@ -276,8 +274,7 @@ namespace Subs.Worker
             var subsCanModerate = new List<Guid>();
             foreach (var sub in subs)
             {
-                // TODO: check for a narrower set of permissions
-                if (_permissionDao.CanUserModerateSub(user, sub))
+                if (_permissionDao.CanUserManageSubMail(user, sub))
                     subsCanModerate.Add(sub);
             }
 
@@ -319,8 +316,7 @@ namespace Subs.Worker
             var subsCanModerate = new List<Guid>();
             foreach (var sub in subs)
             {
-                // TODO: check for a narrower set of permissions
-                if (_permissionDao.CanUserModerateSub(user, sub))
+                if (_permissionDao.CanUserManageSubMail(user, sub))
                     subsCanModerate.Add(sub);
             }
 

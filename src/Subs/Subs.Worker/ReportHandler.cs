@@ -105,7 +105,7 @@ namespace Subs.Worker
                 var post = _postService.GetPostById(command.PostId.Value);
                 if (post == null) return;
 
-                if (!_permissionService.CanUserModerateSub(user, post.SubId)) return;
+                if (!_permissionService.CanUserManageSubPosts(user, post.SubId)) return;
 
                 if (post.IgnoreReports == command.IgnoreReports) return;
 
@@ -124,7 +124,7 @@ namespace Subs.Worker
                 var comment = _commentService.GetCommentById(command.CommentId.Value);
                 if (comment == null) return;
 
-                if (!_permissionService.CanUserModerateSub(user, comment.SubId)) return;
+                if (!_permissionService.CanUserManageSubPosts(user, comment.SubId)) return;
 
                 if (comment.IgnoreReports == command.IgnoreReports) return;
 
@@ -151,9 +151,8 @@ namespace Subs.Worker
             {
                 var post = _postService.GetPostById(command.PostId.Value);
                 if (post == null) return;
-
-                // TODO: check for a narrower set of permissions
-                if (_permissionService.CanUserModerateSub(user, post.SubId))
+                
+                if (_permissionService.CanUserManageSubPosts(user, post.SubId))
                 {
                     _reportService.RemoveReportsForPost(post.Id);
                     _postService.UpdateNumberOfReportsForPost(post.Id, 0);
@@ -164,9 +163,8 @@ namespace Subs.Worker
             {
                 var comment = _commentService.GetCommentById(command.CommentId.Value);
                 if (comment == null) return;
-
-                // TODO: check for a narrower set of permissions
-                if (_permissionService.CanUserModerateSub(user, comment.SubId))
+                
+                if (_permissionService.CanUserManageSubPosts(user, comment.SubId))
                 {
                     _reportService.RemoveReportsForComment(comment.Id);
                     _commentService.UpdateNumberOfReportsForComment(comment.Id, 0);

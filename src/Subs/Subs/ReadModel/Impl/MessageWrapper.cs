@@ -57,7 +57,7 @@ namespace Subs.ReadModel.Impl
             var subsCanModerate = new HashSet<Guid>();
             foreach (var sub in subs.Keys)
             {
-                if (_permissionDao.CanUserModerateSub(currentUser, sub))
+                if (_permissionDao.CanUserManageSubMail(currentUser, sub))
                     subsCanModerate.Add(sub);
             }
 
