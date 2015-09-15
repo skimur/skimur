@@ -32,17 +32,7 @@ namespace Subs.Services
         List<Sub> GetSubsByIds(List<Guid> ids);
 
         Sub GetSubById(Guid id);
-
-        bool CanUserModerateSub(Guid userId, Guid subId);
-
-        List<Guid> GetAllModsForSub(Guid subId);
-
-        void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null);
-
-        void RemoveModFromSub(Guid userId, Guid subId);
-
+        
         void UpdateNumberOfSubscribers(Guid subId, out ulong totalNumber);
-
-        List<Guid> GetSubsModeratoredByUser(Guid userId);
     }
 }

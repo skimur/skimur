@@ -15,6 +15,8 @@ namespace Subs
     {
         public void Register(SimpleInjector.Container container)
         {
+            container.RegisterSingleton<ISubModerationService, SubModerationService>();
+            container.RegisterSingleton<ISubModerationDao, SubModerationDao>();
             container.RegisterSingleton<IReportService, ReportService>();
             container.RegisterSingleton<IReportDao, ReportDao>();
             container.RegisterSingleton<ISubActivityService, SubActivityService>();
@@ -41,6 +43,7 @@ namespace Subs
             container.RegisterSingleton<ISubWrapper, SubWrapper>();
             container.RegisterSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
             container.RegisterSingleton<IMessageWrapper, MessageWrapper>();
+            container.RegisterSingleton<IModeratorWrapper, ModeratorWrapper>();
         }
 
         public int Order

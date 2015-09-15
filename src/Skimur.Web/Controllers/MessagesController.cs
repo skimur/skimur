@@ -22,13 +22,15 @@ namespace Skimur.Web.Controllers
         private readonly IMessageDao _messageDao;
         private readonly IMessageWrapper _messageWrapper;
         private readonly ISubDao _subDao;
+        private readonly ISubModerationDao _subModerationDao;
 
         public MessagesController(ICommandBus commandBus,
             ILogger<MessagesController> logger,
             IUserContext userContext,
             IMessageDao messageDao,
             IMessageWrapper messageWrapper,
-            ISubDao subDao)
+            ISubDao subDao,
+            ISubModerationDao subModerationDao)
         {
             _commandBus = commandBus;
             _logger = logger;
@@ -36,6 +38,7 @@ namespace Skimur.Web.Controllers
             _messageDao = messageDao;
             _messageWrapper = messageWrapper;
             _subDao = subDao;
+            _subModerationDao = subModerationDao;
         }
 
         public ActionResult Inbox(InboxType type, int? pageNumber, int? pageSize)
@@ -82,7 +85,7 @@ namespace Skimur.Web.Controllers
 
             var model = new InboxViewModel();
             model.InboxType = type;
-            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
+            model.IsModerator = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
@@ -98,7 +101,7 @@ namespace Skimur.Web.Controllers
             model.To = to;
             model.Subject = subject;
             model.Message = message;
-            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
+            model.IsModerator = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
 
             return View(model);
         }
@@ -123,7 +126,7 @@ namespace Skimur.Web.Controllers
 
             var model = new InboxViewModel();
             model.InboxType = InboxType.Sent;
-            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
+            model.IsModerator = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages = new PagedList<MessageWrapped>(_messageWrapper.Wrap(messages, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, messages.HasMore);
 
             return View(model);
@@ -134,7 +137,7 @@ namespace Skimur.Web.Controllers
         public ActionResult Compose(ComposeMessageViewModel model)
         {
             ViewBag.ManageNavigationKey = "compose";
-            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
+            model.IsModerator = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -235,7 +238,7 @@ namespace Skimur.Web.Controllers
             var messages = _messageDao.GetMessagesForThread(message.Id);
 
             var model = new MessageThreadViewModel();
-            model.IsModerator = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
+            model.IsModerator = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages.AddRange(_messageWrapper.Wrap(messages, _userContext.CurrentUser));
             if (context.HasValue)
                 model.ContextMessage = model.Messages.SingleOrDefault(x => x.Message.Id == context.Value);
@@ -260,7 +263,7 @@ namespace Skimur.Web.Controllers
             var skip = (pageNumber - 1) * pageSize;
             var take = pageSize;
 
-            var moderatingSubs = _subDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id);
+            var moderatingSubs = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id);
 
             var model = new InboxViewModel { InboxType = type };
             model.IsModerator = moderatingSubs.Count > 0;

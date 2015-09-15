@@ -51,8 +51,7 @@ namespace Subs.ReadModel.Impl
 
             if (currentUser != null)
                 foreach (var sub in subs.Values)
-                    // TODO: Check for a specific permission "ban".
-                    if (_permissionDao.CanUserModerateSub(currentUser, sub.Id))
+                    if (_permissionDao.CanUserManageSubPosts(currentUser, sub.Id))
                         userCanModInSubs.Add(sub.Id);
 
             var likes = currentUser != null ? _voteDao.GetVotesOnCommentsByUser(currentUser.Id, commentIds) : new Dictionary<Guid, VoteType>();

@@ -116,7 +116,7 @@ namespace Skimur.Web
                 name: "SubsReportedComments",
                 url: "s/{subName}/reported/comments",
                 defaults: new { controller = "Reports", action = "ReportedComments" });
-            
+
             routes.MapRoute(
                 name: "Post",
                 url: "s/{subName}/post/{id}/{title}",
@@ -146,6 +146,11 @@ namespace Skimur.Web
                 name: "SubUpdateBan",
                 url: "s/{subName}/updateban",
                 defaults: new { controller = "SubBans", action = "UpdateBan" });
+
+            routes.MapRoute(
+                name: "SubModerators",
+                url: "s/{subName}/moderators",
+                defaults: new { controller = "Moderators", action = "Moderators" });
 
             routes.MapRoute(
                 name: "MoreComments",

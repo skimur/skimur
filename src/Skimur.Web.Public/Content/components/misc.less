@@ -49,3 +49,24 @@
         }
     }
 }
+
+.permissions {
+    .permission {
+        display:block;
+        &.disabled {
+            color:lighten(@gray, 40%);
+        }
+        input[type="checkbox"][disabled] {
+            cursor:inherit;
+        }
+    }
+    hr{
+        margin:0 0 5px 0;
+    }
+}
+
+.permission-modal {
+    .modal-dialog {
+        width:300px;
+    }
+}

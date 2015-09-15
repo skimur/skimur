@@ -50,6 +50,9 @@ namespace Subs.Worker
             container.Register<ICommandHandler<ReportPost>, ReportHandler>();
             container.Register<ICommandHandler<ConfigureReportIgnoring>, ReportHandler>();
             container.Register<ICommandHandler<ClearReports>, ReportHandler>();
+
+            container.Register<ICommandHandler<RemoveModFromSub>, ModerationHandler>();
+            container.Register<ICommandHandler<ChangeModPermissionsForSub>, ModerationHandler>();
         }
 
         public int Order

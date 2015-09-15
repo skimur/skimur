@@ -59,7 +59,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_permissionDao.CanUserModerateSub(bannedBy, sub.Id))
+                if (!_permissionDao.CanUserManageSubAccess(bannedBy, sub.Id))
                 {
                     response.Error = "You are not authorized to ban.";
                     return response;
@@ -109,7 +109,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_permissionDao.CanUserModerateSub(unBannedBy, sub.Id))
+                if (!_permissionDao.CanUserManageSubAccess(unBannedBy, sub.Id))
                 {
                     response.Error = "You are not authorized to ban.";
                     return response;
@@ -159,7 +159,7 @@ namespace Subs.Worker
                     return response;
                 }
 
-                if (!_permissionDao.CanUserModerateSub(updatedBy, sub.Id))
+                if (!_permissionDao.CanUserManageSubAccess(updatedBy, sub.Id))
                 {
                     response.Error = "You are not authorized to ban.";
                     return response;

@@ -45,8 +45,7 @@ namespace Subs.ReadModel.Impl
             var subs = _subDao.GetSubsByIds(posts.Select(x => x.Post.SubId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
             var likes = currentUser != null ? _voteDao.GetVotesOnPostsByUser(currentUser.Id, postIds) : new Dictionary<Guid, VoteType>();
             var canManagePosts = currentUser != null
-                // TODO: add support for narrowed permissions for managing posts
-                ? subs.Values.Where(x => _permissionDao.CanUserModerateSub(currentUser, x.Id))
+                ? subs.Values.Where(x => _permissionDao.CanUserManageSubPosts(currentUser, x.Id))
                     .Select(x => x.Id)
                     .ToList()
                 : new List<Guid>();

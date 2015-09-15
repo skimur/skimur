@@ -54,7 +54,7 @@ namespace Subs.Worker
                 }
 
                 // TODO: support a narrower set of permissions
-                if (!_permissionService.CanUserModerateSub(user, post.SubId))
+                if (!_permissionService.CanUserManageSubPosts(user, post.SubId))
                 {
                     response.Error = "Not allowed.";
                     return response;
@@ -94,7 +94,7 @@ namespace Subs.Worker
                 }
 
                 // TODO: support a narrower set of permissions
-                if (!_permissionService.CanUserModerateSub(user, post.SubId))
+                if (!_permissionService.CanUserManageSubPosts(user, post.SubId))
                 {
                     response.Error = "Not allowed.";
                     return response;
