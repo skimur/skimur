@@ -41,9 +41,13 @@
         }).appendTo($footer);
         $("<button type='button' class='btn btn-primary'>Save</button>").click(function(e) {
             e.preventDefault();
-            skimur.changeModPermissionsForSub(subName, null, userId, skimurui.getModPermissionsFromForm($form), function(result) {
+            var newPermissions = skimurui.getModPermissionsFromForm($form);
+            skimur.changeModPermissionsForSub(subName, null, userId, newPermissions, function (result) {
                 $permissionsModal.modal("hide");
-                if (!result.success) {
+                if (result.success) {
+                    $(".permissions", $moderator).text(skimurui.buildModeratorPermissionsString(newPermissions));
+                    $moderator.data("permissions", newPermissions);
+                } else {
                     skimurui.displayError(result.error);
                 }
             });

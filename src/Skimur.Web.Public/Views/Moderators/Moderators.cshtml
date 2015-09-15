@@ -24,10 +24,10 @@
                     @foreach (var moderator in Model.Moderators)
                     {
                         <tr class="moderator" data-sub-name="@moderator.Sub.Name" data-user-id="@moderator.User.Id" data-permissions="@((int)moderator.Moderator.Permissions)">
-                            <td>@moderator.User.UserName</td>
-                            <td>@Html.Age(moderator.Moderator.AddedOn) ago</td>
-                            <td>@PermissionsText(moderator)</td>
-                            <td>
+                            <td class="user">@moderator.User.UserName</td>
+                            <td class="added-on">@Html.Age(moderator.Moderator.AddedOn) ago</td>
+                            <td class="permissions">@PermissionsText(moderator)</td>
+                            <td class="actions">
                                 @if (moderator.CanChangePermissions)
                                 {
                                     <a href="javascript:void(0);" onclick="return skimurui.moderators.changePermissions(this);" class="btn btn-default btn-sm">Change</a>

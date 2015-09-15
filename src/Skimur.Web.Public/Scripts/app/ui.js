@@ -129,6 +129,32 @@
         return $form;
     }
 
+    var buildModeratorPermissionsString = function (permissions) {
+        if ((permissions & permissionsFlagAll) !== 0) {
+            return "Full";
+        } else if (permissions === 0) {
+            return "None";
+        } else {
+            var list = [];
+            if ((permissions & permissionsFlagAccess) !== 0) {
+                list.push("Access");
+            }
+            if ((permissions & permissionsFlagConfig) !== 0) {
+                list.push("Config");
+            }
+            if ((permissions & permissionsFlagFlair) !== 0) {
+                list.push("Flair");
+            }
+            if ((permissions & permissionsFlagMail) !== 0) {
+                list.push("Mail");
+            }
+            if ((permissions & permissionsFlagPosts) !== 0) {
+                list.push("Posts");
+            }
+            return list.join(", ");
+        }
+    }
+
     var buildModPermissionsForm = function (currentPermissions) {
         var $form = $(
         "<div class='permissions'>" +
@@ -177,6 +203,8 @@
             // and check our current permissions
             if ((currentPermissions & permissionsFlagAll) !== 0) {
                 $(".permission.full input", $form).click();
+            } else if (currentPermissions === 0) {
+                // leave the form alone!
             } else {
                 if ((currentPermissions & permissionsFlagAccess) !== 0) {
                     $(".permission.access input", $form).click();
@@ -199,7 +227,7 @@
         return $form;
     };
 
-    var getModPermissionsFromForm = function($form) {
+    var getModPermissionsFromForm = function ($form) {
         if ($(".permission.full input", $form).is(":checked")) {
             return permissionsFlagAll;
         } else {
@@ -236,7 +264,8 @@
         confirmDelete: confirmDelete,
         buildReportForm: buildReportForm,
         buildModPermissionsForm: buildModPermissionsForm,
-        getModPermissionsFromForm : getModPermissionsFromForm
+        getModPermissionsFromForm: getModPermissionsFromForm,
+        buildModeratorPermissionsString: buildModeratorPermissionsString
     };
 
 })();
