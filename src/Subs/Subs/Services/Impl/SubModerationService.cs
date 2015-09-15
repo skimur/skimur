@@ -32,7 +32,7 @@ namespace Subs.Services.Impl
         {
             return _conn.Perform(conn =>
             {
-                return conn.Select(conn.From<Moderator>().Where(x => x.SubId == subId));
+                return conn.Select(conn.From<Moderator>().Where(x => x.SubId == subId).OrderBy(x => x.AddedOn));
             });
         }
 
@@ -95,6 +95,18 @@ namespace Subs.Services.Impl
             return _conn.Perform(conn =>
             {
                 return conn.Single(conn.From<Moderator>().Where(x => x.UserId == userId && x.SubId == subId));
+            });
+        }
+
+        public void UpdateUserModPermissionForSub(Guid userId, Guid subId, ModeratorPermissions permissions)
+        {
+            if(permissions.HasFlag(ModeratorPermissions.All))
+                permissions = ModeratorPermissions.All; // clear our out any 'non needed' flags.
+
+            _conn.Perform(conn =>
+            {
+                return conn.Update<Moderator>(new {Permissions = permissions},
+                    x => x.UserId == userId && x.SubId == subId);
             });
         }
     }

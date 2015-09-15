@@ -11,7 +11,7 @@
         var $permissionsModal = $("#permissions-modal");
 
         if ($permissionsModal.length === 0) {
-            $permissionsModal = $("<div id='permissions-modal' class='modal fade'>" +
+            $permissionsModal = $("<div id='permissions-modal' class='modal fade permission-modal'>" +
                 "<div class='modal-dialog'>" +
                         "<div class='modal-content'>" +
                             "<div class='modal-body'>" +

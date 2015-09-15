@@ -4,8 +4,8 @@
     var permissionsFlagAccess = 2;
     var permissionsFlagConfig = 4;
     var permissionsFlagFlair = 8;
-    var permissionsFlagMail = 10;
-    var permissionsFlagPosts = 20;
+    var permissionsFlagMail = 16;
+    var permissionsFlagPosts = 32;
 
     var displayError = function (message) {
         $.notify(message, {
@@ -157,7 +157,7 @@
             var isChecked = $(this).prop("checked");
             var $permission = $(this).closest(".permission");
             if ($permission.hasClass("full")) {
-                var items = $(".access, .config, .flair, .mail, .posts").each(function (index, element) {
+                var items = $(".access, .config, .flair, .mail, .posts", $form).each(function (index, element) {
                     var $element = $(element);
                     if (isChecked) {
                         $element.addClass("disabled").find("input").attr("disabled", true).attr("checked", false);
@@ -195,7 +195,6 @@
                 }
             }
         }
-
 
         return $form;
     };

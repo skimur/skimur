@@ -9,6 +9,7 @@ namespace Subs
     [Flags]
     public enum ModeratorPermissions
     {
+        None = 0,
         All = 1,
         Access = 1 << 1,
         Config = 1 << 2,

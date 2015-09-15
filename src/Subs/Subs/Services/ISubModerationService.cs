@@ -22,5 +22,7 @@ namespace Subs.Services
         ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId);
 
         Moderator GetModeratorInfoForUserInSub(Guid userId, Guid subId);
+
+        void UpdateUserModPermissionForSub(Guid userId, Guid subId, ModeratorPermissions permissions);
     }
 }
