@@ -237,6 +237,28 @@ namespace Skimur.Web.Controllers
             // this will return all the messages for this thread, including the first message that started the conversation
             var messages = _messageDao.GetMessagesForThread(message.Id);
 
+            // let's make sure that the user is involved with at least one of these messages
+            if (!_userContext.CurrentUser.IsAdmin)
+            {
+                var userModeratingSubs =
+                    _subModerationDao.GetSubsModeratoredByUserWithPermissions(_userContext.CurrentUser.Id)
+                        .Where(x => x.Value.HasPermission(ModeratorPermissions.Mail)).Select(x => x.Key).ToList();
+
+                // NOTE: Should we check for the user being involved with any message in the thread, or is the first message enough?
+
+                if (message.ToUser.HasValue && message.ToUser.Value == _userContext.CurrentUser.Id
+                    || message.AuthorId == _userContext.CurrentUser.Id
+                    || message.FromSub.HasValue && userModeratingSubs.Contains(message.FromSub.Value)
+                    || message.ToSub.HasValue && userModeratingSubs.Contains(message.ToSub.Value))
+                {
+                    // the user is involved in these discussions!
+                }
+                else
+                {
+                    throw new UnauthorizedException();
+                }
+            }
+
             var model = new MessageThreadViewModel();
             model.IsModerator = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id).Count > 0;
             model.Messages.AddRange(_messageWrapper.Wrap(messages, _userContext.CurrentUser));
@@ -263,7 +285,7 @@ namespace Skimur.Web.Controllers
             var skip = (pageNumber - 1) * pageSize;
             var take = pageSize;
 
-            var moderatingSubs = _subModerationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id);
+            var moderatingSubs = _subModerationDao.GetSubsModeratoredByUserWithPermissions(_userContext.CurrentUser.Id);
 
             var model = new InboxViewModel { InboxType = type };
             model.IsModerator = moderatingSubs.Count > 0;
@@ -272,17 +294,27 @@ namespace Skimur.Web.Controllers
             {
                 var sub = _subDao.GetSubByName(subName);
                 if (sub == null) throw new NotFoundException();
-                if (!moderatingSubs.Contains(sub.Id)) throw new UnauthorizedException();
+
+                // make the sure that the user is allowed to see this mod mail
+                if (!_userContext.CurrentUser.IsAdmin)
+                {
+                    if(!moderatingSubs.ContainsKey(sub.Id)) throw new UnauthorizedException();
+                    if(!moderatingSubs[sub.Id].HasPermission(ModeratorPermissions.Mail)) throw new UnauthorizedException();
+                }
+
                 model.Sub = sub;
                 model.ModeratorMailForSubs = new List<Guid> { sub.Id };
             }
             else
             {
-                model.ModeratorMailForSubs = moderatingSubs;
+                model.ModeratorMailForSubs = new List<Guid>();
+                foreach (var key in moderatingSubs.Keys)
+                {
+                    if(moderatingSubs[key].HasPermission(ModeratorPermissions.Mail))
+                        model.ModeratorMailForSubs.Add(key);
+                }
             }
-
-
-
+            
             SeekedList<Guid> messages;
             if (moderatingSubs.Count == 0)
                 messages = new SeekedList<Guid>();
@@ -290,13 +322,13 @@ namespace Skimur.Web.Controllers
                 switch (type)
                 {
                     case InboxType.ModeratorMail:
-                        messages = _messageDao.GetModeratorMailForSubs(moderatingSubs, skip, take);
+                        messages = _messageDao.GetModeratorMailForSubs(moderatingSubs.Select(x => x.Key).ToList(), skip, take);
                         break;
                     case InboxType.ModeratorMailUnread:
-                        messages = _messageDao.GetUnreadModeratorMailForSubs(moderatingSubs, skip, take);
+                        messages = _messageDao.GetUnreadModeratorMailForSubs(moderatingSubs.Select(x => x.Key).ToList(), skip, take);
                         break;
                     case InboxType.ModeratorMailSent:
-                        messages = _messageDao.GetSentModeratorMailForSubs(moderatingSubs, skip, take);
+                        messages = _messageDao.GetSentModeratorMailForSubs(moderatingSubs.Select(x => x.Key).ToList(), skip, take);
                         break;
                     default:
                         throw new Exception("invalid type");

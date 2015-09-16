@@ -74,6 +74,17 @@ namespace Subs.Services.Impl
             });
         }
 
+        public Dictionary<Guid, ModeratorPermissions> GetSubsModeratoredByUserWithPermissions(Guid userId)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Moderator>();
+                query.Where(x => x.UserId == userId);
+                query.SelectExpression = "SELECT \"sub_id\", \"permissions\"";
+                return conn.Select(query).ToDictionary(x => x.SubId, x => x.Permissions);
+            });
+        }
+
         public ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId)
         {
             if (user == null) return null;

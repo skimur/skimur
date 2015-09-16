@@ -19,6 +19,8 @@ namespace Subs.Services
 
         List<Guid> GetSubsModeratoredByUser(Guid userId);
 
+        Dictionary<Guid, ModeratorPermissions> GetSubsModeratoredByUserWithPermissions(Guid userId);
+
         ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId);
 
         Moderator GetModeratorInfoForUserInSub(Guid userId, Guid subId);
