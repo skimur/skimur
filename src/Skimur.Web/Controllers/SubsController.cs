@@ -362,6 +362,9 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 return Redirect(Url.Subs(name));
 
+            if(!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
+                throw new UnauthorizedException();
+
             var model = _mapper.Map<Sub, CreateEditSubModel>(sub);
             model.IsEditing = true;
 
@@ -376,6 +379,17 @@ namespace Skimur.Web.Controllers
             var name = id;
             model.IsEditing = true;
             model.Name = name;
+
+            if (string.IsNullOrEmpty(name))
+                return Redirect(Url.Subs());
+
+            var sub = _subDao.GetSubByName(name);
+
+            if (sub == null)
+                return Redirect(Url.Subs(name));
+
+            if (!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
+                throw new UnauthorizedException();
 
             var response = _commandBus.Send<EditSub, EditSubResponse>(new EditSub
             {
@@ -393,8 +407,7 @@ namespace Skimur.Web.Controllers
             }
 
             // todo: success message
-
-
+            
             return View(model);
         }
 
