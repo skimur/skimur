@@ -354,6 +354,7 @@
     <Content Include="Views\Reports\ReportedPosts.cshtml" />
     <Content Include="Views\Reports\ReportedComments.cshtml" />
     <Content Include="Views\Moderators\Moderators.cshtml" />
+    <Content Include="Views\Subs\_SubCreateEdit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

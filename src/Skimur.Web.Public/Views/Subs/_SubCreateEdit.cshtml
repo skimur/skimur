@@ -1,0 +1,33 @@
+﻿@model CreateEditSubModel
+
+<div class="form-group">
+    @Html.LabelFor(m => m.Name, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @if (Model.IsEditing)
+        {
+            <p class="form-control-static">@Model.Name</p>
+        }
+        else
+        {
+            @Html.TextBoxFor(m => m.Name, new { @class = "form-control" })
+        }
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Description, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.TextAreaFor(m => m.Description, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.SidebarText, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.TextAreaFor(m => m.SidebarText, new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.SubType, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.DropDownListFor(m => m.SubType, Html.ItemsForEnum(m => m.SubType), new { @class = "form-control" })
+    </div>
+</div>
