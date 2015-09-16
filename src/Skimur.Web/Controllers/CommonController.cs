@@ -78,7 +78,7 @@ namespace Skimur.Web.Controllers
             if (model.CurrentSub != null)
             {
                 if (_userContext.CurrentUser != null)
-                    model.IsModerator = _subModerationDao.CanUserModerateSub(_userContext.CurrentUser.Id, model.CurrentSub.Sub.Id);
+                    model.Permissions = _subModerationDao.GetUserPermissionsForSub(_userContext.CurrentUser, model.CurrentSub.Sub.Id);
 
                 if (!model.IsModerator)
                     // we only show list of mods if the requesting user is not a mod of this sub

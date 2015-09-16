@@ -1,4 +1,5 @@
-﻿@model SidebarViewModel
+﻿@using Subs
+@model SidebarViewModel
 
 @if (Model.ShowSearch) { Html.RenderPartial("_SideBarSearch", new ViewDataDictionary(Model.CurrentSub)); }
 
@@ -37,12 +38,24 @@
         <div class="panel panel-info">
             <div class="panel-heading">Moderation</div>
             <ul class="list-group">
-                <li class="list-group-item"><a href="@Url.EditSub(Model.CurrentSub.Sub.Name)">Sub settings</a></li>
+                @if (Model.Permissions.HasPermission(ModeratorPermissions.Config))
+                {
+                    <li class="list-group-item"><a href="@Url.EditSub(Model.CurrentSub.Sub.Name)">Sub settings</a></li>
+                }
                 <li class="list-group-item"><a href="@Url.Moderators(Model.CurrentSub.Sub.Name)">Moderators</a></li>
-                <li class="list-group-item"><a href="@Url.MessagesForSub(Model.CurrentSub.Sub.Name)">Moderator mail</a></li>
-                <li class="list-group-item"><a href="@Url.SubBans(Model.CurrentSub.Sub.Name)">Bans</a></li>
-                <li class="list-group-item"><a href="@Url.Unmoderated(Model.CurrentSub.Sub.Name)">Unmoderated links</a></li>
-                <li class="list-group-item"><a href="@Url.ReportedPosts(Model.CurrentSub.Sub.Name)">Reported</a></li>
+                @if (Model.Permissions.HasPermission(ModeratorPermissions.Mail))
+                {
+                    <li class="list-group-item"><a href="@Url.MessagesForSub(Model.CurrentSub.Sub.Name)">Moderator mail</a></li>
+                }
+                @if (Model.Permissions.HasPermission(ModeratorPermissions.Access))
+                {
+                    <li class="list-group-item"><a href="@Url.SubBans(Model.CurrentSub.Sub.Name)">Bans</a></li>
+                }
+                @if (Model.Permissions.HasPermission(ModeratorPermissions.Posts))
+                {
+                    <li class="list-group-item"><a href="@Url.Unmoderated(Model.CurrentSub.Sub.Name)">Unmoderated links</a></li>
+                    <li class="list-group-item"><a href="@Url.ReportedPosts(Model.CurrentSub.Sub.Name)">Reported</a></li>
+                }
             </ul>
         </div>
     }

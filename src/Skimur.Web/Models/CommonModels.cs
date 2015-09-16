@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 using Membership;
+using Subs;
 using Subs.ReadModel;
 
 namespace Skimur.Web.Models
@@ -48,7 +49,9 @@ namespace Skimur.Web.Models
 
         public bool IsNumberOfActiveUsersFuzzed { get; set; }
 
-        public bool IsModerator { get; set; }
+        public bool IsModerator { get { return Permissions.HasValue; } }
+
+        public ModeratorPermissions? Permissions { get; set; }
 
         public List<User> Moderators { get; set; }
 
