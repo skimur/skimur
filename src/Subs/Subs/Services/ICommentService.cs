@@ -31,5 +31,7 @@ namespace Subs.Services
         void SetIgnoreReportsForComment(Guid commentId, bool ignoreReports);
 
         SeekedList<Guid> GetReportedComments(List<Guid> subs = null, int? skip = null, int? take = null);
+
+        int GetNumberOfCommentsForPost(Guid postId);
     }
 }

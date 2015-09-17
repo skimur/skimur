@@ -30,5 +30,7 @@ namespace Subs.Services
         void UpdateNumberOfReportsForPost(Guid postId, int numberOfReports);
 
         void SetIgnoreReportsForPost(Guid postId, bool ignoreReports);
+
+        void UpdateNumberOfCommentsForPost(Guid postId, int numberOfComments);
     }
 }

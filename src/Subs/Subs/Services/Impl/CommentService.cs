@@ -192,5 +192,10 @@ namespace Subs.Services.Impl
                 return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
             });
         }
+
+        public int GetNumberOfCommentsForPost(Guid postId)
+        {
+            return (int)_conn.Perform(conn => conn.Count<Comment>(x => x.PostId == postId));
+        }
     }
 }

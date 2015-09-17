@@ -79,6 +79,7 @@
     <Compile Include="Postgres\_0002_PostModeration.cs" />
     <Compile Include="Postgres\_0005_ModeratorPermissions.cs" />
     <Compile Include="Postgres\_0004_Reports.cs" />
+    <Compile Include="Postgres\_0006_PostCommentCount.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

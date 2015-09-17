@@ -36,7 +36,7 @@
             </div>
             <ul class="disc-options">
                 <li class="first comments">
-                    <a href="@Url.Post(Model.Sub, Model.Post)">comments</a>
+                    <a href="@Url.Post(Model.Sub, Model.Post)">@(Model.Post.NumberOfComments > 0 ? (Model.Post.NumberOfComments == 1 ? "1 comment" : Model.Post.NumberOfComments + " comments") : "comment")</a>
                 </li>
                 @if (Model.CanManage)
                 {

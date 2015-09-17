@@ -103,8 +103,11 @@ namespace Subs.Worker
                 };
 
                 _commentService.InsertComment(comment);
+
                 _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserName = user.UserName, VoteType = VoteType.Up });
                 
+                _postService.UpdateNumberOfCommentsForPost(post.Id, _commentService.GetNumberOfCommentsForPost(post.Id));
+
                 response.CommentId = comment.Id;
             }
             catch (Exception ex)

@@ -268,5 +268,13 @@ namespace Subs.Services.Impl
         {
             _conn.Perform(conn => conn.Update<Post>(new { IgnoreReports = ignoreReports }, x => x.Id == postId));
         }
+
+        public void UpdateNumberOfCommentsForPost(Guid postId, int numberOfComments)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Post>(new {NumberOfComments = numberOfComments}, x => x.Id == postId);
+            });
+        }
     }
 }

@@ -21,6 +21,8 @@ namespace Subs.ReadModel
         CommentTree GetCommentTree(Guid postId);
 
         SeekedList<Guid> GetReportedComments(List<Guid> subs = null, int? skip = null, int? take = null);
+
+        int GetNumberOfCommentsForPost(Guid postId);
     }
     
     public enum CommentSortBy

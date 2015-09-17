@@ -60,6 +60,8 @@ namespace Subs
 
         public bool IgnoreReports { get; set; }
 
+        public int NumberOfComments { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {
