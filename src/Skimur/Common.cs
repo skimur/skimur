@@ -5,16 +5,29 @@ namespace Skimur
 {
     public static class Common
     {
+        public static Regex WhiteSpaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
+        public static Regex NotSafeRegex = new Regex(@"\W+", RegexOptions.Compiled);
+        public static Regex UnderscoreRegex = new Regex(@"_+", RegexOptions.Compiled);
+
         public static Func<DateTime> CurrentTime = () => DateTime.UtcNow;
 
-        public static string UrlFriendly(this string value)
+        public static string UrlFriendly(this string value, int maxLength = 50)
         {
-            if (string.IsNullOrEmpty(value))
-                return null;
+            if (string.IsNullOrEmpty(value)) return "";
 
-            value = value.Replace(" ", "_");
+            value = WhiteSpaceRegex.Replace(value, "_");
+            value = NotSafeRegex.Replace(value, "");
+            value = UnderscoreRegex.Replace(value, "_");
+            value = value.Trim('_');
+            value = value.ToLower();
 
-            value = Regex.Replace(value, @"[^A-Za-z0-9_\.~]+", "");
+            if (value.Length > maxLength)
+            {
+                value = value.Substring(0, maxLength);
+                var lastWord = value.LastIndexOf('_');
+                if (lastWord > 0)
+                    value = value.Substring(0, lastWord);
+            }
 
             return value;
         }
