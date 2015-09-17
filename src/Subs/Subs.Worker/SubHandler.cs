@@ -214,7 +214,7 @@ namespace Subs.Worker
                 // remove extrenous white space, and trim whitespace from the edges
                 command.Title = Regex.Replace(command.Title, @"\s+", " ").Trim();
 
-                if (command.Title.Length > 100)
+                if (command.Title.Length > 300)
                 {
                     response.Error = "The title is too long.";
                     return response;
@@ -241,7 +241,7 @@ namespace Subs.Worker
                     switch (scheme)
                     {
                         case "http":
-                        case "https:":
+                        case "https":
                             break;
                         default:
                             response.Error = "The scheme is invalid for the url.";
