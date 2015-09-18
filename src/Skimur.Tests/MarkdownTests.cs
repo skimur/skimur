@@ -23,7 +23,8 @@ namespace Skimur.Tests
         [Test, Ignore]
         public void Can_render_user_as_link()
         {
-            Assert.That(_markdownCompiler.Compile("/u/test"), Is.EqualTo("<a href=\"/u/test\">test</a>"));
+            Assert.That(_markdownCompiler.Compile("/u/test"), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">/u/test</a></p>\n"));
+            Assert.That(_markdownCompiler.Compile("@test"), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">@test</a></p>\n"));
         }
 
         protected override void Setup()

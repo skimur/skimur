@@ -65,14 +65,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="..\Skimur.Web.Public\Scripts\markdown.js">
-      <Link>markdown.js</Link>
-    </EmbeddedResource>
-  </ItemGroup>
-  <ItemGroup>
-    <EmbeddedResource Include="markdownCompiler.js" />
-  </ItemGroup>
-  <ItemGroup>
     <ProjectReference Include="..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>
       <Name>Skimur</Name>
@@ -93,8 +85,12 @@
     </None>
   </ItemGroup>
   <ItemGroup>
-    <EmbeddedResource Include="marked.js" />
-    <EmbeddedResource Include="markedHelper.js" />
+    <EmbeddedResource Include="..\Skimur.Web.Public\Scripts\marked.js">
+      <Link>marked.js</Link>
+    </EmbeddedResource>
+    <EmbeddedResource Include="..\Skimur.Web.Public\Scripts\markedHelper.js">
+      <Link>markedHelper.js</Link>
+    </EmbeddedResource>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

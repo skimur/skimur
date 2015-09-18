@@ -460,7 +460,8 @@ var inline = {
   code: /^(`+)\s*([\s\S]*?[^`])\s*\1(?!`)/,
   br: /^ {2,}\n(?!\s*$)/,
   del: noop,
-  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/
+  text: /^[\s\S]+?(?=[\\<!\[_*`]| {2,}\n|$)/,
+  usermention: /^((?:\/u\/|@))([a-zA-Z0-9]{1}[A-Za-z0-9-_]{1,19})/
 };
 
 inline._inside = /(?:\[[^\]]*\]|[^\[\]]|\](?=[^\[]*\]))*/;
@@ -597,6 +598,15 @@ InlineLexer.prototype.output = function(src) {
       href = text;
       out += this.renderer.link(href, null, text);
       continue;
+    }
+
+    // user mentions
+    if(!this.inLink && (cap = this.rules.usermention.exec(src)))
+    {
+      src = src.substring(cap[0].length);
+      text = escape(cap[0]);
+      href = /user/ + escape(cap[2]);
+      out += this.renderer.link(href, null, text, 'user-mention');
     }
 
     // tag
@@ -866,7 +876,7 @@ Renderer.prototype.del = function(text) {
   return '<del>' + text + '</del>';
 };
 
-Renderer.prototype.link = function(href, title, text) {
+Renderer.prototype.link = function(href, title, text, cls) {
   if (this.options.sanitize) {
     try {
       var prot = decodeURIComponent(unescape(href))
@@ -882,6 +892,9 @@ Renderer.prototype.link = function(href, title, text) {
   var out = '<a href="' + href + '"';
   if (title) {
     out += ' title="' + title + '"';
+  }
+  if (cls) {
+    out += ' class="' + cls + '"';
   }
   out += '>' + text + '</a>';
   return out;

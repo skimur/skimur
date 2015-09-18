@@ -13,7 +13,7 @@ namespace Membership.Services
         private readonly IDbConnectionProvider _conn;
         private readonly IPasswordManager _passwordManager;
         private Regex _emailRegex = new Regex(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$");
-        private Regex _usernameRegex = new Regex(@"^(?=.{5,20}$)(?![_.])(?!.*[_.]{2})[a-zA-Z0-9._]+(?<![_.])$");
+        private Regex _usernameRegex = new Regex(@"^[a-zA-Z0-9]{1}[A-Za-z0-9-_]{1,19}$");
 
         public MembershipService(IDbConnectionProvider conn, IPasswordManager passwordManager)
         {
