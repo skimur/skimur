@@ -14,21 +14,27 @@ namespace Subs.ReadModel.Impl
         private readonly IMembershipService _membershipService;
         private readonly ISubDao _subDao;
         private readonly IPermissionDao _permissionDao;
+        private readonly ICommentWrapper _commentWrapper;
+        private readonly IPostWrapper _postWrapper;
 
-        public MessageWrapper(IMessageDao messageDao, 
+        public MessageWrapper(IMessageDao messageDao,
             IMembershipService membershipService,
             ISubDao subDao,
-            IPermissionDao permissionDao)
+            IPermissionDao permissionDao,
+            ICommentWrapper commentWrapper,
+            IPostWrapper postWrapper)
         {
             _messageDao = messageDao;
             _membershipService = membershipService;
             _subDao = subDao;
             _permissionDao = permissionDao;
+            _commentWrapper = commentWrapper;
+            _postWrapper = postWrapper;
         }
 
         public List<MessageWrapped> Wrap(List<Guid> messageIds, User currentUser)
         {
-            if(currentUser == null) throw new Exception("You must provide a user.");
+            if (currentUser == null) throw new Exception("You must provide a user.");
 
             var messages = new List<MessageWrapped>();
 
@@ -41,6 +47,18 @@ namespace Subs.ReadModel.Impl
 
             var users = new Dictionary<Guid, User>();
             var subs = new Dictionary<Guid, Sub>();
+            var comments = _commentWrapper.Wrap(
+                messages.Where(x => x.Message.CommentId.HasValue)
+                    .Select(x => x.Message.CommentId.Value)
+                    .Distinct()
+                    .ToList(), currentUser)
+                    .ToDictionary(x => x.Comment.Id, x => x);
+            var posts = _postWrapper.Wrap(
+                messages.Where(x => x.Message.PostId.HasValue)
+                    .Select(x => x.Message.PostId.Value)
+                    .Distinct()
+                    .ToList(), currentUser)
+                    .ToDictionary(x => x.Post.Id, x => x);
 
             foreach (var message in messages)
             {
@@ -83,7 +101,7 @@ namespace Subs.ReadModel.Impl
                     // this was a message to the current user, so the current user can reply to it.
                     message.CanReply = true;
                 }
-                else if(message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
+                else if (message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
                 {
                     // this message was sent to a sub, and this user is a moderator with the correct permissions to reply.
                     message.CanReply = true;
@@ -93,10 +111,11 @@ namespace Subs.ReadModel.Impl
                 {
                     message.UserIsSender = true;
                 }
-                else if(message.ToUser != null && message.ToUser.Id == currentUser.Id)
+                else if (message.ToUser != null && message.ToUser.Id == currentUser.Id)
                 {
                     message.UserIsRecipiant = true;
-                }else if (message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
+                }
+                else if (message.ToSub != null && subsCanModerate.Contains(message.ToSub.Id))
                 {
                     message.UserIsRecipiant = true;
                 }
@@ -108,6 +127,12 @@ namespace Subs.ReadModel.Impl
 
                 if (message.CanMarkRead)
                     message.IsUnread = message.Message.IsNew;
+
+                // add any comment or post this message represents (comment reply, mention, etc)
+                if (message.Message.PostId.HasValue && posts.ContainsKey((message.Message.PostId.Value)))
+                    message.Post = posts[message.Message.PostId.Value];
+                if (message.Message.CommentId.HasValue && comments.ContainsKey((message.Message.CommentId.Value)))
+                    message.Comment = comments[message.Message.CommentId.Value];
             }
 
             return messages;

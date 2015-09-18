@@ -72,6 +72,15 @@
                     <a href="javascript:void(0);" onclick="return skimurui.comments.unignoreReports(this);">unignore reports</a>
                 </li>
             }
+            @if (Model.CanMarkRead.HasValue && Model.CanMarkRead.Value)
+            {
+                <li class="mark-unread">
+                    <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                </li>
+                <li class="mark-read">
+                    <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                </li>
+            }
         </ul>
         @if (Model.Comment.CanManage && Model.Comment.Reports != null && Model.Comment.Reports.Count > 0)
         {

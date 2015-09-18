@@ -11,8 +11,8 @@ using Subs.Services;
 
 namespace Subs.Worker
 {
-    public class CommentCommandHandler : 
-        ICommandHandlerResponse<CreateComment, CreateCommentResponse>, 
+    public class CommentCommandHandler :
+        ICommandHandlerResponse<CreateComment, CreateCommentResponse>,
         ICommandHandlerResponse<EditComment, EditCommentResponse>,
         ICommandHandlerResponse<DeleteComment, DeleteCommentResponse>
     {
@@ -24,9 +24,9 @@ namespace Subs.Worker
         private readonly IPermissionService _permissionService;
         private readonly IEventBus _eventBus;
 
-        public CommentCommandHandler(IPostService postService, 
-            IMembershipService membershipService, 
-            ICommentService commentService, 
+        public CommentCommandHandler(IPostService postService,
+            IMembershipService membershipService,
+            ICommentService commentService,
             IMarkdownCompiler markdownCompiler,
             ICommandBus commandBus,
             IPermissionService permissionService,
@@ -91,7 +91,7 @@ namespace Subs.Worker
                     Id = GuidUtil.NewSequentialId(),
                     DateCreated = command.DateCreated,
                     SubId = post.SubId,
-                    ParentId = parentComment != null ? parentComment.Id : (Guid?) null,
+                    ParentId = parentComment != null ? parentComment.Id : (Guid?)null,
                     Parents = new Guid[0],
                     AuthorUserId = user.Id,
                     AuthorIpAddress = command.AuthorIpAddress,
@@ -105,7 +105,8 @@ namespace Subs.Worker
                 _commentService.InsertComment(comment);
 
                 _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserName = user.UserName, VoteType = VoteType.Up });
-                
+                _eventBus.Publish(new CommentCreated { CommentId = comment.Id, PostId = comment.PostId });
+
                 _postService.UpdateNumberOfCommentsForPost(post.Id, _commentService.GetNumberOfCommentsForPost(post.Id));
 
                 response.CommentId = comment.Id;

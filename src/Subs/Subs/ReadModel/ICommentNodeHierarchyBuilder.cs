@@ -42,6 +42,8 @@ namespace Subs.ReadModel
 
         public bool IsParentVisible { get; set; }
 
+        public bool? CanMarkRead { get; set; }
+
         #region INode
 
         public NodeType NodeType

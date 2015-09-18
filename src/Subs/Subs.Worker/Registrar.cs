@@ -53,6 +53,8 @@ namespace Subs.Worker
 
             container.Register<ICommandHandler<RemoveModFromSub>, ModerationHandler>();
             container.Register<ICommandHandler<ChangeModPermissionsForSub>, ModerationHandler>();
+
+            container.Register<IEventHandler<CommentCreated>, ReplyNotificationEventHandler>();
         }
 
         public int Order

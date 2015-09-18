@@ -40,6 +40,12 @@ namespace Subs
 
         public string BodyFormatted { get; set; }
 
+        [Alias("Comment")]
+        public Guid? CommentId { get; set; }
+
+        [Alias("Post")]
+        public Guid? PostId { get; set; }
+
         [Ignore]
         public MessageType MessageType
         {

@@ -227,6 +227,10 @@ namespace Skimur.Web.Controllers
         {
             var message = _messageDao.GetMessageById(id);
 
+            // only private messages can be perma linked
+            if (message.MessageType != MessageType.Private)
+                throw new NotFoundException();
+
             if (message.FirstMessage.HasValue)
             {
                 // the user is looking at the wrong page.

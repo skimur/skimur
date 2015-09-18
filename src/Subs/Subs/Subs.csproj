@@ -93,6 +93,7 @@
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <None Include="CommentBuilder.cs" />
     <Compile Include="Commands\UpdateUserSubBan.cs" />
+    <Compile Include="Events\CommentCreated.cs" />
     <Compile Include="Events\CommentDeleted.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />

@@ -10,6 +10,11 @@ namespace Subs.Commands
 {
     public class SendMessage : ICommandReturns<SendMessageResponse>
     {
+        public SendMessage()
+        {
+            Type = MessageType.Private;
+        }
+
         public Guid Author { get; set; }
 
         public string AuthorIp { get; set; }
@@ -18,9 +23,17 @@ namespace Subs.Commands
 
         public string To { get; set; }
 
+        public Guid? ToUserId { get; set; }
+
         public string Subject { get; set; }
 
         public string Body { get; set; }
+
+        public MessageType Type { get; set; }
+
+        public Guid? CommentId { get; set; }
+
+        public Guid? PostId { get; set; }
     }
 
     public class SendMessageResponse

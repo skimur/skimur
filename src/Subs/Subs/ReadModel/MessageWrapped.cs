@@ -29,11 +29,13 @@ namespace Subs.ReadModel
         public bool UserIsRecipiant { get; set; }
 
         public bool UserIsSender { get; set; }
-
-        public bool CanUserView { get; set; }
-
+        
         public bool CanMarkRead { get; set; }
 
         public bool? IsUnread { get; set; }
+
+        public CommentWrapped Comment { get; set; }
+
+        public PostWrapped Post { get; set; }
     }
 }

@@ -38,6 +38,8 @@ namespace Skimur.Markdown
 
         public string Compile(string markdown)
         {
+            if (string.IsNullOrEmpty(markdown)) return markdown;
+
             string result;
 
             lock (_compilationSynchronizer)

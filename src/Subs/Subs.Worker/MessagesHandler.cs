@@ -86,48 +86,89 @@ namespace Subs.Worker
                     sendAsSub = sub;
                 }
 
-                if (string.IsNullOrEmpty(command.To))
+                if (string.IsNullOrEmpty(command.To) && !command.ToUserId.HasValue)
                 {
                     response.Error = "You must provide a user/sub to send the message to.";
                     return response;
                 }
-                
-                if (command.To.StartsWith("/u/", StringComparison.InvariantCultureIgnoreCase))
+
+                if (command.ToUserId.HasValue && !string.IsNullOrEmpty(command.To))
+                    throw new Exception("A message with a userid and to was provided. Pick one.");
+
+                if (command.ToUserId.HasValue)
                 {
-                    var userName = command.To.Substring(3);
-                    sendingToUser = _membershipService.GetUserByUserName(userName);
+                    sendingToUser = _membershipService.GetUserById(command.ToUserId.Value);
                     if (sendingToUser == null)
                     {
-                        response.Error = string.Format("No user found with the name {0}.", userName);
-                        return response;
-                    }
-                }
-                else if (command.To.StartsWith("/s/", StringComparison.InvariantCultureIgnoreCase))
-                {
-                    var subName = command.To.Substring(3);
-                    sendingToSub = _subService.GetSubByName(subName);
-                    if (sendingToSub == null)
-                    {
-                        response.Error = string.Format("No sub found with the name {0}.", subName);
+                        response.Error = "No user found to send message to.";
                         return response;
                     }
                 }
                 else
                 {
-                    // maybe they are trying to send a message to a user
-                    sendingToUser = _membershipService.GetUserByUserName(command.To);
-                    if (sendingToUser == null)
+                    if (command.To.StartsWith("/u/", StringComparison.InvariantCultureIgnoreCase))
                     {
-                        response.Error = string.Format("No user found with the name {0}.", command.To);
-                        return response;
+                        var userName = command.To.Substring(3);
+                        sendingToUser = _membershipService.GetUserByUserName(userName);
+                        if (sendingToUser == null)
+                        {
+                            response.Error = string.Format("No user found with the name {0}.", userName);
+                            return response;
+                        }
                     }
+                    else if (command.To.StartsWith("/s/", StringComparison.InvariantCultureIgnoreCase))
+                    {
+                        var subName = command.To.Substring(3);
+                        sendingToSub = _subService.GetSubByName(subName);
+                        if (sendingToSub == null)
+                        {
+                            response.Error = string.Format("No sub found with the name {0}.", subName);
+                            return response;
+                        }
+                    }
+                    else
+                    {
+                        // maybe they are trying to send a message to a user
+                        sendingToUser = _membershipService.GetUserByUserName(command.To);
+                        if (sendingToUser == null)
+                        {
+                            response.Error = string.Format("No user found with the name {0}.", command.To);
+                            return response;
+                        }
+                    }
+                }
+
+                // let's make sure the message type is correct
+                switch (command.Type)
+                {
+                    case MessageType.Private:
+                        if(command.CommentId.HasValue)
+                            throw new Exception("A privat message was sent with a reference to a comment id. How?");
+                        break;
+                    case MessageType.CommentReply:
+                        if(!command.CommentId.HasValue)
+                            throw new Exception("The message type was a comment reply, but no comment id was given.");
+                        break;
+                    case MessageType.PostReply:
+                        if (!command.CommentId.HasValue)
+                            throw new Exception("The message type was a post reply, but no comment id was given.");
+                        break;
+                    case MessageType.Mention:
+                        // ensure either 1 comment is given, or 1 post is given
+                        if (!command.CommentId.HasValue && !command.PostId.HasValue)
+                            throw new Exception("The message type was a mention, but neither a comment or a post was given.");
+                        if(command.PostId.HasValue && command.CommentId.HasValue)
+                            throw new Exception("The message type was a mention, but both a comment and post were given. Pick one.");
+                        break;
+                    default:
+                        throw new Exception("Unknown message type");
                 }
 
                 var message = new Message
                 {
                     Id = GuidUtil.NewSequentialId(),
                     DateCreated = Common.CurrentTime(),
-                    MessageType = MessageType.Private,
+                    MessageType = command.Type,
                     ParentId = null,
                     FirstMessage = null,
                     AuthorId = author.Id,
@@ -139,6 +180,8 @@ namespace Subs.Worker
                     Subject = command.Subject,
                     Body = command.Body,
                     BodyFormatted = _markdownCompiler.Compile(command.Body),
+                    CommentId = command.CommentId,
+                    PostId = command.PostId
                 };
 
                 _messageService.InsertMessage(message);

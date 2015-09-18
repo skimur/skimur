@@ -1,49 +1,74 @@
-﻿@using Subs.ReadModel
+﻿@using Subs
+@using Subs.ReadModel
 @model MessageWrapped
 
-<div class="disc message @(Model.IsUnread.HasValue ? Model.IsUnread.Value ? "message-unread" : "message-read" : "")" data-message-id="@Model.Message.Id" onclick="skimurui.messages.messageClicked(this);">
-    <div class="disc-body">
-        <div class="disc-main">
-            <div class="disc-tagline">
-                <a href="javascript:void(0)" class="expand" onclick="return skimurui.messages.toggleExpand(this)">[–]</a> @FromLink(Model) <time class="timestamp">@Html.Age(Model.Message.DateCreated) ago</time>
+<div class="message @(Model.IsUnread.HasValue ? Model.IsUnread.Value ? "message-unread" : "message-read" : "")" data-message-id="@Model.Message.Id" onclick="skimurui.messages.messageClicked(this);">
+    @if (Model.Message.MessageType == MessageType.Private)
+    {
+        <div class="disc">
+            <div class="disc-body">
+                <div class="disc-main">
+                    <div class="disc-tagline">
+                        <a href="javascript:void(0)" class="expand" onclick="return skimurui.messages.toggleExpand(this)">[–]</a> @FromLink(Model) <time class="timestamp">@Html.Age(Model.Message.DateCreated) ago</time>
+                    </div>
+                    <div class="disc-content">
+                        @Html.Raw(Model.Message.BodyFormatted)
+                    </div>
+                    <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Message.Body)</textarea>
+                    <ul class="disc-options">
+                        <li class="first">
+                            <a href="@Url.MessageDetails(Model.Message)">permalink</a>
+                        </li>
+                        @if (Model.CanReply)
+                        {
+                        <li class="reply">
+                            <a href="javascript:void(0);" onclick="return skimurui.messages.startReply(this)" class="reply">reply</a>
+                        </li>
+                        }
+                        @if (Model.CanMarkRead)
+                        {
+                        <li class="mark-unread">
+                            <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                        </li>
+                        <li class="mark-read">
+                            <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                        </li>
+                        }
+                    </ul>
+                    <div class="disc-staging hidden"></div>
+                </div>
             </div>
-            <div class="disc-content">
-                @Html.Raw(Model.Message.BodyFormatted)
-            </div>
-            <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Message.Body)</textarea>
-            <ul class="disc-options">
-                <li class="first">
-                    <a href="@Url.MessageDetails(Model.Message)">permalink</a>
-                </li>
-                @if (Model.CanReply)
-                {
-                    <li class="reply">
-                        <a href="javascript:void(0);" onclick="return skimurui.messages.startReply(this)" class="reply">reply</a>
-                    </li>
-                }
-                @if (Model.CanMarkRead)
-                {
-                    <li class="mark-unread">
-                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
-                    </li>
-                    <li class="mark-read">
-                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
-                    </li>
-                }
-            </ul>
-            <div class="disc-staging hidden"></div>
         </div>
-    </div>
+    }
+    else if (Model.Message.MessageType == MessageType.CommentReply && Model.Comment != null)
+    {
+        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead })
+    }
+    else if (Model.Message.MessageType == MessageType.PostReply && Model.Comment != null)
+    {
+        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead })
+    }
+    else if (Model.Message.MessageType == MessageType.Mention)
+    {
+        if (Model.Comment != null)
+        {
+            @Html.Partial("_CommentNode", new CommentNode(Model.Comment))
+        }
+        else if (Model.Post != null)
+        {
+            @Html.Partial("_Post", Model.Post)
+        }
+    }
 </div>
 
 @helper FromLink(MessageWrapped message)
 {
-    if (message.FromSub != null)
-    {
+if (message.FromSub != null)
+{
         <a href="@Url.Sub(message.FromSub.Name)" class="author">@message.FromSub.Name</a>
-    }
-    else if (message.Author != null)
-    {
+}
+else if (message.Author != null)
+{
         <a href="@Url.User(message.Author.UserName)" class="author">@message.Author.UserName</a>
-    }
+}
 }
