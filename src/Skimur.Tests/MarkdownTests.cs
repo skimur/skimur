@@ -25,6 +25,7 @@ namespace Skimur.Tests
         {
             Assert.That(_markdownCompiler.Compile("/u/test"), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">/u/test</a></p>\n"));
             Assert.That(_markdownCompiler.Compile("@test"), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">@test</a></p>\n"));
+            Assert.That(_markdownCompiler.Compile("Hi @test, whats up?"), Is.EqualTo("<p>Hi <a href=\"/user/test\" class=\"user-mention\">@test</a>, whats up?</p>\n"));
         }
 
         protected override void Setup()

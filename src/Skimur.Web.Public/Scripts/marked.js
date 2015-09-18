@@ -501,7 +501,7 @@ inline.gfm = merge({}, inline.normal, {
   del: /^~~(?=\S)([\s\S]*?\S)~~/,
   text: replace(inline.text)
     (']|', '~]|')
-    ('|', '|https?://|')
+    ('|', '|https?://|(?:\/u\/|@)|')
     ()
 });
 
@@ -607,6 +607,7 @@ InlineLexer.prototype.output = function(src) {
       text = escape(cap[0]);
       href = /user/ + escape(cap[2]);
       out += this.renderer.link(href, null, text, 'user-mention');
+      continue;
     }
 
     // tag
