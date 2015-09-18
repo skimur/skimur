@@ -29,8 +29,8 @@ namespace Skimur.Markdown
 
                 _jsEngine.Execute("var exports = {}");
 
-                _jsEngine.ExecuteResource("Skimur.Markdown.markdown.js", type);
-                _jsEngine.ExecuteResource("Skimur.Markdown.markdownCompiler.js", type);
+                _jsEngine.ExecuteResource("Skimur.Markdown.marked.js", type);
+                _jsEngine.ExecuteResource("Skimur.Markdown.markedHelper.js", type);
 
                 _initialized = true;
             }
@@ -48,7 +48,7 @@ namespace Skimur.Markdown
 
                 _jsEngine.SetVariableValue("_markdownString", markdown);
 
-                result = _jsEngine.Evaluate<string>("markdownHelper.compile(_markdownString)");
+                result = _jsEngine.Evaluate<string>("markedHelper.compile(_markdownString)");
             }
 
             return result;

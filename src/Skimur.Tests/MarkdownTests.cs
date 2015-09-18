@@ -17,7 +17,13 @@ namespace Skimur.Tests
         [Test]
         public void Can_render_markdown()
         {
-            Assert.That(_markdownCompiler.Compile("*TEST*"), Is.EqualTo("<p><em>TEST</em></p>"));
+            Assert.That(_markdownCompiler.Compile("*TEST*"), Is.EqualTo("<p><em>TEST</em></p>\n"));
+        }
+
+        [Test, Ignore]
+        public void Can_render_user_as_link()
+        {
+            Assert.That(_markdownCompiler.Compile("/u/test"), Is.EqualTo("<a href=\"/u/test\">test</a>"));
         }
 
         protected override void Setup()

@@ -301,6 +301,8 @@
     <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap-notify.js" />
     <Content Include="Scripts\jquery.validate.bootstrap.js" />
+    <EmbeddedResource Include="Scripts\marked.js" />
+    <EmbeddedResource Include="Scripts\markedHelper.js" />
     <Content Include="Scripts\sweet-alert.js" />
     <Content Include="Scripts\to-markdown.js" />
     <Content Include="Scripts\markdown.js" />

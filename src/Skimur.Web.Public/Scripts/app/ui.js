@@ -269,3 +269,7 @@
     };
 
 })();
+
+$.fn.markdown.defaults.parser = function (val) {
+    return markedHelper.compile(val);
+};
