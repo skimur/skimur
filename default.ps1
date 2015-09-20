@@ -5,9 +5,11 @@ properties {
     $source_dir = "$base_dir\src"
     $build_dir = "$base_dir\build"
     $dist_dir = "$base_dir\dist"
+    $tools_dir = "$base_dir\tools"
     $global:config = "Debug"
 	$buildNumber = if ( $env:APPVEYOR_BUILD_NUMBER  -ne $NULL) { $env:APPVEYOR_BUILD_NUMBER  } else { "9999" }
 	$version = "0.0.0.$buildNumber"
+    $nuget = "$tools_dir\NuGet\NuGet.exe"
 }
 
 task default -depends local
@@ -26,6 +28,7 @@ task release {
 
 task compile -depends clean {
     create_directory $build_dir
+    exec { & $nuget restore "$source_dir\Skimur.sln" }
 	exec { msbuild /t:Clean /t:Build /p:Configuration=$config /p:VisualStudioVersion=14.0 /p:Platform='Any CPU' /p:OutputPath="$build_dir" /p:CI=true $source_dir\Skimur.sln }
 }
 
