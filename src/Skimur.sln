@@ -17,11 +17,6 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Infrastructure.Messaging", 
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Subs", "Subs", "{8BBD123F-1480-40B9-8306-5F1C81497E80}"
 EndProject
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{CCC0463A-9186-48A4-8F94-B416EE2BF339}"
-	ProjectSection(SolutionItems) = preProject
-		..\database\createdatabase.sql = ..\database\createdatabase.sql
-	EndProjectSection
-EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Subs", "Subs\Subs\Subs.csproj", "{8566E066-9B0F-4E7B-97A0-A2D40978DE26}"
 EndProject
 Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "RabbitMQ", "RabbitMQ", "{D83C8EE6-5E3D-40B1-94C2-98F114F79EAA}"

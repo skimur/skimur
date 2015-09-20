@@ -75,6 +75,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="DataTestBase.cs" />
     <Compile Include="MarkdownTests.cs" />
     <Compile Include="TestBase.cs" />

@@ -43,6 +43,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Commands\CommentCommandHandler.cs" />
     <Compile Include="Commands\MessagesHandler.cs" />
     <Compile Include="Commands\ModerationHandler.cs" />

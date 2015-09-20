@@ -72,6 +72,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Data\ConnectionStringProvider.cs" />
     <Compile Include="Data\IConnectionStringProvider.cs" />
     <Compile Include="Data\IDbConnectionProvider.cs" />

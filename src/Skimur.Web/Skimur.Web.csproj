@@ -131,6 +131,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Avatar\AvatarService.cs" />
     <Compile Include="Avatar\IAvatarService.cs" />
     <Compile Include="Controllers\AvatarController.cs" />

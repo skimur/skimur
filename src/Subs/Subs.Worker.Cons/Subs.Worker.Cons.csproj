@@ -45,6 +45,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Program.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -127,4 +130,12 @@
   <Target Name="AfterBuild">
   </Target>
   -->
+  <Target Name="BeforeBuild">
+    <!--<CreateProperty Value="C:\testt">
+      <Output PropertyName="OutputPath" TaskParameter="Value"/>
+    </CreateProperty>-->
+    <CreateProperty Value="$(OutDir)\$(ProjectName)\" Condition=" '$(CI)' == 'true'">
+      <Output PropertyName="OutDir" TaskParameter="Value" />
+    </CreateProperty>
+  </Target>
 </Project>

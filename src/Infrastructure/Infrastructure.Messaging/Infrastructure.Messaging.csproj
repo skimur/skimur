@@ -44,6 +44,9 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
+    <Compile Include="..\..\GlobalAssemblyInfo.cs">
+      <Link>GlobalAssemblyInfo.cs</Link>
+    </Compile>
     <Compile Include="Handling\CommandDiscovery.cs" />
     <Compile Include="Handling\EventDiscovery.cs" />
     <Compile Include="Handling\ICommandHandler.cs" />
