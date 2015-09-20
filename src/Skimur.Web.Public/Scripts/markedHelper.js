@@ -37,8 +37,14 @@
 
         options = options || {};
         compilationOptions = extend(extend({}, defaultOptions), options);
+        compilationOptions.ment = [];
 
-        return marked(markdown, compilationOptions);
+        var rendered = marked(markdown, compilationOptions);
+
+        return {
+            result: rendered,
+            mentions: compilationOptions.ment
+        };
     };
 
     return exports;

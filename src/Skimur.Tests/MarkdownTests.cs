@@ -20,12 +20,19 @@ namespace Skimur.Tests
             Assert.That(_markdownCompiler.Compile("*TEST*"), Is.EqualTo("<p><em>TEST</em></p>\n"));
         }
 
-        [Test, Ignore]
+        [Test]
         public void Can_render_user_as_link()
         {
-            Assert.That(_markdownCompiler.Compile("/u/test"), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">/u/test</a></p>\n"));
-            Assert.That(_markdownCompiler.Compile("@test"), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">@test</a></p>\n"));
-            Assert.That(_markdownCompiler.Compile("Hi @test, whats up?"), Is.EqualTo("<p>Hi <a href=\"/user/test\" class=\"user-mention\">@test</a>, whats up?</p>\n"));
+            List<string> mentions;
+            Assert.That(_markdownCompiler.Compile("/u/test", out mentions), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">/u/test</a></p>\n"));
+            Assert.That(mentions, Has.Count.EqualTo(1));
+            Assert.That(mentions[0], Is.EqualTo("test"));
+            Assert.That(_markdownCompiler.Compile("@test", out mentions), Is.EqualTo("<p><a href=\"/user/test\" class=\"user-mention\">@test</a></p>\n"));
+            Assert.That(mentions, Has.Count.EqualTo(1));
+            Assert.That(mentions[0], Is.EqualTo("test"));
+            Assert.That(_markdownCompiler.Compile("Hi @test, whats up?", out mentions), Is.EqualTo("<p>Hi <a href=\"/user/test\" class=\"user-mention\">@test</a>, whats up?</p>\n"));
+            Assert.That(mentions, Has.Count.EqualTo(1));
+            Assert.That(mentions[0], Is.EqualTo("test"));
         }
 
         protected override void Setup()

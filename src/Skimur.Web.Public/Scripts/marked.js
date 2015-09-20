@@ -604,9 +604,9 @@ InlineLexer.prototype.output = function(src) {
     if(!this.inLink && (cap = this.rules.usermention.exec(src)))
     {
       src = src.substring(cap[0].length);
-      text = escape(cap[0]);
-      href = /user/ + escape(cap[2]);
-      out += this.renderer.link(href, null, text, 'user-mention');
+      out += this.renderer.mention(escape(cap[2]), escape(cap[0]));
+      if (this.options.hasOwnProperty('ment'))
+        this.options.ment.push(escape(cap[2]));
       continue;
     }
 
@@ -900,6 +900,10 @@ Renderer.prototype.link = function(href, title, text, cls) {
   out += '>' + text + '</a>';
   return out;
 };
+
+Renderer.prototype.mention = function(user, text) {
+    return this.link('/user/' + user, null, text, 'user-mention');
+}
 
 Renderer.prototype.image = function(href, title, text) {
   var out = '<img src="' + href + '" alt="' + text + '"';

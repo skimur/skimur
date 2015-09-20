@@ -271,5 +271,5 @@
 })();
 
 $.fn.markdown.defaults.parser = function (val) {
-    return markedHelper.compile(val);
+    return markedHelper.compile(val).result;
 };

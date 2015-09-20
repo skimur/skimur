@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Dynamic;
 using System.Linq;
 using System.Reflection;
 using System.Text;
@@ -20,7 +21,7 @@ namespace Skimur.Markdown
         {
             _jsEngine = jsEngine;
         }
-
+        
         private void Initialize()
         {
             if (!_initialized)
@@ -48,7 +49,36 @@ namespace Skimur.Markdown
 
                 _jsEngine.SetVariableValue("_markdownString", markdown);
 
-                result = _jsEngine.Evaluate<string>("markedHelper.compile(_markdownString)");
+                var c = (dynamic)_jsEngine.Evaluate("markedHelper.compile(_markdownString)");
+
+                result = c.result;
+            }
+
+            return result;
+        }
+
+        public string Compile(string markdown, out List<string> mentions)
+        {
+            mentions = new List<string>();
+
+            if (string.IsNullOrEmpty(markdown)) return markdown;
+
+            string result;
+
+            lock (_compilationSynchronizer)
+            {
+                Initialize();
+
+                _jsEngine.SetVariableValue("_markdownString", markdown);
+
+                var c = (dynamic)_jsEngine.Evaluate("markedHelper.compile(_markdownString)");
+
+                result = c.result;
+                
+                foreach (var memberName in ((DynamicObject)c.mentions).GetDynamicMemberNames())
+                {
+                    mentions.Add(c.mentions[memberName]);
+                }
             }
 
             return result;
