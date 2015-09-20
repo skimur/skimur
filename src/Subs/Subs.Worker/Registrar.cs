@@ -9,6 +9,8 @@ using SimpleInjector;
 using Skimur;
 using Subs.Commands;
 using Subs.Events;
+using Subs.Worker.Commands;
+using Subs.Worker.Events;
 
 namespace Subs.Worker
 {

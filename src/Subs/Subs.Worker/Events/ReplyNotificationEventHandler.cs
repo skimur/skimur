@@ -1,15 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Messaging;
+﻿using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Events
 {
     public class ReplyNotificationEventHandler : IEventHandler<CommentCreated>
     {

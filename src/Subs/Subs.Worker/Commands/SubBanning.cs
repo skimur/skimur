@@ -4,7 +4,7 @@ using Membership.Services;
 using Subs.Commands;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Commands
 {
     public class SubBanning :
         ICommandHandlerResponse<BanUserFromSub, BanUserFromSubResponse>,

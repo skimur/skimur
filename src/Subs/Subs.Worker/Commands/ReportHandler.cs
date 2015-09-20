@@ -1,14 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
+﻿using System.Linq;
 using Infrastructure.Messaging.Handling;
 using Membership.Services;
 using Subs.Commands;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Commands
 {
     public class ReportHandler : 
         ICommandHandler<ReportComment>,

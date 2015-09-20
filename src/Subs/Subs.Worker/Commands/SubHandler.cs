@@ -9,7 +9,7 @@ using Subs.Commands;
 using Subs.Events;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Commands
 {
     public class SubHandler :
         ICommandHandlerResponse<CreateSub, CreateSubResponse>,

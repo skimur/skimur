@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Messaging.Handling;
+﻿using Infrastructure.Messaging.Handling;
 using Membership.Services;
 using Subs.Commands;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Commands
 {
     public class ModerationHandler :
         ICommandHandler<RemoveModFromSub>,

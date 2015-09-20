@@ -1,8 +1,5 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Logging;
 using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
@@ -14,7 +11,7 @@ using Subs.Commands;
 using Subs.ReadModel;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Commands
 {
     public class MessagesHandler : 
         ICommandHandlerResponse<SendMessage, SendMessageResponse>,

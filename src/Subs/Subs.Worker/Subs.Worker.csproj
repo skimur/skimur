@@ -43,19 +43,19 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="CommentCommandHandler.cs" />
-    <Compile Include="MessagesHandler.cs" />
-    <Compile Include="ModerationHandler.cs" />
-    <Compile Include="PostModerationHandler.cs" />
+    <Compile Include="Commands\CommentCommandHandler.cs" />
+    <Compile Include="Commands\MessagesHandler.cs" />
+    <Compile Include="Commands\ModerationHandler.cs" />
+    <Compile Include="Commands\PostModerationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />
-    <Compile Include="ReplyNotificationEventHandler.cs" />
-    <Compile Include="ReportHandler.cs" />
-    <Compile Include="SubEventHandler.cs" />
-    <Compile Include="SubHandler.cs" />
-    <Compile Include="SubBanning.cs" />
-    <Compile Include="VoteCommandHandler.cs" />
-    <Compile Include="ScoringAndSortingEventHandler.cs" />
+    <Compile Include="Events\ReplyNotificationEventHandler.cs" />
+    <Compile Include="Commands\ReportHandler.cs" />
+    <Compile Include="Events\SubEventHandler.cs" />
+    <Compile Include="Commands\SubHandler.cs" />
+    <Compile Include="Commands\SubBanning.cs" />
+    <Compile Include="Commands\VoteCommandHandler.cs" />
+    <Compile Include="Events\ScoringAndSortingEventHandler.cs" />
   </ItemGroup>
   <ItemGroup>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj">

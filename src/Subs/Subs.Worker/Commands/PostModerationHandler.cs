@@ -1,15 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Infrastructure.Logging;
 using Infrastructure.Messaging.Handling;
 using Membership.Services;
 using Subs.Commands;
 using Subs.Services;
 
-namespace Subs.Worker
+namespace Subs.Worker.Commands
 {
     public class PostModerationHandler : 
         ICommandHandlerResponse<ApprovePost, ApprovePostResponse>,
