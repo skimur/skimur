@@ -57,6 +57,9 @@ namespace Subs.Worker
             container.Register<ICommandHandler<ChangeModPermissionsForSub>, ModerationHandler>();
 
             container.Register<IEventHandler<CommentCreated>, ReplyNotificationEventHandler>();
+
+            container.Register<IEventHandler<UsersMentioned>, UserMentionNotificationHandler>();
+            container.Register<IEventHandler<UsersUnmentioned>, UserMentionNotificationHandler>();
         }
 
         public int Order

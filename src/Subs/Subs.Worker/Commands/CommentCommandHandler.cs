@@ -1,5 +1,8 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Diagnostics;
+using System.Linq;
+using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
@@ -23,6 +26,7 @@ namespace Subs.Worker.Commands
         private readonly ICommandBus _commandBus;
         private readonly IPermissionService _permissionService;
         private readonly IEventBus _eventBus;
+        private readonly ILogger<CommentCommandHandler> _logger;
 
         public CommentCommandHandler(IPostService postService,
             IMembershipService membershipService,
@@ -30,7 +34,8 @@ namespace Subs.Worker.Commands
             IMarkdownCompiler markdownCompiler,
             ICommandBus commandBus,
             IPermissionService permissionService,
-            IEventBus eventBus)
+            IEventBus eventBus,
+            ILogger<CommentCommandHandler> logger)
         {
             _postService = postService;
             _membershipService = membershipService;
@@ -39,6 +44,7 @@ namespace Subs.Worker.Commands
             _commandBus = commandBus;
             _permissionService = permissionService;
             _eventBus = eventBus;
+            _logger = logger;
         }
 
         public CreateCommentResponse Handle(CreateComment command)
@@ -86,6 +92,9 @@ namespace Subs.Worker.Commands
                     }
                 }
 
+                List<string> mentions;
+                var compiledBody = _markdownCompiler.Compile(command.Body, out mentions);
+                
                 var comment = new Comment
                 {
                     Id = GuidUtil.NewSequentialId(),
@@ -97,7 +106,7 @@ namespace Subs.Worker.Commands
                     AuthorIpAddress = command.AuthorIpAddress,
                     PostId = post.Id,
                     Body = command.Body,
-                    BodyFormatted = _markdownCompiler.Compile(command.Body),
+                    BodyFormatted = compiledBody,
                     SendReplies = command.SendReplies,
                     VoteUpCount = 1
                 };
@@ -106,6 +115,8 @@ namespace Subs.Worker.Commands
 
                 _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserName = user.UserName, VoteType = VoteType.Up });
                 _eventBus.Publish(new CommentCreated { CommentId = comment.Id, PostId = comment.PostId });
+                if (mentions.Count > 0)
+                    _eventBus.Publish(new UsersMentioned { CommentId = comment.Id, Users = mentions });
 
                 _postService.UpdateNumberOfCommentsForPost(post.Id, _commentService.GetNumberOfCommentsForPost(post.Id));
 
@@ -143,8 +154,53 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
-                var bodyFormatted = _markdownCompiler.Compile(command.Body);
+                List<string> oldMentions = null;
+                List<string> newMentions = null;
+
+                try
+                {
+                    _markdownCompiler.Compile(comment.Body, out oldMentions);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("There was an errror compiling previous mentions for a comment edit.", ex);
+                }
+
+                var bodyFormatted = _markdownCompiler.Compile(command.Body, out newMentions);
                 _commentService.UpdateCommentBody(comment.Id, command.Body, bodyFormatted, command.DateEdited);
+
+                if (oldMentions != null && oldMentions.Count > 0)
+                {
+                    // we have some mentions in our previous comment. let's see if they were removed
+                    var removed = oldMentions.Except(newMentions).ToList();
+                    if (removed.Count > 0)
+                    {
+                        _eventBus.Publish(new UsersUnmentioned
+                        {
+                            CommentId = comment.Id,
+                            Users = removed
+                        });
+                    }
+                }
+
+                if (newMentions != null)
+                {
+                    // the are some mentions in this comment.
+                    // let's get only the new mentions that were previously in the comment
+                    if (oldMentions != null && oldMentions.Count > 0)
+                    {
+                        newMentions = newMentions.Except(oldMentions).ToList();
+                    }
+
+                    if (newMentions.Count > 0)
+                    {
+                        _eventBus.Publish(new UsersMentioned
+                        {
+                            CommentId = comment.Id,
+                            Users = newMentions
+                        });
+                    }
+                }
 
                 response.Body = command.Body;
                 response.FormattedBody = bodyFormatted;

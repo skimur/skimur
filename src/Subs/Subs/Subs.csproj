@@ -96,6 +96,8 @@
     <Compile Include="Events\CommentCreated.cs" />
     <Compile Include="Events\CommentDeleted.cs" />
     <Compile Include="Events\SubScriptionChanged.cs" />
+    <Compile Include="Events\UsersMentioned.cs" />
+    <Compile Include="Events\UsersUnmentioned.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="Message.cs" />
