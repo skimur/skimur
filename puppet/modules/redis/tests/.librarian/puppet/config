@@ -1,3 +1,0 @@
---- 
-  LIBRARIAN_PUPPET_PATH: /etc/puppet/modules
-  LIBRARIAN_PUPPET_DESTRUCTIVE: "false"
