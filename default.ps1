@@ -6,6 +6,9 @@ properties {
     $build_dir = "$base_dir\build"
     $dist_dir = "$base_dir\dist"
     $tools_dir = "$base_dir\tools"
+    $node_dir = "$base_dir\node"
+    $node_exe = "$node_dir\node.exe"
+    $npm_cli = "$node_dir\npm\bin\npm-cli.js"
     $global:config = "Debug"
 	$buildNumber = if ( $env:APPVEYOR_BUILD_NUMBER  -ne $NULL) { $env:APPVEYOR_BUILD_NUMBER  } else { "9999" }
 	$version = "0.0.0.$buildNumber"
@@ -15,7 +18,7 @@ properties {
 task default -depends local
 task local -depends compile, test
 task full -depends local, dist
-task ci -depends clean, release, commonAssemblyInfo, local, dist
+task ci -depends clean, release, commonAssemblyInfo, local, installNode, dist
 
 task clean {
     delete_directory $build_dir
@@ -37,6 +40,22 @@ task commonAssemblyInfo {
     create-globalAssemblyInfo "$commit" "$source_dir\GlobalAssemblyInfo.cs"
 }
 
+task installNode {
+    delete_directory $node_dir
+    create_directory $node_dir
+    
+    $client = new-object System.Net.WebClient
+    $client.DownloadFile("https://nodejs.org/download/release/v4.1.1/win-x64/node.exe", "$node_dir\node.exe")
+
+    create_directory "$node_dir\npm"
+    git clone -b "v3.3.4" --single-branch https://github.com/npm/npm.git "$node_dir\npm"
+
+    Set-Location -Path "$node_dir"
+    exec { & $node_exe npm install less  }
+    exec { & $node_exe npm install less-plugin-clean-css  }
+    Set-Location -Path "$base_dir"
+}
+
 task test {
 	# todo
 }
@@ -45,6 +64,12 @@ task dist {
 	create_directory $dist_dir
 	copy_files "$build_dir\_PublishedWebsites\Skimur.Web.Public" "$dist_dir\Web"
     copy_files "$build_dir\Subs.Worker.Cons" "$dist_dir\Subs.Worker.Cons"
+
+    create_directory "$dist_dir\static"
+    Set-Location -Path "$node_dir"
+    exec { & "$node_dir\lessc" --clean-css="--s0" "$build_dir\_PublishedWebsites\Skimur.Web.Public\Content\site.less" "$dist_dir\static\site.css" }
+    exec { & $node_exe npm install less-plugin-clean-css  }
+    Set-Location -Path "$base_dir"
 }
 
 function global:create-globalAssemblyInfo($commit, $filename)
@@ -63,7 +88,7 @@ using System.Reflection;
 
 [assembly: AssemblyVersionAttribute(""$version"")]
 [assembly: AssemblyFileVersionAttribute(""$version"")]
-[assembly: AssemblyCopyrightAttribute(""Copyright Skimur 2013-" + $date.Year + """)]
+[assembly: AssemblyCopyrightAttribute(""Copyright Skimur " + $date.Year + """)]
 [assembly: AssemblyProductAttribute(""Skimur"")]
 [assembly: AssemblyTrademarkAttribute(""Skimur"")]
 [assembly: AssemblyCompanyAttribute("""")]

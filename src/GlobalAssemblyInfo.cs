@@ -11,7 +11,7 @@ using System.Reflection;
 
 [assembly: AssemblyVersionAttribute("0.0.0.9999")]
 [assembly: AssemblyFileVersionAttribute("0.0.0.9999")]
-[assembly: AssemblyCopyrightAttribute("Copyright Skimur 2013-2015")]
+[assembly: AssemblyCopyrightAttribute("Copyright Skimur 2015")]
 [assembly: AssemblyProductAttribute("Skimur")]
 [assembly: AssemblyTrademarkAttribute("Skimur")]
 [assembly: AssemblyCompanyAttribute("")]
