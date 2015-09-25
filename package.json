@@ -1,0 +1,10 @@
+{
+  "dependencies": {
+    "del": "^2.0.2",
+    "fs": "0.0.2",
+    "gulp": "*",
+    "gulp-msbuild": "^0.2.13",
+    "gulp-shell": "^0.4.3",
+    "request": "^2.63.0",
+  }
+}
