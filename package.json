@@ -4,9 +4,15 @@
     "fs": "0.0.2",
     "gulp": "*",
     "gulp-change": "^1.0.0",
+    "gulp-concat": "^2.6.0",
     "gulp-dotnet-assembly-info": "^0.1.11",
+    "gulp-less": "^3.0.3",
+    "gulp-minify-css": "^1.2.1",
     "gulp-msbuild": "^0.2.13",
     "gulp-shell": "^0.4.3",
-    "request": "^2.63.0"
+    "gulp-uglify": "^1.4.1",
+    "merge-stream": "^1.0.0",
+    "request": "^2.63.0",
+    "run-sequence": "^1.1.4"
   }
 }

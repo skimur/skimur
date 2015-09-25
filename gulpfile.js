@@ -7,6 +7,12 @@ var shell = require('gulp-shell');
 var assemblyInfo = require('gulp-dotnet-assembly-info');
 var change = require('gulp-change');
 var path = require('path');
+var runSequence = require('run-sequence');
+var merge = require('merge-stream');
+var minifyCss = require('gulp-minify-css');
+var less = require('gulp-less');
+var concat = require('gulp-concat');
+var uglify = require('gulp-uglify');
 
 var buildConfiguration = "Debug";
 
@@ -19,12 +25,30 @@ gulp.task('default', ['local'], function() {
 
 });
 
-gulp.task('local', ['compile', 'test'], function() {
-
+gulp.task('local', function(cb) {
+  runSequence(
+    'compile',
+    'test',
+    function (error) {
+      if (error) {
+        console.log(error.message);
+      }
+      cb(error);
+    });
 });
 
-gulp.task('ci', ['clean', 'config-release', 'local', 'dist'], function() {
-
+gulp.task('ci', function(cb) {
+  runSequence(
+    'clean',
+    'config-release',
+    'local',
+    'dist',
+    function (error) {
+      if (error) {
+        console.log(error.message);
+      }
+      cb(error);
+    });
 });
 
 gulp.task('clean', function() {
@@ -38,18 +62,68 @@ gulp.task('config-release', function() {
   buildConfiguration = "Release";
 });
 
-gulp.task('dist', ['dist-web', 'dist-sub-worker'], function() {
+gulp.task('dist', ['dist-web', 'dist-sub-worker', 'dist-static'], function() {
   
 });
 
 gulp.task('dist-web', function() {
   return gulp.src(path.resolve(__dirname, 'build', '_PublishedWebsites', 'Skimur.Web.Public') + "/**/*")
-    .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'web')))
+    .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'web')));
 });
 
 gulp.task('dist-sub-worker', function() {
   return gulp.src(path.resolve(__dirname, 'build', 'Subs.Worker.Cons') + "/**/*")
-    .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'worker')))
+    .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'worker')));
+});
+
+gulp.task('dist-static', function() {
+  runSequence(
+    'dist-static-copy',
+    'dist-static-compile-less',
+    'dist-static-compile-js',
+    'dist-static-clean',
+    function (error) {
+      if (error) {
+        console.log(error.message);
+      }
+      cb(error);
+    });
+});
+
+gulp.task('dist-static-copy', function() {
+  return gulp.src(
+  	[
+  	  './build/_PublishedWebsites/Skimur.Web.Public/Content/**/*', 
+  	  './build/_PublishedWebsites/Skimur.Web.Public/Scripts/**/*'
+  	], 
+  	{
+  	  base: './build/_PublishedWebsites/Skimur.Web.Public/'
+  	})
+    .pipe(gulp.dest('./dist/static'));
+});
+
+gulp.task('dist-static-compile-less', function() {
+  return gulp.src('./dist/static/Content/site.less')
+    .pipe(less())
+    .pipe(minifyCss({keepSpecialComments:0}))
+    .pipe(gulp.dest('./dist/static/Content'));
+});
+
+gulp.task('dist-static-compile-js', function() {
+  return gulp.src(
+  	[
+  	  './dist/static/Scripts/jquery.js'
+  	])
+    .pipe(uglify())
+    .pipe(concat('script.js'))
+    .pipe(gulp.dest('./dist/static/Scripts'));
+});
+
+gulp.task('dist-static-clean', function() {
+  return del(['./dist/static/**/*', 
+  	'!./dist/static/**/*.css', // leave all css files alone
+  	'!./dist/static/img/', '!./dist/static/img/**', // leave the img directory
+  	'!./dist/static/fonts/', '!./dist/static/fonts/**']) // and leave the fonts directory
 });
 
 gulp.task('compile', ['nuget-restore', 'version-assemblies'], function() {
