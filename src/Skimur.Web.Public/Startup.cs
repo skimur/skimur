@@ -65,6 +65,9 @@ namespace Skimur.Web.Public
 
         public void RegisterBundles(BundleCollection bundles)
         {
+            // no need to do this if we are using static assets!
+            if (AssetUrlBuilder.IsUsingStatisAssets) return;
+
             var scriptTransformer = new ScriptTransformer();
 
             var scriptsBundle = new ScriptBundle("~/bundles/scripts").Include(
