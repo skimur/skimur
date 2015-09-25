@@ -7,6 +7,7 @@ var request = require('request');
 var path = require('path');
 var runSequence = require('run-sequence');
 var merge = require('merge-stream');
+var config = require('./gulp.config')();
 
 // the msbuild configuration
 var buildConfiguration = "Debug";
@@ -106,10 +107,10 @@ gulp.task('dist-static-compile-less', function() {
 });
 
 gulp.task('dist-static-compile-js', function() {
-  return gulp.src(
-  	[
-  	  './dist/static/Scripts/jquery.js'
-  	])
+  var jsFiles = config.jsFiles.slice(0);
+  for(var i = 0; i < jsFiles.length; i++)
+    jsFiles[i] = './dist/static/Scripts/' + jsFiles[i];
+  return gulp.src(jsFiles)
     .pipe($.uglify())
     .pipe($.concat('script.js'))
     .pipe(gulp.dest('./dist/static/Scripts'));
