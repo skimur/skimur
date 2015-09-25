@@ -64,8 +64,33 @@ gulp.task('dist', ['dist-web', 'dist-sub-worker', 'dist-static'], function() {
 });
 
 gulp.task('dist-web', function() {
+  runSequence(
+    'dist-web-copy',
+    'dist-web-delete-static',
+    'dist-web-configure-static',
+    function (error) {
+      if (error) {
+        console.log(error.message);
+      }
+      cb(error);
+    });
+});
+
+gulp.task('dist-web-copy', function() {
   return gulp.src(path.resolve(__dirname, 'build', '_PublishedWebsites', 'Skimur.Web.Public') + "/**/*")
     .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'web')));
+});
+
+
+gulp.task('dist-web-delete-static', function() {
+  return del([
+  	// delete everything that will be part of the 'static' site
+  	'./dist/web/Content/', 
+  	'./dist/web/Scripts']);
+});
+
+gulp.task('dist-web-configure-static', function() {
+  // TODO
 });
 
 gulp.task('dist-sub-worker', function() {
