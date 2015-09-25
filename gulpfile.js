@@ -117,10 +117,15 @@ gulp.task('dist-static-compile-js', function() {
 });
 
 gulp.task('dist-static-clean', function() {
-  return del(['./dist/static/**/*', 
-  	'!./dist/static/**/*.css', // leave all css files alone
-  	'!./dist/static/img/', '!./dist/static/img/**', // leave the img directory
-  	'!./dist/static/fonts/', '!./dist/static/fonts/**']) // and leave the fonts directory
+  return del([
+  	// delete everything!
+  	'./dist/static/Content/**/*', 
+  	'./dist/static/Scripts/**/*',
+  	// except!
+  	'!./dist/static/Content/**/*.css', // leave all css files alone
+  	'!./dist/static/Content/img/', '!./dist/static/Content/img/**', // leave the img directory
+  	'!./dist/static/Content/fonts/', '!./dist/static/Content/fonts/**',
+  	'!./dist/static/Scripts/script.js']) // and leave the fonts directory
 });
 
 gulp.task('compile', ['nuget-restore', 'version-assemblies'], function() {
