@@ -23,7 +23,8 @@
 
 <div class="layout-header navbar">
     <div class="navbar-header">
-        <a href="/" class="navbar-brand"><img src="/content/img/logo.png" /></a>
+        @Html
+        <a href="/" class="navbar-brand"><img src="@Url.AssetUrl("/content/img/logo.png")"/></a>
         @RenderSection("header", false)
     </div>
     <div class="navbar-collapse collapse">

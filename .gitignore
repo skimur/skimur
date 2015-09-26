@@ -195,3 +195,4 @@ Skimur.sublime-*
 src/Skimur.Web.Public/Avatars
 src/.vs/
 dist/
+nuget.exe

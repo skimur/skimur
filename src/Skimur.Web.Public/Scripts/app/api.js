@@ -259,7 +259,7 @@
         $.ajax({
             type: "POST",
             url: "/reports/reportpost",
-            data: { postId, type, reason },
+            data: { postId: postId, type: type, reason: reason },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -276,7 +276,7 @@
         $.ajax({
             type: "POST",
             url: "/reports/reportcomment",
-            data: { commentId, type, reason },
+            data: { commentId: commentId, type: type, reason: reason },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -293,7 +293,7 @@
         $.ajax({
             type: "POST",
             url: "/reports/clear",
-            data: { postId },
+            data: { postId: postId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -310,7 +310,7 @@
         $.ajax({
             type: "POST",
             url: "/reports/clear",
-            data: { commentId },
+            data: { commentId: commentId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -327,7 +327,7 @@
         $.ajax({
             type: "POST",
             url: "/reports/ignore",
-            data: { commentId, postId },
+            data: { commentId: commentId, postId: postId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -344,7 +344,7 @@
         $.ajax({
             type: "POST",
             url: "/reports/unignore",
-            data: { commentId, postId },
+            data: { commentId: commentId, postId: postId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -361,7 +361,7 @@
         $.ajax({
             type: "POST",
             url: "/moderators/removemodfromsub",
-            data: { subName, subId, userId },
+            data: { subName: subName, subId: subId, userId: userId },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -378,7 +378,7 @@
         $.ajax({
             type: "POST",
             url: "/moderators/changemodpermissions",
-            data: { subName, subId, userId, permissions },
+            data: { subName: subName, subId: subId, userId: userId, permissions: permissions },
             dataType: "json",
             success: function (data) {
                 if (callback)

@@ -4,7 +4,7 @@
     <meta charset="utf-8" />
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Skimur</title>
-    @Styles.Render("~/bundles/styles")
+    @{ Html.RenderStyles(); }
     <script type="text/javascript">
         window.q = [];
         window.$ = function (f) {
@@ -23,7 +23,7 @@
     @{ Html.RenderAction("TopBar", "Common"); }
     <div class="layout-header navbar">
         <div class="navbar-header">
-            <a href="/" class="navbar-brand"><img src="/content/img/logo.png"/></a>
+            <a href="/" class="navbar-brand"><img src="@Url.AssetUrl("/content/img/logo.png")"/></a>
             @RenderSection("header", false)
         </div>
         <div class="navbar-collapse collapse">
@@ -31,7 +31,7 @@
         </div>
     </div>
     @RenderBody()
-    @Scripts.Render("~/bundles/scripts")
+    @{ Html.RenderScripts(); }
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         skimurui.isLoggedIn = @Request.IsAuthenticated.ToString().ToLower();
