@@ -24,7 +24,9 @@ module.exports = function() {
       'app/subs.js',
       'app/messages.js',
       'app/moderators.js'
-  	]
+  	],
+    useStaticAssets: 'true',
+    staticAssetsHost: 'http://static.skimur.com/'
   }
 
   return config;

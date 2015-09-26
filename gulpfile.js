@@ -7,6 +7,7 @@ var request = require('request');
 var path = require('path');
 var runSequence = require('run-sequence');
 var merge = require('merge-stream');
+var xmlpoke = require('xmlpoke');
 var config = require('./gulp.config')();
 
 // the msbuild configuration
@@ -89,8 +90,13 @@ gulp.task('dist-web-delete-static', function() {
   	'./dist/web/Scripts']);
 });
 
-gulp.task('dist-web-configure-static', function() {
-  // TODO
+gulp.task('dist-web-configure-static', function(cb) {
+  xmlpoke('./dist/web/Web.config', function(xml) {
+    xml.withBasePath('configuration')
+      .set("appSettings/add[@key='UseStaticAssets']/@value", config.useStaticAssets)
+      .set("appSettings/add[@key='StaticAssetsHost']/@value", config.staticAssetsHost)
+  });
+  cb();
 });
 
 gulp.task('dist-sub-worker', function() {
