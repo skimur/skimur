@@ -4,17 +4,20 @@ using Infrastructure.Utils;
 using Membership;
 using Membership.Services;
 using Microsoft.AspNet.Identity;
+using Microsoft.Owin.Security;
 
 namespace Skimur.Web
 {
     public class UserContext : IUserContext
     {
         private readonly IMembershipService _membershipService;
+        private readonly IAuthenticationManager _authenticationManager;
         private User _currentUser;
 
-        public UserContext(IMembershipService membershipService)
+        public UserContext(IMembershipService membershipService, IAuthenticationManager authenticationManager)
         {
             _membershipService = membershipService;
+            _authenticationManager = authenticationManager;
         }
 
         public User CurrentUser
@@ -28,8 +31,11 @@ namespace Skimur.Web
 
                 _currentUser = _membershipService.GetUserById(HttpContext.Current.User.Identity.GetUserId().ParseGuid());
 
-                if(_currentUser == null)
+                if (_currentUser == null)
+                {
+                    _authenticationManager.SignOut();
                     throw new Exception("Auth cookie exists for an invalid user. UserId=" + HttpContext.Current.User.Identity.GetUserId());
+                }
 
                 return _currentUser;
             }
