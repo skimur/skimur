@@ -152,6 +152,7 @@
     <Compile Include="Controllers\AvatarController.cs" />
     <Compile Include="Controllers\BaseController.cs" />
     <Compile Include="Controllers\CommonController.cs" />
+    <Compile Include="Controllers\HttpStatusController.cs" />
     <Compile Include="Controllers\MessagesController.cs" />
     <Compile Include="Controllers\ModeratorsController.cs" />
     <Compile Include="Controllers\PoliciesController.cs" />
@@ -181,6 +182,8 @@
     <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Models\SubViewModels.cs" />
     <Compile Include="Models\UserViewModel.cs" />
+    <Compile Include="Mvc\AjaxAttribute.cs" />
+    <Compile Include="Mvc\SkimurHandleErrorAttribute.cs" />
     <Compile Include="Mvc\JsonNetResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />

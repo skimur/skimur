@@ -193,6 +193,10 @@
       <Project>{85e9da82-e70c-48d6-b95e-37343a0a2349}</Project>
       <Name>Infrastructure.Cassandra</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj">
+      <Project>{BBE64678-393A-46E3-996F-99314FEB68EE}</Project>
+      <Name>Infrastructure.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
       <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>
       <Name>Infrastructure.Messaging</Name>

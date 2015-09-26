@@ -7,6 +7,7 @@ using BundleTransformer.Core.Transformers;
 using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
+using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
@@ -60,7 +61,7 @@ namespace Skimur.Web.Public
         
         public void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
-            filters.Add(new HandleErrorAttribute());
+            filters.Add(new Mvc.SkimurHandleErrorAttribute());
         }
 
         public void RegisterBundles(BundleCollection bundles)

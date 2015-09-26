@@ -298,6 +298,21 @@ namespace Skimur.Web
                 defaults: new { controller = "Messages", action = "ModeratorMail", type = InboxType.ModeratorMailSent });
 
             routes.MapRoute(
+                name: "HttpError",
+                url: "error",
+                defaults: new {controller = "HttpStatus", action = "Error"});
+
+            routes.MapRoute(
+                name: "HttpNotFound",
+                url: "notfound",
+                defaults: new { controller = "HttpStatus", action = "NotFound" });
+
+            routes.MapRoute(
+                name: "HttpUnAuthorized",
+                url: "unauthorized",
+                defaults: new { controller = "HttpStatus", action = "UnAuthorized" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

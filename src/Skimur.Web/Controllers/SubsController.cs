@@ -4,6 +4,7 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
+using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Infrastructure.Settings;
 using Membership.Services;
