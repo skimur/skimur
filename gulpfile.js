@@ -8,6 +8,7 @@ var path = require('path');
 var runSequence = require('run-sequence');
 var merge = require('merge-stream');
 var xmlpoke = require('xmlpoke');
+var replace = require('gulp-replace');
 var config = require('./gulp.config')();
 
 // the msbuild configuration
@@ -61,12 +62,30 @@ gulp.task('config-release', function() {
 });
 
 gulp.task('dist', ['dist-web', 'dist-sub-worker', 'dist-static'], function() {
-  
+
 });
 
 gulp.task('dist-web', function(cb) {
   runSequence(
     'dist-web-copy',
+    'dist-web-configuration',
+    'dist-web-make-static',
+    function (error) {
+      if (error) {
+        console.log(error.message);
+      }
+      cb(error);
+    });
+});
+
+gulp.task('dist-web-configuration', function(){
+  gulp.src('./dist/web/Web.config')
+    .pipe(replace(/debug="(true|false)"/g, 'debug="' + (buildConfiguration == "Debug" ? 'true' : 'false') + '"'))
+    .pipe(gulp.dest('./dist/web/'));
+});
+
+gulp.task('dist-web-make-static', function(cb) {
+  runSequence(
     'dist-web-delete-static',
     'dist-web-configure-static',
     function (error) {
