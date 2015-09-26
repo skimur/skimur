@@ -283,6 +283,7 @@
     <Content Include="Content\bootstrap\wells.less" />
     <Content Include="Content\components\discussions.less" />
     <Content Include="Content\components\messages.less" />
+    <Content Include="Content\fonts\fontawesome-webfont.svg" />
     <Content Include="Content\img\avatar.jpg" />
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\logo.png" />
@@ -438,6 +439,11 @@
     <Content Include="Content\sweet-alert\sweet-alert.less" />
     <Content Include="Content\sweet-alert\sweet-alert-animations.less" />
     <Content Include="Content\components\policies.less" />
+    <Content Include="Content\fonts\fontawesome-webfont.eot" />
+    <Content Include="Content\fonts\fontawesome-webfont.ttf" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff" />
+    <Content Include="Content\fonts\fontawesome-webfont.woff2" />
+    <Content Include="Content\fonts\FontAwesome.otf" />
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>

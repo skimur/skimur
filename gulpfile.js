@@ -126,7 +126,9 @@ gulp.task('dist-static-copy', function() {
 
 gulp.task('dist-static-compile-less', function() {
   return gulp.src('./dist/static/Content/site.less')
-    .pipe($.less())
+    .pipe($.less({
+    	relativeUrls: true
+    }))
     .pipe($.minifyCss({keepSpecialComments:0}))
     .pipe(gulp.dest('./dist/static/Content'));
 });

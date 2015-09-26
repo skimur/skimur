@@ -46,7 +46,7 @@ namespace Skimur.Web
         public static void RenderScripts(this HtmlHelper htmlHelper)
         {
             if (!IsUsingStatisAssets)
-                Scripts.Render("~/bundles/scripts");
+                htmlHelper.ViewContext.Writer.Write(Scripts.Render("~/bundles/scripts"));
             else
                 htmlHelper.ViewContext.Writer.Write("<script src=\"" + StaticAssetHost + "/Scripts/script.js\"></script>");
         }
@@ -54,7 +54,7 @@ namespace Skimur.Web
         public static void RenderStyles(this HtmlHelper htmlHelper)
         {
             if (!IsUsingStatisAssets)
-                Styles.Render("~/bundles/styles");
+                htmlHelper.ViewContext.Writer.Write(Styles.Render("~/bundles/styles"));
             else
                 htmlHelper.ViewContext.Writer.Write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + StaticAssetHost + "/Content/site.css\">");
         }
