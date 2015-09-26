@@ -63,7 +63,7 @@ gulp.task('dist', ['dist-web', 'dist-sub-worker', 'dist-static'], function() {
   
 });
 
-gulp.task('dist-web', function() {
+gulp.task('dist-web', function(cb) {
   runSequence(
     'dist-web-copy',
     'dist-web-delete-static',
@@ -98,9 +98,10 @@ gulp.task('dist-sub-worker', function() {
     .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'worker')));
 });
 
-gulp.task('dist-static', function() {
+gulp.task('dist-static', function(cb) {
   runSequence(
     'dist-static-copy',
+    'dist-static-copy-config',
     'dist-static-compile-less',
     'dist-static-compile-js',
     'dist-static-clean',
@@ -152,7 +153,14 @@ gulp.task('dist-static-clean', function() {
   	'!./dist/static/Content/**/*.css', // leave all css files alone
   	'!./dist/static/Content/img/', '!./dist/static/Content/img/**', // leave the img directory
   	'!./dist/static/Content/fonts/', '!./dist/static/Content/fonts/**',
-  	'!./dist/static/Scripts/script.js']) // and leave the fonts directory
+  	'!./dist/static/Scripts/script.js', // and leave the fonts directory
+  	'!./dist/static/web.config']) 
+});
+
+gulp.task('dist-static-copy-config', function() {
+  return gulp.src('./src/static.web.config')
+    .pipe($.rename('web.config'))
+    .pipe(gulp.dest('./dist/static'));
 });
 
 gulp.task('compile', ['nuget-restore', 'version-assemblies'], function() {
