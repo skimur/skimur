@@ -8,6 +8,7 @@ using System.Web.Mvc;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 using Subs.Commands;
 using Subs.ReadModel;
 
@@ -49,220 +50,92 @@ namespace Skimur.Web.Controllers
             _commentWrapper = commentWrapper;
         }
 
+        [Ajax, SkimurAuthorize]
         public ActionResult ReportComment(Guid commentId, ReasonType type, string reason)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to report."
-                });
-            }
-
             try
             {
                 reason = BuildReasonFromType(type, reason);
             }
             catch (Exception ex)
             {
-                return Json(new
-                {
-                    success = false,
-                    error = ex.Message
-                });
-            }
-
-            try
-            {
-                _commandBus.Send(new ReportComment
-                {
-                    ReportBy = _userContext.CurrentUser.Id,
-                    CommentId = commentId,
-                    Reason = reason
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error reporting comment.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
-        }
-
-        public ActionResult ReportPost(Guid postId, ReasonType type, string reason)
-        {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to report."
-                });
-            }
-
-            try
-            {
-                reason = BuildReasonFromType(type, reason);
-            }
-            catch (Exception ex)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = ex.Message
-                });
-            }
-
-            try
-            {
-                _commandBus.Send(new ReportPost
-                {
-                    ReportBy = _userContext.CurrentUser.Id,
-                    PostId = postId,
-                    Reason = reason
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error reporting comment.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
-        }
-
-        public ActionResult Clear(Guid? postId, Guid? commentId)
-        {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to clear reports."
-                });
+                return CommonJsonResult(false, ex.Message);
             }
             
+            _commandBus.Send(new ReportComment
+            {
+                ReportBy = _userContext.CurrentUser.Id,
+                CommentId = commentId,
+                Reason = reason
+            });
+
+            return CommonJsonResult(true);
+        }
+
+        [Ajax, SkimurAuthorize]
+        public ActionResult ReportPost(Guid postId, ReasonType type, string reason)
+        {
             try
             {
-                _commandBus.Send(new ClearReports
-                {
-                    UserId = _userContext.CurrentUser.Id,
-                    PostId = postId,
-                    CommentId = commentId
-                });
+                reason = BuildReasonFromType(type, reason);
             }
             catch (Exception ex)
             {
-                _logger.Error("Error clearing reports.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
+                return CommonJsonResult(false, ex.Message);
             }
-
-            return Json(new
+            
+            _commandBus.Send(new ReportPost
             {
-                success = true,
-                error = (string)null
+                ReportBy = _userContext.CurrentUser.Id,
+                PostId = postId,
+                Reason = reason
             });
+
+            return CommonJsonResult(true);
         }
 
+        [Ajax, SkimurAuthorize]
+        public ActionResult Clear(Guid? postId, Guid? commentId)
+        {
+            _commandBus.Send(new ClearReports
+            {
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
+                CommentId = commentId
+            });
+
+            return CommonJsonResult(true);
+        }
+
+        [Ajax, SkimurAuthorize]
         public ActionResult Ignore(Guid? postId, Guid? commentId)
         {
-            if (!Request.IsAuthenticated)
+            _commandBus.Send(new ConfigureReportIgnoring
             {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to ignore reports."
-                });
-            }
-
-            try
-            {
-                _commandBus.Send(new ConfigureReportIgnoring
-                {
-                    UserId = _userContext.CurrentUser.Id,
-                    PostId = postId,
-                    CommentId = commentId,
-                    IgnoreReports = true
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error ignoring reports.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            return Json(new
-            {
-                success = true,
-                error = (string)null
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
+                CommentId = commentId,
+                IgnoreReports = true
             });
+
+            return CommonJsonResult(true);
         }
 
+        [Ajax, SkimurAuthorize]
         public ActionResult Unignore(Guid? postId, Guid? commentId)
         {
-            if (!Request.IsAuthenticated)
+            _commandBus.Send(new ConfigureReportIgnoring
             {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to unignore reports."
-                });
-            }
-
-            try
-            {
-                _commandBus.Send(new ConfigureReportIgnoring
-                {
-                    UserId = _userContext.CurrentUser.Id,
-                    PostId = postId,
-                    CommentId = commentId,
-                    IgnoreReports = false
-                });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error unignoring reports.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            return Json(new
-            {
-                success = true,
-                error = (string)null
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
+                CommentId = commentId,
+                IgnoreReports = false
             });
+
+            return CommonJsonResult(true);
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         public ActionResult ReportedPosts(string subName)
         {
             ViewBag.ManageNavigationKey = "reportedposts";
@@ -287,7 +160,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         public ActionResult ReportedComments(string subName)
         {
             ViewBag.ManageNavigationKey = "reportedcomments";

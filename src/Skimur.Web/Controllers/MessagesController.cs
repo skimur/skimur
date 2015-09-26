@@ -7,13 +7,14 @@ using System.Web.Mvc;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
 
 namespace Skimur.Web.Controllers
 {
-    [Authorize]
+    [SkimurAuthorize]
     public class MessagesController : BaseController
     {
         private readonly ICommandBus _commandBus;
@@ -173,54 +174,17 @@ namespace Skimur.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult Reply(ReplyMessageViewModel model)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    succes = false,
-                    error = "You must be logged in to reply."
-                });
-            }
-
-            ReplyMessageResponse response = null;
-
-            try
-            {
-                response = _commandBus.Send<ReplyMessage, ReplyMessageResponse>(new ReplyMessage
+            var response = _commandBus.Send<ReplyMessage, ReplyMessageResponse>(new ReplyMessage
                 {
                     Author = _userContext.CurrentUser.Id,
                     AuthorIp = Request.UserHostAddress,
                     ReplyToMessageId = model.ReplyToMessage,
                     Body = model.Body
                 });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("An error occured sending a message.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            if (!string.IsNullOrEmpty(response.Error))
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = response.Error
-                });
-            }
-
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            
+            return CommonJsonResult(response.Error);
         }
 
         public ActionResult Details(Guid id, Guid? context = null)
@@ -344,26 +308,10 @@ namespace Skimur.Web.Controllers
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult MarkMessagesAsRead(List<Guid> messages)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    succes = false,
-                    error = "You must be logged in to mark messages as read."
-                });
-            }
-
             if (messages == null || messages.Count == 0)
-            {
-                return Json(new
-                {
-                    success = true,
-                    error= (string)null
-                });
-            }
+                return CommonJsonResult(true);
 
             _commandBus.Send(new MarkMessagesAsRead
             {
@@ -371,34 +319,14 @@ namespace Skimur.Web.Controllers
                 Messages = messages
             });
 
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            return CommonJsonResult(true);
         }
 
         [HttpPost]
-        [AllowAnonymous]
         public ActionResult MarkMessagesAsUnread(List<Guid> messages)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    succes = false,
-                    error = "You must be logged in to mark messages as read."
-                });
-            }
-
             if (messages == null || messages.Count == 0)
-            {
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null
-                });
-            }
+                return CommonJsonResult(true);
 
             _commandBus.Send(new MarkMessagesAsUnread
             {
@@ -406,11 +334,7 @@ namespace Skimur.Web.Controllers
                 Messages = messages
             });
 
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            return CommonJsonResult(true);
         }
     }
 }

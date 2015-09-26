@@ -9,10 +9,11 @@ using Microsoft.Owin.Security;
 using Skimur.Web.Avatar;
 using Skimur.Web.Identity;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 
 namespace Skimur.Web.Controllers
 {
-    [Authorize]
+    [SkimurAuthorize]
     public class ManageController : BaseController
     {
         private readonly ApplicationSignInManager _signInManager;

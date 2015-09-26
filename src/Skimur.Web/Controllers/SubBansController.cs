@@ -4,13 +4,14 @@ using System.Web;
 using System.Web.Mvc;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
 
 namespace Skimur.Web.Controllers
 {
-    [Authorize]
+    [SkimurAuthorize]
     public class SubBansController : BaseController
     {
         private readonly ISubUserBanDao _subUserBanDao;
@@ -34,8 +35,7 @@ namespace Skimur.Web.Controllers
             _subUserBanWrapper = subUserBanWrapper;
             _commandBus = commandBus;
         }
-
-        [Authorize]
+        
         [HttpGet]
         public ActionResult Bans(string subName, string userName, int? pageNumber)
         {
@@ -63,7 +63,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [HttpPost]
+        [HttpPost, Ajax]
         public ActionResult Ban(string subName, BanUserModel model)
         {
             if (string.IsNullOrEmpty(subName))
@@ -76,46 +76,21 @@ namespace Skimur.Web.Controllers
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
-
-            try
+            
+            var response = _commandBus.Send<BanUserFromSub, BanUserFromSubResponse>(new BanUserFromSub
             {
-                var response = _commandBus.Send<BanUserFromSub, BanUserFromSubResponse>(new BanUserFromSub
-                {
-                    UserName = model.UserName,
-                    BannedBy = _userContext.CurrentUser.Id,
-                    SubId = sub.Id,
-                    DateBanned = Common.CurrentTime(),
-                    ReasonPrivate = model.ReasonPrivate,
-                    ReasonPublic = model.ReasonPublic
-                });
+                UserName = model.UserName,
+                BannedBy = _userContext.CurrentUser.Id,
+                SubId = sub.Id,
+                DateBanned = Common.CurrentTime(),
+                ReasonPrivate = model.ReasonPrivate,
+                ReasonPublic = model.ReasonPublic
+            });
 
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        error = response.Error
-                    });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO: log error
-                return Json(new
-                {
-                    success = false,
-                    error = "An unexpected error has occured."
-                });
-            }
+            return CommonJsonResult(response.Error);
         }
 
-        [HttpPost]
+        [Ajax]
         public ActionResult UnBan(string subName, string userName)
         {
             if (string.IsNullOrEmpty(subName))
@@ -128,43 +103,18 @@ namespace Skimur.Web.Controllers
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
-
-            try
+            
+            var response = _commandBus.Send<UnBanUserFromSub, UnBanUserFromSubResponse>(new UnBanUserFromSub
             {
-                var response = _commandBus.Send<UnBanUserFromSub, UnBanUserFromSubResponse>(new UnBanUserFromSub
-                {
-                    SubId = sub.Id,
-                    UserName = userName,
-                    UnBannedBy = _userContext.CurrentUser.Id
-                });
+                SubId = sub.Id,
+                UserName = userName,
+                UnBannedBy = _userContext.CurrentUser.Id
+            });
 
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        error = response.Error
-                    });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO: log error
-                return Json(new
-                {
-                    success = false,
-                    error = "An unexpected error has occured."
-                });
-            }
+            return CommonJsonResult(response.Error);
         }
 
-        [HttpPost]
+        [Ajax, HttpPost]
         public ActionResult UpdateBan(string subName, string userName, string reason)
         {
             if (string.IsNullOrEmpty(subName))
@@ -177,44 +127,26 @@ namespace Skimur.Web.Controllers
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
                 throw new HttpException(403, "not allowed to moderate bans");
-
-            try
+            
+            var response = _commandBus.Send<UpdateUserSubBan, UpdateUserSubBanResponse>(new UpdateUserSubBan
             {
-                var response = _commandBus.Send<UpdateUserSubBan, UpdateUserSubBanResponse>(new UpdateUserSubBan
-                {
-                    UserName = userName,
-                    UpdatedBy = _userContext.CurrentUser.Id,
-                    SubId = sub.Id,
-                    ReasonPrivate = reason,
-                });
+                UserName = userName,
+                UpdatedBy = _userContext.CurrentUser.Id,
+                SubId = sub.Id,
+                ReasonPrivate = reason,
+            });
 
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        error = response.Error
-                    });
-                }
+            if (!string.IsNullOrEmpty(response.Error))
+                return CommonJsonResult(response.Error);
 
-                var bannedUser = _subUserBanDao.GetBannedUserInSub(sub.Id, response.UserId);
+            var bannedUser = _subUserBanDao.GetBannedUserInSub(sub.Id, response.UserId);
 
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null,
-                    html = RenderView("_Ban", _subUserBanWrapper.Wrap(new List<SubUserBan> {bannedUser})[0])
-                });
-            }
-            catch (Exception ex)
+            return Json(new
             {
-                // TODO: log error
-                return Json(new
-                {
-                    success = false,
-                    error = "An unexpected error has occured."
-                });
-            }
+                success = true,
+                error = (string)null,
+                html = RenderView("_Ban", _subUserBanWrapper.Wrap(new List<SubUserBan> {bannedUser})[0])
+            });
         }
     }
 }

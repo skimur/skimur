@@ -4,15 +4,14 @@ using System.Linq;
 using System.Web;
 using System.Web.Mvc;
 using Infrastructure;
-using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Infrastructure.Settings;
 using Membership.Services;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
-using Subs.Services;
 
 namespace Skimur.Web.Controllers
 {
@@ -204,7 +203,8 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
-        
+
+        [Ajax, HttpPost]
         public ActionResult MoreComments(Guid postId, CommentSortBy? sort, string children, int depth)
         {
             if (!sort.HasValue)
@@ -225,6 +225,8 @@ namespace Skimur.Web.Controllers
 
             return Json(new
             {
+                success=true,
+                error=(string)null,
                 html = RenderView("_CommentNodes", model)
             });
         }
@@ -372,7 +374,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string id, CreateEditSubModel model)
@@ -412,13 +414,13 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         public ActionResult Create()
         {
             return View(new CreateEditSubModel());
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateEditSubModel model)
@@ -443,7 +445,7 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.EditSub(response.SubName));
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         public ActionResult CreatePost(string subName = null)
         {
             SubWrapped sub = null;
@@ -464,7 +466,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult CreatePost(CreatePostModel model, string subName = null)
@@ -509,162 +511,73 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.Post(model.SubName, response.PostId.Value, response.Title));
         }
 
-        [HttpPost]
+        [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult CreateComment(CreateCommentModel model)
         {
-            if (!Request.IsAuthenticated)
+            var dateCreated = Common.CurrentTime();
+            var response = _commandBus.Send<CreateComment, CreateCommentResponse>(new CreateComment
             {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to comment."
-                });
-            }
+                PostId = model.PostId,
+                ParentId = model.ParentId,
+                DateCreated = dateCreated,
+                AuthorIpAddress = Request.UserHostAddress,
+                AuthorUserName = _userContext.CurrentUser.UserName,
+                Body = model.Body,
+                SendReplies = model.SendReplies
+            });
 
-            try
+            if (!string.IsNullOrEmpty(response.Error))
+                return CommonJsonResult(response.Error);
+
+            if (!response.CommentId.HasValue)
+                throw new Exception("No error was given, which indicates success, but no comment id was returned.");
+
+            var node = _commentWrapper.Wrap(response.CommentId.Value, _userContext.CurrentUser);
+
+            return Json(new
             {
-                var dateCreated = Common.CurrentTime();
-                var response = _commandBus.Send<CreateComment, CreateCommentResponse>(new CreateComment
-                {
-                    PostId = model.PostId,
-                    ParentId = model.ParentId,
-                    DateCreated = dateCreated,
-                    AuthorIpAddress = Request.UserHostAddress,
-                    AuthorUserName = _userContext.CurrentUser.UserName,
-                    Body = model.Body,
-                    SendReplies = model.SendReplies
-                });
-
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        error = response.Error
-                    });
-                }
-
-                if (!response.CommentId.HasValue)
-                    throw new Exception("No error was given, which indicates success, but no comment id was returned.");
-
-                var node = _commentWrapper.Wrap(response.CommentId.Value, _userContext.CurrentUser);
-
-                return Json(new
-                {
-                    success = true,
-                    commentId = response.CommentId,
-                    html = RenderView("_CommentNode", new CommentNode(node))
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO: log
-                return Json(new
-                {
-                    success = false,
-                    error = "An unexpected error occured."
-                });
-            }
+                success = true,
+                commentId = response.CommentId,
+                html = RenderView("_CommentNode", new CommentNode(node))
+            });
         }
 
-        [HttpPost]
+        [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult EditComment(EditCommentModel model)
         {
-            if (!Request.IsAuthenticated)
+            var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
             {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to edit a comment."
-                });
-            }
+                DateEdited = Common.CurrentTime(),
+                CommentId = model.CommentId,
+                Body = model.Body
+            });
 
-            try
+            if (!string.IsNullOrEmpty(response.Error))
+                return CommonJsonResult(response.Error);
+
+            var html = RenderView("_CommentBody", new CommentNode(_commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser)));
+
+            return Json(new
             {
-
-                var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
-                {
-                    DateEdited = Common.CurrentTime(),
-                    CommentId = model.CommentId,
-                    Body = model.Body
-                });
-
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        error = response.Error
-                    });
-                }
-
-                var html = RenderView("_CommentBody", new CommentNode(_commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser)));
-
-                return Json(new
-                {
-                    success = true,
-                    commentId = model.CommentId,
-                    // we don't render the whole comment, just the body.
-                    // this is because we want to leave the children in-tact on the ui
-                    html
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO: log
-                return Json(new
-                {
-                    success = false,
-                    error = "An unexpected error occured."
-                });
-            }
+                success = true,
+                commentId = model.CommentId,
+                // we don't render the whole comment, just the body.
+                // this is because we want to leave the children in-tact on the ui
+                html
+            });
         }
 
-        [HttpPost]
+        [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult DeleteComment(Guid commentId)
         {
-            if (!Request.IsAuthenticated)
+            var response = _commandBus.Send<DeleteComment, DeleteCommentResponse>(new DeleteComment
             {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to delete a comment."
-                });
-            }
+                CommentId = commentId,
+                UserName = _userContext.CurrentUser.UserName,
+                DateDeleted = Common.CurrentTime()
+            });
 
-            try
-            {
-                var response = _commandBus.Send<DeleteComment, DeleteCommentResponse>(new DeleteComment
-                {
-                    CommentId = commentId,
-                    UserName = _userContext.CurrentUser.UserName,
-                    DateDeleted = Common.CurrentTime()
-                });
-
-                if (!string.IsNullOrEmpty(response.Error))
-                {
-                    return Json(new
-                    {
-                        success = false,
-                        error = response.Error
-                    });
-                }
-
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null
-                });
-            }
-            catch (Exception ex)
-            {
-                // TODO: log
-                return Json(new
-                {
-                    success = false,
-                    error = "An unexpected error occured."
-                });
-            }
+            return CommonJsonResult(response.Error);
         }
 
         public ActionResult TopBar()
@@ -672,68 +585,33 @@ namespace Skimur.Web.Controllers
             return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
         }
 
-        [HttpPost]
-        public JsonResult Subscribe(string subName)
+        [SkimurAuthorize, Ajax, HttpPost]
+        public ActionResult Subscribe(string subName)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in subscribe to a sub."
-                });
-            }
-
             var response = _commandBus.Send<SubcribeToSub, SubcribeToSubResponse>(new SubcribeToSub
             {
                 UserName = _userContext.CurrentUser.UserName,
                 SubName = subName
             });
 
-            return Json(new
-            {
-                success = response.Success,
-                error = response.Error
-            });
+            return CommonJsonResult(response.Success, response.Error);
         }
 
-        [HttpPost]
-        public JsonResult UnSubscribe(string subName)
+        [SkimurAuthorize, Ajax, HttpPost]
+        public ActionResult UnSubscribe(string subName)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in subscribe to a sub."
-                });
-            }
-
             var response = _commandBus.Send<UnSubcribeToSub, UnSubcribeToSubResponse>(new UnSubcribeToSub
             {
                 UserId = _userContext.CurrentUser.Id,
                 SubName = subName
             });
 
-            return Json(new
-            {
-                success = response.Success,
-                error = response.Error
-            });
+            return CommonJsonResult(response.Success, response.Error);
         }
 
-        [HttpPost]
+        [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult VotePost(Guid postId, VoteType type)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to vote for an item."
-                });
-            }
-
             _commandBus.Send(new CastVoteForPost
             {
                 UserId = _userContext.CurrentUser.Id,
@@ -743,24 +621,12 @@ namespace Skimur.Web.Controllers
                 VoteType = type
             });
 
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            return CommonJsonResult(true);
         }
 
+        [SkimurAuthorize, Ajax]
         public ActionResult UnVotePost(Guid postId)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to unvote for an item."
-                });
-            }
-
             _commandBus.Send(new CastVoteForPost
             {
                 UserId = _userContext.CurrentUser.Id,
@@ -770,25 +636,12 @@ namespace Skimur.Web.Controllers
                 VoteType = null /*no vote*/
             });
 
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            return CommonJsonResult(true);
         }
 
-        [HttpPost]
+        [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult VoteComment(Guid commentId, VoteType type)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to vote for an item."
-                });
-            }
-
             _commandBus.Send(new CastVoteForComment
             {
                 UserName = _userContext.CurrentUser.UserName,
@@ -798,24 +651,12 @@ namespace Skimur.Web.Controllers
                 VoteType = type
             });
 
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            return CommonJsonResult(true);
         }
 
+        [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult UnVoteComment(Guid commentId)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to unvote for an item."
-                });
-            }
-
             _commandBus.Send(new CastVoteForComment
             {
                 UserName = _userContext.CurrentUser.UserName,
@@ -825,11 +666,7 @@ namespace Skimur.Web.Controllers
                 VoteType = null /*no vote*/
             });
 
-            return Json(new
-            {
-                success = true,
-                error = (string)null
-            });
+            return CommonJsonResult(true);
         }
     }
 }

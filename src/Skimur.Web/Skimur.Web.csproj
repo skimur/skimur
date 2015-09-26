@@ -183,6 +183,7 @@
     <Compile Include="Models\SubViewModels.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Mvc\AjaxAttribute.cs" />
+    <Compile Include="Mvc\SkimurAuthorizeAttribute.cs" />
     <Compile Include="Mvc\SkimurHandleErrorAttribute.cs" />
     <Compile Include="Mvc\JsonNetResult.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,6 +8,7 @@ using Glimpse.Core.Extensibility;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
@@ -41,7 +42,7 @@ namespace Skimur.Web.Controllers
             _logger = logger;
         }
 
-        [Authorize]
+        [SkimurAuthorize]
         public ActionResult Unmoderated(string subName)
         {
             if (string.IsNullOrEmpty(subName))
@@ -62,102 +63,28 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
+        [SkimurAuthorize, Ajax]
         public ActionResult Approve(Guid postId)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to approve a post."
-                });
-            }
-
-            ApprovePostResponse response;
-
-            try
-            {
-                response = _commandBus.Send<ApprovePost, ApprovePostResponse>(new ApprovePost
+            var response = _commandBus.Send<ApprovePost, ApprovePostResponse>(new ApprovePost
                 {
                     PostId = postId,
                     ApprovedBy = _userContext.CurrentUser.Id
                 });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error approving post.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            if (!string.IsNullOrEmpty(response.Error))
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = response.Error
-                });
-            }
-            else
-            {
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null
-                });
-            }
+           
+            return CommonJsonResult(response.Error);
         }
 
+        [SkimurAuthorize, Ajax]
         public ActionResult Remove(Guid postId)
         {
-            if (!Request.IsAuthenticated)
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = "You must be logged in to remove a post."
-                });
-            }
-
-            RemovePostResponse response;
-
-            try
-            {
-                response = _commandBus.Send<RemovePost, RemovePostResponse>(new RemovePost
+            var response = _commandBus.Send<RemovePost, RemovePostResponse>(new RemovePost
                 {
                     PostId = postId,
                     RemovedBy = _userContext.CurrentUser.Id
                 });
-            }
-            catch (Exception ex)
-            {
-                _logger.Error("Error removing post.", ex);
-                return Json(new
-                {
-                    success = false,
-                    error = "An unknown error occured."
-                });
-            }
-
-            if (!string.IsNullOrEmpty(response.Error))
-            {
-                return Json(new
-                {
-                    success = false,
-                    error = response.Error
-                });
-            }
-            else
-            {
-                return Json(new
-                {
-                    success = true,
-                    error = (string)null
-                });
-            }
+           
+            return CommonJsonResult(response.Error);
         }
     }
 }

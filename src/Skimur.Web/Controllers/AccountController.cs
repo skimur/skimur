@@ -7,10 +7,11 @@ using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Skimur.Web.Identity;
 using Skimur.Web.Models;
+using Skimur.Web.Mvc;
 
 namespace Skimur.Web.Controllers
 {
-    [Authorize]
+    [SkimurAuthorize]
     public class AccountController : Controller
     {
         private ApplicationSignInManager _signInManager;

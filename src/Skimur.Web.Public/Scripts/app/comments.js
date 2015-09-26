@@ -200,8 +200,12 @@
 
     var moreChildren = function (element, postId, sort, children, depth) {
         var $comment = getComment(element);
-        skimur.moreComments(postId, sort, children, depth, function(result) {
-            $comment.after($(result.html)).remove();
+        skimur.moreComments(postId, sort, children, depth, function (result) {
+            if (result.success) {
+                $comment.after($(result.html)).remove();
+            } else {
+                skimurui.displayError(result.error);
+            }
         });
     }
 

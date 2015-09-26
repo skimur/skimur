@@ -72,5 +72,15 @@ namespace Skimur.Web.Controllers
                 return sw.GetStringBuilder().ToString();
             }
         }
+
+        public ActionResult CommonJsonResult(bool success, string error = null)
+        {
+            return Json(new { success, error });
+        }
+
+        public ActionResult CommonJsonResult(string error)
+        {
+            return !string.IsNullOrEmpty(error) ? CommonJsonResult(false, error) : CommonJsonResult(true);
+        }
     }
 }
