@@ -68,6 +68,7 @@ gulp.task('dist', ['dist-web', 'dist-sub-worker', 'dist-static'], function() {
 gulp.task('dist-web', function(cb) {
   runSequence(
     'dist-web-copy',
+    'dist-web-fix-clearscript',
     'dist-web-configuration',
     'dist-web-make-static',
     function (error) {
@@ -76,6 +77,12 @@ gulp.task('dist-web', function(cb) {
       }
       cb(error);
     });
+});
+
+gulp.task('dist-web-fix-clearscript', function(){
+  gulp.src('./dist/web/bin/{ClearScriptV8-32,ClearScriptV8-64,v8-ia32,v8-x64}.dll')
+    .pipe($.clean())
+    .pipe(gulp.dest('./dist/web/bin/ClearScript/'));
 });
 
 gulp.task('dist-web-configuration', function(){
@@ -100,7 +107,6 @@ gulp.task('dist-web-copy', function() {
   return gulp.src(path.resolve(__dirname, 'build', '_PublishedWebsites', 'Skimur.Web.Public') + "/**/*")
     .pipe(gulp.dest(path.resolve(__dirname, 'dist', 'web')));
 });
-
 
 gulp.task('dist-web-delete-static', function() {
   return del([
