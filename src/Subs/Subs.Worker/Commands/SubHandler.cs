@@ -5,6 +5,7 @@ using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
 using Membership.Services;
 using Skimur;
+using Skimur.Markdown;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;
@@ -26,6 +27,7 @@ namespace Subs.Worker.Commands
         private readonly ISubUserBanService _subUserBanService;
         private readonly ISubModerationService _subModerationService;
         private readonly IPermissionService _permissionService;
+        private readonly IMarkdownCompiler _markdownCompiler;
 
         public SubHandler(ISubService subService,
             IMembershipService membershipService,
@@ -34,7 +36,8 @@ namespace Subs.Worker.Commands
             ICommandBus commandBus,
             ISubUserBanService subUserBanService,
             ISubModerationService subModerationService,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            IMarkdownCompiler markdownCompiler)
         {
             _subService = subService;
             _membershipService = membershipService;
@@ -44,6 +47,7 @@ namespace Subs.Worker.Commands
             _subUserBanService = subUserBanService;
             _subModerationService = subModerationService;
             _permissionService = permissionService;
+            _markdownCompiler = markdownCompiler;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -302,6 +306,7 @@ namespace Subs.Worker.Commands
                 else
                 {
                     post.Content = command.Content;
+                    post.ContentFormatted = _markdownCompiler.Compile(post.Content);
                 }
                 
                 _postService.InsertPost(post);

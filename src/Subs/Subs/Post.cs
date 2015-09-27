@@ -38,6 +38,8 @@ namespace Subs
 
         public string Content { get; set; }
 
+        public string ContentFormatted { get; set; }
+
         public string Url { get; set; }
 
         public string Domain { get; set; }

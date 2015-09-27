@@ -86,6 +86,7 @@
     <Compile Include="Postgres\_0007_CommentPostRepliesAndMentions.cs" />
     <Compile Include="Postgres\_0008_SubCreatedBy.cs" />
     <Compile Include="Postgres\_0009_UserAdminField.cs" />
+    <Compile Include="Postgres\_0010_PostContentFormatted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
