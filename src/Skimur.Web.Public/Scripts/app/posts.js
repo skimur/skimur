@@ -201,6 +201,43 @@
         });
     }
 
+    var startEdit = function(element) {
+        var post = cancel(element);
+        var $textArea = $("<textarea />")
+            .appendTo(post.staging)
+            .val(post.post.find("> .disc-body .disc-content-unformatted").val());
+
+        $textArea.markdown({ iconlibrary: "fa", width: "form-group" });
+
+        var $buttonsContainer = $("<div />").appendTo(post.staging);
+
+        $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
+            .appendTo($buttonsContainer)
+            .click(function (e) {
+                e.preventDefault();
+                skimur.editPost(post.post.data("post-id"), $textArea.val(), function (result) {
+                    cancel(element);
+                    if (result.success) {
+                        post.post.replaceWith($(result.html));
+                    } else {
+                        skimurui.displayError(result.error);
+                    }
+                });
+            });
+
+        $buttonsContainer.append("&nbsp;&nbsp;&nbsp;");
+
+        $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
+            .appendTo($buttonsContainer)
+            .click(function (e) {
+                e.preventDefault();
+                cancel(this);
+            });
+
+        post.staging.removeClass("hidden");
+        $textArea.focus();
+    };
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -210,7 +247,8 @@
         toggleReports: toggleReports,
         clearReports: clearReports,
         ignoreReports: ignoreReports,
-        unignoreReports: unignoreReports
+        unignoreReports: unignoreReports,
+        startEdit: startEdit
     };
 
 })();

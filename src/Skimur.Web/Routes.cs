@@ -318,6 +318,11 @@ namespace Skimur.Web
                 defaults: new { controller = "Pages", action = "About" });
 
             routes.MapRoute(
+                name: "EditPost",
+                url: "editpost",
+                defaults: new { controller = "Posts", action = "Edit" });
+
+            routes.MapRoute(
                 name: "Default",
                 url: "{controller}/{action}/{id}",
                 defaults: new { controller = "Home", action = "Index", id = UrlParameter.Optional }

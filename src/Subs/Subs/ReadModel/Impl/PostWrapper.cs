@@ -81,6 +81,10 @@ namespace Subs.ReadModel.Impl
                 }
                 if (currentUser != null)
                     item.CanReport = true;
+
+                // authors can only edit text posts
+                if (item.Post.PostType == PostType.Text && currentUser != null && currentUser.Id == item.Post.UserId)
+                    item.CanEdit = true;
             }
 
             return posts;

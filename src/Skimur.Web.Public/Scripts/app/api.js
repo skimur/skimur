@@ -357,28 +357,45 @@
         });
     }
 
-    var removeModFromSub = function (subName, subId, userId, callback) {
+    var removeModFromSub = function(subName, subId, userId, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/removemodfromsub",
             data: { subName: subName, subId: subId, userId: userId },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 if (callback)
                     callback(data);
             },
-            error: function () {
+            error: function() {
                 if (callback)
                     callback({ success: false, error: "There was an error processing your request." });
             }
         });
-    }
+    };
 
-    var changeModPermissionsForSub = function (subName, subId, userId, permissions, callback) {
+    var changeModPermissionsForSub = function(subName, subId, userId, permissions, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/changemodpermissions",
             data: { subName: subName, subId: subId, userId: userId, permissions: permissions },
+            dataType: "json",
+            success: function(data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function() {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var editPost = function (postId, content, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/editpost",
+            data: { postId: postId, content: content },
             dataType: "json",
             success: function (data) {
                 if (callback)
@@ -389,7 +406,7 @@
                     callback({ success: false, error: "There was an error processing your request." });
             }
         });
-    }
+    };
 
     return {
         subscribe: subscribe,
@@ -419,7 +436,8 @@
         unignoreReportsForPost: function (postId, callback) { return unignoreReports(null, postId, callback); },
         unignoreReportsForComment: function (commentId, callback) { return unignoreReports(commentId, null, callback); },
         removeModFromSub: removeModFromSub,
-        changeModPermissionsForSub: changeModPermissionsForSub
+        changeModPermissionsForSub: changeModPermissionsForSub,
+        editPost: editPost
     };
 
 })();

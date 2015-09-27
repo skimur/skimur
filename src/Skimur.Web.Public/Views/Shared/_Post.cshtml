@@ -34,13 +34,23 @@
             <div class="disc-tagline">
                 Posted @Html.Age(Model.Post.DateCreated) ago by <a href="/user/@Model.Author.UserName">@Model.Author.UserName</a> to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
             </div>
-            <div class="disc-content">
-                @Html.Raw(Model.Post.ContentFormatted)
-            </div>
+            @if (Model.Post.PostType == PostType.Text)
+            {
+                <div class="disc-content">
+                    @Html.Raw(Model.Post.ContentFormatted)
+                </div>
+                <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Post.Content)</textarea>
+            }
             <ul class="disc-options">
                 <li class="first comments">
                     <a href="@Url.Post(Model.Sub, Model.Post)">@(Model.Post.NumberOfComments > 0 ? (Model.Post.NumberOfComments == 1 ? "1 comment" : Model.Post.NumberOfComments + " comments") : "comment")</a>
                 </li>
+                @if (Model.CanEdit)
+                {
+                    <li class="edit">
+                        <a href="javascript:void(0);" onclick="return skimurui.posts.startEdit(this)">edit</a>
+                    </li>
+                }
                 @if (Model.CanManage)
                 {
                     <li class="remove">

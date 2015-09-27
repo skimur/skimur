@@ -86,5 +86,28 @@ namespace Skimur.Web.Controllers
            
             return CommonJsonResult(response.Error);
         }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult Edit(Guid postId, string content)
+        {
+            var response = _commandBus.Send<EditPostContent, EditPostContentResponse>(new EditPostContent
+            {
+                EditedBy = _userContext.CurrentUser.Id,
+                PostId = postId,
+                Content = content
+            });
+
+            if (!string.IsNullOrEmpty(response.Error))
+                return CommonJsonResult(response.Error);
+
+            var html = RenderView("_Post",_postWrapper.Wrap(postId, _userContext.CurrentUser));
+
+            return Json(new
+            {
+                success = true,
+                postId,
+                html
+            });
+        }
     }
 }

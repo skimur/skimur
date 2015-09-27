@@ -81,6 +81,7 @@
     <Compile Include="Commands\CreateSub.cs" />
     <Compile Include="Commands\DeleteComment.cs" />
     <Compile Include="Commands\EditComment.cs" />
+    <Compile Include="Commands\EditPostContent.cs" />
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\MarkMessagesAsRead.cs" />
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />

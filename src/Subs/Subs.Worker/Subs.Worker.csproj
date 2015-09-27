@@ -49,6 +49,7 @@
     <Compile Include="Commands\CommentCommandHandler.cs" />
     <Compile Include="Commands\MessagesHandler.cs" />
     <Compile Include="Commands\ModerationHandler.cs" />
+    <Compile Include="Commands\PostHandler.cs" />
     <Compile Include="Commands\PostModerationHandler.cs" />
     <Compile Include="Events\UserMentionNotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
