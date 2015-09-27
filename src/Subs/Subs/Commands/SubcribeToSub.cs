@@ -12,6 +12,8 @@ namespace Subs.Commands
         public string UserName { get; set; }
 
         public string SubName { get; set; }
+
+        public Guid? SubId { get; set; }
     }
 
     public class SubcribeToSubResponse

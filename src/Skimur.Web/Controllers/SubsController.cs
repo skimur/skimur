@@ -371,6 +371,9 @@ namespace Skimur.Web.Controllers
             var model = _mapper.Map<Sub, CreateEditSubModel>(sub);
             model.IsEditing = true;
 
+            if (!_userContext.CurrentUser.IsAdmin)
+                model.IsDefault = null; // the user can't edit this
+
             return View(model);
         }
 
@@ -400,7 +403,8 @@ namespace Skimur.Web.Controllers
                 Name = name,
                 Description = model.Description,
                 SidebarText = model.SidebarText,
-                Type = model.SubType
+                Type = model.SubType,
+                IsDefault = model.IsDefault
             });
 
             if (!string.IsNullOrEmpty(response.Error))
@@ -417,7 +421,14 @@ namespace Skimur.Web.Controllers
         [SkimurAuthorize]
         public ActionResult Create()
         {
-            return View(new CreateEditSubModel());
+            var model = new CreateEditSubModel();
+
+            // admins can create default subs!
+            // not null means editable.
+            if (_userContext.CurrentUser.IsAdmin)
+                model.IsDefault = false;
+
+            return View(model);
         }
 
         [SkimurAuthorize]
@@ -431,7 +442,8 @@ namespace Skimur.Web.Controllers
                 Name = model.Name,
                 Description = model.Description,
                 SidebarText = model.SidebarText,
-                Type = model.SubType
+                Type = model.SubType,
+                IsDefault = model.IsDefault
             });
 
             if (!string.IsNullOrEmpty(response.Error))

@@ -2,12 +2,14 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
 using Skimur.Web.Identity;
 using Skimur.Web.Models;
 using Skimur.Web.Mvc;
+using Subs.ReadModel;
 
 namespace Skimur.Web.Controllers
 {
@@ -16,13 +18,21 @@ namespace Skimur.Web.Controllers
     {
         private ApplicationSignInManager _signInManager;
         private IAuthenticationManager _authenticationManager;
+        private readonly ICommandBus _commandBus;
+        private readonly ISubDao _subDao;
         private ApplicationUserManager _userManager;
         
-        public AccountController(ApplicationUserManager userManager, ApplicationSignInManager signInManager, IAuthenticationManager authenticationManager)
+        public AccountController(ApplicationUserManager userManager, 
+            ApplicationSignInManager signInManager, 
+            IAuthenticationManager authenticationManager,
+            ICommandBus commandBus,
+            ISubDao subDao)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _authenticationManager = authenticationManager;
+            _commandBus = commandBus;
+            _subDao = subDao;
         }
 
         [AllowAnonymous]
@@ -119,6 +129,19 @@ namespace Skimur.Web.Controllers
             {
                 var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
+
+                if (result.Succeeded)
+                {
+                    // subscribe the user to all the default subs
+                    foreach (var defaultSub in _subDao.GetDefaultSubs())
+                    {
+                        _commandBus.Send(new Subs.Commands.SubcribeToSub
+                        {
+                            SubId = defaultSub,
+                            UserName = user.UserName
+                        });
+                    }
+                }
 
                 if (result.Succeeded)
                 {
@@ -318,12 +341,28 @@ namespace Skimur.Web.Controllers
                 }
                 var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
+
+                if (result.Succeeded)
+                {
+                    // subscribe the user to all the default subs
+                    foreach (var defaultSub in _subDao.GetDefaultSubs())
+                    {
+                        _commandBus.Send(new Subs.Commands.SubcribeToSub
+                        {
+                            SubId = defaultSub,
+                            UserName = user.UserName
+                        });
+                    }
+                }
+
                 if (result.Succeeded)
                 {
                     result = await _userManager.AddLoginAsync(user.Id, info.Login);
+
                     if (result.Succeeded)
                     {
                         await _signInManager.SignInAsync(user, isPersistent: false, rememberBrowser: false);
+
                         return RedirectToLocal(returnUrl);
                     }
                 }

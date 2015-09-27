@@ -18,6 +18,9 @@ namespace Skimur.Web.Models
 
         [DisplayName("Type")]
         public SubType SubType { get; set; }
+
+        [DisplayName("Is default")]
+        public bool? IsDefault { get; set; }
         
         public bool IsEditing { get; set; }
     }

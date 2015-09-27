@@ -25,6 +25,7 @@ namespace Subs.Worker.Commands
         private readonly ICommandBus _commandBus;
         private readonly ISubUserBanService _subUserBanService;
         private readonly ISubModerationService _subModerationService;
+        private readonly IPermissionService _permissionService;
 
         public SubHandler(ISubService subService,
             IMembershipService membershipService,
@@ -32,7 +33,8 @@ namespace Subs.Worker.Commands
             IEventBus eventBus,
             ICommandBus commandBus,
             ISubUserBanService subUserBanService,
-            ISubModerationService subModerationService)
+            ISubModerationService subModerationService,
+            IPermissionService permissionService)
         {
             _subService = subService;
             _membershipService = membershipService;
@@ -41,6 +43,7 @@ namespace Subs.Worker.Commands
             _commandBus = commandBus;
             _subUserBanService = subUserBanService;
             _subModerationService = subModerationService;
+            _permissionService = permissionService;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -86,7 +89,7 @@ namespace Subs.Worker.Commands
                     response.Error = "The sub already exist.";
                     return response;
                 }
-
+                
                 var sub = new Sub
                 {
                     Id = GuidUtil.NewSequentialId(),
@@ -94,8 +97,13 @@ namespace Subs.Worker.Commands
                     Name = command.Name,
                     Description = command.Description,
                     SidebarText = command.SidebarText,
-                    SubType = command.Type
+                    SubType = command.Type,
+                    CreatedBy = user.Id
                 };
+
+                // only admins can configure default subs
+                if (user.IsAdmin && command.IsDefault.HasValue)
+                    sub.IsDefault = command.IsDefault.Value;
 
                 _subService.InsertSub(sub);
 
@@ -136,17 +144,21 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
-                if (!_subModerationService.CanUserModerateSub(user.Id, sub.Id))
+                if (!_permissionService.CanUserManageSubConfig(user, sub.Id))
                 {
                     response.Error = "You are not allowed to modify this sub.";
                     return response;
                 }
-
+                
                 if (string.IsNullOrEmpty(command.Description))
                 {
                     response.Error = "Please describe your sub.";
                     return response;
                 }
+
+                // only admins can determine if a sub is a default sub
+                if (user.IsAdmin && command.IsDefault.HasValue)
+                    sub.IsDefault = command.IsDefault.Value;
 
                 sub.Description = command.Description;
                 sub.SidebarText = command.SidebarText;
@@ -321,14 +333,8 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
-                if (string.IsNullOrEmpty(command.SubName))
-                {
-                    response.Error = "You must provide a sub name.";
-                    return response;
-                }
-
-                var sub = _subService.GetSubByName(command.SubName);
-
+                var sub = command.SubId.HasValue ? _subService.GetSubById(command.SubId.Value) : _subService.GetSubByName(command.SubName);
+                
                 if (sub == null)
                 {
                     response.Error = "Invalid sub name.";

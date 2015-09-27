@@ -27,6 +27,8 @@ namespace Subs
 
         public int Type { get; set; }
 
+        public Guid? CreatedBy { get; set; }
+
         [Ignore]
         public SubType SubType
         {

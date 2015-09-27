@@ -112,7 +112,6 @@ namespace Membership
         /// <summary>
         /// Is this user an administrator?
         /// </summary>
-        [Ignore]
         public bool IsAdmin { get; set; }
     }
 }

@@ -17,6 +17,8 @@ namespace Subs.Commands
 
         public string Description { get; set; }
 
+        public bool? IsDefault { get; set; }
+
         public SubType Type { get; set; }
     }
 
