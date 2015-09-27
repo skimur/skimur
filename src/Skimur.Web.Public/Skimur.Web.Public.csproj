@@ -368,6 +368,7 @@
     <Content Include="Views\Shared\HttpStatus\404.cshtml" />
     <Content Include="Views\Shared\HttpStatus\Unknown.cshtml" />
     <Content Include="Views\Shared\HttpStatus\401.cshtml" />
+    <Content Include="Views\Pages\About.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

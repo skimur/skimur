@@ -300,7 +300,7 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "HttpError",
                 url: "error",
-                defaults: new {controller = "HttpStatus", action = "Error"});
+                defaults: new { controller = "HttpStatus", action = "Error" });
 
             routes.MapRoute(
                 name: "HttpNotFound",
@@ -311,6 +311,11 @@ namespace Skimur.Web
                 name: "HttpUnAuthorized",
                 url: "unauthorized",
                 defaults: new { controller = "HttpStatus", action = "UnAuthorized" });
+
+            routes.MapRoute(
+                name: "About",
+                url: "about",
+                defaults: new { controller = "Pages", action = "About" });
 
             routes.MapRoute(
                 name: "Default",
