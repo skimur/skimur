@@ -82,7 +82,7 @@ gulp.task('dist-web', function(cb) {
 gulp.task('dist-web-fix-clearscript', function(){
   gulp.src('./dist/web/bin/{ClearScriptV8-32,ClearScriptV8-64,v8-ia32,v8-x64}.dll')
     .pipe($.clean())
-    .pipe(gulp.dest('./dist/web/bin/ClearScript/'));
+    .pipe(gulp.dest('./dist/web/bin/ClearScript.V8/'));
 });
 
 gulp.task('dist-web-configuration', function(){
