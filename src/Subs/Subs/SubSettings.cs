@@ -1,5 +1,5 @@
 ﻿using System;
-using Infrastructure.Settings;
+using Infrastructure;
 
 namespace Subs
 {

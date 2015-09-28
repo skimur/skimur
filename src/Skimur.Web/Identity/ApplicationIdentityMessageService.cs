@@ -1,31 +1,29 @@
 ﻿using System.Threading.Tasks;
+using Emails.Commands;
 using Infrastructure.Email;
+using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
 
 namespace Skimur.Web.Identity
 {
     public class ApplicationIdentityMessageService : IIdentityMessageService
     {
-        private readonly IEmailSender _emailSender;
-        private readonly IQueuedEmailService _queuedEmailService;
+        private readonly ICommandBus _commandBus;
 
-        public ApplicationIdentityMessageService(IEmailSender emailSender, IQueuedEmailService queuedEmailService)
+        public ApplicationIdentityMessageService(ICommandBus commandBus)
         {
-            _emailSender = emailSender;
-            _queuedEmailService = queuedEmailService;
+            _commandBus = commandBus;
         }
 
         public Task SendAsync(IdentityMessage message)
         {
-            var queuedEmail = new QueuedEmail()
+            _commandBus.Send(new SendEmail
             {
+                Email = message.Destination,
                 Subject = message.Subject,
-                Body = message.Body,
-                From = "noreply@email.com",
-                FromName = "noreply",
-                To = message.Destination
-            };
-            return Task.Factory.StartNew(() => _queuedEmailService.InsertQueuedEmail(queuedEmail));
+                Body = message.Body
+            });
+            return Task.FromResult(0);
         }
     }
 }

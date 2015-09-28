@@ -9,7 +9,7 @@ namespace Infrastructure.Email
     /// <summary>
     /// The server settings for the system
     /// </summary>
-    public class EmailServerSettings
+    public class EmailServerSettings : ISettings
     {
         /// <summary>
         /// Initializes a new instance of the <see cref="EmailServerSettings"/> class.

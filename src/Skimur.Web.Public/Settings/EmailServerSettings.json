@@ -1,0 +1,6 @@
+﻿{
+  "FromEmail": "hello@skimur.com",
+  "FromName": "Skimur",
+  "Host": "localhost",
+  "Port": 25
+}

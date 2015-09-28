@@ -369,6 +369,7 @@
     <Content Include="Views\Shared\HttpStatus\Unknown.cshtml" />
     <Content Include="Views\Shared\HttpStatus\401.cshtml" />
     <Content Include="Views\Pages\About.cshtml" />
+    <Content Include="Settings\EmailServerSettings.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
@@ -455,6 +456,10 @@
     <None Include="Project_Readme.html" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Emails\Emails.Handlers\Emails.Handlers.csproj">
+      <Project>{61e7e1a8-0b14-4892-968a-5ed2f6b02366}</Project>
+      <Name>Emails.Handlers</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
       <Project>{9aef4e4b-8584-4a15-91a2-9bdb05a4ec1a}</Project>
       <Name>Infrastructure.Caching</Name>

@@ -55,6 +55,7 @@ namespace Skimur.Web.Public
                 new Markdown.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),
+                new Emails.Handlers.Registrar(),
                 new Membership.Registrar(), 
                 this);
         }

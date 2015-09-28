@@ -85,6 +85,7 @@
     <Compile Include="IAggregateRoot.cs" />
     <Compile Include="IMapper.cs" />
     <Compile Include="IPathResolver.cs" />
+    <Compile Include="ISettings.cs" />
     <Compile Include="Mapper.cs" />
     <Compile Include="PathResolver.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

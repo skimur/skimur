@@ -203,6 +203,10 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
+    <ProjectReference Include="..\Emails\Emails\Emails.csproj">
+      <Project>{7925A90D-B001-4DE4-851B-764E6E6B1663}</Project>
+      <Name>Emails</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure\Infrastructure.Email\Infrastructure.Email.csproj">
       <Project>{09714176-2E5C-4343-AE4F-92703A570EAE}</Project>
       <Name>Infrastructure.Email</Name>
