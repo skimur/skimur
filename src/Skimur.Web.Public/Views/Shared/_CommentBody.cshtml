@@ -9,7 +9,7 @@
     </div>
     <div class="disc-main">
         <div class="disc-tagline">
-            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[–]</a> <a href="/user/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
+            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[&#8211;]</a> <a href="/user/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
             {<em>*</em>}
         </div>
         <div class="disc-content">
