@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Diagnostics;
 using System.Linq;
 using System.Reflection;
 using Infrastructure.Logging;
@@ -60,8 +61,16 @@ namespace Infrastructure.Messaging.RabbitMQ
                 _logger.Debug("Registering event handler " + typeof(T).Name);
                 _server.RegisterHandler<T>(message =>
                 {
-                    _container.GetInstance<IEventHandler<T>>().Handle(message.GetBody());
-                    return null;
+                    try
+                    {
+                        _container.GetInstance<IEventHandler<T>>().Handle(message.GetBody());
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error("Error processing command.", ex);
+                        throw;
+                    }
                 });
             }
 
@@ -70,15 +79,34 @@ namespace Infrastructure.Messaging.RabbitMQ
                 _logger.Debug("Registering command handler " + typeof(T).Name);
                 _server.RegisterHandler<T>(message =>
                 {
-                    _container.GetInstance<ICommandHandler<T>>().Handle(message.GetBody());
-                    return null;
+                    try
+                    {
+                        _container.GetInstance<ICommandHandler<T>>().Handle(message.GetBody());
+                        return null;
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error("Error processing command.", ex);
+                        throw;
+                    }
                 });
             }
 
             public void RegisterCommandResponse<TRequest, TResponse>() where TRequest : class, ICommand, ICommandReturns<TResponse> where TResponse : class
             {
                 _logger.Debug("Registering command handler " + typeof(TRequest).Name + " with response " + typeof(TResponse).Name);
-                _server.RegisterHandler<TRequest>(message => _container.GetInstance<ICommandHandlerResponse<TRequest, TResponse>>().Handle(message.GetBody()));
+                _server.RegisterHandler<TRequest>(message =>
+                {
+                    try
+                    {
+                        return  _container.GetInstance<ICommandHandlerResponse<TRequest, TResponse>>().Handle(message.GetBody());
+                    }
+                    catch (Exception ex)
+                    {
+                        _logger.Error("Error processing command.", ex);
+                        throw;
+                    }
+                });
             }
         }
     }
