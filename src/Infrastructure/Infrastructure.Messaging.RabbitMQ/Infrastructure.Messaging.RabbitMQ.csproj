@@ -90,6 +90,10 @@
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>
       <Name>Skimur</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Infrastructure.Logging\Infrastructure.Logging.csproj">
+      <Project>{BBE64678-393A-46E3-996F-99314FEB68EE}</Project>
+      <Name>Infrastructure.Logging</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
       <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>
       <Name>Infrastructure.Messaging</Name>
