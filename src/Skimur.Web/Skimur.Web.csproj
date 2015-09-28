@@ -197,6 +197,7 @@
     <Compile Include="UserContext.cs" />
     <Compile Include="Identity\WebUserStore.cs" />
     <Compile Include="Identity\ApplicationUser.cs" />
+    <Compile Include="WebSettings.cs" />
   </ItemGroup>
   <ItemGroup>
     <None Include="app.config" />

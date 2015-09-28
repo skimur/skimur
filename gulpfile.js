@@ -111,7 +111,9 @@ gulp.task('dist-web-copy', function() {
 gulp.task('dist-web-delete-static', function() {
   return del([
   	// delete everything that will be part of the 'static' site
-  	'./dist/web/Content/', 
+  	'./dist/web/Content/**/*',
+    '!./dist/web/Content/img/', '!./dist/web/Content/img/**', // leave the img directory
+    '!./dist/web/Content/fonts/', '!./dist/web/Content/fonts/**', // leave the fonts directory
   	'./dist/web/Scripts']);
 });
 

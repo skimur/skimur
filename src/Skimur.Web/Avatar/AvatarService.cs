@@ -8,6 +8,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using ImageResizer;
+using Infrastructure.Settings;
 
 namespace Skimur.Web.Avatar
 {
@@ -15,9 +16,9 @@ namespace Skimur.Web.Avatar
     {
         private string _avatarDirectory;
 
-        public AvatarService()
+        public AvatarService(ISettingsProvider<WebSettings> webSettings)
         {
-            _avatarDirectory = System.Web.HttpContext.Current.Server.MapPath("~/Avatars");
+            _avatarDirectory = System.Web.HttpContext.Current.Server.MapPath(webSettings.Settings.AvatarDirectory);
             if (!Directory.Exists(_avatarDirectory))
                 Directory.CreateDirectory(_avatarDirectory);
         }
