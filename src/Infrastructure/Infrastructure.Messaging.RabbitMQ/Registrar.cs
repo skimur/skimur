@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Configuration;
+using Infrastructure.Logging;
 using ServiceStack;
 using ServiceStack.RabbitMq;
 using SimpleInjector;
@@ -22,7 +23,13 @@ namespace Infrastructure.Messaging.RabbitMQ
 
                 var rabbitMqHost = ConfigurationManager.AppSettings["RabbitMQHost"];
                 if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
-                return new RabbitMqServer(rabbitMqHost);
+                return new RabbitMqServer(rabbitMqHost)
+                {
+                    ErrorHandler = exception =>
+                    {
+                        Logger.For<RabbitMqServer>().Error("There was an error processing a message.", exception);
+                    }
+                };
             });
             container.RegisterSingleton<ICommandBus, CommandBus>();
             container.RegisterSingleton<IEventBus, EventBus>();
