@@ -16,7 +16,7 @@
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    @Html.TextBoxFor(x => x.Password, new { @class = "form-control", placeholder = "Password" })
+                    @Html.PasswordFor(x => x.Password, new { @class = "form-control", placeholder = "Password" })
                     <label for="@Html.IdFor(x => x.Password)" class="input-group-addon">
                         <i class="fa fa-key"></i>
                     </label>
@@ -24,7 +24,7 @@
             </div>
             <div class="form-group">
                 <div class="input-group">
-                    @Html.TextBoxFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm" })
+                    @Html.PasswordFor(x => x.ConfirmPassword, new { @class = "form-control", placeholder = "Confirm" })
                     <label for="@Html.IdFor(x => x.ConfirmPassword)" class="input-group-addon">
                         <i class="fa fa-key"></i>
                     </label>
