@@ -172,6 +172,8 @@
     <Compile Include="Controllers\SubsController.cs" />
     <Compile Include="IContextService.cs" />
     <Compile Include="IUserContext.cs" />
+    <Compile Include="Middleware\BlockedIps.cs" />
+    <Compile Include="Middleware\IpBlockerMiddleware.cs" />
     <Compile Include="Models\AccountViewModels.cs" />
     <Compile Include="Models\CommentModels.cs" />
     <Compile Include="Models\CommonModels.cs" />

@@ -371,6 +371,7 @@
     <Content Include="Views\Pages\About.cshtml" />
     <Content Include="Settings\EmailServerSettings.json" />
     <Content Include="Settings\WebSettings.json" />
+    <Content Include="Settings\BlockedIps.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -5,6 +5,7 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using BundleTransformer.Core.Transformers;
 using Infrastructure.Messaging;
+using Infrastructure.Settings;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -12,6 +13,7 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using SimpleInjector;
+using Skimur.Web.Middleware;
 using Skimur.Web.Public;
 
 // ReSharper disable once RedundantNameQualifier
@@ -33,6 +35,8 @@ namespace Skimur.Web.Public
             RegisterBundles(BundleTable.Bundles);
             ConfigureAuth(app);
             ConfigureContainer();
+
+            app.Use<IpBlockerMiddleware>(SkimurContext.Resolve<ISettingsProvider<BlockedIps>>());
 
             // todo: factor out the command/event bus handling to separate exe via a build script
             _busLifetime = SkimurContext.Resolve<IBusLifetime>();
