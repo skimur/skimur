@@ -83,6 +83,10 @@ namespace Skimur.Web.Controllers
         {
             var subs = _contextService.GetSubscribedSubIds();
 
+            // if the user is not subscribe to any subs, show the default content.
+            if (subs.Count == 0)
+                subs = _subDao.GetDefaultSubs();
+
             if (sort == null)
                 sort = PostsSortBy.Hot;
 
