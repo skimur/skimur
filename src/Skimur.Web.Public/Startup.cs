@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using BundleTransformer.Core.Transformers;
+using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Infrastructure.Settings;
 using Microsoft.AspNet.Identity;
@@ -37,6 +38,7 @@ namespace Skimur.Web.Public
             ConfigureContainer();
 
             app.Use<IpBlockerMiddleware>(SkimurContext.Resolve<ISettingsProvider<BlockedIps>>());
+            app.Use<RequestLoggingMiddleware>(SkimurContext.Resolve<ISettingsProvider<RequestLogging>>(), SkimurContext.Resolve<ILogger<RequestLoggingMiddleware>>());
 
             // todo: factor out the command/event bus handling to separate exe via a build script
             _busLifetime = SkimurContext.Resolve<IBusLifetime>();

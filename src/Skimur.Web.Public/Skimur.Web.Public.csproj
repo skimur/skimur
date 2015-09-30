@@ -372,6 +372,7 @@
     <Content Include="Settings\EmailServerSettings.json" />
     <Content Include="Settings\WebSettings.json" />
     <Content Include="Settings\BlockedIps.json" />
+    <Content Include="Settings\RequestLogging.json" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
