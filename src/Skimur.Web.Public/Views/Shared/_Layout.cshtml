@@ -21,12 +21,17 @@
 }
 <body class="@(controller)-@(action)">
     @{ Html.RenderAction("TopBar", "Common"); }
-    <div class="layout-header navbar">
-        <div class="navbar-header">
-            <a href="/" class="navbar-brand"><img src="@Url.AssetUrl("/content/img/logo.png")"/></a>
-            @RenderSection("header", false)
+    <div class="layout-header">
+        <div class="layout-header-banner">
+            <a href="/" class="banner"><img src="@Url.AssetUrl("/content/img/logo.png")" /></a>
         </div>
-        <div class="navbar-collapse collapse">
+        @if (IsSectionDefined("header"))
+        {
+            <div class="layout-header-content">
+                @RenderSection("header")
+            </div>
+        }
+        <div class="layout-header-account">
             @{ Html.RenderAction("Account", "Common");}
         </div>
     </div>

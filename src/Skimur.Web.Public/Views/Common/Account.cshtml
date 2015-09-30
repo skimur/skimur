@@ -1,30 +1,40 @@
 ﻿@model AccountViewModel
-
 @if (Model.CurrentUser != null)
 {
-    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm", @class = "navbar-right" }))
+    using (Html.BeginForm("LogOff", "Account", FormMethod.Post, new { id = "logoutForm" }))
     {
         @Html.AntiForgeryToken()
 
-        <ul class="nav navbar-nav navbar-right">
-            <li>
-                @Html.ActionLink("Hello " + Model.CurrentUser.UserName + "!", "Index", "Manage", routeValues: null, htmlAttributes: new { title = "Manage" })
+        <ul class="account-nav">
+            <li class="profile">
+                <a href="@Url.User(Model.CurrentUser.UserName)">@Model.CurrentUser.UserName</a>
             </li>
-            <li><a href="@Url.Inbox()">
-                Inbox
-                @if (Model.NumberOfUnreadMessages > 0)
-                {
-                    <span class="inbox-count">@Model.NumberOfUnreadMessages</span>
-                }
-            </a></li>
-            <li><a href="javascript:document.getElementById('logoutForm').submit()">Log off</a></li>
+            <li class="divider"></li>
+            <li class="inbox @(Model.NumberOfUnreadMessages > 0 ? "has-mail" : null)">
+                <a href="@Url.Inbox()">
+                    <i class="fa fa-envelope"></i>
+                    @if (Model.NumberOfUnreadMessages > 0)
+                    {
+                        <span class="inbox-count">@Model.NumberOfUnreadMessages</span>
+                    }
+                </a>
+            </li>
+            <li class="divider"></li>
+            <li class="manage">
+                <a href="@Url.Action("Index", "Manage")">
+                    <i class="fa fa-cog"></i>
+                </a>
+            </li>
+            <li class="divider"></li>
+            <li class="logoff"><a href="javascript:document.getElementById('logoutForm').submit()">log off</a></li>
         </ul>
     }
 }
 else
 {
-    <ul class="nav navbar-nav navbar-right">
-        <li>@Html.ActionLink("Register", "Register", "Account", routeValues: null, htmlAttributes: new { id = "registerLink" })</li>
-        <li>@Html.ActionLink("Log in", "Login", "Account", routeValues: null, htmlAttributes: new { id = "loginLink" })</li>
+    <ul class="account-nav">
+        <li class="register"><a href="@Url.Register()" id="registerLink">register</a></li>
+        <li class="divider"></li>
+        <li class="login"><a href="@Url.Login()" id="loginLink">log in</a></li>
     </ul>
 }
