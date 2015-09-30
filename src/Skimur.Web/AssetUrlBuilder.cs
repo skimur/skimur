@@ -14,6 +14,7 @@ namespace Skimur.Web
     {
         private static bool? _isUsingStaticAssets;
         private static string _staticAssetsHost;
+        private static string _version = typeof (AssetUrlBuilder).Assembly.GetName().Version.ToString();
 
         public static bool IsUsingStatisAssets
         {
@@ -48,7 +49,7 @@ namespace Skimur.Web
             if (!IsUsingStatisAssets)
                 htmlHelper.ViewContext.Writer.Write(Scripts.Render("~/bundles/scripts"));
             else
-                htmlHelper.ViewContext.Writer.Write("<script src=\"" + StaticAssetHost + "/Scripts/script.js\"></script>");
+                htmlHelper.ViewContext.Writer.Write("<script src=\"" + StaticAssetHost + "/Scripts/script.js?v=" + _version + "\"></script>");
         }
 
         public static void RenderStyles(this HtmlHelper htmlHelper)
@@ -56,7 +57,7 @@ namespace Skimur.Web
             if (!IsUsingStatisAssets)
                 htmlHelper.ViewContext.Writer.Write(Styles.Render("~/bundles/styles"));
             else
-                htmlHelper.ViewContext.Writer.Write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + StaticAssetHost + "/Content/site.css\">");
+                htmlHelper.ViewContext.Writer.Write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + StaticAssetHost + "/Content/site.css?v=" + _version + "\">");
         }
 
         public static string AssetUrl(this UrlHelper urlHelper, string url)
