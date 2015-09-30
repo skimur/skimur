@@ -10,22 +10,24 @@
             }
         </ul>
     </div>
-    <ul>
-        <li>
-            <a href="/">front</a>
-        </li>
-        <li>
-            <a href="/s/all">all</a>
-        </li>
-        <li>
-            <a href="/s/random">random</a>
-        </li>
-        @foreach (var sub in Model.DefaultSubs)
-        {
+    <div class="topbar-defaults">
+        <ul>
             <li>
-                <a href="@Url.Sub(sub)">@sub.ToLower()</a>
+                <a href="/">front</a>
             </li>
-        }
-    </ul>
+            <li>
+                <a href="/s/all">all</a>
+            </li>
+            <li>
+                <a href="/s/random">random</a>
+            </li>
+            @foreach (var sub in Model.DefaultSubs)
+            {
+                <li>
+                    <a href="@Url.Sub(sub)">@sub.ToLower()</a>
+                </li>
+            }
+        </ul>
+    </div>
     <a class="topbar-edit" href="@Url.Subs()">edit</a>
 </div>
