@@ -17,4 +17,14 @@ $(function() {
             skimurui.login.display("You must be logged in to submit things.");
         });
     }
+
+    $("#register-link").click(function(e) {
+        e.preventDefault();
+        skimurui.login.displayRegister();
+    });
+
+    $("#signin-link").click(function (e) {
+        e.preventDefault();
+        skimurui.login.displayLogin();
+    });
 });
