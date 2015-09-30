@@ -1,5 +1,4 @@
 ﻿.layout-topbar {
-    overflow: hidden;
     white-space: nowrap;
     background: @gray-lighter;
 
@@ -13,9 +12,16 @@
             display: inline;
 
             > a {
-                padding: 3px !important;
                 display: inline-block;
+                .button-size(0; @padding-base-horizontal / 2; @font-size-base; @line-height-base; 0);
             }
+        }
+    }
+
+    .topbar-subscriptions {
+        > .btn {
+            .button-size(0; @padding-base-horizontal; @font-size-base; @line-height-base; 0);
+            border:none;
         }
     }
 
@@ -23,9 +29,10 @@
         position: absolute;
         top: 0;
         right: 0;
-        padding: 3px 10px;
         display: inline-block;
         font-weight: bold;
+        .button-size(0; @padding-base-horizontal / 2; @font-size-base; @line-height-base; 0);
+        background: @gray-lighter;
     }
 }
 
@@ -34,7 +41,7 @@
     margin-bottom: 0px;
     background: lighten(@gray-lighter, 3%);
     border-bottom: 1px solid @nav-tabs-active-link-hover-border-color;
-
+    border-top: 1px solid @nav-tabs-active-link-hover-border-color;
     .navbar-brand {
         padding: 4px 4px 4px 20px;
 

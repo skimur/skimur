@@ -1,6 +1,15 @@
 ﻿@model TopBarViewModel
 
 <div class="layout-topbar">
+    <div class="topbar-subscriptions btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">my subs <span class="caret"></span></button>
+        <ul class="dropdown-menu" role="menu">
+            @foreach (var sub in Model.SubscibedSubs)
+            {
+                <li><a href="@Url.Sub(sub)">@sub.ToLower()</a></li>
+            }
+        </ul>
+    </div>
     <ul>
         <li>
             <a href="/">front</a>
@@ -11,7 +20,7 @@
         <li>
             <a href="/s/random">random</a>
         </li>
-        @foreach (var sub in Model.SubscibedSubs)
+        @foreach (var sub in Model.DefaultSubs)
         {
             <li>
                 <a href="@Url.Sub(sub)">@sub.ToLower()</a>
