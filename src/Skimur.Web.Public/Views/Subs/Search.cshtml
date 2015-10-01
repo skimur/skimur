@@ -11,7 +11,7 @@
                 <div class="panel panel-search">
                     <div class="input-group">
                         <input id="search-input" type="text" class="form-control" placeholder="Search..." value="@Model.Query">
-                        <span id="search-button" class="input-group-addon btn btn-primary"><span class="glyphicon glyphicon-search"></span></span>
+                        <span id="search-button" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
                     </div>
                 </div>
             </div>
@@ -94,15 +94,7 @@
 
     <div class="col-lg-3 col-sm-4">
 
-        <div class="panel">
-            <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-link">Submit a new link</a>
-            <a href="@Url.CreatePost()" class="btn btn-primary btn-block submit-post">Submit a new post</a>
-        </div>
-
-        @if (Model.LimitingToSub != null)
-        {
-            @Html.Action("ModerationSideBar", new { subName = Model.LimitingToSub.Name })
-        }
+        @{ Html.RenderSideBar(subId: Model.LimitingToSub != null ? Model.LimitingToSub.Sub.Id : (Guid?)null, showSearch:false); }
 
     </div>
 </div>
@@ -119,9 +111,9 @@
                 e.preventDefault();
                 var query = $("#search-input").val();
                 if (query) {
-                    window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))?query=" + query;
+                    window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Sub.Name))?query=" + query;
                 } else {
-                    window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Name))";
+                    window.location = "@(Model.LimitingToSub == null ? Url.Search() : Url.SubSearch(Model.LimitingToSub.Sub.Name))";
                 }
             });
             $("#search-input").enterKey(function (e) {
