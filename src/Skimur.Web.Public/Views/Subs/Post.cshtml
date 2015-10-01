@@ -75,6 +75,7 @@
                 skimur.createComment("@Model.Post.Post.Id", null, $("#post-comment").val(), function (result) {
                     if (result.success) {
                         $(result.html).prependTo($(".comments-container"));
+                        $("#post-comment").val("");
                     } else {
                         skimurui.displayError(result.error);
                     }
