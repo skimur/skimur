@@ -462,7 +462,7 @@ namespace Skimur.Web.Controllers
         }
 
         [SkimurAuthorize]
-        public ActionResult CreatePost(string subName = null)
+        public ActionResult CreatePost(string subName = null, string type = null)
         {
             SubWrapped sub = null;
 
@@ -472,13 +472,19 @@ namespace Skimur.Web.Controllers
                 if (sub == null) throw new HttpException(404, "sub not found");
             }
 
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = type.ToLower();
+            }
+
             // this prevents the case of the url "{subName}" to override the "SubName" property of the view model.
             ModelState.Clear();
 
             return View(new CreatePostModel
             {
                 SubName = sub != null ? sub.Sub.Name : null,
-                Sub = sub
+                Sub = sub,
+                PostType = type == "text" ? PostType.Text : PostType.Link
             });
         }
 

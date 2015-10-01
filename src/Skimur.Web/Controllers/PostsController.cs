@@ -23,15 +23,13 @@ namespace Skimur.Web.Controllers
         private readonly IPostWrapper _postWrapper;
         private readonly IUserContext _userContext;
         private readonly ICommandBus _commandBus;
-        private readonly ILogger<PostsController> _logger;
 
         public PostsController(ISubDao subDao,
             ISubWrapper subWrapper,
             IPostDao postDao,
             IPostWrapper postWrapper,
             IUserContext userContext,
-            ICommandBus commandBus,
-            ILogger<PostsController> logger)
+            ICommandBus commandBus)
         {
             _subDao = subDao;
             _subWrapper = subWrapper;
@@ -39,7 +37,6 @@ namespace Skimur.Web.Controllers
             _postWrapper = postWrapper;
             _userContext = userContext;
             _commandBus = commandBus;
-            _logger = logger;
         }
 
         [SkimurAuthorize]

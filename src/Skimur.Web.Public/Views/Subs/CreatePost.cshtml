@@ -6,7 +6,8 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        @using (Html.BeginForm("CreatePost", "Subs", FormMethod.Post, new { @class = "form form-createpost", role = "form" }))
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { action = Url.CreatePost(), @class = "form form-createpost", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
