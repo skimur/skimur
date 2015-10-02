@@ -500,7 +500,8 @@ namespace Skimur.Web.Controllers
             {
                 SubName = sub != null ? sub.Sub.Name : null,
                 Sub = sub,
-                PostType = type == "text" ? PostType.Text : PostType.Link
+                PostType = type == "text" ? PostType.Text : PostType.Link,
+                NotifyReplies = true
             });
         }
 
