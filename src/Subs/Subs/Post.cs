@@ -64,6 +64,8 @@ namespace Subs
 
         public int NumberOfComments { get; set; }
 
+        public bool Deleted { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {

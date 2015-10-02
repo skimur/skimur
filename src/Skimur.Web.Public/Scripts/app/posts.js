@@ -238,6 +238,23 @@
         $textArea.focus();
     };
 
+    var deletePost = function(element) {
+        var $post = getPost(element);
+
+        skimurui.confirmDelete(function (result) {
+            if (result.confirmed) {
+                skimur.deletePost($post.data("post-id"), null, function (deleteResult) {
+                    if (deleteResult.success) {
+                        $("> .disc-body", $post).find(".disc-options > li:not(.comments)").remove();
+                        skimurui.displaySuccess("The post has been deleted.");
+                    } else {
+                        skimurui.displayError(deleteResult.error);
+                    }
+                });
+            }
+        });
+    }
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -248,7 +265,8 @@
         clearReports: clearReports,
         ignoreReports: ignoreReports,
         unignoreReports: unignoreReports,
-        startEdit: startEdit
+        startEdit: startEdit,
+        delete: deletePost
     };
 
 })();

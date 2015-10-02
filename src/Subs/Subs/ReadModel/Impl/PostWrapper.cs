@@ -85,6 +85,8 @@ namespace Subs.ReadModel.Impl
                 // authors can only edit text posts
                 if (item.Post.PostType == PostType.Text && currentUser != null && currentUser.Id == item.Post.UserId)
                     item.CanEdit = true;
+                
+                item.CanDelete = currentUser != null && (currentUser.IsAdmin || item.Post.UserId == currentUser.Id);
             }
 
             return posts;

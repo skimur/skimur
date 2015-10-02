@@ -69,6 +69,12 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
+                if (post.Deleted)
+                {
+                    response.Error = "Cannot create comment for a deleted post.";
+                    return response;
+                }
+
                 var user = _membershipService.GetUserByUserName(command.AuthorUserName);
 
                 if (user == null)

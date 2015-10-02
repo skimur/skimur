@@ -193,6 +193,11 @@ namespace Skimur.Web
                 defaults: new { controller = "Subs", action = "DeleteComment" });
 
             routes.MapRoute(
+                name: "DeletePost",
+                url: "deletepost",
+                defaults: new { controller = "Posts", action = "Delete" });
+
+            routes.MapRoute(
                 name: "Avatar",
                 url: "avatar/{key}",
                 defaults: new { controller = "Avatar", action = "Key" });

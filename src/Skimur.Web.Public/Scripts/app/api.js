@@ -136,22 +136,22 @@
         });
     };
 
-    var deleteComment = function (commentId, reason, callback) {
+    var deleteComment = function(commentId, reason, callback) {
         $.ajax({
             type: "POST",
             url: "/deletecomment",
             data: { commentId: commentId, reason: reason },
             dataType: "json",
-            success: function (data) {
+            success: function(data) {
                 if (callback)
                     callback(data);
             },
-            error: function () {
+            error: function() {
                 if (callback)
                     callback({ success: false, error: "There was an error processing your request." });
             }
         });
-    }
+    };
 
     var moreComments = function (postId, sort, children, depth, callback) {
         $.ajax({
@@ -408,6 +408,23 @@
         });
     };
 
+    var deletePost = function (postId, reason, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/deletepost",
+            data: { postId: postId, reason: reason },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -437,7 +454,8 @@
         unignoreReportsForComment: function (commentId, callback) { return unignoreReports(commentId, null, callback); },
         removeModFromSub: removeModFromSub,
         changeModPermissionsForSub: changeModPermissionsForSub,
-        editPost: editPost
+        editPost: editPost,
+        deletePost: deletePost
     };
 
 })();

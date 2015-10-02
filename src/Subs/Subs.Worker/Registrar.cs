@@ -62,6 +62,7 @@ namespace Subs.Worker
             container.Register<IEventHandler<UsersUnmentioned>, UserMentionNotificationHandler>();
 
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();
+            container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();
         }
 
         public int Order

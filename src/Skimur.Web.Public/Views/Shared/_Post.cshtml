@@ -2,7 +2,7 @@
 @using Subs.ReadModel
 @model PostWrapped
 
-<div class="disc post @ApprovedRemovedClass(Model) @IgnoreUnignoredClass(Model)" data-post-id="@Model.Post.Id">
+<div class="disc post @PostClasses(Model)" data-post-id="@Model.Post.Id">
     <div class="disc-body">
         <div class="disc-left">
             <div class="disc-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
@@ -45,44 +45,53 @@
                 <li class="first comments">
                     <a href="@Url.Post(Model.Sub, Model.Post)">@(Model.Post.NumberOfComments > 0 ? (Model.Post.NumberOfComments == 1 ? "1 comment" : Model.Post.NumberOfComments + " comments") : "comment")</a>
                 </li>
-                @if (Model.CanEdit)
+                @if (!Model.Post.Deleted)
                 {
-                    <li class="edit">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.startEdit(this)">edit</a>
-                    </li>
-                }
-                @if (Model.CanManage)
-                {
-                    <li class="remove">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.remove(this)" class="delete">remove</a>
-                    </li>
-                    <li class="approve">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.approve(this)" class="delete">approve</a>
-                    </li>
-                }
-                @if (Model.CanReport)
-                {
-                    <li class="report">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.report(this);">report</a>
-                    </li>
-                }
-                @if (Model.CanManage)
-                {
-                    if (Model.Reports != null && Model.Reports.Count > 0)
+                    if (Model.CanDelete)
                     {
-                        <li class="reports">
-                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleReports(this);">reports (@Model.Reports.Count)</a>
-                        </li>
-                        <li class="clear-reports">
-                            <a href="javascript:void(0);" onclick="return skimurui.posts.clearReports(this);">clear reports</a>
+                        <li class="delete">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.delete(this)">delete</a>
                         </li>
                     }
-                    <li class="ignore-reports">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.ignoreReports(this);">ignore reports</a>
-                    </li>
-                    <li class="unignore-reports">
-                        <a href="javascript:void(0);" onclick="return skimurui.posts.unignoreReports(this);">unignore reports</a>
-                    </li>
+                    if (Model.CanEdit)
+                    {
+                        <li class="edit">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.startEdit(this)">edit</a>
+                        </li>
+                    }
+                    if (Model.CanManage)
+                    {
+                        <li class="remove">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.remove(this)" class="delete">remove</a>
+                        </li>
+                        <li class="approve">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.approve(this)" class="delete">approve</a>
+                        </li>
+                    }
+                    if (Model.CanReport)
+                    {
+                        <li class="report">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.report(this);">report</a>
+                        </li>
+                    }
+                    if (Model.CanManage)
+                    {
+                        if (Model.Reports != null && Model.Reports.Count > 0)
+                        {
+                            <li class="reports">
+                                <a href="javascript:void(0);" onclick="return skimurui.posts.toggleReports(this);">reports (@Model.Reports.Count)</a>
+                            </li>
+                            <li class="clear-reports">
+                                <a href="javascript:void(0);" onclick="return skimurui.posts.clearReports(this);">clear reports</a>
+                            </li>
+                        }
+                        <li class="ignore-reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.ignoreReports(this);">ignore reports</a>
+                        </li>
+                        <li class="unignore-reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.unignoreReports(this);">unignore reports</a>
+                        </li>
+                    }
                 }
             </ul>
             @if (Model.CanManage && Model.Reports != null && Model.Reports.Count > 0)
@@ -106,26 +115,26 @@
     </div>
 </div>
 
-@helper ApprovedRemovedClass(PostWrapped post)
+@helper PostClasses(PostWrapped post)
 {
     if (post.Verdict.HasValue)
     {
         if (post.Verdict == Verdict.ModApproved)
         {
-            @("approved")
+            @(" approved")
         }
         else if (post.Verdict == Verdict.ModRemoved)
         {
-            @("removed")
+            @(" removed")
         }
     }
-}
-
-@helper IgnoreUnignoredClass(PostWrapped post)
-{
+    if (post.CanDelete && post.Post.Deleted)
+    {
+        @(" deleted")
+    }
     if (post.CanManage)
     {
-        @(post.Post.IgnoreReports ? "reports-ignored" : "reports-unignored")
+            @(post.Post.IgnoreReports ? "reports-ignored" : "reports-unignored")
     }
 }
 

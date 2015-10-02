@@ -33,7 +33,7 @@ namespace Subs.Services.Impl
             return _conn.Perform(conn => conn.SingleById<Post>(id));
         }
 
-        public SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, int? skip = null, int? take = null)
+        public SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -75,6 +75,9 @@ namespace Subs.Services.Impl
                 if (hideRemovedPosts)
                     query.Where(x => x.Verdict != (int)Verdict.ModRemoved);
 
+                if (!showDeleted)
+                    query.Where(x => x.Deleted == false);
+
                 var totalCount = conn.Count(query);
 
                 query.Skip(skip).Take(take);
@@ -105,7 +108,7 @@ namespace Subs.Services.Impl
             });
         }
 
-        public SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, int? skip = null, int? take = null)
+        public SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null)
         {
             // this implemention will eventually store a index, such as solr.
 
@@ -152,6 +155,12 @@ namespace Subs.Services.Impl
                     query.Where(x => x.DateCreated >= from);
                 }
 
+                if (hideRemovedPosts)
+                    query.Where(x => x.Verdict != (int)Verdict.ModRemoved);
+
+                if (!showDeleted)
+                    query.Where(x => x.Deleted == false);
+
                 var totalCount = conn.Count(query);
 
                 query.Skip(skip).Take(take);
@@ -168,7 +177,7 @@ namespace Subs.Services.Impl
                         query.OrderByDescending(x => x.DateCreated);
                         break;
                     case PostsSearchSortBy.Comments:
-                        // TODO:
+                        query.OrderByDescending(x => x.NumberOfComments);
                         break;
                     default:
                         throw new Exception("unknown sort");
@@ -213,6 +222,8 @@ namespace Subs.Services.Impl
 
                 query.Where(x => x.Verdict == (int)Verdict.None);
 
+                query.Where(x => x.Deleted == false);
+
                 var totalCount = conn.Count(query);
 
                 query.Skip(skip).Take(take);
@@ -233,6 +244,8 @@ namespace Subs.Services.Impl
                     query.Where(x => subs.Contains(x.SubId));
 
                 query.Where(x => x.NumberOfReports > 0);
+
+                query.Where(x => x.Deleted == false);
 
                 var totalCount = conn.Count(query);
 

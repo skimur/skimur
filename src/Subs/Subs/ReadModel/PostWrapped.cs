@@ -27,5 +27,7 @@ namespace Subs.ReadModel
         public List<ReportSummary> Reports { get; set; }
 
         public bool CanEdit { get; set; }
+
+        public bool CanDelete { get; set; }
     }
 }

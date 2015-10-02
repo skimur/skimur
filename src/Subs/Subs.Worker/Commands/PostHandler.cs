@@ -12,7 +12,9 @@ using Subs.Services;
 
 namespace Subs.Worker.Commands
 {
-    public class PostHandler : ICommandHandlerResponse<EditPostContent, EditPostContentResponse>
+    public class PostHandler : 
+        ICommandHandlerResponse<EditPostContent, EditPostContentResponse>,
+        ICommandHandlerResponse<DeletePost, DeletePostResponse>
     {
         private readonly IMarkdownCompiler _markdownCompiler;
         private readonly ILogger<PostHandler> _logger;
@@ -81,6 +83,49 @@ namespace Subs.Worker.Commands
                 response.Content = post.Content;
                 response.ContentFormatted = post.ContentFormatted;
 
+                return response;
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("Error editing post.", ex);
+                response.Error = "An unknown error occured.";
+                return response;
+            }
+        }
+
+        public DeletePostResponse Handle(DeletePost command)
+        {
+            var response = new DeletePostResponse();
+
+            try
+            {
+                var user = _membershipService.GetUserById(command.DeleteBy);
+
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var post = _postService.GetPostById(command.PostId);
+
+                if (post == null)
+                {
+                    response.Error = "Invalid post.";
+                    return response;
+                }
+
+                if (post.UserId == user.Id || user.IsAdmin)
+                {
+                    post.Deleted = true;   
+                    _postService.UpdatePost(post);
+                }
+                else
+                {
+                    response.Error = "You cannot delete this post.";
+                    return response;
+                }
+                
                 return response;
             }
             catch (Exception ex)

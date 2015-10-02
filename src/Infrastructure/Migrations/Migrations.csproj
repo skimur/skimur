@@ -88,6 +88,7 @@
     <Compile Include="Postgres\_0009_UserAdminField.cs" />
     <Compile Include="Postgres\_0010_PostContentFormatted.cs" />
     <Compile Include="Postgres\_0011_DateTimeWithoutTimezone.cs" />
+    <Compile Include="Postgres\_0012_PostDeleted.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

@@ -102,7 +102,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, ((pageNumber - 1) * pageSize), pageSize);
 
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
@@ -156,7 +156,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, ((pageNumber - 1) * pageSize), pageSize);
 
             var model = new SubPostsModel();
             model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;
@@ -173,6 +173,14 @@ namespace Skimur.Web.Controllers
 
             if (post == null)
                 throw new HttpException(404, "no post found");
+
+            if (post.Deleted)
+            {
+                if(_userContext.CurrentUser == null)
+                    throw new HttpException(404, "no post found");
+                if(post.UserId != _userContext.CurrentUser.Id && !_userContext.CurrentUser.IsAdmin)
+                    throw new HttpException(404, "no post found");
+            }
 
             var sub = _subDao.GetSubByName(subName);
 
@@ -271,6 +279,8 @@ namespace Skimur.Web.Controllers
                model.LimitingToSub.Sub.Id,
                sort.Value,
                time.Value,
+               true /*TODO: show removed posts for admins*/,
+               false,
                ((pageNumber - 1) * pageSize),
                pageSize);
 
@@ -317,13 +327,19 @@ namespace Skimur.Web.Controllers
                     case null:
                         postIds = _postDao.QueryPosts(query,
                             model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
-                            time.Value, ((pageNumber - 1) * pageSize), pageSize);
+                            time.Value,
+                            true /*TODO: show removed posts for admins*/,
+                            false,
+                            ((pageNumber - 1) * pageSize), pageSize);
                         subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize);
                         break;
                     case SearchResultType.Post:
                         postIds = _postDao.QueryPosts(query,
                             model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
-                            time.Value, ((pageNumber - 1) * pageSize), pageSize);
+                            time.Value, 
+                            true /*TODO: Show removed posts for admins*/,
+                            false,
+                            ((pageNumber - 1) * pageSize), pageSize);
                         break;
                     case SearchResultType.Sub:
                         subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize);

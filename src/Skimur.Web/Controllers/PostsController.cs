@@ -106,5 +106,18 @@ namespace Skimur.Web.Controllers
                 html
             });
         }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult Delete(Guid postId, string reason)
+        {
+            var response = _commandBus.Send<DeletePost, DeletePostResponse>(new DeletePost
+            {
+                PostId = postId,
+                DeleteBy = _userContext.CurrentUser.Id,
+                Reason = reason
+            });
+
+            return CommonJsonResult(response.Error);
+        }
     }
 }

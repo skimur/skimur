@@ -80,6 +80,7 @@
     <Compile Include="Commands\CreatePost.cs" />
     <Compile Include="Commands\CreateSub.cs" />
     <Compile Include="Commands\DeleteComment.cs" />
+    <Compile Include="Commands\DeletePost.cs" />
     <Compile Include="Commands\EditComment.cs" />
     <Compile Include="Commands\EditPostContent.cs" />
     <Compile Include="Commands\EditSub.cs" />
