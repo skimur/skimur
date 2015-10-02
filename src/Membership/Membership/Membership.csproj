@@ -64,13 +64,15 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="Login.cs" />
+    <Compile Include="ReadModel\IMembershipDao.cs" />
+    <Compile Include="ReadModel\Impl\MembershipDao.cs" />
     <Compile Include="Services\IPasswordManager.cs" />
-    <Compile Include="Services\PasswordManager.cs" />
+    <Compile Include="Services\Impl\PasswordManager.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />
     <Compile Include="Role.cs" />
     <Compile Include="Services\IMembershipService.cs" />
-    <Compile Include="Services\MembershipService.cs" />
+    <Compile Include="Services\Impl\MembershipService.cs" />
     <Compile Include="User.cs" />
     <Compile Include="UserLogin.cs" />
     <Compile Include="UserRole.cs" />
@@ -89,6 +91,7 @@
       <Name>Skimur</Name>
     </ProjectReference>
   </ItemGroup>
+  <ItemGroup />
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 
        Other similar extension points exist, see Microsoft.Common.targets.

@@ -6,7 +6,7 @@ using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
 
-namespace Membership.Services
+namespace Membership.Services.Impl
 {
     public class MembershipService : IMembershipService
     {
@@ -21,7 +21,7 @@ namespace Membership.Services
             _passwordManager = passwordManager;
         }
 
-        public bool UpdateUser(User user)
+        public virtual bool UpdateUser(User user)
         {
             if (user.Id == Guid.Empty)
                 throw new Exception("You cannot update a user that doesn't have a user id");
@@ -29,7 +29,7 @@ namespace Membership.Services
             return _conn.Perform(conn => conn.Update(user) == 1);
         }
 
-        public bool InsertUser(User user)
+        public virtual bool InsertUser(User user)
         {
             if (user.Id != Guid.Empty)
                 throw new Exception("You cannot insert a user with an existing user id");
@@ -39,7 +39,7 @@ namespace Membership.Services
             return _conn.Perform(conn => conn.Insert(user) == 1);
         }
 
-        public bool DeleteUser(Guid userId)
+        public virtual bool DeleteUser(Guid userId)
         {
             return _conn.Perform(conn =>
             {
@@ -48,72 +48,33 @@ namespace Membership.Services
             });
         }
 
-        public User GetUserById(Guid userId)
+        public virtual User GetUserById(Guid userId)
         {
             return userId == Guid.Empty
                ? null
                : _conn.Perform(conn => conn.SingleById<User>(userId));
         }
 
-        public User GetUserByUserName(string userName)
+        public virtual User GetUserByUserName(string userName)
         {
             return string.IsNullOrEmpty(userName)
               ? null
               : _conn.Perform(conn => conn.Single<User>(x => x.UserName.ToLower() == userName.ToLower()));
         }
 
-        public User GetUserByEmail(string emailAddress)
+        public virtual User GetUserByEmail(string emailAddress)
         {
             return string.IsNullOrEmpty(emailAddress)
                 ? null
                 : _conn.Perform(con => con.Single<User>(x => x.Email.ToLower() == emailAddress.ToLower()));
         }
-
-        public SeekedList<User> GetUsers(string queryText = null, int? skip = null, int? take = null, Guid? inRole = null)
-        {
-            return _conn.Perform(conn =>
-            {
-                var query = conn.From<User>();
-
-
-                if (!string.IsNullOrEmpty(queryText))
-                    query.Where(x => x.UserName.Contains(queryText) || x.Email.Contains(queryText));
-
-                if (inRole.HasValue)
-                {
-                    query.LeftJoin<User, UserRole>((user, userRole) => user.Id == userRole.UserId)
-                        .Where<UserRole>(x => x.RoleId == inRole);
-                }
-
-                query.OrderByDescending(x => x.CreatedDate);
-
-                var totalCount = conn.Count(query);
-
-                query.Skip(skip).Take(take);
-
-                return new SeekedList<User>(conn.Select(query), skip ?? 0, take, totalCount);
-            });
-        }
-
-        /// <summary>
-        /// Get a list of users by user names
-        /// </summary>
-        /// <param name="userNames"></param>
-        /// <returns></returns>
-        public List<User> GetUsersByUserNames(List<string> userNames)
-        {
-            if(userNames == null || userNames.Count == 0)
-                return new List<User>();
-
-            return _conn.Perform(conn => conn.Select(conn.From<User>().Where(x => userNames.Contains(x.UserName))));
-        }
-
+       
         /// <summary>
         /// Get a list of users by ids
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        public List<User> GetUsersByIds(List<Guid> ids)
+        public virtual List<User> GetUsersByIds(List<Guid> ids)
         {
             if (ids == null || ids.Count == 0)
                 return new List<User>();
@@ -121,24 +82,24 @@ namespace Membership.Services
             return _conn.Perform(conn => conn.Select(conn.From<User>().Where(x => ids.Contains(x.Id))));
         }
         
-        public bool IsUserNameValid(string userName)
+        public virtual bool IsUserNameValid(string userName)
         {
             if (string.IsNullOrEmpty(userName)) return false;
             return _usernameRegex.IsMatch(userName);
         }
 
-        public bool IsEmailValid(string email)
+        public virtual bool IsEmailValid(string email)
         {
             if (string.IsNullOrEmpty(email)) return false;
             return _emailRegex.IsMatch(email);
         }
 
-        public bool IsPasswordValid(string password)
+        public virtual bool IsPasswordValid(string password)
         {
             return _passwordManager.PasswordStrength(password) > PasswordScore.VeryWeak;
         }
 
-        public bool CanChangedEmail(Guid userId, string email)
+        public virtual bool CanChangedEmail(Guid userId, string email)
         {
             // Verify passing of regular expression test.
             if (!IsEmailValid(email)) return false;
@@ -155,31 +116,31 @@ namespace Membership.Services
                 user.Email.ToLower() == email.ToLower())) == 0;
         }
 
-        public Role GetRoleById(Guid id)
+        public virtual Role GetRoleById(Guid id)
         {
             return id == Guid.Empty ? null : _conn.Perform(conn => conn.SingleById<Role>(id));
         }
 
-        public Role GetRoleByName(string roleName)
+        public virtual Role GetRoleByName(string roleName)
         {
             return string.IsNullOrEmpty(roleName) ? null : _conn.Perform(conn => conn.Single<Role>(x => x.Name == roleName));
         }
 
-        public bool UpdateRole(Role role)
+        public virtual bool UpdateRole(Role role)
         {
             if (role.Id == Guid.Empty) throw new Exception("Invalid role.");
             if (string.IsNullOrEmpty(role.Name)) throw new Exception("Invalid role name.");
             return _conn.Perform(conn => conn.Update(role)) == 1;
         }
 
-        public bool InsertRole(Role role)
+        public virtual bool InsertRole(Role role)
         {
             if (role.Id != Guid.Empty) throw new Exception("A role with a predetermined unique ID can not be created. The Id will be generated automatically.");
             role.Id = GuidUtil.NewSequentialId();
             return _conn.Perform(conn => conn.Insert(role)) == 1;
         }
 
-        public bool DeleteRole(Guid roleId)
+        public virtual bool DeleteRole(Guid roleId)
         {
             var dbResult = 0;
             if (roleId == Guid.Empty) throw new ArgumentNullException("roleId");
@@ -191,12 +152,12 @@ namespace Membership.Services
             return dbResult == 1;
         }
 
-        public IList<Role> GetRoles()
+        public virtual IList<Role> GetRoles()
         {
             return _conn.Perform(conn => conn.Select<Role>());
         }
 
-        public bool AddUserToRole(Guid userId, Guid roleId)
+        public virtual bool AddUserToRole(Guid userId, Guid roleId)
         {
             long dbResult = 0;
             _conn.Perform(conn =>
@@ -207,19 +168,19 @@ namespace Membership.Services
             return dbResult == 1;
         }
 
-        public bool RemoveUserFromRole(Guid userId, Guid roleId)
+        public virtual bool RemoveUserFromRole(Guid userId, Guid roleId)
         {
             return _conn.Perform(conn =>
                 conn.Delete(conn.From<UserRole>()
                     .Where(x => x.RoleId == roleId && x.UserId == userId))) == 1;
         }
 
-        public bool IsInRole(Guid userId, Guid roleId)
+        public virtual bool IsInRole(Guid userId, Guid roleId)
         {
             return _conn.Perform(conn => conn.Count(conn.From<UserRole>().Where(x => x.UserId == userId && x.RoleId == roleId)) > 0);
         }
 
-        public IList<Role> GetUserRoles(Guid userId)
+        public virtual IList<Role> GetUserRoles(Guid userId)
         {
             return _conn.Perform(conn => conn.Select<Role>(conn.From<UserRole>()
                 .LeftJoin<Role, UserRole>((role, userRole) => role.Id == userRole.RoleId)
@@ -231,7 +192,7 @@ namespace Membership.Services
         /// </summary>
         /// <param name="user"></param>
         /// <returns></returns>
-        public UserValidationResult ValidateUser(User user)
+        public virtual UserValidationResult ValidateUser(User user)
         {
             var result = UserValidationResult.Success;
 
@@ -267,7 +228,7 @@ namespace Membership.Services
         /// Reset the access failed count for the user
         /// </summary>
         /// <param name="userId"></param>
-        public void ResetAccessFailedCount(Guid userId)
+        public virtual void ResetAccessFailedCount(Guid userId)
         {
             if (userId == Guid.Empty)
                 return;
@@ -280,7 +241,7 @@ namespace Membership.Services
         /// <param name="userId"></param>
         /// <param name="loginProvider"></param>
         /// <param name="loginKey"></param>
-        public void AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
+        public virtual void AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
             _conn.Perform(conn =>
             {
@@ -304,7 +265,7 @@ namespace Membership.Services
         /// <param name="userId"></param>
         /// <param name="loginProvider"></param>
         /// <param name="loginKey"></param>
-        public void RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey)
+        public virtual void RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
             _conn.Perform(conn => conn.Delete<UserLogin>(x => x.UserId == userId && x.LoginProvider == loginProvider && x.LoginKey == loginKey));
         }
@@ -314,7 +275,7 @@ namespace Membership.Services
         /// </summary>
         /// <param name="userId"></param>
         /// <returns></returns>
-        public IList<UserLogin> GetRemoteLoginsForUser(Guid userId)
+        public virtual IList<UserLogin> GetRemoteLoginsForUser(Guid userId)
         {
             return userId == Guid.Empty ? new List<UserLogin>() : _conn.Perform(conn => conn.Select<UserLogin>(x => x.UserId == userId));
         }
@@ -325,7 +286,7 @@ namespace Membership.Services
         /// <param name="loginProvider"></param>
         /// <param name="loginKey"></param>
         /// <returns></returns>
-        public User FindUserByExternalLogin(string loginProvider, string loginKey)
+        public virtual User FindUserByExternalLogin(string loginProvider, string loginKey)
         {
             return _conn.Perform(conn =>
                 conn.Single(conn.From<User>()
@@ -341,7 +302,7 @@ namespace Membership.Services
         /// <param name="bio">The bio.</param>
         /// <param name="url">The URL.</param>
         /// <param name="location">The location.</param>
-        public void UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
+        public virtual void UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
         {
             _conn.Perform(conn =>
             {
@@ -361,7 +322,7 @@ namespace Membership.Services
         /// </summary>
         /// <param name="userId">The user identifier.</param>
         /// <param name="avatarIdentifier">The avatar identifier.</param>
-        public void UpdateUserAvatar(Guid userId, string avatarIdentifier)
+        public virtual void UpdateUserAvatar(Guid userId, string avatarIdentifier)
         {
             _conn.Perform(conn =>
             {

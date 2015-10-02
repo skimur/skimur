@@ -1,23 +1,24 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Membership.ReadModel;
 using Membership.Services;
 
 namespace Subs.ReadModel.Impl
 {
     public class SubUserBanWrapper : ISubUserBanWrapper
     {
-        private readonly IMembershipService _membershipService;
+        private readonly IMembershipDao _membershipDao;
 
-        public SubUserBanWrapper(IMembershipService membershipService)
+        public SubUserBanWrapper(IMembershipDao membershipDao)
         {
-            _membershipService = membershipService;
+            _membershipDao = membershipDao;
         }
 
         public List<SubUserBanWrapped> Wrap(List<SubUserBan> items)
         {
             var users =
-                _membershipService.GetUsersByIds(
+                _membershipDao.GetUsersByIds(
                     items.Select(x => x.UserId).Union(items.Select(x => x.BannedBy)).Distinct().ToList())
                     .ToDictionary(x => x.Id, x => x);
 

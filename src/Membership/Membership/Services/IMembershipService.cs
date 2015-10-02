@@ -44,23 +44,6 @@ namespace Membership.Services
         /// <param name="emailAddress">The email address.</param>
         /// <returns></returns>
         User GetUserByEmail(string emailAddress);
-
-        /// <summary>
-        /// Get all the users from the system
-        /// </summary>
-        /// <param name="queryText">The query text.</param>
-        /// <param name="skip">The number of items to skip.</param>
-        /// <param name="take">The number of items to take.</param>
-        /// <param name="inRole">Filter users by ones in the given role.</param>
-        /// <returns></returns>
-        SeekedList<User> GetUsers(string queryText = null, int? skip = null, int? take = null, Guid? inRole = null);
-
-        /// <summary>
-        /// Get a list of users by user names
-        /// </summary>
-        /// <param name="userNames"></param>
-        /// <returns></returns>
-        List<User> GetUsersByUserNames(List<string> userNames);
         
         /// <summary>
         /// Get a list of users by ids
