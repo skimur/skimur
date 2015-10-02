@@ -29,6 +29,8 @@ namespace Subs
 
         public Guid? CreatedBy { get; set; }
 
+        public bool Nsfw { get; set; }
+
         [Ignore]
         public SubType SubType
         {

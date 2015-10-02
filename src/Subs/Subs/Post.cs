@@ -66,6 +66,8 @@ namespace Subs
 
         public bool Deleted { get; set; }
 
+        public bool Nsfw { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {
