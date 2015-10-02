@@ -90,6 +90,7 @@
     <Compile Include="Postgres\_0011_DateTimeWithoutTimezone.cs" />
     <Compile Include="Postgres\_0012_PostDeleted.cs" />
     <Compile Include="Postgres\_0013_Nsfw.cs" />
+    <Compile Include="Postgres\_0014_MirroredPosts.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
