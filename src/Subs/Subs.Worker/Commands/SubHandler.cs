@@ -308,7 +308,8 @@ namespace Subs.Worker.Commands
                     UserIp = command.IpAddress,
                     PostType = command.PostType,
                     Title = command.Title,
-                    SendReplies = command.NotifyReplies
+                    SendReplies = command.NotifyReplies,
+                    Mirrored = command.Mirror
                 };
                 if (post.PostType == PostType.Link)
                 {

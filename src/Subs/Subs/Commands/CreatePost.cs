@@ -24,6 +24,8 @@ namespace Subs.Commands
         public string SubName { get; set; }
 
         public bool NotifyReplies { get; set; }
+
+        public string Mirror { get; set; }
     }
 
     public class CreatePostResponse

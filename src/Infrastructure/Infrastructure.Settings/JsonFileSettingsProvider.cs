@@ -17,6 +17,8 @@ namespace Infrastructure.Settings
         {
             _file = Path.Combine(pathResolver.Resolve("~/Settings/"), typeof(T).Name + ".json");
             Settings = File.Exists(_file) ? JsonSerializer.DeserializeFromString<T>(File.ReadAllText(_file)) : new T();
+            if(Settings == null)
+                Settings = new T();
             if (File.Exists(_file))
             {
                 _watcher = new FileSystemWatcher();
@@ -36,7 +38,10 @@ namespace Infrastructure.Settings
 
         private void OnFileChanged(object sender, FileSystemEventArgs fileSystemEventArgs)
         {
-            Settings = File.Exists(_file) ? JsonSerializer.DeserializeFromString<T>(File.ReadAllText(_file)) : new T();
+            var parsed = File.Exists(_file) ? JsonSerializer.DeserializeFromString<T>(File.ReadAllText(_file)) : new T();
+            if (parsed == null)
+                parsed = new T();
+            Settings = parsed;
         }
 
         public T Settings { get; private set; }

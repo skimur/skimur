@@ -29,6 +29,10 @@
                         <span class="verdict none"></span>
                     }
                 }
+                @if (!string.IsNullOrEmpty(Model.Post.Mirrored))
+                {
+                    <span class="mirror @Model.Post.Mirrored.ToLower()" title="mirrored from @Model.Post.Mirrored"></span>
+                }
                 @(DomainLink(Model))
             </div>
             <div class="disc-tagline">

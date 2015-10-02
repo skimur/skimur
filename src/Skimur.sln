@@ -69,6 +69,10 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emails.Handlers", "Emails\E
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Emails.Worker", "Emails\Emails.Worker\Emails.Worker.csproj", "{3AD10F4C-EF7B-40A8-83ED-68363E341A1C}"
 EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{40C37A23-E2D5-4516-B3BB-F3B9BFA9F48F}"
+EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "MirroredContentSync", "Utilities\MirroredContentSync\MirroredContentSync.csproj", "{05B43DD4-B9A9-4CC5-95B9-72B1DBBE0A8D}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -179,6 +183,10 @@ Global
 		{3AD10F4C-EF7B-40A8-83ED-68363E341A1C}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{3AD10F4C-EF7B-40A8-83ED-68363E341A1C}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{3AD10F4C-EF7B-40A8-83ED-68363E341A1C}.Release|Any CPU.Build.0 = Release|Any CPU
+		{05B43DD4-B9A9-4CC5-95B9-72B1DBBE0A8D}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{05B43DD4-B9A9-4CC5-95B9-72B1DBBE0A8D}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{05B43DD4-B9A9-4CC5-95B9-72B1DBBE0A8D}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{05B43DD4-B9A9-4CC5-95B9-72B1DBBE0A8D}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -208,5 +216,6 @@ Global
 		{7925A90D-B001-4DE4-851B-764E6E6B1663} = {AACEEDA0-47DF-4DCC-B821-A47000693676}
 		{61E7E1A8-0B14-4892-968A-5ED2F6B02366} = {AACEEDA0-47DF-4DCC-B821-A47000693676}
 		{3AD10F4C-EF7B-40A8-83ED-68363E341A1C} = {AACEEDA0-47DF-4DCC-B821-A47000693676}
+		{05B43DD4-B9A9-4CC5-95B9-72B1DBBE0A8D} = {40C37A23-E2D5-4516-B3BB-F3B9BFA9F48F}
 	EndGlobalSection
 EndGlobal

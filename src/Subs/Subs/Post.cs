@@ -68,6 +68,8 @@ namespace Subs
 
         public bool Nsfw { get; set; }
 
+        public string Mirrored { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {
