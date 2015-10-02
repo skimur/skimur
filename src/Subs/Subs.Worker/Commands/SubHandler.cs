@@ -2,6 +2,7 @@
 using System.Text.RegularExpressions;
 using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
+using Infrastructure.Settings;
 using Infrastructure.Utils;
 using Membership.Services;
 using Skimur;
@@ -28,6 +29,7 @@ namespace Subs.Worker.Commands
         private readonly ISubModerationService _subModerationService;
         private readonly IPermissionService _permissionService;
         private readonly IMarkdownCompiler _markdownCompiler;
+        private readonly ISettingsProvider<SubSettings> _subSettings;
 
         public SubHandler(ISubService subService,
             IMembershipService membershipService,
@@ -37,7 +39,8 @@ namespace Subs.Worker.Commands
             ISubUserBanService subUserBanService,
             ISubModerationService subModerationService,
             IPermissionService permissionService,
-            IMarkdownCompiler markdownCompiler)
+            IMarkdownCompiler markdownCompiler,
+            ISettingsProvider<SubSettings>  subSettings)
         {
             _subService = subService;
             _membershipService = membershipService;
@@ -48,6 +51,7 @@ namespace Subs.Worker.Commands
             _subModerationService = subModerationService;
             _permissionService = permissionService;
             _markdownCompiler = markdownCompiler;
+            _subSettings = subSettings;
         }
 
         public CreateSubResponse Handle(CreateSub command)
@@ -94,6 +98,14 @@ namespace Subs.Worker.Commands
                     return response;
                 }
                 
+                // let's make sure the user creating this sub doesn't already have the maximum number of subs they are modding.
+                var moddedSubsForUser = _subModerationService.GetSubsModeratoredByUser(user.Id);
+                if (moddedSubsForUser.Count >= _subSettings.Settings.MaximumNumberOfModdedSubs)
+                {
+                    response.Error = "You can only moderate a maximum of " + _subSettings.Settings.MaximumNumberOfModdedSubs + " subs.";
+                    return response;
+                }
+
                 var sub = new Sub
                 {
                     Id = GuidUtil.NewSequentialId(),
@@ -348,6 +360,21 @@ namespace Subs.Worker.Commands
 
                 // todo: check for private subs
                 // todo: check if the user is subcribed to too many subs
+
+                var subscribedSubs = _subService.GetSubscribedSubsForUser(user.Id);
+
+                if (subscribedSubs.Contains(sub.Id))
+                {
+                    // already subscribed!
+                    response.Success = true;
+                    return response;
+                }
+
+                if (subscribedSubs.Count >= _subSettings.Settings.MaximumNumberOfSubscribedSubs)
+                {
+                    response.Error = "You cannot have more than " + _subSettings.Settings.MaximumNumberOfSubscribedSubs + " subscribed subs.";
+                    return response;
+                }
 
                 _subService.SubscribeToSub(user.Id, sub.Id);
 
