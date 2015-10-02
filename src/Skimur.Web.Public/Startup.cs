@@ -69,6 +69,7 @@ namespace Skimur.Web.Public
         public void RegisterGlobalFilters(GlobalFilterCollection filters)
         {
             filters.Add(new Mvc.SkimurHandleErrorAttribute());
+            filters.Add(new Mvc.AnnouncementFilterAttribute());
         }
 
         public void RegisterBundles(BundleCollection bundles)

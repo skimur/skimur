@@ -4,6 +4,7 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure;
+using Microsoft.Owin.Security;
 
 namespace Skimur.Web
 {
@@ -11,9 +12,11 @@ namespace Skimur.Web
     {
         public WebSettings()
         {
-            AvatarDirectory = "~/ Avatars";
+            AvatarDirectory = "~/Avatars";
         }
 
         public string AvatarDirectory { get; set; }
+        
+        public string Announcement { get; set; }
     }
 }

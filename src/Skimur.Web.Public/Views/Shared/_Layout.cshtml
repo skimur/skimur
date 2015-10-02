@@ -20,10 +20,16 @@
     var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
 }
 <body class="@(controller)-@(action)">
+    @if (!string.IsNullOrEmpty(ViewBag.Announcement))
+    {
+        <div class="layout-announcement">
+            @Html.Raw(ViewBag.Announcement)
+        </div>
+    }
     @{ Html.RenderAction("TopBar", "Common"); }
     <div class="layout-header">
         <div class="layout-header-banner">
-            <a href="/" class="banner"><img src="@Url.AssetUrl("/content/img/logo.png")" /></a>
+            <a href="/" class="banner"><img src="@Url.AssetUrl("/content/img/logo.png")"/></a>
         </div>
         @if (IsSectionDefined("header"))
         {
