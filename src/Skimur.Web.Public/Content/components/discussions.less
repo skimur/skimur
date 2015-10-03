@@ -64,7 +64,7 @@
         // the right side of the message (auto width)
         .disc-main {
             overflow: hidden;
-            margin-bottom: 15px;
+            padding-bottom: 15px;
             // and headers for the message (if any).
             // posts of headings, comments/messages don't
             .disc-heading {
@@ -72,7 +72,6 @@
             // some quick info about the message (author, time, points, etc)
             .disc-tagline {
                 font-size: @font-size-small;
-
                 .expand {
                     margin-right: 3px;
                     padding: 1px;
@@ -100,10 +99,16 @@
                 > li {
                     display: inline-block;
                     white-space: nowrap;
-                    margin-left: 10px;
+                    margin-left: 7px;
 
                     &.first {
                         margin-left: 0px;
+                        
+                    }
+
+                    &.nsfw {
+                        margin-left:0px;
+                        margin-right:7px;
                     }
 
                     a {

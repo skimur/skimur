@@ -46,6 +46,12 @@
                 <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Post.Content)</textarea>
             }
             <ul class="disc-options">
+                @if (Model.Post.Nsfw)
+                {
+                    <li class="nsfw">
+                        <span class="nsfw">NSFW</span>
+                    </li>
+                }
                 <li class="first comments">
                     <a href="@Url.Post(Model.Sub, Model.Post)">@(Model.Post.NumberOfComments > 0 ? (Model.Post.NumberOfComments == 1 ? "1 comment" : Model.Post.NumberOfComments + " comments") : "comment")</a>
                 </li>
