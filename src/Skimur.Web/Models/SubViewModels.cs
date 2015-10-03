@@ -22,6 +22,12 @@ namespace Skimur.Web.Models
         [DisplayName("Is default")]
         public bool? IsDefault { get; set; }
         
+        [DisplayName("Show in /s/all?")]
+        public bool ShowInAll { get; set; }
+
+        [DisplayName("18 or older content?")]
+        public bool Is18OrOlder { get; set; }
+
         public bool IsEditing { get; set; }
     }
     

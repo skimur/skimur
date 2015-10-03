@@ -20,6 +20,10 @@ namespace Subs.Commands
         public bool? IsDefault { get; set; }
 
         public SubType Type { get; set; }
+
+        public bool ShowInAll { get; set; }
+
+        public bool Is18OrOlder { get; set; }
     }
 
     public class CreateSubResponse

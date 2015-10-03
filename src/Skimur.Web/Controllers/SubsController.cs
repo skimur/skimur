@@ -102,7 +102,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, false, ((pageNumber - 1) * pageSize), pageSize);
 
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
@@ -158,7 +158,7 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, model.IsAll, ((pageNumber - 1) * pageSize), pageSize);
             
             model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;
             model.SortBy = sort.Value;
@@ -449,6 +449,8 @@ namespace Skimur.Web.Controllers
             if (_userContext.CurrentUser.IsAdmin)
                 model.IsDefault = false;
 
+            model.ShowInAll = true;
+
             return View(model);
         }
 
@@ -464,7 +466,9 @@ namespace Skimur.Web.Controllers
                 Description = model.Description,
                 SidebarText = model.SidebarText,
                 Type = model.SubType,
-                IsDefault = model.IsDefault
+                IsDefault = model.IsDefault,
+                ShowInAll = model.ShowInAll,
+                Is18OrOlder = model.Is18OrOlder
             });
 
             if (!string.IsNullOrEmpty(response.Error))

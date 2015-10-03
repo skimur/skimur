@@ -80,6 +80,7 @@
     </Compile>
     <Compile Include="DataTestBase.cs" />
     <Compile Include="MarkdownTests.cs" />
+    <Compile Include="NsfwDetectionTests.cs" />
     <Compile Include="TestBase.cs" />
     <Compile Include="UrlParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

@@ -8,7 +8,7 @@ namespace Skimur
         public static Regex WhiteSpaceRegex = new Regex(@"\s+", RegexOptions.Compiled);
         public static Regex NotSafeRegex = new Regex(@"\W+", RegexOptions.Compiled);
         public static Regex UnderscoreRegex = new Regex(@"_+", RegexOptions.Compiled);
-
+        public static Regex NsfwRegex = new Regex(@"\bnsf[wl]\b", RegexOptions.Compiled | RegexOptions.IgnoreCase);
         public static Func<DateTime> CurrentTime = () => DateTime.UtcNow;
 
         public static string UrlFriendly(this string value, int maxLength = 50)
@@ -37,6 +37,11 @@ namespace Skimur
             var decay = Math.Exp((float)-value/60);
             var jitter = (int)Math.Round(5*decay);
             return value + new Random().Next(0, jitter);
+        }
+
+        public static bool IsNsfw(string text)
+        {
+            return !string.IsNullOrEmpty(text) && (!string.IsNullOrEmpty(text) && NsfwRegex.IsMatch(text));
         }
     }
 }

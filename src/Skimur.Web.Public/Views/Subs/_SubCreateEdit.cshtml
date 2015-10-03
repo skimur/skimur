@@ -26,15 +26,27 @@
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.SubType, new {@class = "col-md-2 control-label"})
+    @Html.LabelFor(m => m.SubType, new { @class = "col-md-2 control-label" })
     <div class="col-md-10">
-        @Html.DropDownListFor(m => m.SubType, Html.ItemsForEnum(m => m.SubType), new {@class = "form-control"})
+        @Html.DropDownListFor(m => m.SubType, Html.ItemsForEnum(m => m.SubType), new { @class = "form-control" })
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.Is18OrOlder, new {@class = "col-md-2 control-label"})
+    <div class="col-md-10">
+        @Html.CheckBoxFor(x => x.Is18OrOlder)
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.ShowInAll, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.CheckBoxFor(x => x.ShowInAll)
     </div>
 </div>
 @if (Model.IsDefault.HasValue)
 {
     <div class="form-group">
-        @Html.LabelFor(m => m.IsDefault, new {@class = "col-md-2 control-label"})
+        @Html.LabelFor(m => m.IsDefault, new { @class = "col-md-2 control-label" })
         <div class="col-md-10">
             @Html.CheckBox(Html.NameFor(x => x.IsDefault).ToHtmlString(), Model.IsDefault.Value)
         </div>

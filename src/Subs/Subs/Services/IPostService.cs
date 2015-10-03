@@ -13,7 +13,14 @@ namespace Subs.Services
 
         Post GetPostById(Guid id);
 
-        SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null);
+        SeekedList<Guid> GetPosts(List<Guid> subs = null, 
+            PostsSortBy sortby = PostsSortBy.New, 
+            TimeFilter timeFilter = TimeFilter.All, 
+            bool hideRemovedPosts = true, 
+            bool showDeleted = false, 
+            bool onlyAll = false,
+            int? skip = null, 
+            int? take = null);
 
         SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null);
         

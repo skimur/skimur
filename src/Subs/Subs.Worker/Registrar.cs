@@ -20,7 +20,6 @@ namespace Subs.Worker
         {
             container.Register<ICommandHandlerResponse<CreateSub, CreateSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<EditSub, EditSubResponse>, SubHandler>();
-            container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<UnSubcribeToSub, UnSubcribeToSubResponse>, SubHandler>();
 
@@ -61,6 +60,7 @@ namespace Subs.Worker
             container.Register<IEventHandler<UsersMentioned>, UserMentionNotificationHandler>();
             container.Register<IEventHandler<UsersUnmentioned>, UserMentionNotificationHandler>();
 
+            container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();
         }

@@ -31,6 +31,8 @@ namespace Subs
 
         public bool Nsfw { get; set; }
 
+        public bool InAll { get; set; }
+
         [Ignore]
         public SubType SubType
         {

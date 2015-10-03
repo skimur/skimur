@@ -33,7 +33,14 @@ namespace Subs.Services.Impl
             return _conn.Perform(conn => conn.SingleById<Post>(id));
         }
 
-        public SeekedList<Guid> GetPosts(List<Guid> subs = null, PostsSortBy sortby = PostsSortBy.New, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null)
+        public SeekedList<Guid> GetPosts(List<Guid> subs = null, 
+            PostsSortBy sortby = PostsSortBy.New, 
+            TimeFilter timeFilter = TimeFilter.All, 
+            bool hideRemovedPosts = true, 
+            bool showDeleted = false,
+            bool onlyAll = false,
+            int? skip = null, 
+            int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -77,6 +84,9 @@ namespace Subs.Services.Impl
 
                 if (!showDeleted)
                     query.Where(x => x.Deleted == false);
+
+                if (onlyAll)
+                    query.Where(x => x.InAll);
 
                 var totalCount = conn.Count(query);
 

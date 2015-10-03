@@ -70,6 +70,8 @@ namespace Subs
 
         public string Mirrored { get; set; }
 
+        public bool InAll { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {
