@@ -36,6 +36,8 @@ namespace Skimur.Web.Models
         public TimeFilter? TimeFilter { get; set; }
 
         public bool IsFrontpage { get; set; }
+
+        public bool IsAll { get; set; }
     }
 
     public class SearchResultsModel

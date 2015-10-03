@@ -118,13 +118,15 @@ namespace Skimur.Web.Controllers
             if (string.IsNullOrEmpty(name))
                 return Redirect(Url.Subs());
 
-            var subs = new List<Guid>();
+            var model = new SubPostsModel();
 
+            var subs = new List<Guid>();
             Sub sub = null;
 
             if (name.Equals("all", StringComparison.InvariantCultureIgnoreCase))
             {
                 // TODO: Filter only by subs that want to be including in "all". For now, we will do nothing, which will effectively return all posts.
+                model.IsAll = true;
             }
             else
             {
@@ -157,8 +159,7 @@ namespace Skimur.Web.Controllers
                 pageSize = 1;
 
             var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, ((pageNumber - 1) * pageSize), pageSize);
-
-            var model = new SubPostsModel();
+            
             model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;
             model.SortBy = sort.Value;
             model.TimeFilter = time;
