@@ -48,7 +48,7 @@ namespace Skimur.Web.Controllers
         public ActionResult TopBar()
         {
             var model = new TopBarViewModel();
-            model.SubscibedSubs.AddRange(_subDao.GetSubsByIds(_contextService.GetSubscribedSubIds()).Select(x => x.Name));
+            model.SubscibedSubs.AddRange(_subDao.GetSubsByIds(_contextService.GetSubscribedSubIds()).Select(x => x.Name).OrderBy(x => x));
             model.DefaultSubs.AddRange(_subDao.GetSubsByIds(_subDao.GetDefaultSubs()).Select(x => x.Name));
             return PartialView(model); 
         }
