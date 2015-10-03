@@ -19,7 +19,8 @@ namespace Subs.Worker.Commands
     public class PostHandler :
         ICommandHandlerResponse<CreatePost, CreatePostResponse>,
         ICommandHandlerResponse<EditPostContent, EditPostContentResponse>,
-        ICommandHandlerResponse<DeletePost, DeletePostResponse>
+        ICommandHandlerResponse<DeletePost, DeletePostResponse>,
+        ICommandHandler<TogglePostNsfw>
     {
         private readonly IMarkdownCompiler _markdownCompiler;
         private readonly ILogger<PostHandler> _logger;
@@ -28,6 +29,7 @@ namespace Subs.Worker.Commands
         private readonly ISubService _subService;
         private readonly ISubUserBanService _subUserBanService;
         private readonly ICommandBus _commandBus;
+        private readonly IPermissionService _permissionService;
 
         public PostHandler(IMarkdownCompiler markdownCompiler,
             ILogger<PostHandler> logger,
@@ -35,7 +37,8 @@ namespace Subs.Worker.Commands
             IPostService postService,
             ISubService subService,
             ISubUserBanService subUserBanService,
-            ICommandBus commandBus)
+            ICommandBus commandBus,
+            IPermissionService permissionService)
         {
             _markdownCompiler = markdownCompiler;
             _logger = logger;
@@ -44,6 +47,7 @@ namespace Subs.Worker.Commands
             _subService = subService;
             _subUserBanService = subUserBanService;
             _commandBus = commandBus;
+            _permissionService = permissionService;
         }
 
         public CreatePostResponse Handle(CreatePost command)
@@ -305,6 +309,23 @@ namespace Subs.Worker.Commands
                 response.Error = "An unknown error occured.";
                 return response;
             }
-        } 
+        }
+
+        public void Handle(TogglePostNsfw command)
+        {
+            var user = _membershipService.GetUserById(command.UserId);
+            if (user == null) return;
+
+            var post = _postService.GetPostById(command.PostId);
+            if (post == null) return;
+
+            if (post.Nsfw == command.IsNsfw) return; // nothing to change
+
+            if (!_permissionService.CanUserManageSubPosts(user, post.SubId)) return;
+
+            post.Nsfw = command.IsNsfw;
+
+            _postService.UpdatePost(post);
+        }
     }
 }

@@ -197,4 +197,19 @@
             }
         }
     }
+
+    .mark-sfw {
+            display:none;
+        }
+        .mark-nsfw {
+            display:inline;
+        }
+    &.nsfw {
+        .mark-sfw {
+            display:inline;
+        }
+        .mark-nsfw {
+            display:none;
+        }
+    }
 }

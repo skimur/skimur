@@ -238,6 +238,29 @@
         $textArea.focus();
     };
 
+    var toggleNsfw = function(element) {
+        var $post = getPost(element);
+        skimurui.confirmWarning("Are you sure?", "Yes!", function(confirmResult) {
+            if (confirmResult.confirmed) {
+                var nsfw = $post.hasClass("nsfw");
+                skimur.togglePostNsfw($post.data("post-id"), !nsfw, function(result) {
+                    if (result.success) {
+                        if (nsfw) {
+                            $post.removeClass("nsfw");
+                            $("> .disc-body", $post).find(".disc-options > li.nsfw").remove();
+                        } else {
+                            $post.addClass("nsfw");
+                            $("> .disc-body", $post).find(".disc-options > li.nsfw").remove();
+                            $("> .disc-body", $post).find(".disc-options").prepend('<li class="nsfw"><span class="nsfw">NSFW</span><li>');
+                        }
+                    } else {
+                        skimurui.displayError(result.error);
+                    }
+                });
+            }
+        });
+    }
+
     var deletePost = function(element) {
         var $post = getPost(element);
 
@@ -266,7 +289,8 @@
         ignoreReports: ignoreReports,
         unignoreReports: unignoreReports,
         startEdit: startEdit,
-        delete: deletePost
+        delete: deletePost,
+        toggleNsfw: toggleNsfw
     };
 
 })();

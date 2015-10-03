@@ -63,6 +63,7 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();
+            container.Register<ICommandHandler<TogglePostNsfw>, PostHandler>();
         }
 
         public int Order

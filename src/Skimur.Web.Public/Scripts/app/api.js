@@ -425,6 +425,23 @@
         });
     };
 
+    var togglePostNsfw = function(postId, nsfw, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/posts/togglensfw",
+            data: { postId: postId, nsfw: nsfw },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -455,7 +472,8 @@
         removeModFromSub: removeModFromSub,
         changeModPermissionsForSub: changeModPermissionsForSub,
         editPost: editPost,
-        deletePost: deletePost
+        deletePost: deletePost,
+        togglePostNsfw: togglePostNsfw
     };
 
 })();

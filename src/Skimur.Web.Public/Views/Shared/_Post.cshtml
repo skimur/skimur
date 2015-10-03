@@ -101,6 +101,9 @@
                         <li class="unignore-reports">
                             <a href="javascript:void(0);" onclick="return skimurui.posts.unignoreReports(this);">unignore reports</a>
                         </li>
+                        <li class="toggle-nsfw">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleNsfw(this);"><span class="mark-sfw">mark sfw</span><span class="mark-nsfw">mark nsfw</span></a>
+                        </li>
                     }
                 }
             </ul>
@@ -144,7 +147,11 @@
     }
     if (post.CanManage)
     {
-            @(post.Post.IgnoreReports ? "reports-ignored" : "reports-unignored")
+        @(post.Post.IgnoreReports ? "reports-ignored" : "reports-unignored")
+    }
+    if (post.Post.Nsfw)
+    {
+        @(" nsfw")
     }
 }
 

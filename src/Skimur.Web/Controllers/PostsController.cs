@@ -119,5 +119,18 @@ namespace Skimur.Web.Controllers
 
             return CommonJsonResult(response.Error);
         }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult ToggleNsfw(Guid postId, bool nsfw)
+        {
+            _commandBus.Send(new TogglePostNsfw
+            {
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
+                IsNsfw = nsfw
+            });
+
+            return CommonJsonResult(true);
+        }
     }
 }

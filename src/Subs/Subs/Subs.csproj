@@ -86,6 +86,7 @@
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\MarkMessagesAsRead.cs" />
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />
+    <Compile Include="Commands\TogglePostNsfw.cs" />
     <Compile Include="Commands\RemoveModFromSub.cs" />
     <Compile Include="Commands\RemovePost.cs" />
     <Compile Include="Commands\ReplyMessage.cs" />
