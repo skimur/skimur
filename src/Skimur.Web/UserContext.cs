@@ -40,5 +40,18 @@ namespace Skimur.Web
                 return _currentUser;
             }
         }
+
+        public bool? CurrentNsfw
+        {
+            get
+            {
+                // anonymous users don't see NSFW content.
+                // logged in users only see NSFW if preferences say so.
+                // If they want to see NSFW, they will see all content (SFW/NSFW).
+                return CurrentUser == null
+                    ? false
+                    : (CurrentUser.ShowNsfw ? (bool?) null : false);
+            }
+        }
     }
 }

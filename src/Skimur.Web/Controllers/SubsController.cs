@@ -76,7 +76,11 @@ namespace Skimur.Web.Controllers
         {
             ViewBag.Query = query;
 
-            return View(_subWrapper.Wrap(_subDao.GetAllSubs(query, !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers), _userContext.CurrentUser));
+            return View(_subWrapper.Wrap(
+                _subDao.GetAllSubs(query,
+                    sortBy: !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers,
+                    nsfw: _userContext.CurrentNsfw),
+                _userContext.CurrentUser));
         }
 
         public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
@@ -109,7 +113,7 @@ namespace Skimur.Web.Controllers
                 // logged in users only see NSFW if preferences say so.
                 // If they want to see NSFW, they will see all content (SFW/NSFW).
                 nsfw: _userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false),
-                skip: ((pageNumber - 1)*pageSize),
+                skip: ((pageNumber - 1) * pageSize),
                 take: pageSize);
 
             var model = new SubPostsModel();
@@ -145,7 +149,7 @@ namespace Skimur.Web.Controllers
                 if (sub == null)
                     return Redirect(Url.Subs(name));
 
-                if(_userContext.CurrentUser != null)
+                if (_userContext.CurrentUser != null)
                     _subActivityDao.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
 
                 subs.Add(sub.Id);
@@ -167,16 +171,16 @@ namespace Skimur.Web.Controllers
                 pageSize = 1;
 
             var postIds = _postDao.GetPosts(subs,
-                sortby:sort.Value, 
-                timeFilter:time.Value,
-                onlyAll:model.IsAll,
+                sortby: sort.Value,
+                timeFilter: time.Value,
+                onlyAll: model.IsAll,
                 // anonymous users don't see NSFW content.
                 // logged in users only see NSFW if preferences say so.
                 // If they want to see NSFW, they will see all content (SFW/NSFW).
-                nsfw:_userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false), 
-                skip:((pageNumber - 1) * pageSize),
-                take:pageSize);
-            
+                nsfw: _userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false),
+                skip: ((pageNumber - 1) * pageSize),
+                take: pageSize);
+
             model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;
             model.SortBy = sort.Value;
             model.TimeFilter = time;
@@ -194,9 +198,9 @@ namespace Skimur.Web.Controllers
 
             if (post.Deleted)
             {
-                if(_userContext.CurrentUser == null)
+                if (_userContext.CurrentUser == null)
                     throw new HttpException(404, "no post found");
-                if(post.UserId != _userContext.CurrentUser.Id && !_userContext.CurrentUser.IsAdmin)
+                if (post.UserId != _userContext.CurrentUser.Id && !_userContext.CurrentUser.IsAdmin)
                     throw new HttpException(404, "no post found");
             }
 
@@ -255,8 +259,8 @@ namespace Skimur.Web.Controllers
 
             return Json(new
             {
-                success=true,
-                error=(string)null,
+                success = true,
+                error = (string)null,
                 html = RenderView("_CommentNodes", model)
             });
         }
@@ -344,23 +348,32 @@ namespace Skimur.Web.Controllers
                 {
                     case null:
                         postIds = _postDao.QueryPosts(query,
-                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, 
+                            sort.Value,
                             time.Value,
                             true /*TODO: show removed posts for admins*/,
                             false,
                             ((pageNumber - 1) * pageSize), pageSize);
-                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize);
+                        subIds = _subDao.GetAllSubs(model.Query,
+                            sortBy: SubsSortBy.Relevance,
+                            nsfw: _userContext.CurrentNsfw,
+                            skip: ((pageNumber - 1) * pageSize),
+                            take: pageSize);
                         break;
                     case SearchResultType.Post:
                         postIds = _postDao.QueryPosts(query,
                             model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
-                            time.Value, 
+                            time.Value,
                             true /*TODO: Show removed posts for admins*/,
                             false,
                             ((pageNumber - 1) * pageSize), pageSize);
                         break;
                     case SearchResultType.Sub:
-                        subIds = _subDao.GetAllSubs(model.Query, SubsSortBy.Relevance, ((pageNumber - 1) * pageSize), pageSize);
+                        subIds = _subDao.GetAllSubs(model.Query,
+                            sortBy: SubsSortBy.Relevance,
+                            nsfw: _userContext.CurrentNsfw,
+                            skip: ((pageNumber - 1) * pageSize),
+                            take: pageSize);
                         break;
                     default:
                         throw new Exception("unknown result type");
@@ -378,7 +391,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult Random()
         {
-            var randomSubId = _subDao.GetRandomSub();
+            var randomSubId = _subDao.GetRandomSub(nsfw:_userContext.CurrentNsfw);
 
             if (randomSubId == null)
                 return Redirect(Url.Subs());
@@ -403,7 +416,7 @@ namespace Skimur.Web.Controllers
             if (sub == null)
                 return Redirect(Url.Subs(name));
 
-            if(!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
+            if (!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
                 throw new UnauthorizedException();
 
             var model = _mapper.Map<Sub, CreateEditSubModel>(sub);
@@ -452,7 +465,7 @@ namespace Skimur.Web.Controllers
             }
 
             // todo: success message
-            
+
             return View(model);
         }
 

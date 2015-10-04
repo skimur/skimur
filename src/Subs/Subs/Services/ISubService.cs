@@ -7,7 +7,11 @@ namespace Subs.Services
 {
     public interface ISubService
     {
-        SeekedList<Guid> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null);
+        SeekedList<Guid> GetAllSubs(string searchText = null,
+            SubsSortBy sortBy = SubsSortBy.Relevance,
+            bool? nsfw = null,
+            int? skip = null,
+            int? take = null);
 
         List<Guid> GetDefaultSubs();
 
@@ -15,7 +19,7 @@ namespace Subs.Services
 
         bool IsUserSubscribedToSub(Guid userId, Guid subId);
 
-        Guid? GetRandomSub();
+        Guid? GetRandomSub(bool? nsfw = null);
 
         void InsertSub(Sub sub);
 

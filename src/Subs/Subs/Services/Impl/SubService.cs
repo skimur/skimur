@@ -21,13 +21,20 @@ namespace Subs.Services.Impl
             _mapper = mapper;
         }
 
-        public SeekedList<Guid> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null)
+        public SeekedList<Guid> GetAllSubs(string searchText = null,
+            SubsSortBy sortBy = SubsSortBy.Relevance,
+            bool? nsfw = null,
+            int? skip = null,
+            int? take = null)
         {
             return _conn.Perform(conn =>
             {
                 var query = conn.From<Sub>();
                 if (!string.IsNullOrEmpty(searchText))
                     query.Where(x => x.Name.Contains(searchText)).OrderBy(x => x.Name);
+
+                if (nsfw.HasValue)
+                    query.Where(x => x.Nsfw == nsfw.Value);
 
                 var totalCount = conn.Count(query);
 
@@ -83,10 +90,10 @@ namespace Subs.Services.Impl
             });
         }
 
-        public Guid? GetRandomSub()
+        public Guid? GetRandomSub(bool? nsfw = null)
         {
             // todo: optimize
-            var allSubs = GetAllSubs();
+            var allSubs = GetAllSubs(nsfw:nsfw);
             if (allSubs.Count == 0)
                 return null;
             var rand = new Random();

@@ -9,7 +9,11 @@ namespace Subs.ReadModel
 {
     public interface ISubDao
     {
-        SeekedList<Guid> GetAllSubs(string searchText = null, SubsSortBy sortBy = SubsSortBy.Relevance, int? skip = null, int? take = null);
+        SeekedList<Guid> GetAllSubs(string searchText = null,
+            SubsSortBy sortBy = SubsSortBy.Relevance, 
+            bool? nsfw = null,
+            int? skip = null, 
+            int? take = null);
 
         List<Guid> GetDefaultSubs();
 
@@ -17,7 +21,7 @@ namespace Subs.ReadModel
 
         bool IsUserSubscribedToSub(Guid userId, Guid subId);
 
-        Guid? GetRandomSub();
+        Guid? GetRandomSub(bool? nsfw = null);
 
         Sub GetSubByName(string name);
 
