@@ -36,7 +36,7 @@
                 <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Text ? "active" : "")" id="textpost">
                     <div class="form-group">
                         @Html.LabelFor(m => m.Content, new { @class = "control-label" })
-                        @Html.TextAreaFor(m => m.Content, new { @class = "form-control" })
+                        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows=10 })
                     </div>
                 </div>
             </div>
@@ -131,5 +131,7 @@
                 });
             }, 500));
         });
+
+        $("#@Html.IdFor(m => m.Content)").markdown({ iconlibrary: "fa", width: "form-group" });
     });
 </script>
