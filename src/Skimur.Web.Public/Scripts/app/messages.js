@@ -9,7 +9,7 @@
         var $message = getMessage(element);
 
         // hide any content that may be staged.
-        var $staging = $message.find("> .disc-body .disc-staging").addClass("hidden").empty();
+        var $staging = $message.find("> .disc .disc-body .disc-staging").addClass("hidden").empty();
 
         return {
             message: $message,
