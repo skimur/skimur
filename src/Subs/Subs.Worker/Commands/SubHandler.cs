@@ -91,6 +91,13 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
+                var userAccountAge = Common.CurrentTime() - user.CreatedDate;
+                if (!user.IsAdmin && userAccountAge.TotalDays < _subSettings.Settings.MinUserAgeCreateSub)
+                {
+                    response.Error = "Your account is too new to create a sub.";
+                    return response;
+                }
+
                 if (_subService.GetSubByName(command.Name) != null)
                 {
                     response.Error = "The sub already exist.";
