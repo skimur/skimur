@@ -299,11 +299,11 @@ namespace Skimur.Web.Controllers
 
             var postIds = _postDao.QueryPosts(query,
                model.LimitingToSub.Sub.Id,
-               sortBy:sort.Value,
-               timeFilter:time.Value,
-               nsfw:_userContext.CurrentNsfw,
-               skip:((pageNumber - 1) * pageSize),
-               take:pageSize);
+               sortBy: sort.Value,
+               timeFilter: time.Value,
+               nsfw: _userContext.CurrentNsfw,
+               skip: ((pageNumber - 1) * pageSize),
+               take: pageSize);
 
             if (!string.IsNullOrEmpty(model.Query))
                 model.Posts = new PagedList<PostWrapped>(
@@ -315,11 +315,11 @@ namespace Skimur.Web.Controllers
             return View("Search", model);
         }
 
-        public ActionResult SearchSite(string query, 
-            PostsSearchSortBy? sort, 
-            TimeFilter? time, 
-            SearchResultType? resultType, 
-            int? pageNumber, 
+        public ActionResult SearchSite(string query,
+            PostsSearchSortBy? sort,
+            TimeFilter? time,
+            SearchResultType? resultType,
+            int? pageNumber,
             int? pageSize)
         {
             if (sort == null)
@@ -352,11 +352,11 @@ namespace Skimur.Web.Controllers
                 {
                     case null:
                         postIds = _postDao.QueryPosts(query,
-                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, 
-                            sortBy:sort.Value,
-                            timeFilter:time.Value,
-                            skip:((pageNumber - 1) * pageSize), 
-                            take:pageSize);
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null,
+                            sortBy: sort.Value,
+                            timeFilter: time.Value,
+                            skip: ((pageNumber - 1) * pageSize),
+                            take: pageSize);
                         subIds = _subDao.GetAllSubs(model.Query,
                             sortBy: SubsSortBy.Relevance,
                             nsfw: _userContext.CurrentNsfw,
@@ -394,7 +394,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult Random()
         {
-            var randomSubId = _subDao.GetRandomSub(nsfw:_userContext.CurrentNsfw);
+            var randomSubId = _subDao.GetRandomSub(nsfw: _userContext.CurrentNsfw);
 
             if (randomSubId == null)
                 return Redirect(Url.Subs());
@@ -457,6 +457,7 @@ namespace Skimur.Web.Controllers
                 Name = name,
                 Description = model.Description,
                 SidebarText = model.SidebarText,
+                SubmissionText = model.SubmissionText,
                 Type = model.SubType,
                 IsDefault = model.IsDefault
             });
@@ -498,6 +499,7 @@ namespace Skimur.Web.Controllers
                 Name = model.Name,
                 Description = model.Description,
                 SidebarText = model.SidebarText,
+                SubmissionText = model.SubmissionText,
                 Type = model.SubType,
                 IsDefault = model.IsDefault,
                 ShowInAll = model.ShowInAll,
@@ -744,6 +746,28 @@ namespace Skimur.Web.Controllers
             });
 
             return CommonJsonResult(true);
+        }
+
+        [Ajax]
+        public ActionResult SubmissionText(string subName, Guid? subId)
+        {
+            var sub = subId.HasValue ? _subDao.GetSubById(subId.Value) : _subDao.GetSubByName(subName);
+
+            if (sub == null)
+                return Json(new
+                {
+                    submission_text = "",
+                    sub_found = false,
+                    success = true
+                }, JsonRequestBehavior.AllowGet);
+
+            return Json(new
+            {
+                submission_text = sub.SubmissionTextFormatted,
+                sub_found = true,
+                name = sub.Name,
+                success = true
+            }, JsonRequestBehavior.AllowGet);
         }
     }
 }

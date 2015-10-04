@@ -442,6 +442,23 @@
         });
     };
 
+    var submissionText = function(subName, subId, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/subs/SubmissionText",
+            data: { subName: subName, subId: subId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -473,7 +490,8 @@
         changeModPermissionsForSub: changeModPermissionsForSub,
         editPost: editPost,
         deletePost: deletePost,
-        togglePostNsfw: togglePostNsfw
+        togglePostNsfw: togglePostNsfw,
+        submissionText: submissionText
     };
 
 })();

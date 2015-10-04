@@ -56,3 +56,20 @@
         }
     }
 }
+
+.form-createpost {
+    .submissiontext {
+        .spinner {
+            text-align:center;
+            display:none;
+        }
+        &.loading {
+            .heading, .body {
+                display:none;
+            }
+            .spinner {
+                display:block;
+            }
+        }
+    }
+}

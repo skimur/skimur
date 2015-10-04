@@ -16,6 +16,9 @@ namespace Skimur.Web.Models
         [DisplayName("Sidebar text")]
         public string SidebarText { get; set; }
 
+        [DisplayName("Submission text")]
+        public string SubmissionText { get; set; }
+
         [DisplayName("Type")]
         public SubType SubType { get; set; }
 

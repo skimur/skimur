@@ -83,6 +83,18 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
+                if (!string.IsNullOrEmpty(command.SubmissionText) && command.SubmissionText.Length > 1000)
+                {
+                    response.Error = "The sidebar text cannot be greater than 1000 characters";
+                    return response;
+                }
+
+                if (!string.IsNullOrEmpty(command.SidebarText) && command.SidebarText.Length > 3000)
+                {
+                    response.Error = "The submission text cannot be greater than 1000 characters";
+                    return response;
+                }
+                
                 var user = _membershipService.GetUserById(command.CreatedByUserId);
 
                 if (user == null)
@@ -111,7 +123,7 @@ namespace Subs.Worker.Commands
                     response.Error = "You can only moderate a maximum of " + _subSettings.Settings.MaximumNumberOfModdedSubs + " subs.";
                     return response;
                 }
-
+                
                 var sub = new Sub
                 {
                     Id = GuidUtil.NewSequentialId(),
@@ -119,6 +131,9 @@ namespace Subs.Worker.Commands
                     Name = command.Name,
                     Description = command.Description,
                     SidebarText = command.SidebarText,
+                    SidebarTextFormatted = _markdownCompiler.Compile(command.SidebarText),
+                    SubmissionText = command.SubmissionText,
+                    SubmissionTextFormatted = _markdownCompiler.Compile(command.SubmissionText),
                     SubType = command.Type,
                     CreatedBy = user.Id,
                     InAll = command.ShowInAll,
@@ -180,12 +195,27 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
+                if (!string.IsNullOrEmpty(command.SubmissionText) && command.SubmissionText.Length > 1000)
+                {
+                    response.Error = "The sidebar text cannot be greater than 1000 characters";
+                    return response;
+                }
+
+                if (!string.IsNullOrEmpty(command.SidebarText) && command.SidebarText.Length > 3000)
+                {
+                    response.Error = "The submission text cannot be greater than 1000 characters";
+                    return response;
+                }
+
                 // only admins can determine if a sub is a default sub
                 if (user.IsAdmin && command.IsDefault.HasValue)
                     sub.IsDefault = command.IsDefault.Value;
 
                 sub.Description = command.Description;
                 sub.SidebarText = command.SidebarText;
+                sub.SidebarTextFormatted = _markdownCompiler.Compile(command.SidebarText);
+                sub.SubmissionText = command.SubmissionText;
+                sub.SubmissionTextFormatted = _markdownCompiler.Compile(command.SubmissionText);
                 sub.SubType = command.Type;
 
                 _subService.UpdateSub(sub);

@@ -19,6 +19,12 @@ namespace Subs
 
         public string SidebarText { get; set; }
 
+        public string SidebarTextFormatted { get; set; }
+
+        public string SubmissionText { get; set; }
+
+        public string SubmissionTextFormatted { get; set; }
+
         public bool IsDefault { get; set; }
 
         public string Description { get; set; }

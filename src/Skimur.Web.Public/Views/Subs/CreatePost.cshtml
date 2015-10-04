@@ -46,6 +46,29 @@
                 @Html.TextBoxFor(m => m.SubName, new { @class = "form-control" })
             </div>
 
+            if (Model.Sub != null)
+            {
+                <div class="form-group panel panel-info submissiontext">
+                    <div class="panel-heading heading">Submitting to <span class="subname">@Model.Sub.Sub.Name</span></div>
+                    <div class="panel-body body">
+                        @Html.Raw(Model.Sub.Sub.SubmissionTextFormatted)
+                    </div>
+                    <div class="panel-body spinner">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group panel panel-info submissiontext hidden">
+                    <div class="panel-heading heading">Submitting to <span class="subname"></span></div>
+                    <div class="panel-body body"> </div>
+                    <div class="panel-body spinner">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            }
+
             <div class="form-group">
                 @Html.CheckBoxFor(m => m.NotifyReplies)
                 @Html.LabelFor(m => m.NotifyReplies)
@@ -70,6 +93,43 @@
         });
         $("#textpost-tab").click(function (e) {
             $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Text");
+        });
+
+        var startSubmissionTextLoading = function() {
+            $(".submissiontext").removeClass("hidden").addClass("loading");
+        };
+
+        var hideSubmissionText = function() {
+            $(".submissiontext").addClass("hidden").removeClass("loading");
+        };
+
+        var showSubmissionText = function(subName, submissionText) {
+            $(".submissiontext .heading .subname").text(subName);
+            $(".submissiontext .body").html(submissionText);
+            $(".submissiontext").removeClass("loading").removeClass("hidden");
+        };
+
+        $("#@Html.IdFor(m => m.SubName)").bind("input propertychange", function (evt) {
+            if (window.event && event.type == "propertychange" && event.propertyName != "value")
+                return;
+
+            startSubmissionTextLoading();
+
+            window.clearTimeout($(this).data("timeout"));
+
+            $(this).data("timeout", setTimeout(function () {
+                skimur.submissionText($("#@Html.IdFor(m => m.SubName)").val(), null, function(result) {
+                    if (!result.success) {
+                        hideSubmissionText();
+                    } else {
+                        if (result.sub_found) {
+                            showSubmissionText(result.name, result.submission_text);
+                        } else {
+                            hideSubmissionText();
+                        }
+                    }
+                });
+            }, 500));
         });
     });
 </script>

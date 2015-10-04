@@ -20,9 +20,15 @@
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.SidebarText, new { @class = "col-md-2 control-label" })
+    @Html.LabelFor(m => m.SidebarText, new {@class = "col-md-2 control-label"})
     <div class="col-md-10">
-        @Html.TextAreaFor(m => m.SidebarText, new { @class = "form-control" })
+        @Html.TextAreaFor(m => m.SidebarText, new {@class = "form-control", rows = 10})
+    </div>
+</div>
+<div class="form-group">
+    @Html.LabelFor(m => m.SubmissionText, new { @class = "col-md-2 control-label" })
+    <div class="col-md-10">
+        @Html.TextAreaFor(m => m.SubmissionText, new { @class = "form-control", rows = 10 })
     </div>
 </div>
 <div class="form-group">
@@ -52,3 +58,10 @@
         </div>
     </div>
 }
+
+<script type="text/javascript">
+    $(function() {
+        $("#@Html.IdFor(x => x.SidebarText)").markdown({ iconlibrary: "fa" });
+        $("#@Html.IdFor(x => x.SubmissionText)").markdown({ iconlibrary: "fa" });
+    });
+</script>
