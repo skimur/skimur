@@ -82,7 +82,8 @@ namespace MirroredContentSync
                                 PostType = redditPost.IsSelfPost ? PostType.Text : PostType.Link,
                                 SubName = subToMirror,
                                 NotifyReplies = false,
-                                Mirror = "reddit"
+                                Mirror = "reddit",
+                                OverrideDateCreated = redditPost.CreatedUTC
                             });
 
                         if (!string.IsNullOrEmpty(createPostResponse.Error))

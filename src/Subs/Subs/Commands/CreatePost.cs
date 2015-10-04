@@ -26,6 +26,8 @@ namespace Subs.Commands
         public bool NotifyReplies { get; set; }
 
         public string Mirror { get; set; }
+
+        public DateTime? OverrideDateCreated { get; set; }
     }
 
     public class CreatePostResponse

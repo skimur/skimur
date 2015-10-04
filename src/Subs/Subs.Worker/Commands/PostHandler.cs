@@ -168,7 +168,7 @@ namespace Subs.Worker.Commands
                 var post = new Post
                 {
                     Id = GuidUtil.NewSequentialId(),
-                    DateCreated = Common.CurrentTime(),
+                    DateCreated = command.OverrideDateCreated.HasValue ? command.OverrideDateCreated.Value : Common.CurrentTime(),
                     LastEditDate = null,
                     SubId = sub.Id,
                     UserId = user.Id,
