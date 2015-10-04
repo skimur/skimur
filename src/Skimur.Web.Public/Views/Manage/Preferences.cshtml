@@ -1,0 +1,21 @@
+﻿@model UserPreferencesModel
+@{
+    Layout = "_LayoutManageAccount.cshtml";
+    ViewBag.Title = "Preferences";
+}
+
+<h2 class="page-header">@ViewBag.Title</h2>
+
+@using (Html.BeginForm(null, null, FormMethod.Post, new { action = Url.ManagePreferences() }))
+{
+    @Html.AntiForgeryToken()
+    @Html.ClientValidationErrorsContainer()
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.ShowNsfw) @Html.DisplayNameFor(x => x.ShowNsfw)
+        </label>
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Save" class="btn btn-primary" />
+    </div>
+}

@@ -159,6 +159,11 @@ namespace Skimur.Web
             return urlHelper.Action("ManageLogins", "Manage");
         }
 
+        public static string ManagePreferences(this UrlHelper urlHelper)
+        {
+            return urlHelper.Action("Preferences", "Manage");
+        }
+
         public static string AvatarUrl(this UrlHelper urlHelper, string avatarIdentifier)
         {
             if (string.IsNullOrEmpty(avatarIdentifier))

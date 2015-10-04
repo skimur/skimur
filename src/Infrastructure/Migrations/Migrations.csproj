@@ -92,6 +92,7 @@
     <Compile Include="Postgres\_0013_Nsfw.cs" />
     <Compile Include="Postgres\_0014_MirroredPosts.cs" />
     <Compile Include="Postgres\_0015_SubInAll.cs" />
+    <Compile Include="Postgres\_0016_UserShowNsfwSettings.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />

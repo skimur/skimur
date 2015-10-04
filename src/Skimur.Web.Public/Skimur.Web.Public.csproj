@@ -373,6 +373,7 @@
     <Content Include="Settings\WebSettings.json" />
     <Content Include="Settings\BlockedIps.json" />
     <Content Include="Settings\RequestLogging.json" />
+    <Content Include="Views\Manage\Preferences.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

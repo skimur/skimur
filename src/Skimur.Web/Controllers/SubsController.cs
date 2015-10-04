@@ -102,7 +102,15 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, false, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs,
+                sortby: sort.Value,
+                timeFilter: time.Value,
+                // anonymous users don't see NSFW content.
+                // logged in users only see NSFW if preferences say so.
+                // If they want to see NSFW, they will see all content (SFW/NSFW).
+                nsfw: _userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false),
+                skip: ((pageNumber - 1)*pageSize),
+                take: pageSize);
 
             var model = new SubPostsModel();
             model.SortBy = sort.Value;
@@ -158,7 +166,16 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
 
-            var postIds = _postDao.GetPosts(subs, sort.Value, time.Value, true /*hide removed posts TODO: only hide if not post admin*/, false, model.IsAll, ((pageNumber - 1) * pageSize), pageSize);
+            var postIds = _postDao.GetPosts(subs,
+                sortby:sort.Value, 
+                timeFilter:time.Value,
+                onlyAll:model.IsAll,
+                // anonymous users don't see NSFW content.
+                // logged in users only see NSFW if preferences say so.
+                // If they want to see NSFW, they will see all content (SFW/NSFW).
+                nsfw:_userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false), 
+                skip:((pageNumber - 1) * pageSize),
+                take:pageSize);
             
             model.Sub = sub != null ? _subWrapper.Wrap(sub.Id, _userContext.CurrentUser) : null;
             model.SortBy = sort.Value;

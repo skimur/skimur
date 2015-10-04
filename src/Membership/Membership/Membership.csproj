@@ -63,6 +63,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="IUserSettings.cs" />
     <Compile Include="Login.cs" />
     <Compile Include="ReadModel\IMembershipDao.cs" />
     <Compile Include="ReadModel\Impl\MembershipDao.cs" />

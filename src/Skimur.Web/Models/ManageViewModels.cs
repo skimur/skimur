@@ -129,4 +129,10 @@ namespace Skimur.Web.Models
         public string SelectedProvider { get; set; }
         public ICollection<System.Web.Mvc.SelectListItem> Providers { get; set; }
     }
+
+    public class UserPreferencesModel
+    {
+        [DisplayName("I am over eighteen years old and willing to view adult content")]
+        public bool ShowNsfw { get; set; }
+    }
 }

@@ -17,6 +17,7 @@ namespace Subs.ReadModel
             bool hideRemovedPosts = true,
             bool showDeleted = false,
             bool onlyAll = false,
+            bool? nsfw = null,
             int? skip = null, 
             int? take = null);
 

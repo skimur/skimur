@@ -7,7 +7,7 @@ namespace Membership
     /// Represents a user of the system
     /// </summary>
     [Alias("Users")]
-    public class User
+    public class User : IUserSettings
     {
         /// <summary>
         /// User ID (Primary Key)
@@ -113,5 +113,10 @@ namespace Membership
         /// Is this user an administrator?
         /// </summary>
         public bool IsAdmin { get; set; }
+
+        /// <summary>
+        /// Does the user want to see NSFW content?
+        /// </summary>
+        public bool ShowNsfw { get; set; }
     }
 }

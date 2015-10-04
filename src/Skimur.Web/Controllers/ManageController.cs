@@ -89,8 +89,36 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> Preferences()
+        {
+            ViewBag.ManageNavigationKey = "Preferences";
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+
+            return View(new UserPreferencesModel
+            {
+                ShowNsfw = user.ShowNsfw
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Preferences(UserPreferencesModel model)
+        {
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            user.ShowNsfw = model.ShowNsfw;
+            await _userManager.UpdateAsync(user);
+
+            AddSuccessMessage("Your preferences have been updated.");
+
+            return View(model);
+        }
+
         #region Email
-        
+
         public async Task<ActionResult> ManageEmail()
         {
             ViewBag.ManageNavigationKey = "Email";
