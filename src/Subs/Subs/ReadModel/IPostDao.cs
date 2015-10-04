@@ -21,7 +21,15 @@ namespace Subs.ReadModel
             int? skip = null, 
             int? take = null);
 
-        SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null);
+        SeekedList<Guid> QueryPosts(string text, 
+            Guid? subId = null, 
+            PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, 
+            TimeFilter timeFilter = TimeFilter.All,
+            bool hideRemovedPosts = true,
+            bool showDeleted = false, 
+            bool? nsfw = null,
+            int? skip = null, 
+            int? take = null);
 
         SeekedList<Guid> GetUnmoderatedPosts(List<Guid> subs = null, int? skip = null, int? take = null);
 

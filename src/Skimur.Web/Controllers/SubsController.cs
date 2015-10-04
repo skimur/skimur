@@ -299,12 +299,11 @@ namespace Skimur.Web.Controllers
 
             var postIds = _postDao.QueryPosts(query,
                model.LimitingToSub.Sub.Id,
-               sort.Value,
-               time.Value,
-               true /*TODO: show removed posts for admins*/,
-               false,
-               ((pageNumber - 1) * pageSize),
-               pageSize);
+               sortBy:sort.Value,
+               timeFilter:time.Value,
+               nsfw:_userContext.CurrentNsfw,
+               skip:((pageNumber - 1) * pageSize),
+               take:pageSize);
 
             if (!string.IsNullOrEmpty(model.Query))
                 model.Posts = new PagedList<PostWrapped>(
@@ -316,7 +315,12 @@ namespace Skimur.Web.Controllers
             return View("Search", model);
         }
 
-        public ActionResult SearchSite(string query, PostsSearchSortBy? sort, TimeFilter? time, SearchResultType? resultType, int? pageNumber, int? pageSize)
+        public ActionResult SearchSite(string query, 
+            PostsSearchSortBy? sort, 
+            TimeFilter? time, 
+            SearchResultType? resultType, 
+            int? pageNumber, 
+            int? pageSize)
         {
             if (sort == null)
                 sort = PostsSearchSortBy.Relevance;
@@ -349,11 +353,10 @@ namespace Skimur.Web.Controllers
                     case null:
                         postIds = _postDao.QueryPosts(query,
                             model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, 
-                            sort.Value,
-                            time.Value,
-                            true /*TODO: show removed posts for admins*/,
-                            false,
-                            ((pageNumber - 1) * pageSize), pageSize);
+                            sortBy:sort.Value,
+                            timeFilter:time.Value,
+                            skip:((pageNumber - 1) * pageSize), 
+                            take:pageSize);
                         subIds = _subDao.GetAllSubs(model.Query,
                             sortBy: SubsSortBy.Relevance,
                             nsfw: _userContext.CurrentNsfw,
@@ -362,18 +365,18 @@ namespace Skimur.Web.Controllers
                         break;
                     case SearchResultType.Post:
                         postIds = _postDao.QueryPosts(query,
-                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null, sort.Value,
-                            time.Value,
-                            true /*TODO: Show removed posts for admins*/,
-                            false,
-                            ((pageNumber - 1) * pageSize), pageSize);
+                            model.LimitingToSub != null ? model.LimitingToSub.Sub.Id : (Guid?)null,
+                            sortBy: sort.Value,
+                            timeFilter: time.Value,
+                            skip: ((pageNumber - 1) * pageSize),
+                            take: pageSize);
                         break;
                     case SearchResultType.Sub:
                         subIds = _subDao.GetAllSubs(model.Query,
-                            sortBy: SubsSortBy.Relevance,
-                            nsfw: _userContext.CurrentNsfw,
-                            skip: ((pageNumber - 1) * pageSize),
-                            take: pageSize);
+                              sortBy: SubsSortBy.Relevance,
+                              nsfw: _userContext.CurrentNsfw,
+                              skip: ((pageNumber - 1) * pageSize),
+                              take: pageSize);
                         break;
                     default:
                         throw new Exception("unknown result type");

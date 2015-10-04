@@ -122,9 +122,17 @@ namespace Subs.Services.Impl
             });
         }
 
-        public SeekedList<Guid> QueryPosts(string text, Guid? subId = null, PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, TimeFilter timeFilter = TimeFilter.All, bool hideRemovedPosts = true, bool showDeleted = false, int? skip = null, int? take = null)
+        public SeekedList<Guid> QueryPosts(string text,
+            Guid? subId = null,
+            PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance,
+            TimeFilter timeFilter = TimeFilter.All,
+            bool hideRemovedPosts = true,
+            bool showDeleted = false,
+            bool? nsfw = null,
+            int? skip = null,
+            int? take = null)
         {
-            // this implemention will eventually store a index, such as solr.
+            // this implemention will eventually store an index, such as solr.
 
             return _conn.Perform(conn =>
             {
@@ -174,6 +182,9 @@ namespace Subs.Services.Impl
 
                 if (!showDeleted)
                     query.Where(x => x.Deleted == false);
+
+                if (nsfw.HasValue)
+                    query.Where(x => x.Nsfw == nsfw.Value);
 
                 var totalCount = conn.Count(query);
 
