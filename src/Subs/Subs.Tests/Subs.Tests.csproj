@@ -71,6 +71,7 @@
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
     <Compile Include="CommentBuilderTests.cs" />
+    <Compile Include="KarmaTests.cs" />
     <Compile Include="MessagingTests.cs" />
     <Compile Include="SortTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
