@@ -48,13 +48,17 @@ namespace Subs.Worker.Commands
             if (!user.IsAdmin)
                 if (_subUserBanService.IsUserBannedFromSub(post.SubId, user.Id))
                     return;
+            
+            var currentVote = _voteService.GetVoteForUserOnPost(user.Id, post.Id);
+
+            if (currentVote == command.VoteType) return; // already voted with that type!
 
             if (command.VoteType.HasValue)
                 _voteService.VoteForPost(post.Id, user.Id, command.IpAddress, command.VoteType.Value, command.DateCasted);
             else
                 _voteService.UnVotePost(post.Id, user.Id);
 
-            _eventBus.Publish(new VoteForPostCasted { PostId = post.Id, UserId = user.Id, VoteType = command.VoteType });
+            _eventBus.Publish(new VoteForPostCasted { PostId = post.Id, UserId = user.Id, PreviousVote = currentVote, VoteType = command.VoteType });
         }
 
         public void Handle(CastVoteForComment command)
@@ -78,12 +82,16 @@ namespace Subs.Worker.Commands
                 if (_subUserBanService.IsUserBannedFromSub(post.SubId, user.Id))
                     return;
 
+            var currentVote = _voteService.GetVoteForUserOnComment(user.Id, comment.Id);
+
+            if (currentVote == command.VoteType) return; // already voted with that type!
+
             if (command.VoteType.HasValue)
                 _voteService.VoteForComment(comment.Id, user.Id, command.IpAddress, command.VoteType.Value, command.DateCasted);
             else
                 _voteService.UnVoteComment(comment.Id, user.Id);
 
-            _eventBus.Publish(new VoteForCommentCasted { CommentId = comment.Id, UserName = user.UserName, VoteType = command.VoteType });
+            _eventBus.Publish(new VoteForCommentCasted { CommentId = comment.Id, UserName = user.UserName, PreviousVote = currentVote, VoteType = command.VoteType });
         }
     }
 }

@@ -12,29 +12,35 @@ namespace Subs.Services.Impl
     public class KarmaService : IKarmaService
     {
         private readonly ISession _session;
-        private PreparedStatement _increaseStatement;
-        private PreparedStatement _decreaseStatement;
+        private PreparedStatement _adjustStatement;
         private Table<UserKarma> _table;
+
+        static KarmaService()
+        {
+            MappingConfiguration.Global.Define<KarmaMappings>();
+        }
 
         public KarmaService(ISession session)
         {
             _session = session;
-            MappingConfiguration.Global.Define<KarmaMappings>();
             _table = new Table<UserKarma>(_session);
+        }
+
+        public void AdjustKarma(Guid userId, Guid subId, KarmaType karmaType, int change)
+        {
+            if (change == 0) return;
+            EnsureStatementsReady();
+            _session.Execute(_adjustStatement.Bind((long)change, userId, subId + "-" + karmaType));
         }
 
         public void IncreaseKarma(Guid userId, Guid subId, KarmaType karmaType)
         {
-            EnsureStatementsReady();
-            var bound = _increaseStatement.Bind(userId, subId + "-" + karmaType);
-            _session.Execute(bound);
+            AdjustKarma(userId, subId, karmaType, 1);
         }
 
         public void DecreaseKarma(Guid userId, Guid subId, KarmaType karmaType)
         {
-            EnsureStatementsReady();
-            var bound = _decreaseStatement.Bind(userId, subId + "-" + karmaType);
-            _session.Execute(bound);
+            AdjustKarma(userId, subId, karmaType, -1);
         }
 
         public Dictionary<KarmaReportKey, int> GetKarma(Guid userId)
@@ -60,10 +66,8 @@ namespace Subs.Services.Impl
 
         private void EnsureStatementsReady()
         {
-            if (_increaseStatement == null)
-                _increaseStatement = _session.Prepare("UPDATE UserKarma SET karma = karma + 1 where user_id = ? and sub_type = ?;");
-            if (_decreaseStatement == null)
-                _decreaseStatement = _session.Prepare("UPDATE UserKarma SET karma = karma - 1 where user_id = ? and sub_type = ?;");
+            if (_adjustStatement == null)
+                _adjustStatement = _session.Prepare("UPDATE UserKarma SET karma = karma + ? where user_id = ? and sub_type = ?;");
         }
 
         private class KarmaMappings : Mappings

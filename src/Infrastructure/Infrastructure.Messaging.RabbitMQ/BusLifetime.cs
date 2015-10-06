@@ -1,9 +1,18 @@
 ﻿using System;
 using System.Diagnostics;
+using System.IO;
 using System.Linq;
 using System.Reflection;
+using System.Runtime.Remoting.Messaging;
+using System.Threading;
+using System.Threading.Tasks;
 using Infrastructure.Logging;
 using Infrastructure.Messaging.Handling;
+using RabbitMQ.Client;
+using RabbitMQ.Client.Exceptions;
+using ServiceStack;
+using ServiceStack.Logging;
+using ServiceStack.Messaging;
 using ServiceStack.RabbitMq;
 using SimpleInjector;
 
@@ -56,22 +65,50 @@ namespace Infrastructure.Messaging.RabbitMQ
                 _logger = logger;
             }
 
-            public void RegisterEvent<T>() where T : class, IEvent
+            public void RegisterEvent<T, TEventHandler>()
+                where T : class, IEvent
+                where TEventHandler : class, IEventHandler<T>
             {
                 _logger.Debug("Registering event handler " + typeof(T).Name);
-                _server.RegisterHandler<T>(message =>
+
+                var queueName = "mq:" + typeof(TEventHandler).Name + ":" + typeof(T).Name + ".inq";
+                
+                using (var messageProducer = (RabbitMqProducer) _server.CreateMessageProducer())
                 {
-                    try
+                    using (var channel = messageProducer.Channel)
                     {
-                        _container.GetInstance<IEventHandler<T>>().Handle(message.GetBody());
+                        channel.ExchangeDeclare(string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout),
+                                        ExchangeType.Fanout,
+                                        durable: true,
+                                        autoDelete: false,
+                                        arguments: null);
+                        
+                        channel.QueueDeclare(queueName, 
+                            durable: true, 
+                            exclusive: false, 
+                            autoDelete: false, 
+                            arguments: null);
+                        
+                        channel.QueueBind(queueName,
+                                            string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout),
+                                            QueueNames<T>.In);
+                    }
+                }
+
+                new RabbitMqWorker((RabbitMqMessageFactory)_server.MessageFactory, 
+                    new MessageHandler<T>(_server, message =>
+                    {
+                        _container.GetInstance<TEventHandler>().Handle(message.GetBody());
                         return null;
-                    }
-                    catch (Exception ex)
+                    })
                     {
-                        _logger.Error("Error processing command.", ex);
-                        throw;
-                    }
-                });
+                        ProcessQueueNames = new[] { queueName }
+                    },
+                    queueName,
+                    (worker, exception) =>
+                    {
+                        _logger.Error("Error from processing queue " + queueName, exception);
+                    }).Start();
             }
 
             public void RegisterCommand<T>() where T : class, ICommand

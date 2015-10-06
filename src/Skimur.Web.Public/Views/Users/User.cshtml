@@ -8,6 +8,17 @@
       Stay tuned. Work-in-progress.
     </div>
     <div class="col-lg-3 col-sm-4">
+
+        <div class="panel panel-default">
+            <div class="panel-heading">Points</div>
+            <ul class="list-group">
+                <li class="list-group-item">@Model.CommentKudos</li>
+                <li class="list-group-item">@Model.PostKudos</li>
+            </ul>
+        </div>
+
+
+
         @if (Model.IsModerator && Model.ModeratingSubs != null && Model.ModeratingSubs.Count > 0)
         {
             <div class="panel panel-default">

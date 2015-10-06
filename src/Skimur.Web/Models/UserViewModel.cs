@@ -14,5 +14,9 @@ namespace Skimur.Web.Models
         public bool IsModerator { get; set; }
 
         public List<string> ModeratingSubs { get; set; } 
+
+        public int CommentKudos { get; set; }
+
+        public int PostKudos { get; set; }
     }
 }

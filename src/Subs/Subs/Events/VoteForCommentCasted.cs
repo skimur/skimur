@@ -9,6 +9,8 @@ namespace Subs.Events
 
         public string UserName { get; set; }
 
+        public VoteType? PreviousVote { get; set; }
+
         public VoteType? VoteType { get; set; }
     }
 }

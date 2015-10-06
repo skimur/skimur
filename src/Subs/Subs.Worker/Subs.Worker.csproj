@@ -51,6 +51,7 @@
     <Compile Include="Commands\ModerationHandler.cs" />
     <Compile Include="Commands\PostHandler.cs" />
     <Compile Include="Commands\PostModerationHandler.cs" />
+    <Compile Include="Events\KudosUpdateEventHandler.cs" />
     <Compile Include="Events\UserMentionNotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Registrar.cs" />

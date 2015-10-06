@@ -10,6 +10,6 @@ namespace Subs.ReadModel
 {
     public interface IKarmaDao
     {
-
+        Dictionary<KarmaReportKey, int> GetKarma(Guid userId);
     }
 }
