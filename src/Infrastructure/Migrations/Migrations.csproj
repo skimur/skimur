@@ -95,7 +95,6 @@
     <Compile Include="Postgres\_0015_SubInAll.cs" />
     <Compile Include="Postgres\_0016_UserShowNsfwSettings.cs" />
     <Compile Include="Postgres\_0017_SubSidebarAndSubmissionText.cs" />
-    <Compile Include="Postgres\_0018_EnsureDefaultUserFunction.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
