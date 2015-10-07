@@ -454,6 +454,7 @@
     <Content Include="NLog.config">
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
+    <Content Include="Content\components\users.less" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
