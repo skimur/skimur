@@ -25,7 +25,7 @@ namespace Skimur.Web.Mvc
             }
             else
             {
-                HandleUnauthorizedRequest(filterContext);
+                base.HandleUnauthorizedRequest(filterContext);
             }
         }
 
