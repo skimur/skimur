@@ -183,5 +183,13 @@ namespace Subs.Services.Impl
                 conn.Update<Message>(new { IsNew = true }, x => messages.Contains(x.Id));
             });
         }
+
+        public void DeleteNotificationsForComment(Guid commentId)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Delete<Message>(x => x.CommentId == commentId);
+            });
+        }
     }
 }

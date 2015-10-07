@@ -6,19 +6,24 @@ using Subs.Services;
 
 namespace Subs.Worker.Events
 {
-    public class ReplyNotificationEventHandler : IEventHandler<CommentCreated>
+    public class ReplyNotificationEventHandler : 
+        IEventHandler<CommentCreated>,
+        IEventHandler<CommentDeleted>
     {
         private readonly ICommentService _commentService;
         private readonly IPostService _postService;
         private readonly ICommandBus _commandBus;
+        private readonly IMessageService _messageService;
 
         public ReplyNotificationEventHandler(ICommentService commentService, 
             IPostService postService,
-            ICommandBus commandBus)
+            ICommandBus commandBus,
+            IMessageService messageService)
         {
             _commentService = commentService;
             _postService = postService;
             _commandBus = commandBus;
+            _messageService = messageService;
         }
 
         public void Handle(CommentCreated @event)
@@ -74,6 +79,15 @@ namespace Subs.Worker.Events
                     });
                 }
             }
+        }
+
+        public void Handle(CommentDeleted @event)
+        {
+            var comment = _commentService.GetCommentById(@event.CommentId);
+            if (comment == null || !comment.Deleted) return;
+
+            // let's delete any comment notifications that may have been created.
+            _messageService.DeleteNotificationsForComment(comment.Id);
         }
     }
 }

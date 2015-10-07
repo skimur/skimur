@@ -42,5 +42,7 @@ namespace Subs.Services
         void MarkMessagesAsRead(List<Guid> messages);
 
         void MarkMessagesAsUnread(List<Guid> messages);
+
+        void DeleteNotificationsForComment(Guid commentId);
     }
 }
