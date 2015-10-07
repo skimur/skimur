@@ -211,15 +211,17 @@
 
         var $buttonsContainer = $("<div />").appendTo(post.staging);
 
-        $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
+        var saveButton = $("<button class='btn btn-primary'>Save</button>")
             .appendTo($buttonsContainer)
             .click(function (e) {
                 e.preventDefault();
+                saveButton.buttonStartLoading();
                 skimur.editPost(post.post.data("post-id"), $textArea.val(), function (result) {
-                    cancel(element);
                     if (result.success) {
+                        cancel(element);
                         post.post.replaceWith($(result.html));
                     } else {
+                        saveButton.buttonStopLoading();
                         skimurui.displayError(result.error);
                     }
                 });
@@ -227,7 +229,7 @@
 
         $buttonsContainer.append("&nbsp;&nbsp;&nbsp;");
 
-        $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
+        $("<button class='btn btn-default'>Cancel</button>")
             .appendTo($buttonsContainer)
             .click(function (e) {
                 e.preventDefault();
