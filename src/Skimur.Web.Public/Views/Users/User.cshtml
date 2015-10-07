@@ -35,11 +35,11 @@
                 Member for: <b title="@Model.User.CreatedDate">@Html.Age(Model.User.CreatedDate)</b><br />
                 @if (!string.IsNullOrEmpty(Model.User.FullName))
                 {
-                    <text>Full name: </text> @Model.User.FullName<br />
+                    <text>Full name: </text><b>@Model.User.FullName</b><br />
                 }
                 @if (!string.IsNullOrEmpty(Model.User.Location))
                 {
-                    <text>Location: </text> @Model.User.Location<br />
+                    <text>Location: </text><b>@Model.User.Location</b><br />
                 }
                 @if (!string.IsNullOrEmpty(Model.User.Url))
                 {
