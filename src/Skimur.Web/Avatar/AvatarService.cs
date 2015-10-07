@@ -8,17 +8,20 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using ImageResizer;
+using Infrastructure;
 using Infrastructure.Settings;
 
 namespace Skimur.Web.Avatar
 {
     public class AvatarService : IAvatarService
     {
+        private readonly IPathResolver _pathResolver;
         private string _avatarDirectory;
 
-        public AvatarService(ISettingsProvider<WebSettings> webSettings)
+        public AvatarService(ISettingsProvider<WebSettings> webSettings, IPathResolver pathResolver)
         {
-            _avatarDirectory = System.Web.HttpContext.Current.Server.MapPath(webSettings.Settings.AvatarDirectory);
+            _pathResolver = pathResolver;
+            _avatarDirectory = _pathResolver.Resolve(webSettings.Settings.AvatarDirectory);
             if (!Directory.Exists(_avatarDirectory))
                 Directory.CreateDirectory(_avatarDirectory);
         }
