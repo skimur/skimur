@@ -7,6 +7,7 @@ using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
 using Infrastructure.Utils;
 using Membership.Services;
+using Skimur;
 using Skimur.Markdown;
 using Subs.Commands;
 using Subs.Events;
@@ -131,7 +132,7 @@ namespace Subs.Worker.Commands
 
                 _commentService.InsertComment(comment);
 
-                _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserName = user.UserName, VoteType = VoteType.Up });
+                _commandBus.Send(new CastVoteForComment { DateCasted = post.DateCreated, IpAddress = command.AuthorIpAddress, CommentId = comment.Id, UserId = user.Id, VoteType = VoteType.Up });
                 _eventBus.Publish(new CommentCreated { CommentId = comment.Id, PostId = comment.PostId });
                 if (mentions.Count > 0)
                     _eventBus.Publish(new UsersMentioned { CommentId = comment.Id, Users = mentions });
@@ -273,7 +274,7 @@ namespace Subs.Worker.Commands
                     return response;
                 }
                 
-                string newBody = null;
+                string newBody;
 
                 if (user.Id == comment.AuthorUserId)
                 {
@@ -289,7 +290,7 @@ namespace Subs.Worker.Commands
                 {
                     newBody = "deleted on " + command.DateDeleted.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
                 }
-
+                
                 _commentService.DeleteComment(comment.Id, newBody);
 
                 _eventBus.Publish(new CommentDeleted
@@ -299,6 +300,18 @@ namespace Subs.Worker.Commands
                     SubId = comment.SubId,
                     DeletedByUserId = user.Id
                 });
+
+                // let's remove the single vote that the author may have attributed to this comment.
+                // this will prevent people from creating/deleting comments for a single kudo, over and over.
+                _commandBus.Send(new CastVoteForComment
+                {
+                    VoteType = null, // unvote the comment!
+                    CommentId = comment.Id,
+                    DateCasted = Common.CurrentTime(),
+                    IpAddress = string.Empty, // TODO,
+                    UserId = comment.AuthorUserId
+                });
+
             }
             catch (Exception ex)
             {

@@ -45,6 +45,15 @@ namespace Subs.Worker.Commands
             if (post == null)
                 return;
 
+            if (post.Deleted)
+            {
+                // if the post is deleted, any user other than the author can't cast a vote.
+                if (user.Id != post.UserId) return;
+
+                // also, that vote that the author may cast can only be a unvote (remove vote).
+                if (command.VoteType != null) return;
+            }
+
             if (!user.IsAdmin)
                 if (_subUserBanService.IsUserBannedFromSub(post.SubId, user.Id))
                     return;
@@ -63,7 +72,7 @@ namespace Subs.Worker.Commands
 
         public void Handle(CastVoteForComment command)
         {
-            var user = _membershipService.GetUserByUserName(command.UserName);
+            var user = _membershipService.GetUserById(command.UserId);
 
             if (user == null)
                 return;
@@ -72,6 +81,15 @@ namespace Subs.Worker.Commands
 
             if (comment == null)
                 return;
+
+            if (comment.Deleted)
+            {
+                // if the comment is deleted, any user other than the author can't cast a vote.
+                if (user.Id != comment.AuthorUserId) return;
+
+                // also, that vote that the author may cast can only be a unvote (remove vote).
+                if (command.VoteType != null) return;
+            }
 
             var post = _postService.GetPostById(comment.PostId);
 

@@ -294,6 +294,18 @@ namespace Subs.Worker.Commands
                 {
                     post.Deleted = true;
                     _postService.UpdatePost(post);
+
+                    // let's remove the single vote that the author may have attributed to this post.
+                    // this will prevent people from creating/deleting post for a single kudo, over and over.
+                    _commandBus.Send(new CastVoteForPost
+                    {
+                        VoteType = null, // unvote the comment!
+                        PostId = post.Id,
+                        DateCasted = Common.CurrentTime(),
+                        IpAddress = string.Empty, // TODO,
+                        UserId = post.UserId
+                    });
+
                 }
                 else
                 {

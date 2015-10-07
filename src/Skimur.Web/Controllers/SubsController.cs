@@ -723,7 +723,7 @@ namespace Skimur.Web.Controllers
         {
             _commandBus.Send(new CastVoteForComment
             {
-                UserName = _userContext.CurrentUser.UserName,
+                UserId = _userContext.CurrentUser.Id,
                 CommentId = commentId,
                 DateCasted = Common.CurrentTime(),
                 IpAddress = Request.UserHostAddress,
@@ -738,7 +738,7 @@ namespace Skimur.Web.Controllers
         {
             _commandBus.Send(new CastVoteForComment
             {
-                UserName = _userContext.CurrentUser.UserName,
+                UserId = _userContext.CurrentUser.Id,
                 CommentId = commentId,
                 DateCasted = Common.CurrentTime(),
                 IpAddress = Request.UserHostAddress,
