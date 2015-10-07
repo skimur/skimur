@@ -16,14 +16,17 @@ namespace Skimur.Web.Controllers
         private readonly IMembershipService _membershipService;
         private readonly ISubDao _subDao;
         private readonly ISubModerationDao _subModerationDao;
+        private readonly IKarmaDao _karmaDao;
 
         public UsersController(IMembershipService membershipService,
             ISubDao subDao,
-            ISubModerationDao subModerationDao)
+            ISubModerationDao subModerationDao,
+            IKarmaDao karmaDao)
         {
             _membershipService = membershipService;
             _subDao = subDao;
             _subModerationDao = subModerationDao;
+            _karmaDao = karmaDao;
         }
 
         public ActionResult User(string userName)
@@ -43,6 +46,11 @@ namespace Skimur.Web.Controllers
                 model.IsModerator = true;
                 model.ModeratingSubs = _subDao.GetSubsByIds(moderatedSubs).Select(x => x.Name).ToList();
             }
+
+            var kudos = _karmaDao.GetKarma(user.Id);
+
+            model.CommentKudos = kudos.Keys.Where(x => x.Type == KarmaType.Comment).Sum(x => kudos[x]);
+            model.PostKudos = kudos.Keys.Where(x => x.Type == KarmaType.Post).Sum(x => kudos[x]);
 
             return View(model);
         }

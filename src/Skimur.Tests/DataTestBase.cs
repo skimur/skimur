@@ -20,7 +20,7 @@ namespace Skimur.Tests
         {
         }
 
-        [Alias("ensure_default_user_created")]
+        [Alias("ensure_default_user_exists")]
         public class EnsureDefaultUserFunction
         {
             

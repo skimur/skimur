@@ -50,7 +50,13 @@ namespace Membership.Services
         /// </summary>
         /// <param name="ids"></param>
         /// <returns></returns>
-        List<User> GetUsersByIds(List<Guid> ids); 
+        List<User> GetUsersByIds(List<Guid> ids);
+
+        /// <summary>
+        /// All the users in the system
+        /// </summary>
+        /// <returns></returns>
+        SeekedList<User> GetAllUsers(int? skip = null, int? take = null); 
 
         /// <summary>
         /// Determines if the given username is a valid one. It does NOT check if it is currently used.

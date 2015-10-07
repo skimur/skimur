@@ -25,18 +25,22 @@ namespace Infrastructure.Messaging.Handling
             {
                 if (typeof (IEventHandler).IsAssignableFrom(registration.ServiceType))
                 {
-                    var genericArguements = registration.ServiceType.GenericTypeArguments.ToList();
-                    if(genericArguements.Count == 0)
-                        throw new Exception("The service " + registration.ServiceType + " must by of type IEventHandler<T>");
-                    
-                    RegisterEventHandler(genericArguements[0], registrar);
+                    // get all the implementations on this type
+                    foreach(var intface in registration.ServiceType.GetInterfaces().Where(x => typeof(IEventHandler).IsAssignableFrom(x)))
+                    {
+                        var genericArguements = intface.GenericTypeArguments.ToList();
+                        if (genericArguements.Count == 0)
+                            continue;
+                        
+                        RegisterEventHandler(genericArguements[0], registration.Registration.ImplementationType, registrar);
+                    }
                 }
             }
         }
 
-        private void RegisterEventHandler(Type type, IEventRegistrar registrar)
+        private void RegisterEventHandler(Type type, Type implementation, IEventRegistrar registrar)
         {
-            var methodInfo = typeof(IEventRegistrar).GetMethod("RegisterEvent", BindingFlags.Public | BindingFlags.Instance).MakeGenericMethod(type);
+            var methodInfo = typeof(IEventRegistrar).GetMethod("RegisterEvent", BindingFlags.Public | BindingFlags.Instance).MakeGenericMethod(type, implementation);
             methodInfo.Invoke(registrar, new object[0]);
         }
     }

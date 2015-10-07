@@ -197,5 +197,58 @@ namespace Subs.Services.Impl
         {
             return (int)_conn.Perform(conn => conn.Count<Comment>(x => x.PostId == postId));
         }
+
+        public SeekedList<Guid> GetCommentsForUser(Guid userId, 
+            CommentSortBy? sortBy = null, 
+            int? skip = null,
+            int? take = null)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<Comment>();
+
+                query.Where(x => x.AuthorUserId == userId);
+
+                if (sortBy.HasValue)
+                {
+                    switch (sortBy)
+                    {
+                        case CommentSortBy.Best:
+                            query.OrderByDescending(x => x.SortConfidence);
+                            break;
+                        case CommentSortBy.Top:
+                            query.OrderByExpression =
+                                "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
+                            break;
+                        case CommentSortBy.New:
+                            query.OrderByDescending(x => x.DateCreated);
+                            break;
+                        case CommentSortBy.Controversial:
+                            query.OrderByExpression =
+                                "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
+                            break;
+                        case CommentSortBy.Old:
+                            query.OrderBy(x => x.DateCreated);
+                            break;
+                        case CommentSortBy.Qa:
+                            query.OrderByDescending(x => x.SortQa);
+                            break;
+                        default:
+                            throw new Exception("unknown sort");
+                    }
+                }
+                else
+                {
+                    query.OrderByDescending(x => x.DateCreated);
+                }
+
+                var totalCount = conn.Count(query);
+
+                query.Skip(skip).Take(take);
+                query.SelectExpression = "SELECT \"id\"";
+
+                return new SeekedList<Guid>(conn.Select(query).Select(x => x.Id), skip ?? 0, take, totalCount);
+            });
+        }
     }
 }

@@ -108,6 +108,7 @@
     <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ModeratorPermissions.cs" />
+    <Compile Include="ReadModel\IKarmaDao.cs" />
     <Compile Include="ReadModel\IMessageDao.cs" />
     <Compile Include="ReadModel\IMessageWrapper.cs" />
     <Compile Include="ReadModel\IModeratorWrapper.cs" />
@@ -115,6 +116,7 @@
     <Compile Include="ReadModel\CommentWrapped.cs" />
     <Compile Include="ReadModel\Impl\CommentWrapper.cs" />
     <Compile Include="ReadModel\ICommentWrapper.cs" />
+    <Compile Include="ReadModel\Impl\KarmaDao.cs" />
     <Compile Include="ReadModel\Impl\MessageDao.cs" />
     <Compile Include="ReadModel\Impl\MessageWrapper.cs" />
     <Compile Include="ReadModel\Impl\ModeratorWrapper.cs" />
@@ -139,12 +141,14 @@
     <Compile Include="ReadModel\SubWrapped.cs" />
     <Compile Include="ReadModel\Impl\SubWrapper.cs" />
     <Compile Include="Report.cs" />
+    <Compile Include="Services\IKarmaService.cs" />
     <Compile Include="Services\IMessageService.cs" />
     <Compile Include="Services\Impl\CommentTreeBuilder.cs" />
     <Compile Include="ReadModel\CommentTreeContextBuilder.cs" />
     <Compile Include="ReadModel\ICommentNodeHierarchyBuilder.cs" />
     <Compile Include="Services\ICommentTreeBuilder.cs" />
     <Compile Include="ReadModel\ICommentTreeContextBuilder.cs" />
+    <Compile Include="Services\Impl\KarmaService.cs" />
     <Compile Include="Services\Impl\MessageService.cs" />
     <Compile Include="Services\Impl\ReportService.cs" />
     <Compile Include="Services\Impl\SubModerationService.cs" />

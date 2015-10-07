@@ -36,6 +36,7 @@ namespace Subs.Services.Impl
         public SeekedList<Guid> GetPosts(List<Guid> subs = null,
             PostsSortBy sortby = PostsSortBy.New,
             TimeFilter timeFilter = TimeFilter.All,
+            Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,
             bool onlyAll = false,
@@ -54,6 +55,7 @@ namespace Subs.Services.Impl
                 if (timeFilter != TimeFilter.All)
                 {
                     TimeSpan timeSpan;
+
                     switch (timeFilter)
                     {
                         case TimeFilter.Hour:
@@ -92,6 +94,9 @@ namespace Subs.Services.Impl
                 if (nsfw.HasValue)
                     query.Where(x => x.Nsfw == nsfw.Value);
 
+                if (userId.HasValue)
+                    query.Where(x => x.UserId == userId.Value);
+
                 var totalCount = conn.Count(query);
 
                 query.Skip(skip).Take(take);
@@ -126,6 +131,7 @@ namespace Subs.Services.Impl
             Guid? subId = null,
             PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance,
             TimeFilter timeFilter = TimeFilter.All,
+            Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,
             bool? nsfw = null,
@@ -185,6 +191,9 @@ namespace Subs.Services.Impl
 
                 if (nsfw.HasValue)
                     query.Where(x => x.Nsfw == nsfw.Value);
+                
+                if (userId.HasValue)
+                    query.Where(x => x.UserId == userId.Value);
 
                 var totalCount = conn.Count(query);
 

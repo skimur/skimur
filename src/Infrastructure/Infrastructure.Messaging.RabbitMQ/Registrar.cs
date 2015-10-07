@@ -23,6 +23,7 @@ namespace Infrastructure.Messaging.RabbitMQ
 
                 var rabbitMqHost = ConfigurationManager.AppSettings["RabbitMQHost"];
                 if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
+                
                 return new RabbitMqServer(rabbitMqHost)
                 {
                     ErrorHandler = exception =>

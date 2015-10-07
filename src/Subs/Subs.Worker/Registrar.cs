@@ -22,15 +22,10 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<EditSub, EditSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>, SubHandler>();
             container.Register<ICommandHandlerResponse<UnSubcribeToSub, UnSubcribeToSubResponse>, SubHandler>();
-
-            container.Register<IEventHandler<SubScriptionChanged>, SubEventHandler>();
-
+            
             container.Register<ICommandHandler<CastVoteForPost>, VoteCommandHandler>();
             container.Register<ICommandHandler<CastVoteForComment>, VoteCommandHandler>();
-
-            container.Register<IEventHandler<VoteForPostCasted>, ScoringAndSortingEventHandler>();
-            container.Register<IEventHandler<VoteForCommentCasted>, ScoringAndSortingEventHandler>();
-
+            
             container.Register<ICommandHandlerResponse<CreateComment, CreateCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<EditComment, EditCommentResponse>, CommentCommandHandler>();
             container.Register<ICommandHandlerResponse<DeleteComment, DeleteCommentResponse>, CommentCommandHandler>();
@@ -54,16 +49,17 @@ namespace Subs.Worker
 
             container.Register<ICommandHandler<RemoveModFromSub>, ModerationHandler>();
             container.Register<ICommandHandler<ChangeModPermissionsForSub>, ModerationHandler>();
-
-            container.Register<IEventHandler<CommentCreated>, ReplyNotificationEventHandler>();
-
-            container.Register<IEventHandler<UsersMentioned>, UserMentionNotificationHandler>();
-            container.Register<IEventHandler<UsersUnmentioned>, UserMentionNotificationHandler>();
-
+            
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();
             container.Register<ICommandHandler<TogglePostNsfw>, PostHandler>();
+            
+            container.Register<KudosUpdateEventHandler>();
+            container.Register<ScoringAndSortingEventHandler>();
+            container.Register<ReplyNotificationEventHandler>();
+            container.Register<UserMentionNotificationHandler>();
+            container.Register<SubEventHandler>();
         }
 
         public int Order

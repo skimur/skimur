@@ -13,6 +13,8 @@ namespace Subs.Events
 
         public Guid UserId { get; set; }
 
+        public VoteType? PreviousVote { get; set; }
+
         public VoteType? VoteType { get; set; }
     }
 }
