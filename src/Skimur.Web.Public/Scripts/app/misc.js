@@ -10,6 +10,18 @@ $.fn.enterKey = function (fnc) {
     });
 }
 
+// helper method for disabling and enabling buttons
+$.fn.buttonStartLoading = function (fnc) {
+    return this.each(function () {
+        $(this).addClass("loading").prop("disabled", true);
+    });
+}
+$.fn.buttonStopLoading = function (fnc) {
+    return this.each(function () {
+        $(this).removeClass("loading").prop("disabled", false);
+    });
+}
+
 $(function() {
     if (!skimurui.isLoggedIn) {
         $(".submit-link, .submit-post").click(function(e) {

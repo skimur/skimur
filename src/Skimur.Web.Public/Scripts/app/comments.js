@@ -109,15 +109,17 @@
 
         var $buttonsContainer = $("<div />").appendTo(comment.staging);
 
-        $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
+        var saveButton = $("<button class='btn btn-primary'>Save</button>")
             .appendTo($buttonsContainer)
             .click(function (e) {
                 e.preventDefault();
+                saveButton.buttonStartLoading();
                 skimur.createComment(comment.comment.data("post-id"), comment.comment.data("comment-id"), $textArea.val(), function (result) {
-                    cancel(element);
                     if (result.success) {
+                        cancel(element);
                         $(result.html).insertAfter($("> .disc-body", comment.comment));
                     } else {
+                        saveButton.buttonStopLoading();
                         skimurui.displayError(result.error);
                     }
                 });
@@ -125,9 +127,9 @@
 
         $buttonsContainer.append("&nbsp;&nbsp;&nbsp;");
 
-        $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
+        var cancelButton = $("<button class='btn btn-default'>Cancel</button>")
             .appendTo($buttonsContainer)
-            .click(function (e) {
+            .click(function(e) {
                 e.preventDefault();
                 cancel(this);
             });
@@ -146,15 +148,17 @@
 
         var $buttonsContainer = $("<div />").appendTo(comment.staging);
 
-        $("<a href='javascript:void(0);' class='btn btn-primary'>Save</a>")
+        var saveButton = $("<button class='btn btn-primary'>Save</button>")
             .appendTo($buttonsContainer)
             .click(function (e) {
                 e.preventDefault();
+                saveButton.buttonStartLoading();
                 skimur.editComment(comment.comment.data("comment-id"), $textArea.val(), function (result) {
-                    cancel(element);
                     if (result.success) {
+                        cancel(element);
                         comment.comment.find("> .disc-body").replaceWith($(result.html));
                     } else {
+                        saveButton.buttonStopLoading();
                         skimurui.displayError(result.error);
                     }
                 });
@@ -162,7 +166,7 @@
 
         $buttonsContainer.append("&nbsp;&nbsp;&nbsp;");
 
-        $("<a href='javascript:void(0);' class='btn btn-default'>Cancel</a>")
+        var cancelButton = $("<button href='javascript:void(0);' class='btn btn-default'>Cancel</button>")
             .appendTo($buttonsContainer)
             .click(function (e) {
                 e.preventDefault();
