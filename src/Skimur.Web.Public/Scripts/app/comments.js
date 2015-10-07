@@ -19,10 +19,12 @@
 
     var voteUp = function (element) {
 
+        var $comment = getComment(element);
+        if ($comment.hasClass("deleted")) return;
+
         if (!skimurui.login.checkLoggedIn("You must be logged in to vote."))
             return;
 
-        var $comment = getComment(element);
         var $voting = $("> .disc-body .disc-voting", $comment);
 
         // the user wants to upvote a post!
@@ -189,7 +191,8 @@
             if (result.confirmed) {
                 skimur.deleteComment($comment.data("comment-id"), null, function (deleteResult) {
                     if (deleteResult.success) {
-                        $("> .disc-body", $comment).find(".delete, .reply, .edit").remove();
+                        $comment.addClass("deleted");
+                        $("> .disc-body .disc-options", $comment).empty();
                     } else {
                         skimurui.displayError(deleteResult.error);
                     }

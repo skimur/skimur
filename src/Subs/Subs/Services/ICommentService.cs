@@ -24,7 +24,7 @@ namespace Subs.Services
 
         void UpdateCommentSorting(Guid commentId, double? confidence, double? qa);
 
-        void DeleteComment(Guid commentId, DateTime deletedOn);
+        void DeleteComment(Guid commentId, string body);
 
         void UpdateNumberOfReportsForComment(Guid commentId, int numberOfReports);
 

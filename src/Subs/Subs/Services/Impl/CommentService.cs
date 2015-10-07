@@ -27,7 +27,7 @@ namespace Subs.Services.Impl
 
         public List<Comment> GetCommentsByIds(List<Guid> ids)
         {
-            if(ids == null || ids.Count == 0)
+            if (ids == null || ids.Count == 0)
                 return new List<Comment>();
 
             return _conn.Perform(conn => conn.SelectByIds<Comment>(ids));
@@ -98,7 +98,7 @@ namespace Subs.Services.Impl
                 return conn.Select(authorId.HasValue ? conn.From<Comment>().Where(x => x.ParentId == commentId && x.AuthorUserId == authorId) : conn.From<Comment>().Where(x => x.ParentId == commentId));
             });
         }
-        
+
         public void UpdateCommentVotes(Guid commentId, int? upVotes, int? downVotes)
         {
             if (downVotes.HasValue || upVotes.HasValue)
@@ -139,7 +139,7 @@ namespace Subs.Services.Impl
 
                     var statement = string.Format("update {0} set {1} {2}",
                             OrmLiteConfig.DialectProvider.GetQuotedTableName(ModelDefinition<Comment>.Definition),
-                            string.Join(",", sets), 
+                            string.Join(",", sets),
                             from.WhereExpression);
 
                     conn.ExecuteNonQuery(statement);
@@ -147,7 +147,7 @@ namespace Subs.Services.Impl
             }
         }
 
-        public void DeleteComment(Guid commentId, DateTime deletedOn)
+        public void DeleteComment(Guid commentId, string body)
         {
             _conn.Perform(conn =>
             {
@@ -155,8 +155,8 @@ namespace Subs.Services.Impl
                     {
                         Deleted = true,
                         AuthorUserName = "deleted",
-                        Body = "deleted on " + deletedOn.ToLongTimeString(),
-                        BodyFormatted = "deleted"
+                        Body = body,
+                        BodyFormatted = body
                     },
                     x => x.Id == commentId);
             });
@@ -198,8 +198,8 @@ namespace Subs.Services.Impl
             return (int)_conn.Perform(conn => conn.Count<Comment>(x => x.PostId == postId));
         }
 
-        public SeekedList<Guid> GetCommentsForUser(Guid userId, 
-            CommentSortBy? sortBy = null, 
+        public SeekedList<Guid> GetCommentsForUser(Guid userId,
+            CommentSortBy? sortBy = null,
             int? skip = null,
             int? take = null)
         {

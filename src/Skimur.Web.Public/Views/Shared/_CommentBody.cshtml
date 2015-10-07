@@ -9,7 +9,17 @@
     </div>
     <div class="disc-main">
         <div class="disc-tagline">
-            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[&#8211;]</a> <a href="/user/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a> <span class="score">@(Model.Comment.Score) points</span> <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
+            <a href="javascript:void(0)" class="expand" onclick="return skimurui.comments.toggleExpand(this)">[&#8211;]</a>
+            @if (Model.Comment.Comment.Deleted)
+            {
+                <span href="javascript:void(0)" class="author deleted">deleted</span>
+            }
+            else
+            {
+                <a href="/user/@Model.Comment.Author.UserName" class="author">@Model.Comment.Author.UserName</a>
+                <span class="score">@(Model.Comment.Score) point@(Model.Comment.Score == 1 ? "" : "s")</span>
+            }
+            <time class="timestamp">@Html.Age(Model.Comment.Comment.DateCreated) ago</time>@if (Model.Comment.Comment.DateEdited.HasValue)
             {<em>*</em>}
         </div>
         <div class="disc-content">
@@ -17,69 +27,72 @@
         </div>
         <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Comment.Comment.Body)</textarea>
         <ul class="disc-options">
-            <li class="first">
-                <a href="@Url.Comment(Model.Comment.Sub.Name, Model.Comment.Post, Model.Comment.Comment)">permalink</a>
-            </li>
-            @if (Model.Comment.CanDelete)
+            @if (!Model.Comment.Comment.Deleted)
             {
-                <li class="delete">
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.delete(this)">delete</a>
+                <li class="first">
+                    <a href="@Url.Comment(Model.Comment.Sub.Name, Model.Comment.Post, Model.Comment.Comment)">permalink</a>
                 </li>
-            }
-            <li class="reply">
-                <a href="javascript:void(0);" onclick="return skimurui.comments.startReply(this)">reply</a>
-            </li>
-            @if (Model.Comment.CanEdit)
-            {
-                <li class="edit">
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.startEdit(this)">edit</a>
-                </li>
-            }
-            @if (Model.Parent != null)
-            {
-                <li class="perma">
-                    @if (Model.IsParentVisible)
-                    {
-                        <a href="#@Model.Parent.Comment.Id">parent</a>
-                    }
-                    else
-                    {
-                        <a href="@Url.Comment(Model.Parent.Sub.Name, Model.Parent.Post, Model.Parent.Comment)">parent</a>
-                    }
-                </li>
-            }
-            @if (Model.Comment.CanReport)
-            {
-                <li class="report">
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.report(this);">report</a>
-                </li>
-            }
-            @if (Model.Comment.CanManage)
-            {
-                if (Model.Comment.Reports != null && Model.Comment.Reports.Count > 0)
+                if (Model.Comment.CanDelete)
                 {
-                    <li class="reports">
-                        <a href="javascript:void(0);" onclick="return skimurui.comments.toggleReports(this);">reports (@Model.Comment.Reports.Count)</a>
-                    </li>
-                    <li class="clear-reports">
-                        <a href="javascript:void(0);" onclick="return skimurui.comments.clearReports(this);">clear reports</a>
+                    <li class="delete">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.delete(this)">delete</a>
                     </li>
                 }
-                <li class="ignore-reports">
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.ignoreReports(this);">ignore reports</a>
+                <li class="reply">
+                    <a href="javascript:void(0);" onclick="return skimurui.comments.startReply(this)">reply</a>
                 </li>
-                <li class="unignore-reports">
-                    <a href="javascript:void(0);" onclick="return skimurui.comments.unignoreReports(this);">unignore reports</a>
-                </li>
-            }
-            @if (Model.CanMarkRead.HasValue && Model.CanMarkRead.Value)
-            {
-                <li class="mark-unread">
-                    <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
-                </li>
-                <li class="mark-read">
-                    <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
-                </li>
+                if (Model.Comment.CanEdit)
+                {
+                    <li class="edit">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.startEdit(this)">edit</a>
+                    </li>
+                }
+                if (Model.Parent != null)
+                {
+                    <li class="perma">
+                        @if (Model.IsParentVisible)
+                        {
+                            <a href="#@Model.Parent.Comment.Id">parent</a>
+                        }
+                        else
+                        {
+                            <a href="@Url.Comment(Model.Parent.Sub.Name, Model.Parent.Post, Model.Parent.Comment)">parent</a>
+                        }
+                    </li>
+                }
+                if (Model.Comment.CanReport)
+                {
+                    <li class="report">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.report(this);">report</a>
+                    </li>
+                }
+                if (Model.Comment.CanManage)
+                {
+                    if (Model.Comment.Reports != null && Model.Comment.Reports.Count > 0)
+                    {
+                        <li class="reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.comments.toggleReports(this);">reports (@Model.Comment.Reports.Count)</a>
+                        </li>
+                        <li class="clear-reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.comments.clearReports(this);">clear reports</a>
+                        </li>
+                    }
+                    <li class="ignore-reports">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.ignoreReports(this);">ignore reports</a>
+                    </li>
+                    <li class="unignore-reports">
+                        <a href="javascript:void(0);" onclick="return skimurui.comments.unignoreReports(this);">unignore reports</a>
+                    </li>
+                }
+                if (Model.CanMarkRead.HasValue && Model.CanMarkRead.Value)
+                {
+                    <li class="mark-unread">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                    </li>
+                    <li class="mark-read">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                    </li>
+                }
             }
         </ul>
         @if (Model.Comment.CanManage && Model.Comment.Reports != null && Model.Comment.Reports.Count > 0)

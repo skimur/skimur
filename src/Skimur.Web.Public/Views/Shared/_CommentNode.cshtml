@@ -36,5 +36,9 @@
     {
         var comment = ((CommentNode)Model).Comment;
         @(comment.Comment.IgnoreReports ? "reports-ignored" : "reports-unignored")
+        if (comment.Comment.Deleted)
+        {
+            @(" deleted")
+        }
     }
 }

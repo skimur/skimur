@@ -90,12 +90,24 @@ namespace Subs.Worker.Commands
                     // this is a reply to a comment.
                     parentComment = _commentService.GetCommentById(command.ParentId.Value);
 
+                    if (parentComment == null)
+                    {
+                        response.Error = "Invalid parent comment.";
+                        return response;
+                    }
+
                     if (parentComment.PostId != post.Id)
                     {
                         // NOTE: this shouldn't happen, and we may want to log it in the future.
                         response.Error = "Replying to a comment in a different post.";
                         return response;
                     }
+                }
+
+                if (parentComment != null && parentComment.Deleted)
+                {
+                    response.Error = "You cannot reply to a deleted comment.";
+                    return response;
                 }
 
                 List<string> mentions;
@@ -144,6 +156,20 @@ namespace Subs.Worker.Commands
 
             try
             {
+                var comment = _commentService.GetCommentById(command.CommentId);
+                
+                if (comment == null)
+                {
+                    response.Error = "Invalid comment.";
+                    return response;
+                }
+
+                if (comment.Deleted)
+                {
+                    response.Error = "You cannot edit a deleted comment.";
+                    return response;
+                }
+
                 if (string.IsNullOrEmpty(command.Body))
                 {
                     response.Error = "A comment is required.";
@@ -151,15 +177,7 @@ namespace Subs.Worker.Commands
                 }
 
                 command.Body = command.Body.Trim();
-
-                var comment = _commentService.GetCommentById(command.CommentId);
-
-                if (comment == null)
-                {
-                    response.Error = "Invalid comment.";
-                    return response;
-                }
-
+                
                 List<string> oldMentions = null;
                 List<string> newMentions = null;
 
@@ -228,10 +246,16 @@ namespace Subs.Worker.Commands
             try
             {
                 var comment = _commentService.GetCommentById(command.CommentId);
-
+                
                 if (comment == null)
                 {
                     response.Error = "Invalid comment.";
+                    return response;
+                }
+
+                if (comment.Deleted)
+                {
+                    // don't return error, just return success, because it was already deleted.
                     return response;
                 }
 
@@ -248,8 +272,25 @@ namespace Subs.Worker.Commands
                     response.Error = "You are not allowed to delete this comment.";
                     return response;
                 }
+                
+                string newBody = null;
 
-                _commentService.DeleteComment(comment.Id, command.DateDeleted);
+                if (user.Id == comment.AuthorUserId)
+                {
+                    newBody = "deleted by author on " + command.DateDeleted.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+                }else if (user.IsAdmin)
+                {
+                    newBody = "deleted by admin on " + command.DateDeleted.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+                }else if (_permissionService.CanUserManageSubPosts(user, comment.SubId))
+                {
+                    newBody = "deleted by mod on " + command.DateDeleted.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+                }
+                else
+                {
+                    newBody = "deleted on " + command.DateDeleted.ToString("yyyy'-'MM'-'dd'T'HH':'mm':'ss'.'fff'Z'");
+                }
+
+                _commentService.DeleteComment(comment.Id, newBody);
 
                 _eventBus.Publish(new CommentDeleted
                 {

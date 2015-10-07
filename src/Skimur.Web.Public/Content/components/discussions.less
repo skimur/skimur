@@ -72,6 +72,7 @@
             // some quick info about the message (author, time, points, etc)
             .disc-tagline {
                 font-size: @font-size-small;
+
                 .expand {
                     margin-right: 3px;
                     padding: 1px;
@@ -103,12 +104,11 @@
 
                     &.first {
                         margin-left: 0px;
-                        
                     }
 
                     &.nsfw {
-                        margin-left:0px;
-                        margin-right:7px;
+                        margin-left: 0px;
+                        margin-right: 7px;
                     }
 
                     a {
@@ -199,17 +199,29 @@
     }
 
     .mark-sfw {
-            display:none;
-        }
-        .mark-nsfw {
-            display:inline;
-        }
+        display: none;
+    }
+
+    .mark-nsfw {
+        display: inline;
+    }
+
     &.nsfw {
         .mark-sfw {
-            display:inline;
+            display: inline;
         }
+
         .mark-nsfw {
-            display:none;
+            display: none;
+        }
+    }
+
+    &.deleted {
+        > .disc-body {
+            .disc-voting {
+                // hide voting for deleted comments
+                visibility:hidden;
+            }
         }
     }
 }
