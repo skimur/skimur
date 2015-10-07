@@ -9,6 +9,8 @@ namespace Subs.Services
     public interface IKarmaService
     {
         void AdjustKarma(Guid userId, Guid subId, KarmaType karmaType, int change);
+        
+        void DeleteAllKarmaForUser(Guid userId);
 
         void IncreaseKarma(Guid userId, Guid subId, KarmaType karmaType);
 

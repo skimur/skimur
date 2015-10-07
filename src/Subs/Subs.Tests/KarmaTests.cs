@@ -19,7 +19,36 @@ namespace Subs.Tests
             TestWithUser(Guid.NewGuid());
             TestWithUser(Guid.NewGuid());
         }
-        
+
+        [Test]
+        public void Can_delete_karma_for_user()
+        {
+            // arrange
+            var userId = Guid.NewGuid();
+            var subId = Guid.NewGuid();
+            _karmaService.IncreaseKarma(userId, subId, KarmaType.Comment);
+            var report = _karmaService.GetKarma(userId);
+            Assert.That(report.Count, Is.EqualTo(1));
+            Assert.That(report[new KarmaReportKey(subId, KarmaType.Comment)], Is.EqualTo(1));
+
+            // act
+            _karmaService.DeleteAllKarmaForUser(userId);
+
+            // assert
+            report = _karmaService.GetKarma(userId);
+            // it doesn't really delete, just resets
+            Assert.That(report.Count, Is.EqualTo(1));
+            Assert.That(report[new KarmaReportKey(subId, KarmaType.Comment)], Is.EqualTo(0));
+
+            // act
+            _karmaService.IncreaseKarma(userId, subId, KarmaType.Comment);
+
+            // asert
+            report = _karmaService.GetKarma(userId);
+            Assert.That(report.Count, Is.EqualTo(1));
+            Assert.That(report[new KarmaReportKey(subId, KarmaType.Comment)], Is.EqualTo(1));
+        }
+
         private void TestWithUser(Guid userId)
         {
             var sub1 = Guid.NewGuid();

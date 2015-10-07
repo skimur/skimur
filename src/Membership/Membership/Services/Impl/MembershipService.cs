@@ -81,7 +81,25 @@ namespace Membership.Services.Impl
 
             return _conn.Perform(conn => conn.Select(conn.From<User>().Where(x => ids.Contains(x.Id))));
         }
-        
+
+        /// <summary>
+        /// All the users in the system
+        /// </summary>
+        /// <returns></returns>
+        public SeekedList<User> GetAllUsers(int? skip = null, int? take = null)
+        {
+            return _conn.Perform(conn =>
+            {
+                var query = conn.From<User>();
+
+                var totalCount = conn.Count(query);
+
+                query.Skip(skip).Take(take);
+                
+                return new SeekedList<User>(conn.Select(query), skip ?? 0, take, totalCount);
+            });
+        }
+
         public virtual bool IsUserNameValid(string userName)
         {
             if (string.IsNullOrEmpty(userName)) return false;

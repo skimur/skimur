@@ -13,7 +13,8 @@ namespace Subs.ReadModel
 
         SeekedList<Guid> GetPosts(List<Guid> subs = null, 
             PostsSortBy sortby = PostsSortBy.New, 
-            TimeFilter timeFilter = TimeFilter.All, 
+            TimeFilter timeFilter = TimeFilter.All,
+            Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,
             bool onlyAll = false,
@@ -25,6 +26,7 @@ namespace Subs.ReadModel
             Guid? subId = null, 
             PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance, 
             TimeFilter timeFilter = TimeFilter.All,
+            Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false, 
             bool? nsfw = null,

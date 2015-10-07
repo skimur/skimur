@@ -30,7 +30,19 @@ namespace Subs.Services.Impl
         {
             if (change == 0) return;
             EnsureStatementsReady();
-            _session.Execute(_adjustStatement.Bind((long)change, userId, subId + "-" + karmaType));
+            _session.Execute(_adjustStatement.Bind((long)change, userId, subId + "-" + karmaType).SetConsistencyLevel(ConsistencyLevel.All));
+        }
+
+        public void DeleteAllKarmaForUser(Guid userId)
+        {
+            EnsureStatementsReady();
+            // cassandra doesn't allow deleting columns that are counters.
+            // http://stackoverflow.com/questions/31780331/how-to-re-insert-record-with-counter-column-after-delete-it-in-cassandra
+            // so, we are going to just adjust the counters so that reach 0.
+            var report = GetKarma(userId);
+            if (report.Count == 0) return;
+            foreach (var karma in report)
+                AdjustKarma(userId, karma.Key.SubId, karma.Key.Type, -karma.Value);
         }
 
         public void IncreaseKarma(Guid userId, Guid subId, KarmaType karmaType)
