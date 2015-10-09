@@ -459,6 +459,91 @@
         });
     };
 
+    var inviteMod = function(subName, subId, userName, userId, permissions) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/invitemod",
+            data: { subName: subName, subId: subId, userName: userName, userId: userId, permissions: permissions },
+            dataType: "json",
+            success: function(data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function() {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var acceptModInvite = function(subName, subId) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/acceptinvite",
+            data: { subName: subName, subId: subId },
+            dataType: "json",
+            success: function(data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function() {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var denyModInvite = function (subName, subId) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/denyinvite",
+            data: { subName: subName, subId: subId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var removeModInvite = function (subName, subId, userName, userId) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/removeinvite",
+            data: { subName: subName, subId: subId, userName: userName, userId: userId },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
+    var changeModInvite = function (subName, subId, userName, userId, permissions) {
+        $.ajax({
+            type: "POST",
+            url: "/moderators/changeinvite",
+            data: { subName: subName, subId: subId, userName: userName, userId: userId, permissions: permissions },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -491,7 +576,12 @@
         editPost: editPost,
         deletePost: deletePost,
         togglePostNsfw: togglePostNsfw,
-        submissionText: submissionText
+        submissionText: submissionText,
+        inviteMod: inviteMod,
+        acceptModInvite: acceptModInvite,
+        denyModInvite: denyModInvite,
+        removeModInvite: removeModInvite,
+        changeModInvite: changeModInvite
     };
 
 })();
