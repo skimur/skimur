@@ -11,23 +11,15 @@ using Skimur;
 
 namespace Subs.Services.Impl
 {
-    public class SubModerationService : ISubModerationService
+    public class ModerationService : IModerationService
     {
         private readonly IDbConnectionProvider _conn;
 
-        public SubModerationService(IDbConnectionProvider conn)
+        public ModerationService(IDbConnectionProvider conn)
         {
             _conn = conn;
         }
-
-        public bool CanUserModerateSub(Guid userId, Guid subId)
-        {
-            return _conn.Perform(conn =>
-            {
-                return conn.Count(conn.From<Moderator>().Where(x => x.UserId == userId && x.SubId == subId)) > 0;
-            });
-        }
-
+        
         public List<Moderator> GetAllModsForSub(Guid subId)
         {
             return _conn.Perform(conn =>
@@ -36,7 +28,7 @@ namespace Subs.Services.Impl
             });
         }
 
-        public void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null)
+        public void AddModToSub(Guid userId, Guid subId, ModeratorPermissions permissions, Guid? addedBy = null)
         {
             _conn.Perform(conn =>
             {
@@ -50,7 +42,7 @@ namespace Subs.Services.Impl
                     SubId = subId,
                     AddedOn = Common.CurrentTime(),
                     AddedBy = addedBy,
-                    Permissions = ModeratorPermissions.All
+                    Permissions = permissions
                 });
             });
         }
@@ -116,8 +108,7 @@ namespace Subs.Services.Impl
 
             _conn.Perform(conn =>
             {
-                return conn.Update<Moderator>(new {Permissions = permissions},
-                    x => x.UserId == userId && x.SubId == subId);
+                return conn.Update<Moderator>(new {Permissions = permissions}, x => x.UserId == userId && x.SubId == subId);
             });
         }
     }

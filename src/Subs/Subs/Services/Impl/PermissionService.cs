@@ -5,11 +5,11 @@ namespace Subs.Services.Impl
 {
     public class PermissionService : IPermissionService
     {
-        private readonly ISubModerationService _subModerationService;
+        private readonly IModerationService _moderationService;
 
-        public PermissionService(ISubModerationService subModerationService)
+        public PermissionService(IModerationService moderationService)
         {
-            _subModerationService = subModerationService;
+            _moderationService = moderationService;
         }
 
         public bool CanUserDeleteComment(User user, Comment comment)
@@ -69,7 +69,7 @@ namespace Subs.Services.Impl
 
         public ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId)
         {
-            return _subModerationService.GetUserPermissionsForSub(user, subId);
+            return _moderationService.GetUserPermissionsForSub(user, subId);
         }
     }
 }

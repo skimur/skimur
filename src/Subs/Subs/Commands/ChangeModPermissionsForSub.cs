@@ -7,7 +7,7 @@ using Infrastructure.Messaging;
 
 namespace Subs.Commands
 {
-    public class ChangeModPermissionsForSub : ICommand
+    public class ChangeModPermissionsForSub : ICommandReturns<ChangeModPermissionsForSubResponse>
     {
         public string SubName { get; set; }
 
@@ -18,5 +18,10 @@ namespace Subs.Commands
         public Guid UserToChange { get; set; }
 
         public ModeratorPermissions Permissions { get; set; }
+    }
+
+    public class ChangeModPermissionsForSubResponse
+    {
+        public string Error { get; set; }
     }
 }

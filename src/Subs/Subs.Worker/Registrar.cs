@@ -47,9 +47,10 @@ namespace Subs.Worker
             container.Register<ICommandHandler<ConfigureReportIgnoring>, ReportHandler>();
             container.Register<ICommandHandler<ClearReports>, ReportHandler>();
 
-            container.Register<ICommandHandler<RemoveModFromSub>, ModerationHandler>();
-            container.Register<ICommandHandler<ChangeModPermissionsForSub>, ModerationHandler>();
-            
+            container.Register<ICommandHandlerResponse<RemoveModFromSub, RemoveModFromSubResponse>, ModerationHandler>();
+            container.Register<ICommandHandlerResponse<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>, ModerationHandler>();
+            container.Register<ICommandHandlerResponse<AddUserModToSub, AddUserModToSubResponse>, ModerationHandler>();
+
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();

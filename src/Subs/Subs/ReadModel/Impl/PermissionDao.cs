@@ -7,8 +7,8 @@ namespace Subs.ReadModel.Impl
         // this class temporarily implements the service, until we implement the proper read-only layer
         : PermissionService, IPermissionDao
     {
-        public PermissionDao(ISubModerationService subModerationService)
-            :base(subModerationService)
+        public PermissionDao(IModerationService moderationService)
+            :base(moderationService)
         {
             
         }

@@ -17,21 +17,21 @@ namespace Skimur.Web.Controllers
     public class ModeratorsController : BaseController
     {
         private readonly ISubDao _subDao;
-        private readonly ISubModerationDao _subModerationDao;
+        private readonly IModerationDao _moderationDao;
         private readonly IModeratorWrapper _moderatorWrapper;
         private readonly IUserContext _userContext;
         private readonly ICommandBus _commandBus;
         private readonly ILogger<ModeratorsController> _logger;
 
         public ModeratorsController(ISubDao subDao,
-            ISubModerationDao subModerationDao,
+            IModerationDao moderationDao,
             IModeratorWrapper moderatorWrapper,
             IUserContext userContext,
             ICommandBus commandBus,
             ILogger<ModeratorsController> logger)
         {
             _subDao = subDao;
-            _subModerationDao = subModerationDao;
+            _moderationDao = moderationDao;
             _moderatorWrapper = moderatorWrapper;
             _userContext = userContext;
             _commandBus = commandBus;
@@ -51,7 +51,7 @@ namespace Skimur.Web.Controllers
             var model = new ModeratorsViewModel();
 
             model.Sub = sub;
-            model.Moderators = _moderatorWrapper.Wrap(_subModerationDao.GetAllModsForSub(sub.Id), _userContext.CurrentUser);
+            model.Moderators = _moderatorWrapper.Wrap(_moderationDao.GetAllModsForSub(sub.Id), _userContext.CurrentUser);
 
             return View(model);
         }
@@ -59,7 +59,7 @@ namespace Skimur.Web.Controllers
         [SkimurAuthorize, Ajax]
         public ActionResult RemoveModFromSub(string subName, Guid? subId, Guid userId)
         {
-            _commandBus.Send(new RemoveModFromSub
+            var response = _commandBus.Send<RemoveModFromSub, RemoveModFromSubResponse>(new RemoveModFromSub
             {
                 SubName = subName,
                 SubId = subId,
@@ -67,13 +67,13 @@ namespace Skimur.Web.Controllers
                 UserToRemove = userId
             });
 
-            return CommonJsonResult(true);
+            return CommonJsonResult(response.Error);
         }
 
         [SkimurAuthorize, Ajax]
         public ActionResult ChangeModPermissions(string subName, Guid? subId, Guid userId, ModeratorPermissions permissions)
         {
-            _commandBus.Send(new ChangeModPermissionsForSub
+            var response = _commandBus.Send<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>(new ChangeModPermissionsForSub
             {
                 SubName = subName,
                 SubId = subId,
@@ -82,7 +82,7 @@ namespace Skimur.Web.Controllers
                 Permissions = permissions
             });
 
-            return CommonJsonResult(true);
+            return CommonJsonResult(response.Error);
         }
     }
 }

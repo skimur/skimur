@@ -25,7 +25,7 @@ namespace Subs.Worker.Commands
         private readonly IEventBus _eventBus;
         private readonly ICommandBus _commandBus;
         private readonly ISubUserBanService _subUserBanService;
-        private readonly ISubModerationService _subModerationService;
+        private readonly IModerationService _moderationService;
         private readonly IPermissionService _permissionService;
         private readonly IMarkdownCompiler _markdownCompiler;
         private readonly ISettingsProvider<SubSettings> _subSettings;
@@ -36,7 +36,7 @@ namespace Subs.Worker.Commands
             IEventBus eventBus,
             ICommandBus commandBus,
             ISubUserBanService subUserBanService,
-            ISubModerationService subModerationService,
+            IModerationService moderationService,
             IPermissionService permissionService,
             IMarkdownCompiler markdownCompiler,
             ISettingsProvider<SubSettings>  subSettings)
@@ -47,7 +47,7 @@ namespace Subs.Worker.Commands
             _eventBus = eventBus;
             _commandBus = commandBus;
             _subUserBanService = subUserBanService;
-            _subModerationService = subModerationService;
+            _moderationService = moderationService;
             _permissionService = permissionService;
             _markdownCompiler = markdownCompiler;
             _subSettings = subSettings;
@@ -117,7 +117,7 @@ namespace Subs.Worker.Commands
                 }
                 
                 // let's make sure the user creating this sub doesn't already have the maximum number of subs they are modding.
-                var moddedSubsForUser = _subModerationService.GetSubsModeratoredByUser(user.Id);
+                var moddedSubsForUser = _moderationService.GetSubsModeratoredByUser(user.Id);
                 if (moddedSubsForUser.Count >= _subSettings.Settings.MaximumNumberOfModdedSubs)
                 {
                     response.Error = "You can only moderate a maximum of " + _subSettings.Settings.MaximumNumberOfModdedSubs + " subs.";
@@ -150,7 +150,7 @@ namespace Subs.Worker.Commands
                 response.SubName = sub.Name;
 
                 _subService.SubscribeToSub(user.Id, sub.Id);
-                _subModerationService.AddModToSub(user.Id, sub.Id);
+                _moderationService.AddModToSub(user.Id, sub.Id, ModeratorPermissions.All);
             }
             catch (Exception ex)
             {

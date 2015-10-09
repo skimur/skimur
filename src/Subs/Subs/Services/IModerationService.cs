@@ -7,13 +7,11 @@ using Membership;
 
 namespace Subs.Services
 {
-    public interface ISubModerationService
+    public interface IModerationService
     {
-        bool CanUserModerateSub(Guid userId, Guid subId);
-
         List<Moderator> GetAllModsForSub(Guid subId);
 
-        void AddModToSub(Guid userId, Guid subId, Guid? addedBy = null);
+        void AddModToSub(Guid userId, Guid subId, ModeratorPermissions permissions, Guid? addedBy = null);
 
         void RemoveModFromSub(Guid userId, Guid subId);
 

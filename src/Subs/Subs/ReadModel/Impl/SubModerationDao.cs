@@ -9,11 +9,11 @@ using Subs.Services.Impl;
 
 namespace Subs.ReadModel.Impl
 {
-    public class SubModerationDao :
-        SubModerationService, // TOOD: only implement read-only methods
-        ISubModerationDao 
+    public class ModerationDao :
+        ModerationService, // TOOD: only implement read-only methods
+        IModerationDao 
     {
-        public SubModerationDao(IDbConnectionProvider conn)
+        public ModerationDao(IDbConnectionProvider conn)
             :base(conn)
         {
             

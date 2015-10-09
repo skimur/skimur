@@ -70,6 +70,7 @@
     <Compile Include="..\..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Commands\AddUserModToSub.cs" />
     <Compile Include="Commands\ApprovePost.cs" />
     <Compile Include="Commands\BanUserFromSub.cs" />
     <Compile Include="Commands\CastVoteForPost.cs" />
@@ -107,6 +108,7 @@
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
     <Compile Include="Message.cs" />
+    <Compile Include="ModeratorInvite.cs" />
     <Compile Include="ModeratorPermissions.cs" />
     <Compile Include="ReadModel\IKarmaDao.cs" />
     <Compile Include="ReadModel\IMessageDao.cs" />
@@ -127,7 +129,7 @@
     <Compile Include="ReadModel\IPostWrapper.cs" />
     <Compile Include="ReadModel\IReportDao.cs" />
     <Compile Include="ReadModel\ISubActivityDao.cs" />
-    <Compile Include="ReadModel\ISubModerationDao.cs" />
+    <Compile Include="ReadModel\IModerationDao.cs" />
     <Compile Include="ReadModel\ISubUserBanDao.cs" />
     <Compile Include="ReadModel\ISubUserBanWrapper.cs" />
     <Compile Include="ReadModel\ISubWrapper.cs" />
@@ -154,7 +156,7 @@
     <Compile Include="Services\Impl\SubModerationService.cs" />
     <Compile Include="Services\IReportService.cs" />
     <Compile Include="Services\ISubActivityService.cs" />
-    <Compile Include="Services\ISubModerationService.cs" />
+    <Compile Include="Services\IModerationService.cs" />
     <Compile Include="Services\ISubUserBanService.cs" />
     <Compile Include="Services\Impl\SubUserBanService.cs" />
     <Compile Include="Services\Impl\SubActivityService.cs" />
