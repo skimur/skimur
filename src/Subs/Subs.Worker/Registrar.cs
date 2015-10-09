@@ -50,6 +50,10 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<RemoveModFromSub, RemoveModFromSubResponse>, ModerationHandler>();
             container.Register<ICommandHandlerResponse<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>, ModerationHandler>();
             container.Register<ICommandHandlerResponse<AddUserModToSub, AddUserModToSubResponse>, ModerationHandler>();
+            container.Register<ICommandHandlerResponse<InviteModToSub, InviteModToSubResponse>, ModerationHandler>();
+            container.Register<ICommandHandlerResponse<AcceptModInvitation, AcceptModInvitationResponse>, ModerationHandler>();
+            container.Register<ICommandHandlerResponse<RemoveModInviteFromSub, RemoveModInviteFromSubResponse>, ModerationHandler>();
+            container.Register<ICommandHandlerResponse<ChangeModInvitePermissions, ChangeModInvitePermissionsResponse>, ModerationHandler>();
 
             container.Register<ICommandHandlerResponse<CreatePost, CreatePostResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();

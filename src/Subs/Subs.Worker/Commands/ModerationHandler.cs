@@ -10,21 +10,31 @@ namespace Subs.Worker.Commands
     public class ModerationHandler :
         ICommandHandlerResponse<RemoveModFromSub, RemoveModFromSubResponse>,
         ICommandHandlerResponse<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>,
-        ICommandHandlerResponse<AddUserModToSub, AddUserModToSubResponse>
+        ICommandHandlerResponse<AddUserModToSub, AddUserModToSubResponse>,
+        ICommandHandlerResponse<InviteModToSub, InviteModToSubResponse>,
+        ICommandHandlerResponse<AcceptModInvitation, AcceptModInvitationResponse>,
+        ICommandHandlerResponse<RemoveModInviteFromSub, RemoveModInviteFromSubResponse>,
+        ICommandHandlerResponse<ChangeModInvitePermissions, ChangeModInvitePermissionsResponse>
     {
         private readonly IModerationService _moderationService;
+        private readonly IModerationInviteService _moderationInviteService;
         private readonly IMembershipService _membershipService;
         private readonly ISubService _subService;
+        private readonly IPermissionService _permissionService;
         private readonly ILogger<ModerationHandler> _logger;
 
         public ModerationHandler(IModerationService moderationService,
+            IModerationInviteService moderationInviteService,
             IMembershipService membershipService,
             ISubService subService,
+            IPermissionService permissionService,
             ILogger<ModerationHandler> logger)
         {
             _moderationService = moderationService;
+            _moderationInviteService = moderationInviteService;
             _membershipService = membershipService;
             _subService = subService;
+            _permissionService = permissionService;
             _logger = logger;
         }
 
@@ -256,6 +266,222 @@ namespace Subs.Worker.Commands
             {
                 response.Error = "An unknown error occured.";
                 _logger.Error("An error occured adding a user as a mod.", ex);
+            }
+
+            return response;
+        }
+
+        public InviteModToSubResponse Handle(InviteModToSub command)
+        {
+            var response = new InviteModToSubResponse();
+
+            try
+            {
+                var requestingUser = _membershipService.GetUserById(command.RequestingUserId);
+                if (requestingUser == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var sub = command.SubId.HasValue
+                    ? _subService.GetSubById(command.SubId.Value)
+                    : _subService.GetSubByName(command.SubName);
+                if (sub == null)
+                {
+                    response.Error = "Invalid sub.";
+                    return response;
+                }
+                
+                var permission = _permissionService.GetUserPermissionsForSub(requestingUser, sub.Id);
+
+                if (!permission.HasValue || !permission.Value.HasFlag(ModeratorPermissions.All))
+                {
+                    response.Error = "You are not permitted to invite users to mod a sub.";
+                    return response;
+                }
+
+                var user = command.UserId.HasValue
+                   ? _membershipService.GetUserById(command.UserId.Value)
+                   : _membershipService.GetUserByUserName(command.UserName);
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var userInviteInfo = _moderationInviteService.GetModeratorInviteInfo(user.Id, sub.Id);
+                if (userInviteInfo != null)
+                {
+                    response.Error = "The user is already invited.";
+                    return response;
+                }
+
+                _moderationInviteService.AddInvite(user.Id, sub.Id, requestingUser.Id, command.Permissions);
+            }
+            catch (Exception ex)
+            {
+                response.Error = "An unknown error occured.";
+                _logger.Error("An error occured inviting a mod to sub.", ex);
+            }
+
+            return response;
+        }
+
+        public AcceptModInvitationResponse Handle(AcceptModInvitation command)
+        {
+            var response = new AcceptModInvitationResponse();
+
+            try
+            {
+                var user = command.UserId.HasValue
+                   ? _membershipService.GetUserById(command.UserId.Value)
+                   : _membershipService.GetUserByUserName(command.UserName);
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var sub = command.SubId.HasValue
+                   ? _subService.GetSubById(command.SubId.Value)
+                   : _subService.GetSubByName(command.SubName);
+                if (sub == null)
+                {
+                    response.Error = "Invalid sub.";
+                    return response;
+                }
+                
+                var userInviteInfo = _moderationInviteService.GetModeratorInviteInfo(user.Id, sub.Id);
+                if (userInviteInfo == null)
+                {
+                    response.Error = "The user is not invited as a mod to the sub.";
+                    return response;
+                }
+
+                // remove the invite and add the user as a mod.
+                _moderationInviteService.RemoveModeratorInvite(user.Id, sub.Id);
+                _moderationService.AddModToSub(user.Id, sub.Id, userInviteInfo.Permissions, userInviteInfo.InvitedBy);
+            }
+            catch (Exception ex)
+            {
+                response.Error = "An unknown error occured.";
+                _logger.Error("An error occured accepting an invite to a sub.", ex);
+            }
+
+            return response;
+        }
+
+        public RemoveModInviteFromSubResponse Handle(RemoveModInviteFromSub command)
+        {
+            var response = new RemoveModInviteFromSubResponse();
+
+            try
+            {
+                var user = command.UserId.HasValue
+                   ? _membershipService.GetUserById(command.UserId.Value)
+                   : _membershipService.GetUserByUserName(command.UserName);
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var sub = command.SubId.HasValue
+                   ? _subService.GetSubById(command.SubId.Value)
+                   : _subService.GetSubByName(command.SubName);
+                if (sub == null)
+                {
+                    response.Error = "Invalid sub.";
+                    return response;
+                }
+
+                var requestingUser = _membershipService.GetUserById(command.RequestingUserId);
+                if (requestingUser == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var permission = _permissionService.GetUserPermissionsForSub(requestingUser, sub.Id);
+
+                if (!permission.HasValue || !permission.Value.HasFlag(ModeratorPermissions.All))
+                {
+                    response.Error = "You are not permitted to remove mod invites from a sub.";
+                    return response;
+                }
+
+                var userInviteInfo = _moderationInviteService.GetModeratorInviteInfo(user.Id, sub.Id);
+                if (userInviteInfo == null)
+                {
+                    response.Error = "The user is not invited as a mod to the sub.";
+                    return response;
+                }
+
+                // remove the invite.
+                _moderationInviteService.RemoveModeratorInvite(user.Id, sub.Id);
+            }
+            catch (Exception ex)
+            {
+                response.Error = "An unknown error occured.";
+                _logger.Error("An error occured removing a mod invite from a sub.", ex);
+            }
+
+            return response;
+        }
+
+        public ChangeModInvitePermissionsResponse Handle(ChangeModInvitePermissions command)
+        {
+            var response = new ChangeModInvitePermissionsResponse();
+
+            try
+            {
+                var requestingUser = _membershipService.GetUserById(command.RequestingUserId);
+                if (requestingUser == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var sub = command.SubId.HasValue
+                    ? _subService.GetSubById(command.SubId.Value)
+                    : _subService.GetSubByName(command.SubName);
+                if (sub == null)
+                {
+                    response.Error = "Invalid sub.";
+                    return response;
+                }
+
+                var permission = _permissionService.GetUserPermissionsForSub(requestingUser, sub.Id);
+
+                if (!permission.HasValue || !permission.Value.HasFlag(ModeratorPermissions.All))
+                {
+                    response.Error = "You are not permitted to change permissions for mod invites.";
+                    return response;
+                }
+
+                var user = command.UserId.HasValue
+                   ? _membershipService.GetUserById(command.UserId.Value)
+                   : _membershipService.GetUserByUserName(command.UserName);
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                var userInviteInfo = _moderationInviteService.GetModeratorInviteInfo(user.Id, sub.Id);
+                if (userInviteInfo == null)
+                {
+                    response.Error = "The user is not current invited.";
+                    return response;
+                }
+                
+                _moderationInviteService.UpdateInvitePermissions(user.Id, sub.Id, command.Permissions);
+            }
+            catch (Exception ex)
+            {
+                response.Error = "An unknown error occured.";
+                _logger.Error("An error occured changing an invited mod's permissions.", ex);
             }
 
             return response;

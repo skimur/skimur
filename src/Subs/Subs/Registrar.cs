@@ -15,6 +15,9 @@ namespace Subs
     {
         public void Register(SimpleInjector.Container container)
         {
+            container.RegisterSingleton<IModeratorInviteWrapper, ModeratorInviteWrapper>();
+            container.RegisterSingleton<IModerationInviteService, ModerationInviteService>();
+            container.RegisterSingleton<IModerationDao, ModerationDao>();
             container.RegisterSingleton<IKarmaService, KarmaService>();
             container.RegisterSingleton<IKarmaDao, KarmaDao>();
             container.RegisterSingleton<IModerationService, ModerationService>();
