@@ -7,8 +7,7 @@ using Subs.Services;
 
 namespace Subs.ReadModel
 {
-    public interface ISubModerationDao
-        : ISubModerationService // TODO: only implement read methods
+    public interface IModerationInviteDao : IModerationInviteService
     {
     }
 }

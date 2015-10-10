@@ -13,17 +13,17 @@ namespace Subs.ReadModel.Impl
         private readonly IMembershipService _membershipService;
         private readonly ISubDao _subDao;
         private readonly IPermissionDao _permissionDao;
-        private readonly ISubModerationDao _subModerationDao;
+        private readonly IModerationDao _moderationDao;
 
         public ModeratorWrapper(IMembershipService membershipService,
             ISubDao subDao,
             IPermissionDao permissionDao,
-            ISubModerationDao subModerationDao)
+            IModerationDao moderationDao)
         {
             _membershipService = membershipService;
             _subDao = subDao;
             _permissionDao = permissionDao;
-            _subModerationDao = subModerationDao;
+            _moderationDao = moderationDao;
         }
 
         public List<ModeratorWrapped> Wrap(List<Moderator> moderators, User currentUser = null)
@@ -32,7 +32,7 @@ namespace Subs.ReadModel.Impl
 
             var users = _membershipService.GetUsersByIds(moderators.Select(x => x.UserId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
             var subs = _subDao.GetSubsByIds(moderators.Select(x => x.SubId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
-            var subModeratorInfo = currentUser != null ? subs.Keys.ToDictionary(x => x, x => _subModerationDao.GetModeratorInfoForUserInSub(currentUser.Id, x)) : new Dictionary<Guid, Moderator>();
+            var subModeratorInfo = currentUser != null ? subs.Keys.ToDictionary(x => x, x => _moderationDao.GetModeratorInfoForUserInSub(currentUser.Id, x)) : new Dictionary<Guid, Moderator>();
             
             foreach (var item in items)
             {

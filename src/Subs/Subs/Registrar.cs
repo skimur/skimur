@@ -15,10 +15,13 @@ namespace Subs
     {
         public void Register(SimpleInjector.Container container)
         {
+            container.RegisterSingleton<IModeratorInviteWrapper, ModeratorInviteWrapper>();
+            container.RegisterSingleton<IModerationInviteService, ModerationInviteService>();
+            container.RegisterSingleton<IModerationInviteDao, ModerationInviteDao>();
             container.RegisterSingleton<IKarmaService, KarmaService>();
             container.RegisterSingleton<IKarmaDao, KarmaDao>();
-            container.RegisterSingleton<ISubModerationService, SubModerationService>();
-            container.RegisterSingleton<ISubModerationDao, SubModerationDao>();
+            container.RegisterSingleton<IModerationService, ModerationService>();
+            container.RegisterSingleton<IModerationDao, ModerationDao>();
             container.RegisterSingleton<IReportService, ReportService>();
             container.RegisterSingleton<IReportDao, ReportDao>();
             container.RegisterSingleton<ISubActivityService, SubActivityService>();

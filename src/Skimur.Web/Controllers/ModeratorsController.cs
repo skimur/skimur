@@ -17,25 +17,32 @@ namespace Skimur.Web.Controllers
     public class ModeratorsController : BaseController
     {
         private readonly ISubDao _subDao;
-        private readonly ISubModerationDao _subModerationDao;
+        private readonly IModerationDao _moderationDao;
         private readonly IModeratorWrapper _moderatorWrapper;
         private readonly IUserContext _userContext;
         private readonly ICommandBus _commandBus;
-        private readonly ILogger<ModeratorsController> _logger;
+        private readonly IModeratorInviteWrapper _moderatorInviteWrapper;
+        private readonly IPermissionDao _permissionDao;
+        private readonly IModerationInviteDao _moderationInviteDao;
 
         public ModeratorsController(ISubDao subDao,
-            ISubModerationDao subModerationDao,
+            IModerationDao moderationDao,
             IModeratorWrapper moderatorWrapper,
             IUserContext userContext,
             ICommandBus commandBus,
-            ILogger<ModeratorsController> logger)
+            ILogger<ModeratorsController> logger,
+            IModeratorInviteWrapper moderatorInviteWrapper,
+            IPermissionDao permissionDao,
+            IModerationInviteDao moderationInviteDao)
         {
             _subDao = subDao;
-            _subModerationDao = subModerationDao;
+            _moderationDao = moderationDao;
             _moderatorWrapper = moderatorWrapper;
             _userContext = userContext;
             _commandBus = commandBus;
-            _logger = logger;
+            _moderatorInviteWrapper = moderatorInviteWrapper;
+            _permissionDao = permissionDao;
+            _moderationInviteDao = moderationInviteDao;
         }
 
         public ActionResult Moderators(string subName)
@@ -51,38 +58,128 @@ namespace Skimur.Web.Controllers
             var model = new ModeratorsViewModel();
 
             model.Sub = sub;
-            model.Moderators = _moderatorWrapper.Wrap(_subModerationDao.GetAllModsForSub(sub.Id), _userContext.CurrentUser);
+            model.Moderators = _moderatorWrapper.Wrap(_moderationDao.GetAllModsForSub(sub.Id), _userContext.CurrentUser);
+            if (_userContext.CurrentUser != null)
+            {
+                if (_permissionDao.GetUserPermissionsForSub(_userContext.CurrentUser, sub.Id).HasPermission(ModeratorPermissions.All))
+                {
+                    // super mods can see all pending invites
+                    model.Invites = _moderatorInviteWrapper.Wrap(_moderationInviteDao.GetModeratorInvitesForSub(sub.Id));
+                    model.CanInvite = true;
+                }
+                else
+                {
+                    // let's see if the current user has a pending invite
+                    model.CurrentUserInvite = _moderationInviteDao.GetModeratorInviteInfo(_userContext.CurrentUser.Id, sub.Id);
+                }
+            }
 
             return View(model);
         }
 
         [SkimurAuthorize, Ajax]
-        public ActionResult RemoveModFromSub(string subName, Guid? subId, Guid userId)
+        public ActionResult RemoveModFromSub(string subName, Guid? subId, Guid? userId, string userName)
         {
-            _commandBus.Send(new RemoveModFromSub
+            var response = _commandBus.Send<RemoveModFromSub, RemoveModFromSubResponse>(new RemoveModFromSub
             {
                 SubName = subName,
                 SubId = subId,
                 RequestingUser = _userContext.CurrentUser.Id,
-                UserToRemove = userId
+                UserNameToRemove = userName,
+                UserIdToRemove = userId
             });
 
-            return CommonJsonResult(true);
+            return CommonJsonResult(response.Error);
         }
 
         [SkimurAuthorize, Ajax]
-        public ActionResult ChangeModPermissions(string subName, Guid? subId, Guid userId, ModeratorPermissions permissions)
+        public ActionResult ChangeModPermissions(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
         {
-            _commandBus.Send(new ChangeModPermissionsForSub
+            var response = _commandBus.Send<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>(new ChangeModPermissionsForSub
             {
                 SubName = subName,
                 SubId = subId,
                 RequestingUser = _userContext.CurrentUser.Id,
-                UserToChange = userId,
+                UserNameToChange = userName,
+                UserIdToChange = userId,
                 Permissions = permissions
             });
 
-            return CommonJsonResult(true);
+            return CommonJsonResult(response.Error);
+        }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult InviteMod(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
+        {
+            var response = _commandBus.Send<InviteModToSub, InviteModToSubResponse>(new InviteModToSub
+            {
+                RequestingUserId = _userContext.CurrentUser.Id,
+                UserName = userName,
+                UserId = userId,
+                SubName = subName,
+                SubId = subId,
+                Permissions = permissions
+            });
+
+            return CommonJsonResult(response.Error);
+        }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult AcceptInvite(string subName, Guid? subId)
+        {
+           var response = _commandBus.Send<AcceptModInvitation, AcceptModInvitationResponse>(new AcceptModInvitation
+           {
+               UserId = _userContext.CurrentUser.Id,
+               SubName = subName,
+               SubId = subId
+           });
+
+            return CommonJsonResult(response.Error);
+        }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult DenyInvite(string subName, Guid? subId)
+        {
+            var response = _commandBus.Send<RemoveModInviteFromSub, RemoveModInviteFromSubResponse>(new RemoveModInviteFromSub
+            {
+                RequestingUserId = _userContext.CurrentUser.Id,
+                UserId = _userContext.CurrentUser.Id,
+                SubName = subName,
+                SubId = subId
+            });
+
+            return CommonJsonResult(response.Error);
+        }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult RemoveInvite(string subName, Guid? subId, string userName, Guid? userId)
+        {
+            var response = _commandBus.Send<RemoveModInviteFromSub, RemoveModInviteFromSubResponse>(new RemoveModInviteFromSub
+            {
+                RequestingUserId = _userContext.CurrentUser.Id,
+                UserName = userName,
+                UserId = userId,
+                SubName = subName,
+                SubId = subId
+            });
+
+            return CommonJsonResult(response.Error);
+        }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult ChangeInvite(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
+        {
+            var response = _commandBus.Send<ChangeModInvitePermissions, ChangeModInvitePermissionsResponse>(new ChangeModInvitePermissions
+            {
+                RequestingUserId = _userContext.CurrentUser.Id,
+                UserName = userName,
+                UserId = userId,
+                SubName = subName,
+                SubId = subId,
+                Permissions = permissions
+            });
+
+            return CommonJsonResult(response.Error);
         }
     }
 }

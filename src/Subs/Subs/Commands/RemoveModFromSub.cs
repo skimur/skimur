@@ -7,7 +7,7 @@ using Infrastructure.Messaging;
 
 namespace Subs.Commands
 {
-    public class RemoveModFromSub : ICommand
+    public class RemoveModFromSub : ICommandReturns<RemoveModFromSubResponse>
     {
         public string SubName { get; set; }
 
@@ -15,6 +15,13 @@ namespace Subs.Commands
 
         public Guid RequestingUser { get; set; }
 
-        public Guid UserToRemove { get; set; }
+        public string UserNameToRemove { get; set; }
+
+        public Guid? UserIdToRemove { get; set; }
+    }
+
+    public class RemoveModFromSubResponse
+    {
+        public string Error { get; set; }
     }
 }

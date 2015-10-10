@@ -251,6 +251,44 @@
         }
     };
 
+    var displayChangePermissionsForm = function (value, callback) {
+
+        var $permissionsModal = $("#permissions-modal");
+
+        if ($permissionsModal.length === 0) {
+            $permissionsModal = $("<div id='permissions-modal' class='modal fade permission-modal'>" +
+                "<div class='modal-dialog'>" +
+                        "<div class='modal-content'>" +
+                            "<div class='modal-body'>" +
+                            "</div>" +
+                            "<div class='modal-footer'>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>");
+            $permissionsModal.appendTo($("body"));
+            $permissionsModal.modal({ show: false });
+        }
+
+        var $content = $(".modal-body", $permissionsModal).empty();
+        var $footer = $(".modal-footer", $permissionsModal).empty();
+
+        var $form = skimurui.buildModPermissionsForm(value);
+        $form.appendTo($content);
+
+        $("<button type='button' class='btn btn-default'>Cancel</button>").click(function (e) {
+            e.preventDefault();
+            $permissionsModal.modal("hide");
+        }).appendTo($footer);
+        $("<button type='button' class='btn btn-primary'>Save</button>").click(function (e) {
+            e.preventDefault();
+            $permissionsModal.modal("hide");
+            callback(skimurui.getModPermissionsFromForm($form));
+        }).appendTo($footer);
+
+        $permissionsModal.modal("show");
+    }
+
     return {
         displayError: displayError,
         displaySuccess: displaySuccess,
@@ -265,7 +303,8 @@
         buildReportForm: buildReportForm,
         buildModPermissionsForm: buildModPermissionsForm,
         getModPermissionsFromForm: getModPermissionsFromForm,
-        buildModeratorPermissionsString: buildModeratorPermissionsString
+        buildModeratorPermissionsString: buildModeratorPermissionsString,
+        displayChangePermissionsForm: displayChangePermissionsForm
     };
 
 })();

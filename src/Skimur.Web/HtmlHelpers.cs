@@ -10,6 +10,7 @@ using System.Web;
 using System.Web.Mvc;
 using System.Web.Mvc.Html;
 using Skimur.Web.Models;
+using Subs;
 
 namespace Skimur.Web
 {
@@ -152,6 +153,30 @@ namespace Skimur.Web
                 showCreateSub,
                 showSubmit
             });
+        }
+
+        public static string ModeratorPermissionsText(this HtmlHelper htmlHelper, ModeratorPermissions permissions)
+        {
+            if (permissions.HasPermission(ModeratorPermissions.All))
+                return "Full";
+
+            if (permissions == ModeratorPermissions.None)
+                return "None";
+
+            var list = new List<string>();
+
+            if (permissions.HasPermission(ModeratorPermissions.Access))
+                list.Add("Access");
+            if (permissions.HasPermission(ModeratorPermissions.Config))
+                list.Add("Config");
+            if (permissions.HasPermission(ModeratorPermissions.Flair))
+                list.Add("Flair");
+            if (permissions.HasPermission(ModeratorPermissions.Mail))
+                list.Add("Mail");
+            if (permissions.HasPermission(ModeratorPermissions.Posts))
+                list.Add("Posts");
+
+            return string.Join(", " , list);
         }
     }
 }

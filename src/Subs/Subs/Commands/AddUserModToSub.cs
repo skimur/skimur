@@ -7,7 +7,7 @@ using Infrastructure.Messaging;
 
 namespace Subs.Commands
 {
-    public class ChangeModPermissionsForSub : ICommandReturns<ChangeModPermissionsForSubResponse>
+    public class AddUserModToSub : ICommandReturns<AddUserModToSubResponse>
     {
         public string SubName { get; set; }
 
@@ -15,14 +15,12 @@ namespace Subs.Commands
 
         public Guid RequestingUser { get; set; }
 
-        public string UserNameToChange { get; set; }
-
-        public Guid? UserIdToChange { get; set; }
+        public Guid UserToAdd { get; set; }
 
         public ModeratorPermissions Permissions { get; set; }
     }
 
-    public class ChangeModPermissionsForSubResponse
+    public class AddUserModToSubResponse
     {
         public string Error { get; set; }
     }

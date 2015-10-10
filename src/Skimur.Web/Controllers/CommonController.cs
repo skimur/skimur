@@ -22,7 +22,7 @@ namespace Skimur.Web.Controllers
         private readonly IMembershipService _membershipService;
         private readonly ISubActivityDao _subActivityDao;
         private readonly ISettingsProvider<SubSettings> _subSettings;
-        private readonly ISubModerationDao _subModerationDao;
+        private readonly IModerationDao _moderationDao;
 
         public CommonController(IContextService contextService,
             ISubDao subDao,
@@ -32,7 +32,7 @@ namespace Skimur.Web.Controllers
             IMembershipService membershipService,
             ISubActivityDao subActivityDao,
             ISettingsProvider<SubSettings> subSettings,
-            ISubModerationDao subModerationDao)
+            IModerationDao moderationDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -42,7 +42,7 @@ namespace Skimur.Web.Controllers
             _membershipService = membershipService;
             _subActivityDao = subActivityDao;
             _subSettings = subSettings;
-            _subModerationDao = subModerationDao;
+            _moderationDao = moderationDao;
         }
         
         public ActionResult TopBar()
@@ -79,11 +79,11 @@ namespace Skimur.Web.Controllers
             if (model.CurrentSub != null)
             {
                 if (_userContext.CurrentUser != null)
-                    model.Permissions = _subModerationDao.GetUserPermissionsForSub(_userContext.CurrentUser, model.CurrentSub.Sub.Id);
+                    model.Permissions = _moderationDao.GetUserPermissionsForSub(_userContext.CurrentUser, model.CurrentSub.Sub.Id);
 
                 if (!model.IsModerator)
                     // we only show list of mods if the requesting user is not a mod of this sub
-                    model.Moderators = _membershipService.GetUsersByIds(_subModerationDao.GetAllModsForSub(model.CurrentSub.Sub.Id).Select(x => x.UserId).ToList());
+                    model.Moderators = _membershipService.GetUsersByIds(_moderationDao.GetAllModsForSub(model.CurrentSub.Sub.Id).Select(x => x.UserId).ToList());
 
                 // get the number of active users currently viewing this sub.
                 // for normal users, this number may be fuzzed (if low enough) for privacy reasons.
