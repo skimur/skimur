@@ -459,7 +459,9 @@ namespace Skimur.Web.Controllers
                 SidebarText = model.SidebarText,
                 SubmissionText = model.SubmissionText,
                 Type = model.SubType,
-                IsDefault = model.IsDefault
+                IsDefault = model.IsDefault,
+                Nsfw = model.Nsfw,
+                InAll = model.InAll
             });
 
             if (!string.IsNullOrEmpty(response.Error))
@@ -483,7 +485,7 @@ namespace Skimur.Web.Controllers
             if (_userContext.CurrentUser.IsAdmin)
                 model.IsDefault = false;
 
-            model.ShowInAll = true;
+            model.InAll = true;
 
             return View(model);
         }
@@ -502,8 +504,8 @@ namespace Skimur.Web.Controllers
                 SubmissionText = model.SubmissionText,
                 Type = model.SubType,
                 IsDefault = model.IsDefault,
-                ShowInAll = model.ShowInAll,
-                Is18OrOlder = model.Is18OrOlder
+                InAll = model.InAll,
+                Nsfw = model.Nsfw
             });
 
             if (!string.IsNullOrEmpty(response.Error))

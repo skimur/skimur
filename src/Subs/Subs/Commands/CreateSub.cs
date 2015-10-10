@@ -23,9 +23,9 @@ namespace Subs.Commands
 
         public SubType Type { get; set; }
 
-        public bool ShowInAll { get; set; }
+        public bool InAll { get; set; }
 
-        public bool Is18OrOlder { get; set; }
+        public bool Nsfw { get; set; }
     }
 
     public class CreateSubResponse

@@ -22,6 +22,10 @@ namespace Subs.Commands
         public bool? IsDefault { get; set; }
 
         public SubType Type { get; set; }
+
+        public bool InAll { get; set; }
+
+        public bool Nsfw { get; set; }
     }
 
     public class EditSubResponse

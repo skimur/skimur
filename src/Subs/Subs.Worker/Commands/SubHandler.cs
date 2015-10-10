@@ -136,8 +136,8 @@ namespace Subs.Worker.Commands
                     SubmissionTextFormatted = _markdownCompiler.Compile(command.SubmissionText),
                     SubType = command.Type,
                     CreatedBy = user.Id,
-                    InAll = command.ShowInAll,
-                    Nsfw = command.Is18OrOlder
+                    InAll = command.InAll,
+                    Nsfw = command.Nsfw
                 };
 
                 // only admins can configure default subs
@@ -217,6 +217,8 @@ namespace Subs.Worker.Commands
                 sub.SubmissionText = command.SubmissionText;
                 sub.SubmissionTextFormatted = _markdownCompiler.Compile(command.SubmissionText);
                 sub.SubType = command.Type;
+                sub.InAll = command.InAll;
+                sub.Nsfw = command.Nsfw;
 
                 _subService.UpdateSub(sub);
             }

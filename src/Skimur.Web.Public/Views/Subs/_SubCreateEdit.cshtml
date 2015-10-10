@@ -38,15 +38,15 @@
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.Is18OrOlder, new {@class = "col-md-2 control-label"})
+    @Html.LabelFor(m => m.Nsfw, new {@class = "col-md-2 control-label"})
     <div class="col-md-10">
-        @Html.CheckBoxFor(x => x.Is18OrOlder)
+        @Html.CheckBoxFor(x => x.Nsfw)
     </div>
 </div>
 <div class="form-group">
-    @Html.LabelFor(m => m.ShowInAll, new { @class = "col-md-2 control-label" })
+    @Html.LabelFor(m => m.InAll, new { @class = "col-md-2 control-label" })
     <div class="col-md-10">
-        @Html.CheckBoxFor(x => x.ShowInAll)
+        @Html.CheckBoxFor(x => x.InAll)
     </div>
 </div>
 @if (Model.IsDefault.HasValue)
