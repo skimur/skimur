@@ -310,6 +310,13 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
+                var existingModPermissions = _moderationService.GetUserPermissionsForSub(user, sub.Id);
+                if (existingModPermissions.HasValue)
+                {
+                    response.Error = "The user is already a moderator.";
+                    return response;
+                }
+
                 var userInviteInfo = _moderationInviteService.GetModeratorInviteInfo(user.Id, sub.Id);
                 if (userInviteInfo != null)
                 {
@@ -402,13 +409,19 @@ namespace Subs.Worker.Commands
                     response.Error = "Invalid user.";
                     return response;
                 }
-
-                var permission = _permissionService.GetUserPermissionsForSub(requestingUser, sub.Id);
-
-                if (!permission.HasValue || !permission.Value.HasFlag(ModeratorPermissions.All))
+                
+                if (requestingUser.Id == user.Id)
                 {
-                    response.Error = "You are not permitted to remove mod invites from a sub.";
-                    return response;
+                    // the user is removing their invite (deny).
+                }
+                else
+                {
+                    var permission = _permissionService.GetUserPermissionsForSub(requestingUser, sub.Id);
+                    if (!permission.HasValue || !permission.Value.HasFlag(ModeratorPermissions.All))
+                    {
+                        response.Error = "You are not permitted to remove mod invites from a sub.";
+                        return response;
+                    }
                 }
 
                 var userInviteInfo = _moderationInviteService.GetModeratorInviteInfo(user.Id, sub.Id);

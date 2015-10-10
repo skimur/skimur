@@ -17,5 +17,7 @@ namespace Skimur.Web.Models
         public List<ModeratorInviteWrapped> Invites { get; set; } 
 
         public ModeratorInvite CurrentUserInvite { get; set; }
+
+        public bool CanInvite { get; set; }
     }
 }

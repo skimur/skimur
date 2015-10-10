@@ -65,6 +65,7 @@ namespace Skimur.Web.Controllers
                 {
                     // super mods can see all pending invites
                     model.Invites = _moderatorInviteWrapper.Wrap(_moderationInviteDao.GetModeratorInvitesForSub(sub.Id));
+                    model.CanInvite = true;
                 }
                 else
                 {

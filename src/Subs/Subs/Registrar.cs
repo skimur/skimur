@@ -17,7 +17,7 @@ namespace Subs
         {
             container.RegisterSingleton<IModeratorInviteWrapper, ModeratorInviteWrapper>();
             container.RegisterSingleton<IModerationInviteService, ModerationInviteService>();
-            container.RegisterSingleton<IModerationDao, ModerationDao>();
+            container.RegisterSingleton<IModerationInviteDao, ModerationInviteDao>();
             container.RegisterSingleton<IKarmaService, KarmaService>();
             container.RegisterSingleton<IKarmaDao, KarmaDao>();
             container.RegisterSingleton<IModerationService, ModerationService>();

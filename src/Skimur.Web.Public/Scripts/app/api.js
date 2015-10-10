@@ -459,7 +459,7 @@
         });
     };
 
-    var inviteMod = function(subName, subId, userName, userId, permissions) {
+    var inviteMod = function (subName, subId, userName, userId, permissions, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/invitemod",
@@ -476,7 +476,7 @@
         });
     };
 
-    var acceptModInvite = function(subName, subId) {
+    var acceptModInvite = function (subName, subId, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/acceptinvite",
@@ -493,7 +493,7 @@
         });
     };
 
-    var denyModInvite = function (subName, subId) {
+    var denyModInvite = function (subName, subId, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/denyinvite",
@@ -510,7 +510,7 @@
         });
     };
 
-    var removeModInvite = function (subName, subId, userName, userId) {
+    var removeModInvite = function (subName, subId, userName, userId, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/removeinvite",
@@ -527,7 +527,7 @@
         });
     };
 
-    var changeModInvite = function (subName, subId, userName, userId, permissions) {
+    var changeModInvite = function (subName, subId, userName, userId, permissions, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/changeinvite",

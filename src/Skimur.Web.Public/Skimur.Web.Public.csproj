@@ -374,6 +374,7 @@
     <Content Include="Settings\BlockedIps.json" />
     <Content Include="Settings\RequestLogging.json" />
     <Content Include="Views\Manage\Preferences.cshtml" />
+    <Content Include="Views\Moderators\_ModeratorInvite.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
