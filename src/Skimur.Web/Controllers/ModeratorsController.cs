@@ -78,28 +78,30 @@ namespace Skimur.Web.Controllers
         }
 
         [SkimurAuthorize, Ajax]
-        public ActionResult RemoveModFromSub(string subName, Guid? subId, Guid userId)
+        public ActionResult RemoveModFromSub(string subName, Guid? subId, Guid? userId, string userName)
         {
             var response = _commandBus.Send<RemoveModFromSub, RemoveModFromSubResponse>(new RemoveModFromSub
             {
                 SubName = subName,
                 SubId = subId,
                 RequestingUser = _userContext.CurrentUser.Id,
-                UserToRemove = userId
+                UserNameToRemove = userName,
+                UserIdToRemove = userId
             });
 
             return CommonJsonResult(response.Error);
         }
 
         [SkimurAuthorize, Ajax]
-        public ActionResult ChangeModPermissions(string subName, Guid? subId, Guid userId, ModeratorPermissions permissions)
+        public ActionResult ChangeModPermissions(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
         {
             var response = _commandBus.Send<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>(new ChangeModPermissionsForSub
             {
                 SubName = subName,
                 SubId = subId,
                 RequestingUser = _userContext.CurrentUser.Id,
-                UserToChange = userId,
+                UserNameToChange = userName,
+                UserIdToChange = userId,
                 Permissions = permissions
             });
 

@@ -9,12 +9,12 @@
         var $moderator = getModerator(element);
 
         var subName = $moderator.data("sub-name");
-        var userId = $moderator.data("user-id");
+        var username = $moderator.data("user-name");
         var currentPermissions = $moderator.data("permissions");
 
         if ($moderator.hasClass("invite")) {
             skimurui.displayChangePermissionsForm(currentPermissions, function (newPermissions) {
-                skimur.changeModInvite(subName, null, null, userId, newPermissions, function (result) {
+                skimur.changeModInvite(subName, null, username, null, newPermissions, function (result) {
                     if (result.success) {
                         $(".permissions", $moderator).text(skimurui.buildModeratorPermissionsString(newPermissions));
                         $moderator.data("permissions", newPermissions);
@@ -25,7 +25,7 @@
             });
         } else {
             skimurui.displayChangePermissionsForm(currentPermissions, function (newPermissions) {
-                skimur.changeModPermissionsForSub(subName, null, userId, newPermissions, function (result) {
+                skimur.changeModPermissionsForSub(subName, null, username, null, newPermissions, function (result) {
                     if (result.success) {
                         $(".permissions", $moderator).text(skimurui.buildModeratorPermissionsString(newPermissions));
                         $moderator.data("permissions", newPermissions);
@@ -43,7 +43,7 @@
         if ($moderator.hasClass("invite")) {
             skimurui.confirmWarning("Are you sure?", "Yes, remove invite!", function (confirmResult) {
                 if (confirmResult.confirmed) {
-                    skimur.removeModInvite($moderator.data("sub-name"), null, null, $moderator.data("user-id"), function (result) {
+                    skimur.removeModInvite($moderator.data("sub-name"), null, $moderator.data("user-name"), null, function (result) {
                         if (result.success) {
                             $moderator.remove();
                         } else {
@@ -55,7 +55,7 @@
         } else {
             skimurui.confirmWarning("Are you sure?", "Yes, remove mod!", function (confirmResult) {
                 if (confirmResult.confirmed) {
-                    skimur.removeModFromSub($moderator.data("sub-name"), null, $moderator.data("user-id"), function (result) {
+                    skimur.removeModFromSub($moderator.data("sub-name"), null, $moderator.data("user-name"), null, function (result) {
                         if (result.success) {
                             $moderator.remove();
                         } else {

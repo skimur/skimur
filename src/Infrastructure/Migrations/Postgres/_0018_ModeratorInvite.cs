@@ -29,7 +29,7 @@ CREATE TABLE moderator_invites
   user_id uuid NOT NULL,
   sub_id uuid NOT NULL,
   invited_by uuid NULL,
-  invited_on timestamp with time zone NOT NULL,
+  invited_on timestamp without time zone NOT NULL,
   permissions integer NOT NULL,
   CONSTRAINT moderator_invites_pkey PRIMARY KEY (id)
 );");

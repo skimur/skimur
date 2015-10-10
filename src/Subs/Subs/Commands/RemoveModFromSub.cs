@@ -15,7 +15,9 @@ namespace Subs.Commands
 
         public Guid RequestingUser { get; set; }
 
-        public Guid UserToRemove { get; set; }
+        public string UserNameToRemove { get; set; }
+
+        public Guid? UserIdToRemove { get; set; }
     }
 
     public class RemoveModFromSubResponse

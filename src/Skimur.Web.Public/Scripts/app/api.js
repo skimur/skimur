@@ -357,11 +357,11 @@
         });
     }
 
-    var removeModFromSub = function(subName, subId, userId, callback) {
+    var removeModFromSub = function (subName, subId, userName, userId, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/removemodfromsub",
-            data: { subName: subName, subId: subId, userId: userId },
+            data: { subName: subName, subId: subId, userName:userName, userId: userId },
             dataType: "json",
             success: function(data) {
                 if (callback)
@@ -374,11 +374,11 @@
         });
     };
 
-    var changeModPermissionsForSub = function(subName, subId, userId, permissions, callback) {
+    var changeModPermissionsForSub = function(subName, subId, userName, userId, permissions, callback) {
         $.ajax({
             type: "POST",
             url: "/moderators/changemodpermissions",
-            data: { subName: subName, subId: subId, userId: userId, permissions: permissions },
+            data: { subName: subName, subId: subId, userName: userName, userId: userId, permissions: permissions },
             dataType: "json",
             success: function(data) {
                 if (callback)

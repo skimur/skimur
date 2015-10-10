@@ -51,7 +51,9 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
-                var userToRemove = _membershipService.GetUserById(command.UserToRemove);
+                var userToRemove = command.UserIdToRemove.HasValue
+                   ? _membershipService.GetUserById(command.UserIdToRemove.Value)
+                   : _membershipService.GetUserByUserName(command.UserNameToRemove);
                 if (userToRemove == null)
                 {
                     response.Error = "Invalid user.";
@@ -127,24 +129,26 @@ namespace Subs.Worker.Commands
 
             try
             {
-                // you can't change your own permissions
-                if (command.RequestingUser == command.UserToChange)
-                {
-                    response.Error = "You can't change your own permissions.";
-                    return response;
-                }
-
                 var requestingUser = _membershipService.GetUserById(command.RequestingUser);
                 if (requestingUser == null)
                 {
                     response.Error = "Invalid user.";
                     return response;
                 }
-
-                var userToChange = _membershipService.GetUserById(command.UserToChange);
+                
+                var userToChange = command.UserIdToChange.HasValue
+                   ? _membershipService.GetUserById(command.UserIdToChange.Value)
+                   : _membershipService.GetUserByUserName(command.UserNameToChange);
                 if (userToChange == null)
                 {
                     response.Error = "Invalid user.";
+                    return response;
+                }
+
+                // you can't change your own permissions
+                if (requestingUser.Id == userToChange.Id)
+                {
+                    response.Error = "You can't change your own permissions.";
                     return response;
                 }
 

@@ -1,5 +1,5 @@
 ﻿@model Subs.ReadModel.ModeratorInviteWrapped
-<tr class="moderator invite" data-sub-name="@Model.Sub.Name" data-user-id="@Model.User.Id" data-permissions="@((int) Model.ModeratorInvite.Permissions)">
+<tr class="moderator invite" data-sub-name="@Model.Sub.Name" data-user-name="@Model.User.UserName" data-permissions="@((int) Model.ModeratorInvite.Permissions)">
     <td class="user">@Model.User.UserName</td>
     <td class="invited-on">@Html.Age(Model.ModeratorInvite.InvitedOn) ago</td>
     <td class="permissions">@Html.ModeratorPermissionsText(Model.ModeratorInvite.Permissions)</td>

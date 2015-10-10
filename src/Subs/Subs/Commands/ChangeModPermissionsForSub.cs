@@ -15,7 +15,9 @@ namespace Subs.Commands
 
         public Guid RequestingUser { get; set; }
 
-        public Guid UserToChange { get; set; }
+        public string UserNameToChange { get; set; }
+
+        public Guid? UserIdToChange { get; set; }
 
         public ModeratorPermissions Permissions { get; set; }
     }
