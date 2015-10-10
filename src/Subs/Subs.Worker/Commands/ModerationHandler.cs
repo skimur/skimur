@@ -260,6 +260,7 @@ namespace Subs.Worker.Commands
                     return response;
                 }
 
+                _moderationInviteService.RemoveModeratorInvite(userToAdd.Id, sub.Id); // just in case
                 _moderationService.AddModToSub(userToAdd.Id, sub.Id, command.Permissions, requestingUser.Id);
             }
             catch (Exception ex)
