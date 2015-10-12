@@ -52,14 +52,26 @@ namespace MirroredContentSync
 
                 foreach (var subToMirror in _mirrorSettings.SubsToMirror)
                 {
+                    Console.WriteLine("Attempting to mirror " + subToMirror + ".");
+
                     var sub = _subService.GetSubByName(subToMirror);
-                    if (sub == null) continue;
+                    if (sub == null)
+                    {
+                        Console.WriteLine("Sub doesn't exist.");
+                        continue;
+                    }
 
                     var redditSub = reddit.GetSubreddit("/r/" + subToMirror);
-                    if (redditSub == null) continue;
+                    if (redditSub == null)
+                    {
+                        Console.WriteLine("Couldn't find reddit sub.");
+                        continue;
+                    }
 
                     foreach (var redditPost in redditSub.GetTop(_mirrorSettings.FromTime).Take(_mirrorSettings.PostsPerSub))
                     {
+                        Console.WriteLine("Syncing " + redditPost.Title);
+
                         var existing = _postService.QueryPosts(redditPost.Title, sub.Id).Select(x => _postService.GetPostById(x)).ToList();
                         var exists = false;
                         if (existing.Count > 0)
@@ -70,7 +82,11 @@ namespace MirroredContentSync
                                     exists = true;
                             }
                         }
-                        if (exists) continue;
+                        if (exists)
+                        {
+                            Console.WriteLine("Already exists.");
+                            continue;
+                        }
 
                         var createPostResponse = SkimurContext.Resolve<ICommandHandlerResponse<CreatePost, CreatePostResponse>>()
                             .Handle(new CreatePost
@@ -111,7 +127,6 @@ namespace MirroredContentSync
                         if (!string.IsNullOrEmpty(createCommentResponse.Error))
                         {
                             Console.WriteLine("Couldn't create comment. " + createCommentResponse.Error);
-                            continue;
                         }
                     }
                 }
