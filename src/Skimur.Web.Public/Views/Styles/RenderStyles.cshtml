@@ -28,7 +28,7 @@
     case CssType.GitHubCss:
         if (!string.IsNullOrEmpty(Model.GitHubCssProjectName) && !string.IsNullOrEmpty(Model.GitHubCssProjectTag))
         {
-            <link href="https://cdn.rawgit.com/@(Model.GitHubCssProjectName)/@(Model.GitHubCssProjectTag)styles.css" rel="stylesheet" />
+            <link href="https://cdn.rawgit.com/@(Model.GitHubCssProjectName)/@(Model.GitHubCssProjectTag)/styles.css" rel="stylesheet" />
         }
         break;
     case CssType.GitHubLess:

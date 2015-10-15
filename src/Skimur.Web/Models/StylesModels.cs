@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
@@ -12,14 +14,19 @@ namespace Skimur.Web.Models
     {
         public string Embedded { get; set; }
 
+        [DisplayName("External CSS")]
         public string ExternalCss { get; set; }
-        
+
+        [DisplayName("Project name")]
         public string GitHubCssProjectName { get; set; }
-        
+
+        [DisplayName("Project tag")]
         public string GitHubCssProjectTag { get; set; }
-        
+
+        [DisplayName("Project name")]
         public string GitHubLessProjectName { get; set; }
-        
+
+        [DisplayName("Project tag")]
         public string GitHubLessProjectTag { get; set; }
         
         public CssType CssType { get; set; }

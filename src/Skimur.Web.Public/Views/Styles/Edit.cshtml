@@ -26,7 +26,7 @@
                 <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.None ? "active" : "")" id="none">
                     <div class="form-group">
                         <p class="alert alert-default">
-                            sdf
+                            No styles will be rendered.
                         </p>
                     </div>
                 </div>
@@ -38,25 +38,39 @@
                 </div>
                 <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.ExternalCss ? "active" : "")" id="external">
                     <div class="form-group">
-                        External css
+                        @Html.LabelFor(m => m.ExternalCss)
+                        @Html.TextBoxFor(m => m.ExternalCss, new {@class="form-control", placeholder="https://somewhere.com/style.css"})
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.GitHubCss ? "active" : "")" id="githubcss">
                     <div class="form-group">
-                        Github Css
+                        @Html.LabelFor(m => m.GitHubCssProjectName)
+                        @Html.TextBoxFor(m => m.GitHubCssProjectName, new {@class = "form-control", placeholder = "User/Repository"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GitHubCssProjectTag)
+                        @Html.TextBoxFor(m => m.GitHubCssProjectTag, new { @class = "form-control", placeholder = "v1.0.0" })
                     </div>
                 </div>
                 <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.GitHubLess ? "active" : "")" id="githubless">
+                    <div class="alert alert-warning">
+                        This feature is not implemented at the moment. Stay tuned for updates!
+                    </div>
                     <div class="form-group">
-                        Github less
+                        @Html.LabelFor(m => m.GitHubLessProjectName)
+                        @Html.TextBoxFor(m => m.GitHubLessProjectName, new {@class = "form-control", placeholder = "User/Repository"})
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GitHubLessProjectTag)
+                        @Html.TextBoxFor(m => m.GitHubLessProjectTag, new {@class = "form-control", placeholder = "v1.0.0"})
                     </div>
                 </div>
             </div>
-
-            <div class="form-group">
+            <div class="form-group pull-right">
                 <button class="btn btn-default" name="preview" onclick="$('#@Html.IdFor(m => m.Embedded)').val(editor.getSession().getValue()); $(this).click(); $(this).buttonStartLoading();">Preview</button>
                 <button class="btn btn-primary" name="save" onclick="$('#@Html.IdFor(m => m.Embedded)').val(editor.getSession().getValue()); $(this).click(); $(this).buttonStartLoading();">Save</button>
             </div>
+            <div class="clearfix"></div>
         }
     </div>
 
