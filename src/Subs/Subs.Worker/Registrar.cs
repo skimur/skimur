@@ -60,6 +60,8 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();
             container.Register<ICommandHandler<TogglePostNsfw>, PostHandler>();
             
+            container.Register<ICommandHandlerResponse<EditSubStylesCommand, EditSubStylesCommandResponse>, StylesHandler>();
+
             container.Register<KudosUpdateEventHandler>();
             container.Register<ScoringAndSortingEventHandler>();
             container.Register<ReplyNotificationEventHandler>();

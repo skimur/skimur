@@ -10,9 +10,9 @@ using ServiceStack.OrmLite.Dapper;
 namespace Migrations.Postgres
 {
     // ReSharper disable once InconsistentNaming
-    public class _0018_ModeratorInvite : Migration
+    public class _0019_SubCss : Migration
     {
-        public _0018_ModeratorInvite() : base(MigrationType.Schema, 18)
+        public _0019_SubCss() : base(MigrationType.Schema, 19)
         {
 
         }
@@ -22,22 +22,25 @@ namespace Migrations.Postgres
             conn.Perform(x =>
             {
                 x.Execute(@"
-CREATE TABLE moderator_invites
+CREATE TABLE sub_css
 (
   id uuid NOT NULL,
-  user_id uuid NOT NULL,
   sub_id uuid NOT NULL,
-  invited_by uuid NULL,
-  invited_on timestamp without time zone NOT NULL,
-  permissions integer NOT NULL,
-  CONSTRAINT moderator_invites_pkey PRIMARY KEY (id)
+  type int NOT NULL,
+  embedded text NULL,
+  external_css text NULL,
+  github_css_project_name text NULL,
+  github_css_project_tag text NULL,
+  github_less_project_name text NULL,
+  github_less_project_tag text NULL,
+  CONSTRAINT sub_css_pkey PRIMARY KEY (id)
 );");
             });
         }
 
         public override string GetDescription()
         {
-            return "Add table to store pending mod invites.";
+            return "Add table to css settings for subs.";
         }
     }
 }

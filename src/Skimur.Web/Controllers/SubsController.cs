@@ -125,9 +125,9 @@ namespace Skimur.Web.Controllers
             return View("Posts", model);
         }
 
-        public ActionResult Posts(string name, PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
+        public ActionResult Posts(string subName, PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(subName))
                 return Redirect(Url.Subs());
 
             var model = new SubPostsModel();
@@ -135,7 +135,7 @@ namespace Skimur.Web.Controllers
             var subs = new List<Guid>();
             Sub sub = null;
 
-            if (name.Equals("all", StringComparison.InvariantCultureIgnoreCase))
+            if (subName.Equals("all", StringComparison.InvariantCultureIgnoreCase))
             {
                 // TODO: Filter only by subs that want to be including in "all". For now, we will do nothing, which will effectively return all posts.
                 model.IsAll = true;
@@ -144,10 +144,10 @@ namespace Skimur.Web.Controllers
             {
                 // the user wants to view a specific sub
 
-                sub = _subDao.GetSubByName(name);
+                sub = _subDao.GetSubByName(subName);
 
                 if (sub == null)
-                    return Redirect(Url.Subs(name));
+                    return Redirect(Url.Subs(subName));
 
                 if (_userContext.CurrentUser != null)
                     _subActivityDao.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
@@ -265,9 +265,9 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        public ActionResult SearchSub(string name, string query, PostsSearchSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
+        public ActionResult SearchSub(string subBame, string query, PostsSearchSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
         {
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(subBame))
                 return Redirect(Url.Subs());
 
             if (sort == null)
@@ -276,10 +276,10 @@ namespace Skimur.Web.Controllers
             if (time == null)
                 time = TimeFilter.All;
 
-            var sub = _subDao.GetSubByName(name);
+            var sub = _subDao.GetSubByName(subBame);
 
             if (sub == null)
-                return Redirect(Url.Subs(name));
+                return Redirect(Url.Subs(subBame));
 
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
@@ -407,17 +407,15 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.Sub(randomSub.Name));
         }
 
-        public ActionResult Edit(string id)
+        public ActionResult Edit(string subName)
         {
-            var name = id;
-
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(subName))
                 return Redirect(Url.Subs());
 
-            var sub = _subDao.GetSubByName(name);
+            var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                return Redirect(Url.Subs(name));
+                return Redirect(Url.Subs(subName));
 
             if (!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
                 throw new UnauthorizedException();

@@ -49,6 +49,8 @@ namespace Subs
             container.RegisterSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
             container.RegisterSingleton<IMessageWrapper, MessageWrapper>();
             container.RegisterSingleton<IModeratorWrapper, ModeratorWrapper>();
+            container.RegisterSingleton<ISubCssService, SubCssService>();
+            container.RegisterSingleton<ISubCssDao, SubCssDao>();
         }
 
         public int Order

@@ -297,6 +297,10 @@
     <Content Include="Content\components\common.less" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="Startup.cs" />
+    <Content Include="Scripts\ace\ace.js" />
+    <Content Include="Scripts\ace\mode-css.js" />
+    <Content Include="Scripts\ace\theme-github.js" />
+    <Content Include="Scripts\ace\worker-css.js" />
     <Content Include="Scripts\app\api.js" />
     <Content Include="Scripts\app\comments.js" />
     <Content Include="Scripts\app\messages.js" />
@@ -375,6 +379,7 @@
     <Content Include="Settings\RequestLogging.json" />
     <Content Include="Views\Manage\Preferences.cshtml" />
     <Content Include="Views\Moderators\_ModeratorInvite.cshtml" />
+    <Content Include="Views\Styles\Edit.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

@@ -5,6 +5,7 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>@ViewBag.Title - Skimur</title>
     @{ Html.RenderStyles(); }
+    @{ Html.RenderAction("SubStyles", "Styles"); }
     <script type="text/javascript">
         window.q = [];
         window.$ = function (f) {

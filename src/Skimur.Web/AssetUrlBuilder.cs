@@ -60,6 +60,14 @@ namespace Skimur.Web
                 htmlHelper.ViewContext.Writer.Write("<link rel=\"stylesheet\" type=\"text/css\" href=\"" + StaticAssetHost + "/Content/site.css?v=" + _version + "\">");
         }
 
+        public static void RenderEditorScripts(this HtmlHelper htmlHelper)
+        {
+            if (!IsUsingStatisAssets)
+                htmlHelper.ViewContext.Writer.Write("<script src=\"/Scripts/ace/ace.js?v=" + _version + "\"></script>");
+            else
+                htmlHelper.ViewContext.Writer.Write("<script src=\"" + StaticAssetHost + "/Scripts/csseditor.js?v=" + _version + "\"></script>");
+        }
+
         public static string AssetUrl(this UrlHelper urlHelper, string url)
         {
             if (!IsUsingStatisAssets)

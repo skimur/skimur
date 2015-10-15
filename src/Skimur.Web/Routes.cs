@@ -74,33 +74,38 @@ namespace Skimur.Web
 
             routes.MapRoute(
                name: "Sub",
-               url: "s/{name}",
+               url: "s/{subName}",
                defaults: new { controller = "Subs", action = "Posts" });
 
             routes.MapRoute(
                name: "SubHot",
-               url: "s/{name}/hot",
+               url: "s/{subName}/hot",
                defaults: new { controller = "Subs", action = "Posts", sort = "hot" });
 
             routes.MapRoute(
                name: "SubNew",
-               url: "s/{name}/new",
+               url: "s/{subName}/new",
                defaults: new { controller = "Subs", action = "Posts", sort = "new" });
 
             routes.MapRoute(
                name: "SubControversial",
-               url: "s/{name}/controversial",
+               url: "s/{subName}/controversial",
                defaults: new { controller = "Subs", action = "Posts", sort = "controversial" });
 
             routes.MapRoute(
                name: "SubTop",
-               url: "s/{name}/top",
+               url: "s/{subName}/top",
                defaults: new { controller = "Subs", action = "Posts", sort = "top" });
 
             routes.MapRoute(
                name: "SubSearch",
-               url: "s/{name}/search",
+               url: "s/{subName}/search",
                defaults: new { controller = "Subs", action = "SearchSub" });
+
+            routes.MapRoute(
+                name: "SubEdit",
+                url: "s/{subName}/edit",
+                defaults: new {controller = "Subs", action = "Edit"});
 
             routes.MapRoute(
                 name: "SubsUnmoderated",
@@ -151,6 +156,11 @@ namespace Skimur.Web
                 name: "SubModerators",
                 url: "s/{subName}/moderators",
                 defaults: new { controller = "Moderators", action = "Moderators" });
+
+            routes.MapRoute(
+                name: "SubStyles",
+                url: "s/{subName}/styles",
+                defaults: new {controller = "Styles", action = "Edit"});
 
             routes.MapRoute(
                 name: "MoreComments",

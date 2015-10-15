@@ -175,6 +175,8 @@ namespace Skimur.Web
                 list.Add("Mail");
             if (permissions.HasPermission(ModeratorPermissions.Posts))
                 list.Add("Posts");
+            if(permissions.HasPermission(ModeratorPermissions.Styles))
+                list.Add("Styles");
 
             return string.Join(", " , list);
         }

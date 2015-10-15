@@ -15,6 +15,7 @@ namespace Subs
         Config = 1 << 2,
         Flair = 1 << 3,
         Mail = 1 << 4,
-        Posts = 1 << 5
+        Posts = 1 << 5,
+        Styles = 1 << 6
     }
 }

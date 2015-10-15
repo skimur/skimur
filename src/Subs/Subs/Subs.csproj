@@ -87,6 +87,7 @@
     <Compile Include="Commands\EditComment.cs" />
     <Compile Include="Commands\EditPostContent.cs" />
     <Compile Include="Commands\EditSub.cs" />
+    <Compile Include="Commands\EditSubStylesCommand.cs" />
     <Compile Include="Commands\InviteModToSub.cs" />
     <Compile Include="Commands\MarkMessagesAsRead.cs" />
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />
@@ -132,12 +133,14 @@
     <Compile Include="ReadModel\Impl\ModeratorWrapper.cs" />
     <Compile Include="ReadModel\Impl\ReportDao.cs" />
     <Compile Include="ReadModel\Impl\SubActivityDao.cs" />
+    <Compile Include="ReadModel\Impl\SubCssDao.cs" />
     <Compile Include="ReadModel\Impl\SubModerationDao.cs" />
     <Compile Include="ReadModel\Impl\SubUserBanWrapper.cs" />
     <Compile Include="ReadModel\IPostWrapper.cs" />
     <Compile Include="ReadModel\IReportDao.cs" />
     <Compile Include="ReadModel\ISubActivityDao.cs" />
     <Compile Include="ReadModel\IModerationDao.cs" />
+    <Compile Include="ReadModel\ISubCssDao.cs" />
     <Compile Include="ReadModel\ISubUserBanDao.cs" />
     <Compile Include="ReadModel\ISubUserBanWrapper.cs" />
     <Compile Include="ReadModel\ISubWrapper.cs" />
@@ -165,9 +168,11 @@
     <Compile Include="Services\Impl\ModerationInviteService.cs" />
     <Compile Include="Services\Impl\ReportService.cs" />
     <Compile Include="Services\Impl\ModerationService.cs" />
+    <Compile Include="Services\Impl\SubCssService.cs" />
     <Compile Include="Services\IReportService.cs" />
     <Compile Include="Services\ISubActivityService.cs" />
     <Compile Include="Services\IModerationService.cs" />
+    <Compile Include="Services\ISubCssService.cs" />
     <Compile Include="Services\ISubUserBanService.cs" />
     <Compile Include="Services\Impl\SubUserBanService.cs" />
     <Compile Include="Services\Impl\SubActivityService.cs" />
@@ -197,6 +202,7 @@
     <Compile Include="Services\Impl\VoteService.cs" />
     <Compile Include="Sub.cs" />
     <Compile Include="Moderator.cs" />
+    <Compile Include="SubCss.cs" />
     <Compile Include="SubExtensions.cs" />
     <Compile Include="SubScription.cs" />
     <Compile Include="Services\Impl\SubService.cs" />

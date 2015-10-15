@@ -59,6 +59,10 @@
                     <li class="list-group-item"><a href="@Url.Unmoderated(Model.CurrentSub.Sub.Name)">Unmoderated links</a></li>
                     <li class="list-group-item"><a href="@Url.ReportedPosts(Model.CurrentSub.Sub.Name)">Reported</a></li>
                 }
+                @if (Model.Permissions.HasPermission(ModeratorPermissions.Styles))
+                {
+                    <li class="list-group-item"><a href="@Url.Styles(Model.CurrentSub.Sub.Name)">Styles</a></li>
+                }
             </ul>
         </div>
     }

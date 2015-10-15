@@ -21,6 +21,8 @@ namespace Subs.ReadModel
 
         bool CanUserManageSubPosts(User user, Guid subId);
 
+        bool CanUserManageSubStyles(User user, Guid subId);
+
         ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId);
     }
 }
