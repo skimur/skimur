@@ -14,7 +14,7 @@ using Subs.ReadModel;
 namespace Skimur.Web.Controllers
 {
     [SkimurAuthorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private ApplicationSignInManager _signInManager;
         private IAuthenticationManager _authenticationManager;
@@ -396,16 +396,7 @@ namespace Skimur.Web.Controllers
                 ModelState.AddModelError("", error);
             }
         }
-
-        private ActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            return RedirectToAction("Index", "Home");
-        }
-
+        
         internal class ChallengeResult : HttpUnauthorizedResult
         {
             private readonly IAuthenticationManager _authenticationManager;

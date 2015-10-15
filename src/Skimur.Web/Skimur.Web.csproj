@@ -191,6 +191,7 @@
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Mvc\AjaxAttribute.cs" />
     <Compile Include="Mvc\AnnouncementFilterAttribute.cs" />
+    <Compile Include="Mvc\ParameterBasedOnFormNameAttribute.cs" />
     <Compile Include="Mvc\SkimurAuthorizeAttribute.cs" />
     <Compile Include="Mvc\SkimurHandleErrorAttribute.cs" />
     <Compile Include="Mvc\JsonNetResult.cs" />

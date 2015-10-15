@@ -54,7 +54,8 @@
             </div>
 
             <div class="form-group">
-                <button class="btn btn-primary" onclick="$('#@Html.IdFor(m => m.Embedded)').val(editor.getSession().getValue()); this.form.submit(); $(this).buttonStartLoading();">Save</button>
+                <button class="btn btn-primary" name="preview" onclick="$('#@Html.IdFor(m => m.Embedded)').val(editor.getSession().getValue()); $(this).click(); $(this).buttonStartLoading();">Preview</button>
+                <button class="btn btn-default" name="save" onclick="$('#@Html.IdFor(m => m.Embedded)').val(editor.getSession().getValue()); $(this).click(); $(this).buttonStartLoading();">Save</button>
             </div>
         }
     </div>

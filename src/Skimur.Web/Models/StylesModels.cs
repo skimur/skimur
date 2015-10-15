@@ -7,6 +7,7 @@ using Subs;
 
 namespace Skimur.Web.Models
 {
+    [Serializable]
     public class StylesEditModel
     {
         public string Embedded { get; set; }
@@ -22,7 +23,27 @@ namespace Skimur.Web.Models
         public string GitHubLessProjectTag { get; set; }
         
         public CssType CssType { get; set; }
-
+        
         public Sub Sub { get; set; }
+    }
+
+    [Serializable]
+    public class StylesPreviewModel
+    {
+        public string Embedded { get; set; }
+
+        public string ExternalCss { get; set; }
+
+        public string GitHubCssProjectName { get; set; }
+
+        public string GitHubCssProjectTag { get; set; }
+
+        public string GitHubLessProjectName { get; set; }
+
+        public string GitHubLessProjectTag { get; set; }
+
+        public CssType CssType { get; set; }
+
+        public DateTime ExpiresOn { get; set; }
     }
 }
