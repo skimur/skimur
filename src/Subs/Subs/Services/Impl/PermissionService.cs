@@ -67,6 +67,13 @@ namespace Subs.Services.Impl
             return permissions.HasPermission(ModeratorPermissions.Posts);
         }
 
+        public bool CanUserManageSubStyles(User user, Guid subId)
+        {
+            var permissions = GetUserPermissionsForSub(user, subId);
+            if (permissions == null) return false;
+            return permissions.HasPermission(ModeratorPermissions.Styles);
+        }
+
         public ModeratorPermissions? GetUserPermissionsForSub(User user, Guid subId)
         {
             return _moderationService.GetUserPermissionsForSub(user, subId);

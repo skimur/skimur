@@ -134,5 +134,8 @@ namespace Skimur.Web.Models
     {
         [DisplayName("I am over eighteen years old and willing to view adult content")]
         public bool ShowNsfw { get; set; }
+
+        [DisplayName("Allow subs to present custom styles to me.")]
+        public bool EnableStyles { get; set; }
     }
 }

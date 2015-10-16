@@ -12,7 +12,6 @@ namespace Migrations.Postgres
     // ReSharper disable once InconsistentNaming
     public class _0018_ModeratorInvite : Migration
     {
-        // public bool IsInvitation { get; set; }
         public _0018_ModeratorInvite() : base(MigrationType.Schema, 18)
         {
 

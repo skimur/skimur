@@ -37,9 +37,9 @@ namespace Skimur.Web
             return urlHelper.Action("Index", "Subs", new { query });
         }
 
-        public static string Sub(this UrlHelper urlHelper, string name)
+        public static string Sub(this UrlHelper urlHelper, string subName)
         {
-            return urlHelper.RouteUrl("Sub", new { name });
+            return urlHelper.RouteUrl("Sub", new { subName });
         }
 
         public static string CreateSub(this UrlHelper urlHelper)
@@ -47,9 +47,9 @@ namespace Skimur.Web
             return urlHelper.Action("Create", "Subs");
         }
 
-        public static string EditSub(this UrlHelper urlHelper, string name)
+        public static string EditSub(this UrlHelper urlHelper, string subName)
         {
-            return urlHelper.Action("Edit", "Subs", new { id = name });
+            return urlHelper.RouteUrl("SubEdit", new {subName});
         }
 
         public static string SubBans(this UrlHelper urlHelper, string name)
@@ -111,7 +111,7 @@ namespace Skimur.Web
 
         public static string SubSearch(this UrlHelper urlHelper, string subName)
         {
-            return urlHelper.RouteUrl("SubSearch", new { name = subName });
+            return urlHelper.RouteUrl("SubSearch", new { subName });
         }
 
         public static string Login(this UrlHelper urlHelper)
@@ -190,6 +190,11 @@ namespace Skimur.Web
         public static string Moderators(this UrlHelper urlHelper, string subName)
         {
             return urlHelper.RouteUrl("SubModerators", new { subName });
+        }
+
+        public static string Styles(this UrlHelper urlHelper, string subName)
+        {
+            return urlHelper.RouteUrl("SubStyles", new { subName });
         }
     }
 }

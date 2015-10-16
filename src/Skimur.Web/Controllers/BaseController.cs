@@ -82,5 +82,14 @@ namespace Skimur.Web.Controllers
         {
             return !string.IsNullOrEmpty(error) ? CommonJsonResult(false, error) : CommonJsonResult(true);
         }
+
+        protected ActionResult RedirectToLocal(string returnUrl)
+        {
+            if (Url.IsLocalUrl(returnUrl))
+            {
+                return Redirect(returnUrl);
+            }
+            return RedirectToAction("Index", "Home");
+        }
     }
 }

@@ -118,5 +118,11 @@ namespace Membership
         /// Does the user want to see NSFW content?
         /// </summary>
         public bool ShowNsfw { get; set; }
+
+        /// <summary>
+        /// Does the user want to be presented with any custom styles?
+        /// </summary>
+        [Alias("Styles")]
+        public bool EnableStyles { get; set; }
     }
 }

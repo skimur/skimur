@@ -4,6 +4,7 @@ using System.Web.Mvc;
 using System.Web.Optimization;
 using System.Web.Routing;
 using BundleTransformer.Core.Transformers;
+using FluentValidation.Mvc;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Infrastructure.Settings;
@@ -42,6 +43,8 @@ namespace Skimur.Web.Public
 
             // todo: factor out the command/event bus handling to separate exe via a build script
             _busLifetime = SkimurContext.Resolve<IBusLifetime>();
+
+            FluentValidationModelValidatorProvider.Configure();
         }
 
         public void ConfigureContainer()

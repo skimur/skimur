@@ -15,6 +15,11 @@
             @Html.CheckBoxFor(m => m.ShowNsfw) @Html.DisplayNameFor(x => x.ShowNsfw)
         </label>
     </div>
+    <div class="checkbox">
+        <label>
+            @Html.CheckBoxFor(m => m.EnableStyles) @Html.DisplayNameFor(x => x.EnableStyles)
+        </label>
+    </div>
     <div class="form-group">
         <input type="submit" value="Save" class="btn btn-primary" />
     </div>

@@ -6,6 +6,7 @@
     var permissionsFlagFlair = 8;
     var permissionsFlagMail = 16;
     var permissionsFlagPosts = 32;
+    var permissionsFlagStyles = 64;
 
     var displayError = function (message) {
         $.notify(message, {
@@ -151,6 +152,9 @@
             if ((permissions & permissionsFlagPosts) !== 0) {
                 list.push("Posts");
             }
+            if ((permissions & permissionsFlagStyles) !== 0) {
+                list.push("Styles");
+            }
             return list.join(", ");
         }
     }
@@ -177,13 +181,16 @@
             "<label class='permission posts'>" +
                 "<input type='checkbox' name='posts'> Posts" +
             "</label>" +
+            "<label class='permission styles'>" +
+                "<input type='checkbox' name='styles'> Styles" +
+            "</label>" +
         "</div>");
 
         $(".permission input", $form).click(function (e) {
             var isChecked = $(this).prop("checked");
             var $permission = $(this).closest(".permission");
             if ($permission.hasClass("full")) {
-                var items = $(".access, .config, .flair, .mail, .posts", $form).each(function (index, element) {
+                var items = $(".access, .config, .flair, .mail, .posts, .styles", $form).each(function (index, element) {
                     var $element = $(element);
                     if (isChecked) {
                         $element.addClass("disabled").find("input").attr("disabled", true).attr("checked", false);
@@ -221,6 +228,9 @@
                 if ((currentPermissions & permissionsFlagPosts) !== 0) {
                     $(".permission.posts input", $form).click();
                 }
+                if ((currentPermissions & permissionsFlagStyles) !== 0) {
+                    $(".permission.styles input", $form).click();
+                }
             }
         }
 
@@ -246,6 +256,9 @@
             }
             if ($(".permission.posts input", $form).is(":checked")) {
                 permissions |= permissionsFlagPosts;
+            }
+            if ($(".permission.styles input", $form).is(":checked")) {
+                permissions |= permissionsFlagStyles;
             }
             return permissions;
         }
