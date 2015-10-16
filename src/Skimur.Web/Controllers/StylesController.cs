@@ -16,7 +16,6 @@ using Subs.Services;
 
 namespace Skimur.Web.Controllers
 {
-    [SkimurAuthorize]
     public class StylesController : BaseController
     {
         private readonly IPermissionDao _permissionDao;
@@ -41,6 +40,7 @@ namespace Skimur.Web.Controllers
             _commandBus = commandBus;
         }
 
+        [SkimurAuthorize]
         public ActionResult Edit(string subName)
         {
             var sub = _subDao.GetSubByName(subName);
@@ -50,6 +50,7 @@ namespace Skimur.Web.Controllers
 
             var model = new StylesEditModel();
             model.Sub = sub;
+            model.StyledEnabledForUser = _userContext.CurrentUser.EnableStyles;
 
             if (Request.Cookies.AllKeys.Contains("preview-" + sub.Name.ToLower()))
             {
@@ -73,6 +74,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
+        [SkimurAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ParameterBasedOnFormName("save", "save"), ParameterBasedOnFormName("preview", "preview")]
@@ -82,6 +84,7 @@ namespace Skimur.Web.Controllers
             if (sub == null) throw new NotFoundException();
 
             model.Sub = sub;
+            model.StyledEnabledForUser = _userContext.CurrentUser.EnableStyles;
 
             if (!ModelState.IsValid)
                 return View(model);
@@ -121,7 +124,7 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
-
+        
         public ActionResult CancelPreview(string subName, string returnUrl)
         {
             if (!string.IsNullOrEmpty(subName))
@@ -137,8 +140,12 @@ namespace Skimur.Web.Controllers
             return RedirectToLocal(returnUrl);
         }
 
+        [ChildActionOnly]
         public ActionResult SubStyles(string subName)
         {
+            // the user doesn't want to see any styles!
+            if (_userContext.CurrentUser != null && !_userContext.CurrentUser.EnableStyles) return Content("");
+
             var sub = _subDao.GetSubByName(subName);
             if (sub == null) return Content("");
 

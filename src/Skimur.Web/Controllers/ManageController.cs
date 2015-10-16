@@ -97,7 +97,8 @@ namespace Skimur.Web.Controllers
 
             return View(new UserPreferencesModel
             {
-                ShowNsfw = user.ShowNsfw
+                ShowNsfw = user.ShowNsfw,
+                EnableStyles = user.EnableStyles
             });
         }
 
@@ -110,6 +111,7 @@ namespace Skimur.Web.Controllers
 
             var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
             user.ShowNsfw = model.ShowNsfw;
+            user.EnableStyles = model.EnableStyles;
             await _userManager.UpdateAsync(user);
 
             AddSuccessMessage("Your preferences have been updated.");

@@ -35,12 +35,13 @@ CREATE TABLE sub_css
   github_less_project_tag text NULL,
   CONSTRAINT sub_css_pkey PRIMARY KEY (id)
 );");
+                x.Execute("ALTER TABLE users ADD COLUMN styles boolean NOT NULL default TRUE;");
             });
         }
 
         public override string GetDescription()
         {
-            return "Add table to css settings for subs.";
+            return "Add table to css settings for subs. Add a setting to the users table to indicate if the user wants to be presented with custom CSS.";
         }
     }
 }

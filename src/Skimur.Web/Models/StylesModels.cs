@@ -34,6 +34,8 @@ namespace Skimur.Web.Models
         public CssType CssType { get; set; }
         
         public Sub Sub { get; set; }
+
+        public bool StyledEnabledForUser { get; set; }
     }
 
     [Serializable]

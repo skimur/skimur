@@ -113,6 +113,13 @@
 </script>
 
 @section messages {
+    @if (!Model.StyledEnabledForUser)
+    {
+        <div class="alert alert-warning">
+            Your account is configured to not allow subs to display custom styles. It is recommended to enable this when adjusting styles.<br/>
+            <a href="@Url.ManagePreferences()" class="btn btn-default">Manage preferences</a>
+        </div>   
+    }
     @Html.ErrorMessages()
     @Html.SuccessMessages()
 }
