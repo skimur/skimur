@@ -34,6 +34,14 @@
       <HintPath>..\packages\Antlr.3.5.0.2\lib\Antlr3.Runtime.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="FluentValidation, Version=5.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.5.6.2.0\lib\Net45\FluentValidation.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="FluentValidation.Mvc, Version=5.6.2.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\FluentValidation.MVC5.5.6.2.0\lib\Net45\FluentValidation.Mvc.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="Glimpse.AspNet, Version=1.9.2.0, Culture=neutral, processorArchitecture=MSIL">
       <HintPath>..\packages\Glimpse.AspNet.1.9.2\lib\net45\Glimpse.AspNet.dll</HintPath>
       <Private>True</Private>
@@ -187,6 +195,7 @@
     <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\ReportModels.cs" />
     <Compile Include="Models\StylesModels.cs" />
+    <Compile Include="Models\StylesModels.Validators.cs" />
     <Compile Include="Models\SubViewModels.cs" />
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Mvc\AjaxAttribute.cs" />

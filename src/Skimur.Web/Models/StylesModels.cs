@@ -6,10 +6,12 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Subs;
+using FluentValidation.Attributes;
 
 namespace Skimur.Web.Models
 {
     [Serializable]
+    [Validator(typeof(StylesEditModelValidator))]
     public class StylesEditModel
     {
         public string Embedded { get; set; }

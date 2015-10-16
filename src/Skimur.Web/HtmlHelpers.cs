@@ -105,7 +105,31 @@ namespace Skimur.Web
 
         public static MvcHtmlString ClientValidationErrorsContainer(this HtmlHelper helper)
         {
-            return MvcHtmlString.Create("<div class=\"validation-summary-valid text-danger\" data-valmsg-summary=\"true\"><ul><li style=\"display:none\"></li></ul></div>");
+            var propertyLevelErrors = new List<string>();
+
+            foreach (var key in helper.ViewData.ModelState.Keys)
+            {
+                if (!string.IsNullOrEmpty(key))
+                {
+                    var modelState = helper.ViewData.ModelState[key];
+                    foreach (var error in modelState.Errors)
+                    {
+                        propertyLevelErrors.Add(error.ErrorMessage);
+                    }
+                }
+            }
+
+            string ul;
+            if (propertyLevelErrors.Count > 0)
+            {
+                // we have some propertly-level errors.
+                ul = "<ul>" + string.Join(string.Empty, propertyLevelErrors.Select(x => "<li>" + x + "</li>"))  + "</ul>";
+            }
+            else
+            {
+                ul = "<ul><li style=\"display:none\"></li></ul>";
+            }
+            return MvcHtmlString.Create("<div class=\"validation-summary-valid text-danger\" data-valmsg-summary=\"true\">" + ul + "</div>");
         }
 
         public static string GetEnumDescription<TEnum>(TEnum value)
