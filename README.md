@@ -1,3 +1,4 @@
+[![Stories in Ready](https://badge.waffle.io/skimur/skimur.png?label=ready&title=Ready)](https://waffle.io/skimur/skimur)
 # skimur
 
 <img src="resources/logo-small.jpg" align="right" style="width:40%;">
