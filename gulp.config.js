@@ -26,7 +26,12 @@ module.exports = function() {
       'app/moderators.js'
   	],
     useStaticAssets: 'true',
-    staticAssetsHost: 'http://static.skimur.com/'
+    staticAssetsHost: 'https://jjj.skimur.com/',
+    rabbitMQHost: '192.168.10.200',
+    redisReadWrite: '192.168.10.200:6379',
+    redisRead: '192.168.10.200:6379',
+    postgres: 'Server=192.168.10.200;Port=5656;User Id=postgres; Password=password; Database=skimur',
+    cassandra: '192.168.10.200'
   }
 
   return config;

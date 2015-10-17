@@ -85,10 +85,21 @@ gulp.task('dist-web-fix-clearscript', function(){
     .pipe(gulp.dest('./dist/web/bin/ClearScript.V8/'));
 });
 
-gulp.task('dist-web-configuration', function(){
-  gulp.src('./dist/web/Web.config')
-    .pipe(replace(/debug="(true|false)"/g, 'debug="' + (buildConfiguration == "Debug" ? 'true' : 'false') + '"'))
-    .pipe(gulp.dest('./dist/web/'));
+gulp.task('dist-web-configuration', function(cb){
+  xmlpoke('./dist/web/Web.config', function(xml) {
+    xml.withBasePath('configuration')
+      .set("appSettings/add[@key='UseStaticAssets']/@value", config.useStaticAssets)
+      .set("appSettings/add[@key='StaticAssetsHost']/@value", config.staticAssetsHost);
+    xml.withBasePath('configuration/system.web')
+      .set("compilation/@debug", 'false');
+    xml.withBasePath('configuration')
+      .set("appSettings/add[@key='RabbitMQHost']/@value", config.rabbitMQHost)
+      .set("appSettings/add[@key='RedisReadWrite']/@value", config.redisReadWrite)
+      .set("appSettings/add[@key='RedisRead']/@value", config.redisRead)
+      .set("appSettings/add[@key='Postgres']/@value", config.postgres)
+      .set("appSettings/add[@key='Cassandra']/@value", config.cassandra);
+  });
+  cb();
 });
 
 gulp.task('dist-web-make-static', function(cb) {
