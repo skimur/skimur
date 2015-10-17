@@ -5,6 +5,7 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
+using Membership;
 using Membership.Services;
 using PowerArgs;
 using ServiceStack.OrmLite;
@@ -116,12 +117,16 @@ namespace Tasks
             foreach (var post in connectionProvider.Perform(conn => conn.Select<Post>(x => x.SubId == sub.Id)))
             {
                 connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.PostId == post.Id));
+                connectionProvider.Perform(conn => conn.Delete<Report.PostReport>(x => x.PostId == post.Id));
+                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.PostId == post.Id));
                 connectionProvider.Perform(conn => conn.Delete<Post>(x => x.Id == post.Id));
             }
 
             foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.SubId == sub.Id)))
             {
                 connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.CommentId == comment.Id));
+                connectionProvider.Perform(conn => conn.Delete<Report.CommentReport>(x => x.CommentId == comment.Id));
+                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.CommentId == comment.Id));
                 connectionProvider.Perform(conn => conn.Delete<Comment>(x => x.Id == comment.Id));
             }
 
@@ -130,6 +135,35 @@ namespace Tasks
             connectionProvider.Perform(conn => conn.Delete<SubCss>(x => x.SubId == sub.Id));
             connectionProvider.Perform(conn => conn.Delete<SubUserBan>(x => x.SubId == sub.Id));
             connectionProvider.Perform(conn => conn.Delete<Sub>(x => x.Id == sub.Id));
+        }
+
+        [ArgActionMethod, ArgDescription("Delete a user")]
+        public void DeleteUser(string userName)
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+
+            var user = connectionProvider.Perform(conn => conn.Single<User>(x => x.UserName.ToLower() == userName.ToLower()));
+            if (user == null)
+            {
+                Console.WriteLine("No user with that name.");
+                return;
+            }
+
+            foreach (var post in connectionProvider.Perform(conn => conn.Select<Post>(x => x.UserId == user.Id)))
+            {
+                connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.PostId == post.Id));
+                connectionProvider.Perform(conn => conn.Delete<Report.PostReport>(x => x.PostId == post.Id));
+                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.PostId == post.Id));
+                connectionProvider.Perform(conn => conn.Delete<Post>(x => x.Id == post.Id));
+            }
+
+            foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.AuthorUserId == user.Id)))
+            {
+                connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.CommentId == comment.Id));
+                connectionProvider.Perform(conn => conn.Delete<Report.CommentReport>(x => x.CommentId == comment.Id));
+                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.CommentId == comment.Id));
+                connectionProvider.Perform(conn => conn.Delete<Comment>(x => x.Id == comment.Id));
+            }
         }
     }
 
