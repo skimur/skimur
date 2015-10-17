@@ -43,5 +43,45 @@ namespace Skimur
         {
             return !string.IsNullOrEmpty(text) && (!string.IsNullOrEmpty(text) && NsfwRegex.IsMatch(text));
         }
+
+        public static bool IsReservedKeyword(string value)
+        {
+            if (string.IsNullOrEmpty(value))
+                return false;
+
+            if (value.Equals("CON", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("PRN", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("CLOCK$", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("CLOCK", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("NUL", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("PRN", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM0", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM1", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM2", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM3", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM4", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM5", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM6", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM7", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM8", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("COM9", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT0", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT1", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT2", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT3", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT4", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT5", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT6", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT7", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT8", StringComparison.InvariantCultureIgnoreCase)
+                || value.Equals("LPT9", StringComparison.InvariantCultureIgnoreCase))
+            {
+                return true;
+            }
+
+            return false;
+        }
     }
 }

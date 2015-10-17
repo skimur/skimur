@@ -115,7 +115,15 @@ namespace Subs.Worker.Commands
                     response.Error = "The sub already exist.";
                     return response;
                 }
-                
+
+                if (command.Name.Equals("random", StringComparison.InvariantCultureIgnoreCase)
+                    || command.Name.Equals("all", StringComparison.InvariantCultureIgnoreCase)
+                    || Common.IsReservedKeyword(command.Name))
+                {
+                    response.Error = "The name is invalid.";
+                    return response;
+                }
+
                 // let's make sure the user creating this sub doesn't already have the maximum number of subs they are modding.
                 var moddedSubsForUser = _moderationService.GetSubsModeratoredByUser(user.Id);
                 if (moddedSubsForUser.Count >= _subSettings.Settings.MaximumNumberOfModdedSubs)

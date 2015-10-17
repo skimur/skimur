@@ -125,6 +125,9 @@ namespace Skimur.Web.Controllers
         {
             ViewBag.ReturnUrl = returnUrl;
 
+            if (Common.IsReservedKeyword(model.Username))
+                ModelState.AddModelError(string.Empty, "The username is invalid.");
+
             if (ModelState.IsValid)
             {
                 var user = new ApplicationUser { UserName = model.Username, Email = model.Email };
@@ -330,6 +333,9 @@ namespace Skimur.Web.Controllers
             {
                 return RedirectToAction("Index", "Manage");
             }
+
+            if (Common.IsReservedKeyword(model.Username))
+                ModelState.AddModelError(string.Empty, "The username is invalid.");
 
             if (ModelState.IsValid)
             {
