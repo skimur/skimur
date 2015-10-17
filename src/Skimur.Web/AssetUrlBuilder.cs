@@ -65,7 +65,7 @@ namespace Skimur.Web
             if (!IsUsingStatisAssets)
                 htmlHelper.ViewContext.Writer.Write("<script src=\"/Scripts/ace/ace.js?v=" + _version + "\"></script>");
             else
-                htmlHelper.ViewContext.Writer.Write("<script src=\"" + StaticAssetHost + "/Scripts/csseditor.js?v=" + _version + "\"></script>");
+                htmlHelper.ViewContext.Writer.Write("<script src=\"" + StaticAssetHost + "/Scripts/ace/ace.js?v=" + _version + "\"></script>");
         }
 
         public static string AssetUrl(this UrlHelper urlHelper, string url)
