@@ -185,7 +185,8 @@ gulp.task('dist-static-clean', function() {
   	// except!
   	'!./dist/static/Content/**/*.css', // leave all css files alone
   	'!./dist/static/Content/img/', '!./dist/static/Content/img/**', // leave the img directory
-  	'!./dist/static/Content/fonts/', '!./dist/static/Content/fonts/**',
+  	'!./dist/static/Content/fonts/', '!./dist/static/Content/fonts/**', // leave the fonts
+    '!./dist/static/Scripts/ace/', '!./dist/static/Scripts/ace/**', // leave the ace edit script directory
   	'!./dist/static/Scripts/script.js', // and leave the fonts directory
   	'!./dist/static/web.config']) 
 });
