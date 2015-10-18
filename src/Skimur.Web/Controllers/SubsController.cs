@@ -538,7 +538,7 @@ namespace Skimur.Web.Controllers
 
             return View(new CreatePostModel
             {
-                SubName = sub != null ? sub.Sub.Name : null,
+                PostToSub = sub != null ? sub.Sub.Name : null,
                 Sub = sub,
                 PostType = type == "text" ? PostType.Text : PostType.Link,
                 NotifyReplies = true
@@ -568,7 +568,7 @@ namespace Skimur.Web.Controllers
                 Url = model.Url,
                 Content = model.Content,
                 PostType = model.PostType,
-                SubName = model.SubName,
+                SubName = model.PostToSub,
                 NotifyReplies = model.NotifyReplies
             });
 
@@ -587,7 +587,7 @@ namespace Skimur.Web.Controllers
 
             // todo: success message
 
-            return Redirect(Url.Post(model.SubName, response.PostId.Value, response.Title));
+            return Redirect(Url.Post(model.PostToSub, response.PostId.Value, response.Title));
         }
 
         [SkimurAuthorize, Ajax, HttpPost]

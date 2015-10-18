@@ -16,7 +16,7 @@ namespace Skimur.Web.Models
         public PostType PostType { get; set; }
 
         [DisplayName("Sub name")]
-        public string SubName { get; set; }
+        public string PostToSub { get; set; }
 
         [DisplayName("Notify replies")]
         public bool NotifyReplies { get; set; }

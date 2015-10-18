@@ -7,7 +7,7 @@
 <div class="row">
     <div class="col-lg-9 col-sm-8">
 
-        @using (Html.BeginForm(null, null, FormMethod.Post, new { action = Url.CreatePost(), @class = "form form-createpost", role = "form" }))
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { action = Url.CreatePost(Model.Sub != null ? Model.Sub.Sub.Name : null), @class = "form form-createpost", role = "form" }))
         {
             @Html.AntiForgeryToken()
 
@@ -42,11 +42,11 @@
             </div>
 
             <div class="form-group">
-                @Html.LabelFor(m => m.SubName, new { @class = "control-label" })
-                @Html.TextBoxFor(m => m.SubName, new { @class = "form-control" })
+                @Html.LabelFor(m => m.PostToSub, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.PostToSub, new { @class = "form-control" })
             </div>
 
-            if (Model.Sub != null)
+            if (Model.Sub != null && !string.IsNullOrEmpty(Model.Sub.Sub.SubmissionTextFormatted))
             {
                 <div class="form-group panel panel-info submissiontext">
                     <div class="panel-heading heading">Submitting to <span class="subname">@Model.Sub.Sub.Name</span></div>
@@ -109,7 +109,7 @@
             $(".submissiontext").removeClass("loading").removeClass("hidden");
         };
 
-        $("#@Html.IdFor(m => m.SubName)").bind("input propertychange", function (evt) {
+        $("#@Html.IdFor(m => m.PostToSub)").bind("input propertychange", function (evt) {
             if (window.event && event.type == "propertychange" && event.propertyName != "value")
                 return;
 
@@ -118,11 +118,11 @@
             window.clearTimeout($(this).data("timeout"));
 
             $(this).data("timeout", setTimeout(function () {
-                skimur.submissionText($("#@Html.IdFor(m => m.SubName)").val(), null, function(result) {
+                skimur.submissionText($("#@Html.IdFor(m => m.PostToSub)").val(), null, function(result) {
                     if (!result.success) {
                         hideSubmissionText();
                     } else {
-                        if (result.sub_found) {
+                        if (result.sub_found && result.submission_text) {
                             showSubmissionText(result.name, result.submission_text);
                         } else {
                             hideSubmissionText();
