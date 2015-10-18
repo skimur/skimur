@@ -6,7 +6,7 @@
     @if (Model.Message.MessageType == MessageType.Private)
     {
         <div class="message-header">
-            <span>Private message:</span> <a href="@Url.MessageDetails(Model.Message)">@Model.Message.Subject</a>
+            <span class="type">Private message:</span> <a class="subject" href="@Url.MessageDetails(Model.Message)">@Model.Message.Subject</a>
         </div>
         <div class="disc">
             <div class="disc-body">
@@ -48,7 +48,7 @@
         if (Model.Comment.Post != null) // shouldn't happen, but i'm paranoid
         {
             <div class="message-header">
-                <span>Comment reply:</span> <a href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+                <span class="type">Comment reply:</span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
             </div>
         }
         @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead })
@@ -58,7 +58,7 @@
         if (Model.Comment.Post != null) // shouldn't happen, but i'm paranoid
         {
             <div class="message-header">
-                <span>Post reply: </span> <a href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+                <span class="type">Post reply: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
             </div>
         }
         @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead })
@@ -68,13 +68,13 @@
         if (Model.Post != null)
         {
             <div class="message-header">
-                <span>Username mention:</span> <a href="@Url.Post(Model.Post.Sub, Model.Post.Post)">@Model.Post.Post</a>
+                <span class="type">Username mention:</span> <a class="post" href="@Url.Post(Model.Post.Sub, Model.Post.Post)">@Model.Post.Post</a>
             </div>
         }
         else if (Model.Comment != null && Model.Comment.Post != null)
         {
             <div class="message-header">
-                <span>Post reply: </span> <a href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+                <span class="type">Post reply: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
             </div>
         }
         if (Model.Comment != null)
@@ -90,12 +90,12 @@
 
 @helper FromLink(MessageWrapped message)
 {
-if (message.FromSub != null)
-{
+    if (message.FromSub != null)
+    {
         <a href="@Url.Sub(message.FromSub.Name)" class="author">@message.FromSub.Name</a>
-}
-else if (message.Author != null)
-{
+    }
+    else if (message.Author != null)
+    {
         <a href="@Url.User(message.Author.UserName)" class="author">@message.Author.UserName</a>
-}
+    }
 }

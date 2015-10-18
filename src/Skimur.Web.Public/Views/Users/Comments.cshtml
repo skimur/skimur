@@ -11,7 +11,12 @@
         {
             foreach (var comment in Model.Comments)
             {
-                @Html.Partial("_CommentNode", new CommentNode(comment))
+                <div class="message">
+                    <div class="message-header">
+                        <a class="post" href="@Url.Post(comment.Sub, comment.Post)">@comment.Post.Title</a> in <a class="sub" href="@Url.Sub(comment.Sub.Name)">@comment.Sub.Name</a>
+                    </div>
+                    @Html.Partial("_CommentNode", new CommentNode(comment))
+                </div>
             }
             if (Model.Comments.HasPreviousPage || Model.Comments.HasNextPage)
             {

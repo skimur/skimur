@@ -10,7 +10,9 @@
         {
             foreach (var post in Model.Posts)
             {
-                @Html.Partial("_Post", post)
+                <div class="message">
+                    @Html.Partial("_Post", post)
+                </div>
             }
             if (Model.Posts.HasPreviousPage || Model.Posts.HasNextPage)
             {
