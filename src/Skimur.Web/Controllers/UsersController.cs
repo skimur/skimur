@@ -22,6 +22,7 @@ namespace Skimur.Web.Controllers
         private readonly IPostDao _postDao;
         private readonly IPostWrapper _postWrapper;
         private readonly IUserContext _userContext;
+        private readonly IContextService _contextService;
 
         public UsersController(IMembershipService membershipService,
             ISubDao subDao,
@@ -31,7 +32,8 @@ namespace Skimur.Web.Controllers
             ICommentWrapper commentWrapper,
             IPostDao postDao,
             IPostWrapper postWrapper,
-            IUserContext userContext)
+            IUserContext userContext,
+            IContextService contextService)
         {
             _membershipService = membershipService;
             _subDao = subDao;
@@ -42,6 +44,7 @@ namespace Skimur.Web.Controllers
             _postDao = postDao;
             _postWrapper = postWrapper;
             _userContext = userContext;
+            _contextService = contextService;
         }
 
         public ActionResult User(string userName)
@@ -79,9 +82,9 @@ namespace Skimur.Web.Controllers
                 take: pageSize);
 
             model.Comments = new PagedList<CommentWrapped>(
-                _commentWrapper.Wrap(comments, _userContext.CurrentUser), 
-                pageNumber.Value, 
-                pageSize.Value, 
+                _commentWrapper.Wrap(comments, _userContext.CurrentUser),
+                pageNumber.Value,
+                pageSize.Value,
                 comments.HasMore);
 
             return View(model);
@@ -90,7 +93,7 @@ namespace Skimur.Web.Controllers
         public ActionResult Posts(string userName, UserViewModel.SortByEnum? sort = null, UserViewModel.TimeFilterEnum? filter = null, int? pageNumber = null, int? pageSize = null)
         {
             ViewBag.NavigationKey = "posts";
-            
+
             var model = BuildUserModel(userName);
 
             if (sort == null)
@@ -108,6 +111,20 @@ namespace Skimur.Web.Controllers
             if (pageSize < 1)
                 pageSize = 1;
             
+            var posts = _postDao.GetPosts(
+                userId: model.User.Id,
+                sortby: (PostsSortBy)Enum.Parse(typeof(PostsSortBy), sort.Value.ToString()),
+                timeFilter: (PostsTimeFilter)Enum.Parse(typeof(PostsTimeFilter), filter.Value.ToString()),
+                nsfw: _userContext.CurrentNsfw,
+                skip: ((pageNumber - 1) * pageSize),
+                take: pageSize);
+
+            model.Posts = new PagedList<PostWrapped>(
+               _postWrapper.Wrap(posts, _userContext.CurrentUser),
+               pageNumber.Value,
+               pageSize.Value,
+               posts.HasMore);
+
             return View(model);
         }
 

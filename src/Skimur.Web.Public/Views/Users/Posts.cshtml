@@ -5,8 +5,29 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
+        @if (Model.Posts != null && Model.Posts.Count > 0)
+        {
+            foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_Post", post)
+            }
+            if (Model.Posts.HasPreviousPage || Model.Posts.HasNextPage)
+            {
+                <div class="row">
+                    <div class="list-pager">
+                        @Html.Pager(Model.Posts)
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            @("There are no items to display.")
+        }
     </div>
     <div class="col-lg-3 col-sm-4">
+        @{ Html.RenderPartial("_SideBar"); }
+        @{ Html.RenderSideBar(); }
     </div>
 </div>
 
