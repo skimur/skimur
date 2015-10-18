@@ -98,8 +98,6 @@ namespace Tasks
                 currentIndex += users.Count;
                 users = membershipService.GetAllUsers(currentIndex, pageSize);
             }
-
-
         }
 
         [ArgActionMethod, ArgDescription("Delete a sub")]
@@ -116,18 +114,12 @@ namespace Tasks
 
             foreach (var post in connectionProvider.Perform(conn => conn.Select<Post>(x => x.SubId == sub.Id)))
             {
-                connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.PostId == post.Id));
-                connectionProvider.Perform(conn => conn.Delete<Report.PostReport>(x => x.PostId == post.Id));
-                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.PostId == post.Id));
-                connectionProvider.Perform(conn => conn.Delete<Post>(x => x.Id == post.Id));
+                DeletePost(post.Id);
             }
 
             foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.SubId == sub.Id)))
             {
-                connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.CommentId == comment.Id));
-                connectionProvider.Perform(conn => conn.Delete<Report.CommentReport>(x => x.CommentId == comment.Id));
-                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.CommentId == comment.Id));
-                connectionProvider.Perform(conn => conn.Delete<Comment>(x => x.Id == comment.Id));
+                DeleteComment(comment.Id);
             }
 
             connectionProvider.Perform(conn => conn.Delete<Moderator>(x => x.SubId == sub.Id));
@@ -149,21 +141,87 @@ namespace Tasks
                 return;
             }
 
+            // delete the users comments
+            foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.AuthorUserId == user.Id)))
+                DeleteComment(comment.Id);
+
+            // delete the users posts
             foreach (var post in connectionProvider.Perform(conn => conn.Select<Post>(x => x.UserId == user.Id)))
+                DeletePost(post.Id);
+            
+            connectionProvider.Perform(conn => conn.Delete<Message>(x => x.ToUser == user.Id));
+            connectionProvider.Perform(conn => conn.Delete<Message>(x => x.AuthorId == user.Id));
+        }
+        
+        [ArgActionMethod, ArgDescription("Delete comment")]
+        public void DeleteComment(Guid commentId)
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+
+            var comment = connectionProvider.Perform(conn => conn.Single<Comment>(x => x.Id == commentId));
+            if (comment == null)
             {
-                connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.PostId == post.Id));
-                connectionProvider.Perform(conn => conn.Delete<Report.PostReport>(x => x.PostId == post.Id));
-                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.PostId == post.Id));
-                connectionProvider.Perform(conn => conn.Delete<Post>(x => x.Id == post.Id));
+                Console.WriteLine("No comment with that id.");
+                return;
             }
 
-            foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.AuthorUserId == user.Id)))
+            connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.CommentId == comment.Id));
+            connectionProvider.Perform(conn => conn.Delete<Report.CommentReport>(x => x.CommentId == comment.Id));
+            
+            // delete any messages associated with this comment
+            foreach (var messageId in connectionProvider.Perform(conn => conn.Select<Message>(x => x.CommentId == comment.Id).Select(x => x.Id)))
+                DeleteMessageThread(messageId);
+            
+            // delete child comments
+            foreach (var childComment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.ParentId == comment.Id)))
+                DeleteComment(childComment.Id);
+
+            connectionProvider.Perform(conn => conn.Delete<Comment>(x => x.Id == comment.Id));
+        }
+
+        [ArgActionMethod, ArgDescription("Delete post")]
+        public void DeletePost(Guid postId)
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+
+            var post = connectionProvider.Perform(conn => conn.Single<Post>(x => x.Id == postId));
+            if (post == null)
             {
-                connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.CommentId == comment.Id));
-                connectionProvider.Perform(conn => conn.Delete<Report.CommentReport>(x => x.CommentId == comment.Id));
-                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.CommentId == comment.Id));
-                connectionProvider.Perform(conn => conn.Delete<Comment>(x => x.Id == comment.Id));
+                Console.WriteLine("No post with that id.");
+                return;
             }
+
+            connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.PostId == post.Id));
+            connectionProvider.Perform(conn => conn.Delete<Report.PostReport>(x => x.PostId == post.Id));
+            
+            // delete any messages associated with this post
+            foreach (var messageId in connectionProvider.Perform(conn => conn.Select<Message>(x => x.PostId == post.Id).Select(x => x.Id)))
+                DeleteMessageThread(messageId);
+            connectionProvider.Perform(conn => conn.Delete<Post>(x => x.Id == post.Id));
+
+            // delete all comments for this post
+            foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.PostId == post.Id)))
+                DeleteComment(comment.Id);
+
+            connectionProvider.Perform(conn => conn.Delete<Post>(x => x.Id == post.Id));
+        }
+
+        [ArgActionMethod, ArgDescription("Delete message")]
+        public void DeleteMessageThread(Guid messageId)
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+
+            var message = connectionProvider.Perform(conn => conn.Single<Message>(x => x.Id == messageId));
+            if (message == null)
+            {
+                Console.WriteLine("No message with give id.");
+                return;
+            }
+
+            if (message.ParentId.HasValue)
+                connectionProvider.Perform(conn => conn.Delete<Message>(x => x.ParentId == message.ParentId || x.Id == message.ParentId));
+
+            connectionProvider.Perform(conn => conn.Delete<Message>(x => x.Id == messageId));
         }
     }
 
