@@ -397,6 +397,9 @@
     <Content Include="Views\Moderators\_ModeratorInvite.cshtml" />
     <Content Include="Views\Styles\Edit.cshtml" />
     <Content Include="Views\Styles\RenderStyles.cshtml" />
+    <Content Include="Views\Users\Comments.cshtml" />
+    <Content Include="Views\Users\_HeaderNav.cshtml" />
+    <Content Include="Views\Users\Posts.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

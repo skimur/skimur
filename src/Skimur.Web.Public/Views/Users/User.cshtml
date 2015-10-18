@@ -56,20 +56,24 @@
             <ul class="list-group">
                 <li class="list-group-item">Comment kudos: <b>@Model.CommentKudos</b></li>
                 <li class="list-group-item">Link kudos: <b>@Model.PostKudos</b></li>
+            </ul>
+        </div>
+
+        @if (Model.IsModerator && Model.ModeratingSubs != null && Model.ModeratingSubs.Count > 0)
+        {
+            <div class="panel panel-default">
+                <div class="panel-heading">Currently moderating</div>
+                <ul class="list-group">
+                    @foreach (var sub in Model.ModeratingSubs)
+                    {
+                        <li class="list-group-item"><a href="@Url.Sub(sub)">@sub</a></li>
+                    }
                 </ul>
             </div>
-
-            @if (Model.IsModerator && Model.ModeratingSubs != null && Model.ModeratingSubs.Count > 0)
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">Currently moderating</div>
-                    <ul class="list-group">
-                        @foreach (var sub in Model.ModeratingSubs)
-                        {
-                            <li class="list-group-item"><a href="@Url.Sub(sub)">@sub</a></li>
-                        }
-                    </ul>
-                </div>
-            }
-        </div>
+        }
     </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

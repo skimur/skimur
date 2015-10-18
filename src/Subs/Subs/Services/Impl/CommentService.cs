@@ -67,6 +67,9 @@ namespace Subs.Services.Impl
                         case CommentSortBy.Best:
                             query.OrderByDescending(x => x.SortConfidence);
                             break;
+                        case CommentSortBy.Hot:
+                            query.OrderByExpression = "ORDER BY (hot(vote_up_count, vote_down_count, date_created), date_created) DESC";
+                            break;
                         case CommentSortBy.Top:
                             query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
                             break;
@@ -199,9 +202,10 @@ namespace Subs.Services.Impl
         }
 
         public SeekedList<Guid> GetCommentsForUser(Guid userId,
-            CommentSortBy? sortBy = null,
-            int? skip = null,
-            int? take = null)
+             CommentSortBy? sortBy = null,
+             CommentsTimeFilter? timeFilter = null,
+             int? skip = null,
+             int? take = null)
         {
             return _conn.Perform(conn =>
             {
@@ -215,6 +219,9 @@ namespace Subs.Services.Impl
                     {
                         case CommentSortBy.Best:
                             query.OrderByDescending(x => x.SortConfidence);
+                            break;
+                        case CommentSortBy.Hot:
+                            query.OrderByExpression = "ORDER BY (hot(vote_up_count, vote_down_count, date_created), date_created) DESC";
                             break;
                         case CommentSortBy.Top:
                             query.OrderByExpression =
@@ -240,6 +247,39 @@ namespace Subs.Services.Impl
                 else
                 {
                     query.OrderByDescending(x => x.DateCreated);
+                }
+
+                if (timeFilter.HasValue)
+                {
+                    TimeSpan timeSpan;
+
+                    if (timeFilter.Value != CommentsTimeFilter.All)
+                    {
+                        switch (timeFilter.Value)
+                        {
+                            case CommentsTimeFilter.Hour:
+                                timeSpan = TimeSpan.FromHours(1);
+                                break;
+                            case CommentsTimeFilter.Day:
+                                timeSpan = TimeSpan.FromDays(1);
+                                break;
+                            case CommentsTimeFilter.Week:
+                                timeSpan = TimeSpan.FromDays(7);
+                                break;
+                            case CommentsTimeFilter.Month:
+                                timeSpan = TimeSpan.FromDays(30);
+                                break;
+                            case CommentsTimeFilter.Year:
+                                timeSpan = TimeSpan.FromDays(365);
+                                break;
+                            default:
+                                throw new Exception("unknown time filter");
+                        }
+
+                        var from = Common.CurrentTime() - timeSpan;
+
+                        query.Where(x => x.DateCreated >= from);
+                    }
                 }
 
                 var totalCount = conn.Count(query);

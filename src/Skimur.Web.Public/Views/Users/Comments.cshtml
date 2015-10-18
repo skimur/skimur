@@ -1,0 +1,36 @@
+﻿@using Subs.ReadModel
+@model UserViewModel
+@{
+    ViewBag.Title = "Comments for " + Model.User.UserName;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        @if (Model.Comments != null && Model.Comments.Count > 0)
+        {
+            foreach (var comment in Model.Comments)
+            {
+                @Html.Partial("_CommentNode", new CommentNode(comment))
+            }
+            if (Model.Comments.HasPreviousPage || Model.Comments.HasNextPage)
+            {
+                <div class="row">
+                    <div class="list-pager">
+                        @Html.Pager(Model.Comments)
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            @("There are no items to display.")
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

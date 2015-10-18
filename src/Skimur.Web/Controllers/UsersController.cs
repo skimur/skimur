@@ -17,28 +17,110 @@ namespace Skimur.Web.Controllers
         private readonly ISubDao _subDao;
         private readonly IModerationDao _moderationDao;
         private readonly IKarmaDao _karmaDao;
+        private readonly ICommentDao _commentDao;
+        private readonly ICommentWrapper _commentWrapper;
+        private readonly IPostDao _postDao;
+        private readonly IPostWrapper _postWrapper;
+        private readonly IUserContext _userContext;
 
         public UsersController(IMembershipService membershipService,
             ISubDao subDao,
             IModerationDao moderationDao,
-            IKarmaDao karmaDao)
+            IKarmaDao karmaDao,
+            ICommentDao commentDao,
+            ICommentWrapper commentWrapper,
+            IPostDao postDao,
+            IPostWrapper postWrapper,
+            IUserContext userContext)
         {
             _membershipService = membershipService;
             _subDao = subDao;
             _moderationDao = moderationDao;
             _karmaDao = karmaDao;
+            _commentDao = commentDao;
+            _commentWrapper = commentWrapper;
+            _postDao = postDao;
+            _postWrapper = postWrapper;
+            _userContext = userContext;
         }
 
         public ActionResult User(string userName)
         {
+            ViewBag.NavigationKey = "overview";
+
+            return View(BuildUserModel(userName));
+        }
+
+        public ActionResult Comments(string userName, UserViewModel.SortByEnum? sort = null, UserViewModel.TimeFilterEnum? filter = null, int? pageNumber = null, int? pageSize = null)
+        {
+            ViewBag.NavigationKey = "comments";
+
+            var model = BuildUserModel(userName);
+
+            if (sort == null)
+                sort = UserViewModel.SortByEnum.New;
+
+            if (filter == null)
+                filter = UserViewModel.TimeFilterEnum.All;
+
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
+            var comments = _commentDao.GetCommentsForUser(model.User.Id,
+                sortBy: (CommentSortBy)Enum.Parse(typeof(CommentSortBy), sort.Value.ToString()),
+                timeFilter: (CommentsTimeFilter)Enum.Parse(typeof(CommentsTimeFilter), filter.Value.ToString()),
+                skip: ((pageNumber - 1) * pageSize),
+                take: pageSize);
+
+            model.Comments = new PagedList<CommentWrapped>(
+                _commentWrapper.Wrap(comments, _userContext.CurrentUser), 
+                pageNumber.Value, 
+                pageSize.Value, 
+                comments.HasMore);
+
+            return View(model);
+        }
+
+        public ActionResult Posts(string userName, UserViewModel.SortByEnum? sort = null, UserViewModel.TimeFilterEnum? filter = null, int? pageNumber = null, int? pageSize = null)
+        {
+            ViewBag.NavigationKey = "posts";
+            
+            var model = BuildUserModel(userName);
+
+            if (sort == null)
+                sort = UserViewModel.SortByEnum.New;
+
+            if (filter == null)
+                filter = UserViewModel.TimeFilterEnum.All;
+
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 25;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+            
+            return View(model);
+        }
+
+        private UserViewModel BuildUserModel(string userName)
+        {
             var user = _membershipService.GetUserByUserName(userName);
 
-            if(user == null)
+            if (user == null)
                 throw new NotFoundException();
-            
+
             var model = new UserViewModel();
             model.User = user;
-            
+
             var moderatedSubs = _moderationDao.GetSubsModeratoredByUser(user.Id);
 
             if (moderatedSubs.Count > 0)
@@ -52,7 +134,7 @@ namespace Skimur.Web.Controllers
             model.CommentKudos = kudos.Keys.Where(x => x.Type == KarmaType.Comment).Sum(x => kudos[x]);
             model.PostKudos = kudos.Keys.Where(x => x.Type == KarmaType.Post).Sum(x => kudos[x]);
 
-            return View(model);
+            return model;
         }
     }
 }

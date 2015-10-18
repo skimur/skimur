@@ -15,7 +15,7 @@ namespace Subs.Services
 
         SeekedList<Guid> GetPosts(List<Guid> subs = null,
             PostsSortBy sortby = PostsSortBy.New,
-            TimeFilter timeFilter = TimeFilter.All,
+            PostsTimeFilter timeFilter = PostsTimeFilter.All,
             Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,
@@ -27,7 +27,7 @@ namespace Subs.Services
         SeekedList<Guid> QueryPosts(string text,
             Guid? subId = null,
             PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance,
-            TimeFilter timeFilter = TimeFilter.All,
+            PostsTimeFilter timeFilter = PostsTimeFilter.All,
             Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,

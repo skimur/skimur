@@ -35,7 +35,7 @@ namespace Subs.Services.Impl
 
         public SeekedList<Guid> GetPosts(List<Guid> subs = null,
             PostsSortBy sortby = PostsSortBy.New,
-            TimeFilter timeFilter = TimeFilter.All,
+            PostsTimeFilter timeFilter = PostsTimeFilter.All,
             Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,
@@ -52,25 +52,25 @@ namespace Subs.Services.Impl
                     query.Where(x => subs.Contains(x.SubId));
                 }
 
-                if (timeFilter != TimeFilter.All)
+                if (timeFilter != PostsTimeFilter.All)
                 {
                     TimeSpan timeSpan;
 
                     switch (timeFilter)
                     {
-                        case TimeFilter.Hour:
+                        case PostsTimeFilter.Hour:
                             timeSpan = TimeSpan.FromHours(1);
                             break;
-                        case TimeFilter.Day:
+                        case PostsTimeFilter.Day:
                             timeSpan = TimeSpan.FromDays(1);
                             break;
-                        case TimeFilter.Week:
+                        case PostsTimeFilter.Week:
                             timeSpan = TimeSpan.FromDays(7);
                             break;
-                        case TimeFilter.Month:
+                        case PostsTimeFilter.Month:
                             timeSpan = TimeSpan.FromDays(30);
                             break;
-                        case TimeFilter.Year:
+                        case PostsTimeFilter.Year:
                             timeSpan = TimeSpan.FromDays(365);
                             break;
                         default:
@@ -130,7 +130,7 @@ namespace Subs.Services.Impl
         public SeekedList<Guid> QueryPosts(string text,
             Guid? subId = null,
             PostsSearchSortBy sortBy = PostsSearchSortBy.Relevance,
-            TimeFilter timeFilter = TimeFilter.All,
+            PostsTimeFilter timeFilter = PostsTimeFilter.All,
             Guid? userId = null,
             bool hideRemovedPosts = true,
             bool showDeleted = false,
@@ -154,24 +154,24 @@ namespace Subs.Services.Impl
                     query.Where(x => x.Title.Contains(text) || x.Content.Contains(text));
                 }
 
-                if (timeFilter != TimeFilter.All)
+                if (timeFilter != PostsTimeFilter.All)
                 {
                     TimeSpan timeSpan;
                     switch (timeFilter)
                     {
-                        case TimeFilter.Hour:
+                        case PostsTimeFilter.Hour:
                             timeSpan = TimeSpan.FromHours(1);
                             break;
-                        case TimeFilter.Day:
+                        case PostsTimeFilter.Day:
                             timeSpan = TimeSpan.FromDays(1);
                             break;
-                        case TimeFilter.Week:
+                        case PostsTimeFilter.Week:
                             timeSpan = TimeSpan.FromDays(7);
                             break;
-                        case TimeFilter.Month:
+                        case PostsTimeFilter.Month:
                             timeSpan = TimeSpan.FromDays(30);
                             break;
-                        case TimeFilter.Year:
+                        case PostsTimeFilter.Year:
                             timeSpan = TimeSpan.FromDays(365);
                             break;
                         default:
