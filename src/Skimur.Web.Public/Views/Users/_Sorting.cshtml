@@ -34,12 +34,21 @@
 
 @helper HelperRenderSortListItem(UserViewModel.SortByEnum sort)
 {
-    <li class="@(Model.SortBy == sort ? "active" : null)"><a href="@Url.ModifyQuery("sort", sort.ToString().ToLower())">@SortDisplay(sort)</a></li>
+    var url = Request.Url.GetLeftPart(UriPartial.Path);
+    url = Url.ModifyQuery(url, "sort", sort.ToString().ToLower());
+    if (sort == UserViewModel.SortByEnum.Controversial || sort == UserViewModel.SortByEnum.Top)
+    {
+        url = Url.ModifyQuery(url, "filter", Model.TimeFilter.ToString().ToLower());
+    }
+    <li class="@(Model.SortBy == sort ? "active" : null)"><a href="@url">@SortDisplay(sort)</a></li>
 }
 
 @helper HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum filter)
 {
-    <li class="@(Model.TimeFilter == filter ? "active" : null)"><a href="@Url.ModifyQuery("filter", filter.ToString().ToLower())">@TimeFilterDisplay(filter)</a></li>
+    var url = Request.Url.GetLeftPart(UriPartial.Path);
+    url = Url.ModifyQuery(url, "sort", Model.SortBy.ToString().ToLower());
+    url = Url.ModifyQuery(url, "filter", filter.ToString().ToLower());
+    <li class="@(Model.TimeFilter == filter ? "active" : null)"><a href="@url">@TimeFilterDisplay(filter)</a></li>
 }
 
 @helper TimeFilterDisplay(UserViewModel.TimeFilterEnum timeFilter)
