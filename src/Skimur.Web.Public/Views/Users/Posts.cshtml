@@ -5,6 +5,7 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
+        @Html.Partial("_Sorting")
         @if (Model.Posts != null && Model.Posts.Count > 0)
         {
             foreach (var post in Model.Posts)
@@ -22,7 +23,7 @@
         }
         else
         {
-            @("There are no items to display.")
+            <p>There are no items to display.</p>
         }
     </div>
     <div class="col-lg-3 col-sm-4">

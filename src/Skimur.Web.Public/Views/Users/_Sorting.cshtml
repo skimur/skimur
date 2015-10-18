@@ -1,0 +1,87 @@
+﻿@model UserViewModel
+
+<div class="form-group">
+    Sort by:
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            @SortDisplay(Model.SortBy) <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-left">
+            @HelperRenderSortListItem(UserViewModel.SortByEnum.New)
+            @HelperRenderSortListItem(UserViewModel.SortByEnum.Hot)
+            @HelperRenderSortListItem(UserViewModel.SortByEnum.Top)
+            @HelperRenderSortListItem(UserViewModel.SortByEnum.Controversial)
+        </ul>
+    </div>
+    @if (Model.SortBy == UserViewModel.SortByEnum.Top || Model.SortBy == UserViewModel.SortByEnum.Controversial)
+    {
+        <text>&nbsp;From:</text>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                @TimeFilterDisplay(Model.TimeFilter) <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-left">
+                @HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Hour)
+                @HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Day)
+                @HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Week)
+                @HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Month)
+                @HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Year)
+                @HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum.All)
+            </ul>
+        </div>
+    }
+</div>
+
+@helper HelperRenderSortListItem(UserViewModel.SortByEnum sort)
+{
+    <li class="@(Model.SortBy == sort ? "active" : null)"><a href="@Url.ModifyQuery("sort", sort.ToString().ToLower())">@SortDisplay(sort)</a></li>
+}
+
+@helper HelperRenderTimeFilterListItem(UserViewModel.TimeFilterEnum filter)
+{
+    <li class="@(Model.TimeFilter == filter ? "active" : null)"><a href="@Url.ModifyQuery("filter", filter.ToString().ToLower())">@TimeFilterDisplay(filter)</a></li>
+}
+
+@helper TimeFilterDisplay(UserViewModel.TimeFilterEnum timeFilter)
+{
+    switch (timeFilter)
+    {
+        case UserViewModel.TimeFilterEnum.Hour:
+            @("Past hour")
+            break;
+        case UserViewModel.TimeFilterEnum.Day:
+            @("Past day")
+            break;
+        case UserViewModel.TimeFilterEnum.Week:
+            @("Past week")
+            break;
+        case UserViewModel.TimeFilterEnum.Month:
+            @("Past month")
+            break;
+        case UserViewModel.TimeFilterEnum.Year:
+            @("Past year")
+            break;
+        case UserViewModel.TimeFilterEnum.All:
+            @("All time")
+            break;
+    }
+}
+
+@helper SortDisplay(UserViewModel.SortByEnum sort)
+{
+    switch (sort)
+    {
+        case UserViewModel.SortByEnum.New:
+            @("New")
+            break;
+        case UserViewModel.SortByEnum.Hot:
+            @("Hot")
+            break;
+        case UserViewModel.SortByEnum.Top:
+            @("Top")
+            break;
+        case UserViewModel.SortByEnum.Controversial:
+            @("Controversial")
+            break;
+    }
+}

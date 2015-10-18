@@ -66,6 +66,12 @@ namespace Skimur.Web.Controllers
             if (filter == null)
                 filter = UserViewModel.TimeFilterEnum.All;
 
+            if (sort.Value != UserViewModel.SortByEnum.Top && sort.Value != UserViewModel.SortByEnum.Controversial)
+                filter = UserViewModel.TimeFilterEnum.All;
+
+            model.SortBy = sort.Value;
+            model.TimeFilter = filter.Value;
+
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
             if (pageSize == null)
@@ -102,6 +108,12 @@ namespace Skimur.Web.Controllers
             if (filter == null)
                 filter = UserViewModel.TimeFilterEnum.All;
 
+            if (sort.Value != UserViewModel.SortByEnum.Top && sort.Value != UserViewModel.SortByEnum.Controversial)
+                filter = UserViewModel.TimeFilterEnum.All;
+
+            model.SortBy = sort.Value;
+            model.TimeFilter = filter.Value;
+            
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
             if (pageSize == null)

@@ -6,6 +6,7 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
+        @Html.Partial("_Sorting")
         @if (Model.Comments != null && Model.Comments.Count > 0)
         {
             foreach (var comment in Model.Comments)
@@ -23,7 +24,7 @@
         }
         else
         {
-            @("There are no items to display.")
+            <p>There are no items to display.</p>
         }
     </div>
     <div class="col-lg-3 col-sm-4">

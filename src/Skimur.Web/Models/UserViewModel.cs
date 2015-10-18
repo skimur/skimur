@@ -38,12 +38,12 @@ namespace Skimur.Web.Models
 
         public enum TimeFilterEnum
         {
-            All,
             Hour,
             Day,
             Week,
             Month,
-            Year
+            Year,
+            All,
         }
     }
 }

@@ -401,6 +401,7 @@
     <Content Include="Views\Users\_HeaderNav.cshtml" />
     <Content Include="Views\Users\Posts.cshtml" />
     <Content Include="Views\Users\_SideBar.cshtml" />
+    <Content Include="Views\Users\_Sorting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
