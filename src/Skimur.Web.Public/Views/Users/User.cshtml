@@ -1,11 +1,105 @@
-﻿@model UserViewModel
+﻿@using Skimur
+@using Subs.ReadModel
+@model UserViewModel
 @{
     ViewBag.Title = Model.User.UserName;
+    var currentColor = ColorPallete.ChartingPalleteColors[0];
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        <p>TBD: Stay tuned!</p>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>
+                    Posts
+                </h3>
+                @if (Model.Posts != null && Model.Posts.Count > 0)
+                {
+                    foreach (var post in Model.Posts)
+                    {
+                        <div class="message">
+                            @Html.Partial("_Post", post)
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>There are no items to display.</p>
+                }
+                <div class="row">
+                    <div class="list-pager">
+                        <a class="btn btn-default" href="@Url.UserPosts(Model.User.UserName)">View more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>
+                    Comments
+                </h3>
+                @if (Model.Comments != null && Model.Comments.Count > 0)
+                {
+                    foreach (var comment in Model.Comments)
+                    {
+                        <div class="message">
+                            <div class="message-header">
+                                <a class="post" href="@Url.Post(comment.Sub, comment.Post)">@comment.Post.Title</a> in <a class="sub" href="@Url.Sub(comment.Sub.Name)">@comment.Sub.Name</a>
+                            </div>
+                            @Html.Partial("_CommentNode", new CommentNode(comment))
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>There are no items to display.</p>
+                }
+                <div class="row">
+                    <div class="list-pager">
+                        <a class="btn btn-default" href="@Url.UserComments(Model.User.UserName)">View more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="row">
+            <div class="col-md-12">
+                <div class="form-group">
+                    <ul class="nav nav-tabs" role="tablist">
+                        <li class="nav-header">
+                            <span>Kudos</span>
+                        </li>
+                        <li class="active"><a href="#kudos-overview" data-toggle="tab">Overview</a></li>
+                        <li><a href="#kudos-details" data-toggle="tab">Details</a></li>
+                    </ul>
+                </div>
+                <div class="tab-content">
+                    <div role="tabpanel" class="tab-pane active" id="kudos-overview">
+                        <div id="kudos-overview-canvas-container">
+                            <canvas id="kudos-overview-canvas"></canvas>
+                        </div>
+                    </div>
+                    <div role="tabpanel" class="tab-pane" id="kudos-details">
+                        <table class="table table-hover">
+                            <thead>
+                                <tr>
+                                    <th>Name</th>
+                                    <th>Posts</th>
+                                    <th>Comments</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                @foreach (var kudos in Model.KudosDetails.OrderByDescending(x => x.Total))
+                                {
+                                    <tr>
+                                        <td>@kudos.SubName</td>
+                                        <td>@kudos.PostKudos</td>
+                                        <td>@kudos.CommentKudos</td>
+                                    </tr>
+                                }
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+        </div>
     </div>
     <div class="col-lg-3 col-sm-4">
         @{ Html.RenderPartial("_SideBar"); }
@@ -16,3 +110,44 @@
 @section header {
     @Html.Partial("_HeaderNav")
 }
+
+@section scripts {
+    @{
+        Html.RenderMomentJs();
+        Html.RenderChartJs();
+    }
+    <script type="text/javascript">
+        $(function() {
+            var pieData = [
+                @foreach (var detail in Model.KudosDetails.Where(x => x.Total > 0))
+                {
+                    <text>
+                        {
+                            value: @detail.Total,
+                            label: '@detail.SubName',
+                            color: '#@currentColor.Color'
+                        }
+                    </text>@(Model.KudosDetails.IndexOf(detail) != (Model.KudosDetails.Count - 1) ? "," : null)
+                    currentColor = currentColor.Next;
+                }
+            ];
+
+            var context = document.getElementById('kudos-overview-canvas').getContext('2d');
+            var skillsChart = new Chart(context).Pie(pieData, {
+                responsive: true,
+                maintainAspectRatio: true
+            });
+
+            $(window).resize(function() {
+                //skillsChart.update();
+            });
+        });
+    </script>
+}
+
+<style type="text/css">
+    #kudos-overview {
+        /*width: 100% !important;
+        height: inherit !important;*/
+    }
+</style>

@@ -74,5 +74,15 @@ namespace Skimur.Web
                 return url;
             return StaticAssetHost + url;
         }
+
+        public static void RenderChartJs(this HtmlHelper htmlHelper)
+        {
+            htmlHelper.ViewContext.Writer.Write("<script src=\"" + AssetUrl(null, "/Scripts/chart.js") + "?v=" + _version + "\"></script>");
+        }
+
+        public static void RenderMomentJs(this HtmlHelper htmlHelper)
+        {
+            htmlHelper.ViewContext.Writer.Write("<script src=\"" + AssetUrl(null, "/Scripts/moment.js") + "?v=" + _version + "\"></script>");
+        }
     }
 }

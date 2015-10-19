@@ -20,6 +20,8 @@ namespace Skimur.Web.Models
 
         public int PostKudos { get; set; }
 
+        public List<KudosDetailsModel> KudosDetails { get; set; } 
+
         public PagedList<CommentWrapped> Comments { get; set; }
         
         public PagedList<PostWrapped> Posts { get; set; }
@@ -44,6 +46,17 @@ namespace Skimur.Web.Models
             Month,
             Year,
             All,
+        }
+
+        public class KudosDetailsModel
+        {
+            public string SubName { get; set; }
+
+            public int PostKudos { get; set; }
+
+            public int CommentKudos { get; set; }
+
+            public int Total { get { return PostKudos + CommentKudos; } }
         }
     }
 }

@@ -51,7 +51,35 @@ namespace Skimur.Web.Controllers
         {
             ViewBag.NavigationKey = "overview";
 
-            return View(BuildUserModel(userName));
+            var model = BuildUserModel(userName);
+
+            var latestComments = _commentDao.GetCommentsForUser(model.User.Id,
+                sortBy: CommentSortBy.New,
+                timeFilter: CommentsTimeFilter.All,
+                skip: 0,
+                take: 3);
+            
+            model.Comments = new PagedList<CommentWrapped>(
+               _commentWrapper.Wrap(latestComments, _userContext.CurrentUser),
+               0,
+               5,
+               true);
+
+            var latestPosts = _postDao.GetPosts(
+                userId: model.User.Id,
+                sortby: PostsSortBy.New,
+                timeFilter: PostsTimeFilter.All,
+                nsfw: _userContext.CurrentNsfw,
+                skip: 0,
+                take: 3);
+
+            model.Posts = new PagedList<PostWrapped>(
+               _postWrapper.Wrap(latestPosts, _userContext.CurrentUser),
+               0,
+               5,
+               true);
+            
+            return View(model);
         }
 
         public ActionResult Comments(string userName, UserViewModel.SortByEnum? sort = null, UserViewModel.TimeFilterEnum? filter = null, int? pageNumber = null, int? pageSize = null)
@@ -113,7 +141,7 @@ namespace Skimur.Web.Controllers
 
             model.SortBy = sort.Value;
             model.TimeFilter = filter.Value;
-            
+
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
             if (pageSize == null)
@@ -122,7 +150,7 @@ namespace Skimur.Web.Controllers
                 pageSize = 100;
             if (pageSize < 1)
                 pageSize = 1;
-            
+
             var posts = _postDao.GetPosts(
                 userId: model.User.Id,
                 sortby: (PostsSortBy)Enum.Parse(typeof(PostsSortBy), sort.Value.ToString()),
@@ -160,8 +188,30 @@ namespace Skimur.Web.Controllers
 
             var kudos = _karmaDao.GetKarma(user.Id);
 
-            model.CommentKudos = kudos.Keys.Where(x => x.Type == KarmaType.Comment).Sum(x => kudos[x]);
-            model.PostKudos = kudos.Keys.Where(x => x.Type == KarmaType.Post).Sum(x => kudos[x]);
+            var subs = _subDao.GetSubsByIds(kudos.Keys.Select(x => x.SubId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
+            var details = subs.ToDictionary(x => x.Key, x => new UserViewModel.KudosDetailsModel {SubName = x.Value.Name});
+            
+            foreach (var key in kudos.Keys)
+            {
+                if(!details.ContainsKey(key.SubId)) continue;
+
+                var detail = details[key.SubId];
+
+                switch (key.Type)
+                {
+                    case KarmaType.Comment:
+                        detail.CommentKudos = kudos[key];
+                        break;
+                    case KarmaType.Post:
+                        detail.PostKudos = kudos[key];
+                        break;
+                }
+            }
+
+            model.KudosDetails = details.Values.ToList();
+
+            model.CommentKudos = model.KudosDetails.Sum(x => x.CommentKudos);
+            model.PostKudos = model.KudosDetails.Sum(x => x.PostKudos);
 
             return model;
         }
