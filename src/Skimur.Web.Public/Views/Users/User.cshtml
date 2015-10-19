@@ -3,11 +3,11 @@
 @model UserViewModel
 @{
     ViewBag.Title = Model.User.UserName;
-    var currentColor = ColorPallete.ChartingPalleteColors[0];
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
+        <h3 class="page-header visible-xs visible-sm">@ViewBag.Title</h3>
         <div class="row">
             <div class="col-md-6">
                 <h3>
@@ -59,47 +59,6 @@
                 </div>
             </div>
         </div>
-        <div class="row">
-            <div class="col-md-12">
-                <div class="form-group">
-                    <ul class="nav nav-tabs" role="tablist">
-                        <li class="nav-header">
-                            <span>Kudos</span>
-                        </li>
-                        <li class="active"><a href="#kudos-overview" data-toggle="tab">Overview</a></li>
-                        <li><a href="#kudos-details" data-toggle="tab">Details</a></li>
-                    </ul>
-                </div>
-                <div class="tab-content">
-                    <div role="tabpanel" class="tab-pane active" id="kudos-overview">
-                        <div id="kudos-overview-canvas-container">
-                            <canvas id="kudos-overview-canvas"></canvas>
-                        </div>
-                    </div>
-                    <div role="tabpanel" class="tab-pane" id="kudos-details">
-                        <table class="table table-hover">
-                            <thead>
-                                <tr>
-                                    <th>Name</th>
-                                    <th>Posts</th>
-                                    <th>Comments</th>
-                                </tr>
-                            </thead>
-                            <tbody>
-                                @foreach (var kudos in Model.KudosDetails.OrderByDescending(x => x.Total))
-                                {
-                                    <tr>
-                                        <td>@kudos.SubName</td>
-                                        <td>@kudos.PostKudos</td>
-                                        <td>@kudos.CommentKudos</td>
-                                    </tr>
-                                }
-                            </tbody>
-                        </table>
-                    </div>
-                </div>
-            </div>
-        </div>
     </div>
     <div class="col-lg-3 col-sm-4">
         @{ Html.RenderPartial("_SideBar"); }
@@ -110,44 +69,3 @@
 @section header {
     @Html.Partial("_HeaderNav")
 }
-
-@section scripts {
-    @{
-        Html.RenderMomentJs();
-        Html.RenderChartJs();
-    }
-    <script type="text/javascript">
-        $(function() {
-            var pieData = [
-                @foreach (var detail in Model.KudosDetails.Where(x => x.Total > 0))
-                {
-                    <text>
-                        {
-                            value: @detail.Total,
-                            label: '@detail.SubName',
-                            color: '#@currentColor.Color'
-                        }
-                    </text>@(Model.KudosDetails.IndexOf(detail) != (Model.KudosDetails.Count - 1) ? "," : null)
-                    currentColor = currentColor.Next;
-                }
-            ];
-
-            var context = document.getElementById('kudos-overview-canvas').getContext('2d');
-            var skillsChart = new Chart(context).Pie(pieData, {
-                responsive: true,
-                maintainAspectRatio: true
-            });
-
-            $(window).resize(function() {
-                //skillsChart.update();
-            });
-        });
-    </script>
-}
-
-<style type="text/css">
-    #kudos-overview {
-        /*width: 100% !important;
-        height: inherit !important;*/
-    }
-</style>

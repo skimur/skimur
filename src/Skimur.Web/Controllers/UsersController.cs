@@ -187,32 +187,10 @@ namespace Skimur.Web.Controllers
             }
 
             var kudos = _karmaDao.GetKarma(user.Id);
-
-            var subs = _subDao.GetSubsByIds(kudos.Keys.Select(x => x.SubId).Distinct().ToList()).ToDictionary(x => x.Id, x => x);
-            var details = subs.ToDictionary(x => x.Key, x => new UserViewModel.KudosDetailsModel {SubName = x.Value.Name});
             
-            foreach (var key in kudos.Keys)
-            {
-                if(!details.ContainsKey(key.SubId)) continue;
-
-                var detail = details[key.SubId];
-
-                switch (key.Type)
-                {
-                    case KarmaType.Comment:
-                        detail.CommentKudos = kudos[key];
-                        break;
-                    case KarmaType.Post:
-                        detail.PostKudos = kudos[key];
-                        break;
-                }
-            }
-
-            model.KudosDetails = details.Values.ToList();
-
-            model.CommentKudos = model.KudosDetails.Sum(x => x.CommentKudos);
-            model.PostKudos = model.KudosDetails.Sum(x => x.PostKudos);
-
+            model.CommentKudos = kudos.Keys.Where(x => x.Type == KarmaType.Comment).Sum(x => kudos[x]);
+            model.PostKudos = kudos.Keys.Where(x => x.Type == KarmaType.Post).Sum(x => kudos[x]);
+            
             return model;
         }
     }
