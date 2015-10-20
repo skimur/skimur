@@ -3,7 +3,8 @@
 
 Vagrant.configure("2") do |config|
 
-  config.vm.box = 'ubuntu/trusty32'
+  config.vm.box     = 'skimurdev/skimurdev-1.0.0'
+  config.vm.box_url = 'https://github.com/skimur/skimur-vagrant/releases/download/1.0.0/skimurdev_1.0.0.box'
 
   config.vm.define "dev" do |dev|
 
@@ -16,12 +17,6 @@ Vagrant.configure("2") do |config|
     dev.vm.network :forwarded_port, guest: 6379, host: 6379, id: "skimurredis"
     dev.vm.network :forwarded_port, guest: 9042, host: 9042, id: "skimurcassandra"
 
-  end
-
-  config.vm.provision "puppet" do |puppet|
-    puppet.module_path = "puppet/modules"
-    puppet.manifests_path = "puppet/manifests"
-    puppet.manifest_file = "default.pp"
   end
 
   config.vm.provider "virtualbox" do |v|
