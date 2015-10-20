@@ -17,7 +17,7 @@
     case CssType.None:
         break;
     case CssType.Embedded:
-        <style type="text/css">@Model.Embedded</style>
+        <style type="text/css">@Html.Raw(Model.Embedded)</style>
         break;
     case CssType.ExternalCss:
         if (!string.IsNullOrEmpty(Model.ExternalCss))
