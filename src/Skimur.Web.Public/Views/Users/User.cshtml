@@ -1,75 +1,71 @@
-﻿@model UserViewModel
+﻿@using Skimur
+@using Subs.ReadModel
+@model UserViewModel
 @{
     ViewBag.Title = Model.User.UserName;
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        <p>TBD: Stay tuned!</p>
-    </div>
-    <div class="col-lg-3 col-sm-4">
-
-        <div class="media user-profile">
-            <div class="avatar">
-                <img src="@Url.AvatarUrl(Model.User.AvatarIdentifier)" />
-            </div>
-            <div class="body">
-                <h4 class="username">@Model.User.UserName</h4>
-                @if (!string.IsNullOrEmpty(Model.User.Bio))
+        <h3 class="page-header visible-xs visible-sm">@ViewBag.Title</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>
+                    Posts
+                </h3>
+                @if (Model.Posts != null && Model.Posts.Count > 0)
                 {
-                    <p class="bio">
-                        @Model.User.Bio
-                    </p>
+                    foreach (var post in Model.Posts)
+                    {
+                        <div class="message">
+                            @Html.Partial("_Post", post)
+                        </div>
+                    }
                 }
                 else
                 {
-                    <p class="bio">
-                        The user did not provide a bio.
-                    </p>
+                    <p>There are no items to display.</p>
                 }
-            </div>
-        </div>
-
-        <div class="panel">
-            <p>
-                Member for: <b title="@Model.User.CreatedDate">@Html.Age(Model.User.CreatedDate)</b><br />
-                @if (!string.IsNullOrEmpty(Model.User.FullName))
-                {
-                    <text>Full name: </text><b>@Model.User.FullName</b><br />
-                }
-                @if (!string.IsNullOrEmpty(Model.User.Location))
-                {
-                    <text>Location: </text><b>@Model.User.Location</b><br />
-                }
-                @if (!string.IsNullOrEmpty(Model.User.Url))
-                {
-                    <text>Website: </text> <a href="@Model.User.Url" target="blank" rel="nofollow">@Model.User.Url</a>
-                }
-            </p>
-            <p>
-                <a href="@Url.Compose(to: Model.User.UserName)" class="btn btn-default"><span class="fa fa-envelope"></span> Send message</a>
-            </p>
-        </div>
-
-        <div class="panel panel-default">
-            <div class="panel-heading">Kudos</div>
-            <ul class="list-group">
-                <li class="list-group-item">Comment kudos: <b>@Model.CommentKudos</b></li>
-                <li class="list-group-item">Link kudos: <b>@Model.PostKudos</b></li>
-                </ul>
-            </div>
-
-            @if (Model.IsModerator && Model.ModeratingSubs != null && Model.ModeratingSubs.Count > 0)
-            {
-                <div class="panel panel-default">
-                    <div class="panel-heading">Currently moderating</div>
-                    <ul class="list-group">
-                        @foreach (var sub in Model.ModeratingSubs)
-                        {
-                            <li class="list-group-item"><a href="@Url.Sub(sub)">@sub</a></li>
-                        }
-                    </ul>
+                <div class="row">
+                    <div class="list-pager">
+                        <a class="btn btn-default" href="@Url.UserPosts(Model.User.UserName)">View more</a>
+                    </div>
                 </div>
-            }
+            </div>
+            <div class="col-md-6">
+                <h3>
+                    Comments
+                </h3>
+                @if (Model.Comments != null && Model.Comments.Count > 0)
+                {
+                    foreach (var comment in Model.Comments)
+                    {
+                        <div class="message">
+                            <div class="message-header">
+                                <a class="post" href="@Url.Post(comment.Sub, comment.Post)">@comment.Post.Title</a> in <a class="sub" href="@Url.Sub(comment.Sub.Name)">@comment.Sub.Name</a>
+                            </div>
+                            @Html.Partial("_CommentNode", new CommentNode(comment))
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>There are no items to display.</p>
+                }
+                <div class="row">
+                    <div class="list-pager">
+                        <a class="btn btn-default" href="@Url.UserComments(Model.User.UserName)">View more</a>
+                    </div>
+                </div>
+            </div>
         </div>
     </div>
+    <div class="col-lg-3 col-sm-4">
+        @{ Html.RenderPartial("_SideBar"); }
+        @{ Html.RenderSideBar(); }
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

@@ -34,6 +34,10 @@ namespace Subs.Services
 
         int GetNumberOfCommentsForPost(Guid postId);
 
-        SeekedList<Guid> GetCommentsForUser(Guid userId, CommentSortBy? sortBy = null, int? skip = null, int? take = null);
+        SeekedList<Guid> GetCommentsForUser(Guid userId,
+            CommentSortBy? sortBy = null,
+            CommentsTimeFilter? timeFilter = null,
+            int? skip = null,
+            int? take = null);
     }
 }

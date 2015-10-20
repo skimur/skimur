@@ -99,6 +99,16 @@ namespace Skimur.Web
             return urlHelper.RouteUrl("User", new { userName });
         }
 
+        public static string UserComments(this UrlHelper urlHelper, string userName)
+        {
+            return urlHelper.RouteUrl("UserComments", new { userName });
+        }
+
+        public static string UserPosts(this UrlHelper urlHelper, string userName)
+        {
+            return urlHelper.RouteUrl("UserPosts", new { userName });
+        }
+
         public static string Domain(this UrlHelper urlHelper, string domain)
         {
             return urlHelper.RouteUrl("Domain", new { domain });

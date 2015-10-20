@@ -42,7 +42,7 @@ namespace Skimur.Web.Models
 
         public PostsSortBy SortBy { get; set; }
 
-        public TimeFilter? TimeFilter { get; set; }
+        public PostsTimeFilter? TimeFilter { get; set; }
 
         public bool IsFrontpage { get; set; }
 
@@ -61,7 +61,7 @@ namespace Skimur.Web.Models
 
         public PostsSearchSortBy SortBy { get; set; }
 
-        public TimeFilter? TimeFilter { get; set; }
+        public PostsTimeFilter? TimeFilter { get; set; }
 
         public SearchResultType? ResultType { get; set; }
     }

@@ -173,6 +173,16 @@ namespace Skimur.Web
                 defaults: new { controller = "Users", action = "User" });
 
             routes.MapRoute(
+                name: "UserComments",
+                url: "user/{userName}/comments",
+                defaults: new { controller = "Users", action = "Comments" });
+
+            routes.MapRoute(
+                name: "UserPosts",
+                url: "user/{userName}/posts",
+                defaults: new { controller = "Users", action = "Posts" });
+            
+            routes.MapRoute(
                 name: "Domain",
                 url: "domain/{domain}",
                 defaults: new { controller = "Domains", action = "Domain" });

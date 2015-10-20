@@ -23,15 +23,32 @@ namespace Subs.ReadModel
         SeekedList<Guid> GetReportedComments(List<Guid> subs = null, int? skip = null, int? take = null);
 
         int GetNumberOfCommentsForPost(Guid postId);
+
+        SeekedList<Guid> GetCommentsForUser(Guid userId, 
+            CommentSortBy? sortBy = null, 
+            CommentsTimeFilter? timeFilter = null,
+            int? skip = null, 
+            int? take = null);
     }
     
     public enum CommentSortBy
     {
         Best,
+        Hot,
         Top,
         New,
         Controversial,
         Old,
         Qa
+    }
+
+    public enum CommentsTimeFilter
+    {
+        All,
+        Hour,
+        Day,
+        Week,
+        Month,
+        Year
     }
 }

@@ -328,9 +328,11 @@
     <Content Include="Scripts\app\subs.js" />
     <Content Include="Scripts\bootstrap-markdown.js" />
     <Content Include="Scripts\bootstrap-notify.js" />
+    <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\jquery.validate.bootstrap.js" />
     <Content Include="Scripts\marked.js" />
     <Content Include="Scripts\markedHelper.js" />
+    <Content Include="Scripts\moment.js" />
     <Content Include="Scripts\sweet-alert.js" />
     <Content Include="Scripts\to-markdown.js" />
     <Content Include="Scripts\markdown.js" />
@@ -397,6 +399,11 @@
     <Content Include="Views\Moderators\_ModeratorInvite.cshtml" />
     <Content Include="Views\Styles\Edit.cshtml" />
     <Content Include="Views\Styles\RenderStyles.cshtml" />
+    <Content Include="Views\Users\Comments.cshtml" />
+    <Content Include="Views\Users\_HeaderNav.cshtml" />
+    <Content Include="Views\Users\Posts.cshtml" />
+    <Content Include="Views\Users\_SideBar.cshtml" />
+    <Content Include="Views\Users\_Sorting.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

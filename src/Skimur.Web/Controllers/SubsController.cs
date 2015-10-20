@@ -83,7 +83,7 @@ namespace Skimur.Web.Controllers
                 _userContext.CurrentUser));
         }
 
-        public ActionResult Frontpage(PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
+        public ActionResult Frontpage(PostsSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
         {
             var subs = _contextService.GetSubscribedSubIds();
 
@@ -95,7 +95,7 @@ namespace Skimur.Web.Controllers
                 sort = PostsSortBy.Hot;
 
             if (time == null)
-                time = TimeFilter.All;
+                time = PostsTimeFilter.All;
 
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
@@ -125,7 +125,7 @@ namespace Skimur.Web.Controllers
             return View("Posts", model);
         }
 
-        public ActionResult Posts(string subName, PostsSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
+        public ActionResult Posts(string subName, PostsSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
         {
             if (string.IsNullOrEmpty(subName))
                 return Redirect(Url.Subs());
@@ -159,7 +159,7 @@ namespace Skimur.Web.Controllers
                 sort = PostsSortBy.Hot; // TODO: get default from sub
 
             if (time == null)
-                time = TimeFilter.All;
+                time = PostsTimeFilter.All;
 
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
@@ -265,7 +265,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        public ActionResult SearchSub(string subBame, string query, PostsSearchSortBy? sort, TimeFilter? time, int? pageNumber, int? pageSize)
+        public ActionResult SearchSub(string subBame, string query, PostsSearchSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
         {
             if (string.IsNullOrEmpty(subBame))
                 return Redirect(Url.Subs());
@@ -274,7 +274,7 @@ namespace Skimur.Web.Controllers
                 sort = PostsSearchSortBy.Relevance;
 
             if (time == null)
-                time = TimeFilter.All;
+                time = PostsTimeFilter.All;
 
             var sub = _subDao.GetSubByName(subBame);
 
@@ -317,7 +317,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult SearchSite(string query,
             PostsSearchSortBy? sort,
-            TimeFilter? time,
+            PostsTimeFilter? time,
             SearchResultType? resultType,
             int? pageNumber,
             int? pageSize)
@@ -326,7 +326,7 @@ namespace Skimur.Web.Controllers
                 sort = PostsSearchSortBy.Relevance;
 
             if (time == null)
-                time = TimeFilter.All;
+                time = PostsTimeFilter.All;
 
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
