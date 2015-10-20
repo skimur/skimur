@@ -9,6 +9,12 @@ namespace Membership
     [Alias("Users")]
     public class User : IUserSettings
     {
+        public User()
+        {
+            // defaults
+            EnableStyles = true;
+        }
+
         /// <summary>
         /// User ID (Primary Key)
         /// </summary>
