@@ -9,6 +9,7 @@ using System.Threading.Tasks;
 using System.Web;
 using ImageResizer;
 using Infrastructure;
+using Infrastructure.FileSystem;
 using Infrastructure.Settings;
 
 namespace Skimur.Web.Avatar
@@ -16,14 +17,17 @@ namespace Skimur.Web.Avatar
     public class AvatarService : IAvatarService
     {
         private readonly IPathResolver _pathResolver;
-        private string _avatarDirectory;
+        private readonly IFileSystem _fileSystemProvider;
+        private readonly IDirectoryInfo _avatarDirectoryInfo;
 
-        public AvatarService(ISettingsProvider<WebSettings> webSettings, IPathResolver pathResolver)
+        public AvatarService(ISettingsProvider<WebSettings> webSettings, IPathResolver pathResolver, IFileSystem fileSystemProvider)
         {
             _pathResolver = pathResolver;
-            _avatarDirectory = _pathResolver.Resolve(webSettings.Settings.AvatarDirectory);
-            if (!Directory.Exists(_avatarDirectory))
-                Directory.CreateDirectory(_avatarDirectory);
+            _fileSystemProvider = fileSystemProvider;
+
+            _avatarDirectoryInfo = _fileSystemProvider.GetDirectory("avatars");
+            if(!_avatarDirectoryInfo.Exists)
+                _avatarDirectoryInfo.Create();
         }
 
         public string UploadAvatar(HttpPostedFileBase file, string key)
