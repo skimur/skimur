@@ -511,10 +511,10 @@ namespace Skimur.Web.Controllers
                 ModelState.AddModelError(string.Empty, response.Error);
                 return View(model);
             }
+            
+            AddSuccessMessage("You sub has been succesfully created.");
 
-            // todo: success message
-
-            return Redirect(Url.EditSub(response.SubName));
+            return Redirect(Url.Sub(response.SubName));
         }
 
         [SkimurAuthorize]

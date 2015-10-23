@@ -2,12 +2,12 @@
 @model StylesEditModel
 
 @{
-    ViewBag.Title = "Styles for " + Model.Sub.Name;
+    ViewBag.Title = "Styles for /s/" + Model.Sub.Name;
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        <h1 class="page-header">@ViewBag.Title</h1>
+        <h1 class="page-header">Styles</h1>
         @using (Html.BeginForm(null, null, FormMethod.Post, new {action = Url.Styles(Model.Sub.Name), @class = "form form-substyles", role = "form"}))
         {
             @Html.AntiForgeryToken()

@@ -2,10 +2,12 @@
 
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    ViewBag.Title = "Unmoderated posts for /s/" + Model.Sub.Sub.Name;
 }
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
+        <h2 class="page-header">Unmoderated posts</h2>
         @if (Model.Posts != null && Model.Posts.Count > 0)
         {
             foreach (var post in Model.Posts)

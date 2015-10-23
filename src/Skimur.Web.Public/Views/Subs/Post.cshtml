@@ -3,6 +3,7 @@
 @model PostDetailsModel
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    ViewBag.Title = Model.Post.Post.Title;
 }
 
 <div class="row">
