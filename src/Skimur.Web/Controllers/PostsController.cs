@@ -132,5 +132,18 @@ namespace Skimur.Web.Controllers
 
             return CommonJsonResult(true);
         }
+
+        [SkimurAuthorize, Ajax]
+        public ActionResult ToggleSticky(Guid postId, bool sticky)
+        {
+            var response = _commandBus.Send<ToggleSticky, ToggleStickyResponse>(new ToggleSticky
+            {
+                UserId = _userContext.CurrentUser.Id,
+                PostId = postId,
+                Sticky = sticky
+            });
+
+            return CommonJsonResult(response.Error);
+        }
     }
 }

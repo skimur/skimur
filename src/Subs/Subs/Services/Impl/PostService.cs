@@ -41,6 +41,7 @@ namespace Subs.Services.Impl
             bool showDeleted = false,
             bool onlyAll = false,
             bool? nsfw = null,
+            bool? sticky = null,
             int? skip = null,
             int? take = null)
         {
@@ -96,6 +97,9 @@ namespace Subs.Services.Impl
 
                 if (userId.HasValue)
                     query.Where(x => x.UserId == userId.Value);
+
+                if (sticky.HasValue)
+                    query.Where(x => x.Sticky == sticky);
 
                 var totalCount = conn.Count(query);
 
@@ -321,6 +325,14 @@ namespace Subs.Services.Impl
             _conn.Perform(conn =>
             {
                 conn.Update<Post>(new {NumberOfComments = numberOfComments}, x => x.Id == postId);
+            });
+        }
+
+        public void SetStickyForPost(Guid postId, bool sticky)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Post>(new {Sticky = sticky}, x => x.Id == postId);
             });
         }
     }

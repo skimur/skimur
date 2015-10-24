@@ -78,6 +78,8 @@ namespace Subs.ReadModel.Impl
                             item.Reports.Add(summary);
                         }
                     }
+
+                    item.CanSticky = true;
                 }
                 if (currentUser != null)
                     item.CanReport = true;

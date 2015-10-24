@@ -19,6 +19,7 @@ namespace Subs.ReadModel
             bool showDeleted = false,
             bool onlyAll = false,
             bool? nsfw = null,
+            bool? sticky = null,
             int? skip = null, 
             int? take = null);
 

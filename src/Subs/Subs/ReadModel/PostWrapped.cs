@@ -29,5 +29,7 @@ namespace Subs.ReadModel
         public bool CanEdit { get; set; }
 
         public bool CanDelete { get; set; }
+
+        public bool CanSticky { get; set; }
     }
 }
