@@ -23,6 +23,7 @@ namespace Skimur.Web.Controllers
         private readonly IPostWrapper _postWrapper;
         private readonly IUserContext _userContext;
         private readonly ICommandBus _commandBus;
+        private static Guid? _announcementSubId;
 
         public PostsController(ISubDao subDao,
             ISubWrapper subWrapper,
@@ -144,6 +145,25 @@ namespace Skimur.Web.Controllers
             });
 
             return CommonJsonResult(response.Error);
+        }
+
+        [ChildActionOnly]
+        public ActionResult AnnouncementPosts()
+        {
+            if (!_announcementSubId.HasValue)
+            {
+                var announcementSub = _subDao.GetSubByName("announcements");
+                _announcementSubId = announcementSub != null ? announcementSub.Id : Guid.Empty;
+            }
+
+            if (_announcementSubId == Guid.Empty)
+                return Content("");
+
+            var sticky = _postDao.GetPosts(new List<Guid> {_announcementSubId.Value}, sticky: true);
+
+            var posts = _postWrapper.Wrap(sticky, _userContext.CurrentUser);
+
+            return PartialView("PostList", posts);
         }
     }
 }
