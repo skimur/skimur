@@ -7,6 +7,7 @@ using System.Threading.Tasks;
 using Infrastructure.Logging;
 using Infrastructure.Messaging;
 using Infrastructure.Messaging.Handling;
+using Infrastructure.Settings;
 using Infrastructure.Utils;
 using Membership.Services;
 using Skimur;
@@ -20,7 +21,8 @@ namespace Subs.Worker.Commands
         ICommandHandlerResponse<CreatePost, CreatePostResponse>,
         ICommandHandlerResponse<EditPostContent, EditPostContentResponse>,
         ICommandHandlerResponse<DeletePost, DeletePostResponse>,
-        ICommandHandler<TogglePostNsfw>
+        ICommandHandler<TogglePostNsfw>,
+        ICommandHandlerResponse<ToggleSticky, ToggleStickyResponse>
     {
         private readonly IMarkdownCompiler _markdownCompiler;
         private readonly ILogger<PostHandler> _logger;
@@ -30,6 +32,7 @@ namespace Subs.Worker.Commands
         private readonly ISubUserBanService _subUserBanService;
         private readonly ICommandBus _commandBus;
         private readonly IPermissionService _permissionService;
+        private readonly ISettingsProvider<SubSettings> _subSettings;
 
         public PostHandler(IMarkdownCompiler markdownCompiler,
             ILogger<PostHandler> logger,
@@ -38,7 +41,8 @@ namespace Subs.Worker.Commands
             ISubService subService,
             ISubUserBanService subUserBanService,
             ICommandBus commandBus,
-            IPermissionService permissionService)
+            IPermissionService permissionService,
+            ISettingsProvider<SubSettings> subSettings)
         {
             _markdownCompiler = markdownCompiler;
             _logger = logger;
@@ -48,6 +52,7 @@ namespace Subs.Worker.Commands
             _subUserBanService = subUserBanService;
             _commandBus = commandBus;
             _permissionService = permissionService;
+            _subSettings = subSettings;
         }
 
         public CreatePostResponse Handle(CreatePost command)
@@ -338,6 +343,59 @@ namespace Subs.Worker.Commands
             post.Nsfw = command.IsNsfw;
 
             _postService.UpdatePost(post);
+        }
+
+        public ToggleStickyResponse Handle(ToggleSticky command)
+        {
+            var response = new ToggleStickyResponse();
+
+            try
+            {
+                var post = _postService.GetPostById(command.PostId);
+                if (post == null)
+                {
+                    response.Error = "Invalid post.";
+                    return response;
+                }
+
+                var user = _membershipService.GetUserById(command.UserId);
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
+                if (!_permissionService.CanUserManageSubPosts(user, post.SubId))
+                {
+                    response.Error = "You are not authorized to manage stickies for this sub.";
+                    return response;
+                }
+
+                if (command.Sticky == post.Sticky)
+                    return response; // already done, no error
+
+                if (command.Sticky)
+                {
+                    // we are trying to sticky something, let's see if we reached our limit.
+                    // we don't need to check this limit of we are UN-stickying a post.
+                    var currentStickied = _postService.GetPosts(new List<Guid> {post.SubId}, sticky: true);
+                    if (currentStickied.Count >= _subSettings.Settings.MaximumNumberOfStickyPosts)
+                    {
+                        response.Error = string.Format("You are only allowed {0} stickied posts.",
+                            _subSettings.Settings.MaximumNumberOfStickyPosts);
+                        return response;
+                    }
+                }
+
+                _postService.SetStickyForPost(post.Id, command.Sticky);
+            }
+            catch (Exception ex)
+            {
+                _logger.Error("An unknown error occured attempting to sticky a post.", ex);
+                response.Error = "An unknown error occured.";
+            }
+
+            return response;
         }
     }
 }

@@ -72,6 +72,8 @@ namespace Subs
 
         public bool InAll { get; set; }
 
+        public bool Sticky { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {

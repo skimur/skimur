@@ -13,6 +13,10 @@
         </div>
         <div class="disc-main">
             <div class="disc-heading">
+                @if(Model.Post.Sticky)
+                {
+                    <span class="sticky">Sticky</span>
+                }
                 <a class="link" href="@PostUrl(Model)">@Model.Post.Title</a>
                 @if (Model.Verdict.HasValue)
                 {
@@ -105,6 +109,12 @@
                             <a href="javascript:void(0);" onclick="return skimurui.posts.toggleNsfw(this);"><span class="mark-sfw">mark sfw</span><span class="mark-nsfw">mark nsfw</span></a>
                         </li>
                     }
+                    if (Model.CanSticky)
+                    {
+                        <li class="toggle-sticky">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleSticky(this);">toggle sticky</a>
+                        </li>
+                    }
                 }
             </ul>
             @if (Model.CanManage && Model.Reports != null && Model.Reports.Count > 0)
@@ -152,6 +162,10 @@
     if (post.Post.Nsfw)
     {
         @(" nsfw")
+    }
+    if (post.Post.Sticky)
+    {
+        @(" sticky")
     }
 }
 

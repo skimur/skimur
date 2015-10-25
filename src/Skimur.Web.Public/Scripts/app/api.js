@@ -544,6 +544,23 @@
         });
     };
 
+    var toggleSticky = function (postId, sticky, callback) {
+        $.ajax({
+            type: "POST",
+            url: "/posts/togglesticky",
+            data: { postId: postId, sticky: sticky },
+            dataType: "json",
+            success: function (data) {
+                if (callback)
+                    callback(data);
+            },
+            error: function () {
+                if (callback)
+                    callback({ success: false, error: "There was an error processing your request." });
+            }
+        });
+    };
+
     return {
         subscribe: subscribe,
         unsubcribe: unsubcribe,
@@ -581,7 +598,8 @@
         acceptModInvite: acceptModInvite,
         denyModInvite: denyModInvite,
         removeModInvite: removeModInvite,
-        changeModInvite: changeModInvite
+        changeModInvite: changeModInvite,
+        toggleSticky: toggleSticky
     };
 
 })();
