@@ -147,7 +147,7 @@ namespace Skimur.Web.Controllers
                 sub = _subDao.GetSubByName(subName);
 
                 if (sub == null)
-                    return Redirect(Url.Subs(subName));
+                    throw new NotFoundException();
 
                 if (_userContext.CurrentUser != null)
                     _subActivityDao.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
