@@ -76,12 +76,6 @@
 
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        @if (Model.Sub == null && !Model.IsAll && Model.Posts.PageNumber == 1)
-        {
-            // we are viewing the first page of a users front page.
-            // let's show the user any announcements.
-            Html.RenderAction("AnnouncementPosts", "Posts");
-        }
         @if (Model.Posts != null)
         {
             foreach (var post in Model.Posts)
