@@ -289,8 +289,11 @@
                     if (result.success) {
                         if (sticky) {
                             $post.removeClass("sticky");
+                            $("> .disc-body", $post).find(".disc-heading > .sticky").remove();
                         } else {
                             $post.addClass("sticky");
+                            $("> .disc-body", $post).find(".disc-heading > .sticky").remove();
+                            $("> .disc-body", $post).find(".disc-heading").prepend('<span class="sticky">Sticky</span>');
                         }
                     } else {
                         skimurui.displayError(result.error);

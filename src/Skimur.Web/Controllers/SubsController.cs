@@ -178,6 +178,8 @@ namespace Skimur.Web.Controllers
                 // logged in users only see NSFW if preferences say so.
                 // If they want to see NSFW, they will see all content (SFW/NSFW).
                 nsfw: _userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false),
+                // we are showing posts for a specific sub, so we can show stickies
+                stickyFirst: true,
                 skip: ((pageNumber - 1) * pageSize),
                 take: pageSize);
 
@@ -511,7 +513,7 @@ namespace Skimur.Web.Controllers
                 ModelState.AddModelError(string.Empty, response.Error);
                 return View(model);
             }
-            
+
             AddSuccessMessage("You sub has been succesfully created.");
 
             return Redirect(Url.Sub(response.SubName));

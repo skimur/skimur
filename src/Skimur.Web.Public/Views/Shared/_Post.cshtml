@@ -13,6 +13,10 @@
         </div>
         <div class="disc-main">
             <div class="disc-heading">
+                @if(Model.Post.Sticky)
+                {
+                    <span class="sticky">Sticky</span>
+                }
                 <a class="link" href="@PostUrl(Model)">@Model.Post.Title</a>
                 @if (Model.Verdict.HasValue)
                 {

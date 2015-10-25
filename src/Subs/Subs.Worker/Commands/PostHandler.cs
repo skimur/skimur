@@ -374,11 +374,17 @@ namespace Subs.Worker.Commands
                 if (command.Sticky == post.Sticky)
                     return response; // already done, no error
 
-                var currentStickied = _postService.GetPosts(new List<Guid> {post.SubId}, sticky: true);
-                if (currentStickied.Count >= _subSettings.Settings.MaximumNumberOfStickyPosts)
+                if (command.Sticky)
                 {
-                    response.Error = string.Format("You are only allowed {0} stickied posts.", _subSettings.Settings.MaximumNumberOfStickyPosts);
-                    return response;
+                    // we are trying to sticky something, let's see if we reached our limit.
+                    // we don't need to check this limit of we are UN-stickying a post.
+                    var currentStickied = _postService.GetPosts(new List<Guid> {post.SubId}, sticky: true);
+                    if (currentStickied.Count >= _subSettings.Settings.MaximumNumberOfStickyPosts)
+                    {
+                        response.Error = string.Format("You are only allowed {0} stickied posts.",
+                            _subSettings.Settings.MaximumNumberOfStickyPosts);
+                        return response;
+                    }
                 }
 
                 _postService.SetStickyForPost(post.Id, command.Sticky);

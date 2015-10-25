@@ -42,6 +42,7 @@ namespace Subs.Services.Impl
             bool onlyAll = false,
             bool? nsfw = null,
             bool? sticky = null,
+            bool stickyFirst = false,
             int? skip = null,
             int? take = null)
         {
@@ -105,24 +106,38 @@ namespace Subs.Services.Impl
 
                 query.Skip(skip).Take(take);
 
+                var orders = new List<string>();
+
+                if(stickyFirst)
+                    orders.Add("sticky");
+
                 switch (sortby)
                 {
                     case PostsSortBy.Hot:
-                        query.OrderByExpression = "ORDER BY (hot(vote_up_count, vote_down_count, date_created), date_created) DESC";
+                        orders.Add("hot(vote_up_count, vote_down_count, date_created)");
+                        orders.Add("date_created");
                         break;
                     case PostsSortBy.New:
-                        query.OrderByDescending(x => x.DateCreated);
+                        orders.Add("date_created");
                         break;
                     case PostsSortBy.Rising:
                         throw new Exception("not implemented");
                     case PostsSortBy.Controversial:
-                        query.OrderByExpression = "ORDER BY (controversy(vote_up_count, vote_down_count), date_created) DESC";
+                        orders.Add("controversy(vote_up_count, vote_down_count)");
+                        orders.Add("date_created");
                         break;
                     case PostsSortBy.Top:
-                        query.OrderByExpression = "ORDER BY (score(vote_up_count, vote_down_count), date_created) DESC";
+                        orders.Add("score(vote_up_count, vote_down_count)");
+                        orders.Add("date_created");
+                        query.OrderByExpression = "ORDER BY (, date_created) DESC";
                         break;
                     default:
                         throw new Exception("uknown sort");
+                }
+
+                if (orders.Count > 0)
+                {
+                    query.OrderByExpression = "ORDER BY (" + string.Join(", ", orders) + ") DESC";
                 }
 
                 query.SelectExpression = "SELECT \"id\"";

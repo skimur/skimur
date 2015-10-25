@@ -22,6 +22,7 @@ namespace Subs.Services
             bool onlyAll = false,
             bool? nsfw = null,
             bool? sticky = null,
+            bool stickyFirst = false,
             int? skip = null,
             int? take = null);
 
