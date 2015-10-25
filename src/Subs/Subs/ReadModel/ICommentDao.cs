@@ -27,6 +27,7 @@ namespace Subs.ReadModel
         SeekedList<Guid> GetCommentsForUser(Guid userId, 
             CommentSortBy? sortBy = null, 
             CommentsTimeFilter? timeFilter = null,
+            bool showDeleted = false,
             int? skip = null, 
             int? take = null);
     }
