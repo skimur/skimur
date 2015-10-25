@@ -179,7 +179,7 @@ namespace Skimur.Web.Controllers
                 // If they want to see NSFW, they will see all content (SFW/NSFW).
                 nsfw: _userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false),
                 // we are showing posts for a specific sub, so we can show stickies
-                stickyFirst: true,
+                stickyFirst: sub != null,
                 skip: ((pageNumber - 1) * pageSize),
                 take: pageSize);
 
