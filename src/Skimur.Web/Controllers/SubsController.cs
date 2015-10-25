@@ -230,12 +230,22 @@ namespace Skimur.Web.Controllers
             model.Sub = _subWrapper.Wrap(sub.Id, _userContext.CurrentUser);
             model.Comments = new CommentListModel();
             model.Comments.SortBy = commentsSort.Value;
+            model.ViewingSpecificComment = commentId.HasValue;
 
-            var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
-            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment: commentId, limit: limit, maxDepth: 5);
-            commentTreeContext.Sort = model.Comments.SortBy;
-            model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
+            try
+            {
+                var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
+                var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
+                var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter,
+                    comment: commentId, limit: limit, maxDepth: 5);
+                commentTreeContext.Sort = model.Comments.SortBy;
+                model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext,
+                    _userContext.CurrentUser);
+            }
+            catch (CommentNotFoundException ex)
+            {
+                throw new NotFoundException();
+            }
 
             return View(model);
         }

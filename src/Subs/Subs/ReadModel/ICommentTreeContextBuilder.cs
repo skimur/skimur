@@ -47,4 +47,9 @@ namespace Subs.ReadModel
 
         public CommentSortBy Sort { get; set; }
     }
+
+    public class CommentNotFoundException : Exception
+    {
+        
+    }
 }
