@@ -98,6 +98,7 @@
     <Compile Include="Postgres\_0018_ModeratorInvite.cs" />
     <Compile Include="Postgres\_0019_SubCss.cs" />
     <Compile Include="Postgres\_0020_StickyPosts.cs" />
+    <Compile Include="Postgres\_0021_AccountIp.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup />
