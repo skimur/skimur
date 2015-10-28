@@ -77,7 +77,7 @@ namespace Infrastructure.Messaging.RabbitMQ
                 {
                     using (var channel = messageProducer.Channel)
                     {
-                        channel.ExchangeDeclare(string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout),
+                        channel.ExchangeDeclare(string.Concat(QueueNames.Exchange, ".", "events"),
                                         ExchangeType.Direct,
                                         durable: true,
                                         autoDelete: false,
