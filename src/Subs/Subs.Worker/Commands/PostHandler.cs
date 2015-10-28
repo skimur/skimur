@@ -13,6 +13,7 @@ using Membership.Services;
 using Skimur;
 using Skimur.Markdown;
 using Subs.Commands;
+using Subs.Events;
 using Subs.Services;
 
 namespace Subs.Worker.Commands
@@ -33,6 +34,7 @@ namespace Subs.Worker.Commands
         private readonly ICommandBus _commandBus;
         private readonly IPermissionService _permissionService;
         private readonly ISettingsProvider<SubSettings> _subSettings;
+        private readonly IEventBus _eventBus;
 
         public PostHandler(IMarkdownCompiler markdownCompiler,
             ILogger<PostHandler> logger,
@@ -42,7 +44,8 @@ namespace Subs.Worker.Commands
             ISubUserBanService subUserBanService,
             ICommandBus commandBus,
             IPermissionService permissionService,
-            ISettingsProvider<SubSettings> subSettings)
+            ISettingsProvider<SubSettings> subSettings,
+            IEventBus eventBus)
         {
             _markdownCompiler = markdownCompiler;
             _logger = logger;
@@ -53,6 +56,7 @@ namespace Subs.Worker.Commands
             _commandBus = commandBus;
             _permissionService = permissionService;
             _subSettings = subSettings;
+            _eventBus = eventBus;
         }
 
         public CreatePostResponse Handle(CreatePost command)
@@ -186,6 +190,8 @@ namespace Subs.Worker.Commands
                     InAll = sub.InAll
                 };
 
+                List<string> mentions = null;
+
                 if (post.PostType == PostType.Link)
                 {
                     post.Url = command.Url;
@@ -194,11 +200,14 @@ namespace Subs.Worker.Commands
                 else
                 {
                     post.Content = command.Content;
-                    post.ContentFormatted = _markdownCompiler.Compile(post.Content);
+                    post.ContentFormatted = _markdownCompiler.Compile(post.Content, out mentions);
                 }
 
                 _postService.InsertPost(post);
                 _commandBus.Send(new CastVoteForPost { DateCasted = post.DateCreated, IpAddress = command.IpAddress, PostId = post.Id, UserId = user.Id, VoteType = VoteType.Up });
+
+                if (mentions != null && mentions.Count > 0)
+                    _eventBus.Publish(new UsersMentioned { PostId = post.Id, Users = mentions });
 
                 response.Title = command.Title;
                 response.PostId = post.Id;
@@ -254,11 +263,57 @@ namespace Subs.Worker.Commands
                         return response;
                     }
                 }
+                
+                List<string> oldMentions = null;
+                List<string> newMentions = null;
+                
+                try
+                {
+                    _markdownCompiler.Compile(post.Content, out oldMentions);
+                }
+                catch (Exception ex)
+                {
+                    _logger.Error("There was an errror compiling previous mentions for a comment edit.", ex);
+                }
 
                 post.Content = command.Content;
-                post.ContentFormatted = _markdownCompiler.Compile(post.Content);
+                post.ContentFormatted = _markdownCompiler.Compile(post.Content, out newMentions);
 
                 _postService.UpdatePost(post);
+
+                if (oldMentions != null && oldMentions.Count > 0)
+                {
+                    // we have some mentions in our previous comment. let's see if they were removed
+                    var removed = oldMentions.Except(newMentions).ToList();
+                    if (removed.Count > 0)
+                    {
+                        _eventBus.Publish(new UsersUnmentioned
+                        {
+                            PostId = post.Id,
+                            Users = removed
+                        });
+                    }
+                }
+
+                // ReSharper disable once ConditionIsAlwaysTrueOrFalse
+                if (newMentions != null)
+                {
+                    // the are some mentions in this comment.
+                    // let's get only the new mentions that were previously in the comment
+                    if (oldMentions != null && oldMentions.Count > 0)
+                    {
+                        newMentions = newMentions.Except(oldMentions).ToList();
+                    }
+
+                    if (newMentions.Count > 0)
+                    {
+                        _eventBus.Publish(new UsersMentioned
+                        {
+                            PostId = post.Id,
+                            Users = newMentions
+                        });
+                    }
+                }
 
                 response.Content = post.Content;
                 response.ContentFormatted = post.ContentFormatted;
