@@ -27,7 +27,7 @@ namespace Infrastructure.Messaging.RabbitMQ
                 client.Publish(
                         QueueNames<T>.In,
                         new Message<T>(@event),
-                        string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout));
+                        string.Concat(QueueNames.Exchange, ".", "events"));
             }
         }
 
@@ -39,7 +39,7 @@ namespace Infrastructure.Messaging.RabbitMQ
                     client.Publish(
                         QueueNames<T>.In, 
                         new Message<T>(@event),
-                        string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout));
+                        string.Concat(QueueNames.Exchange, ".", "events"));
                 }
         }
     }
