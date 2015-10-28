@@ -65,16 +65,16 @@
     }
     else if (Model.Message.MessageType == MessageType.Mention)
     {
-        if (Model.Post != null)
+        if (Model.Comment != null && Model.Comment.Post != null)
         {
             <div class="message-header">
-                <span class="type">Username mention:</span> <a class="post" href="@Url.Post(Model.Post.Sub, Model.Post.Post)">@Model.Post.Post</a>
+                <span class="type">Mention: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
             </div>
         }
-        else if (Model.Comment != null && Model.Comment.Post != null)
+        else if (Model.Post != null)
         {
             <div class="message-header">
-                <span class="type">Post reply: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+                <span class="type">Mention:</span> <a class="post" href="@Url.Post(Model.Post.Sub, Model.Post.Post)">@Model.Post.Post.Title</a>
             </div>
         }
         if (Model.Comment != null)

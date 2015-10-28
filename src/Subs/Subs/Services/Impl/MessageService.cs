@@ -5,6 +5,7 @@ using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
+using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
 
@@ -47,7 +48,7 @@ namespace Subs.Services.Impl
 
         public SeekedList<Guid> GetAllMessagesForUser(Guid userId, int? skip = null, int? take = null)
         {
-            return QueryMessagesForUser(userId, query => {}, skip, take);
+            return QueryMessagesForUser(userId, query => { }, skip, take);
         }
 
         public SeekedList<Guid> GetUnreadMessagesForUser(Guid userId, int? skip = null, int? take = null)
@@ -79,7 +80,7 @@ namespace Subs.Services.Impl
         {
             return _conn.Perform(conn =>
             {
-                var query = conn.From<Message>().Where(x => x.AuthorId == userId 
+                var query = conn.From<Message>().Where(x => x.AuthorId == userId
                     // if the user sent this message as a moderator, hide it.
                     // it will be visible in the moderator mail
                     && x.FromSub == null);
@@ -104,7 +105,7 @@ namespace Subs.Services.Impl
 
         public SeekedList<Guid> GetModeratorMailForSubs(List<Guid> subs, int? skip = null, int? take = null)
         {
-            if(subs == null) throw new ArgumentNullException("subs");
+            if (subs == null) throw new ArgumentNullException("subs");
 
             return _conn.Perform(conn =>
             {
@@ -150,7 +151,7 @@ namespace Subs.Services.Impl
             {
                 var q = conn.From<Message>();
                 query(q);
-                q.Where(x => x.ToUser == userId 
+                q.Where(x => x.ToUser == userId
                     // if the user was sent this message as a mod of a sub,
                     // then don't show it. it is visible in moderator mail
                     && x.ToSub == null);
@@ -164,12 +165,12 @@ namespace Subs.Services.Impl
 
         public void MarkMessagesAsRead(List<Guid> messages)
         {
-            if(messages == null || messages.Count == 0)
+            if (messages == null || messages.Count == 0)
                 return;
 
             _conn.Perform(conn =>
             {
-                conn.Update<Message>(new {IsNew = false}, x => messages.Contains(x.Id));
+                conn.Update<Message>(new { IsNew = false }, x => messages.Contains(x.Id));
             });
         }
 
@@ -189,6 +190,66 @@ namespace Subs.Services.Impl
             _conn.Perform(conn =>
             {
                 conn.Delete<Message>(x => x.CommentId == commentId);
+            });
+        }
+
+        public void InsertMention(Guid userId, Guid authorUserId, Guid? postId, Guid? commentId)
+        {
+            if (postId.HasValue && commentId.HasValue) throw new Exception("You mast pass either post, or comment, but not both.");
+            if (!postId.HasValue && !commentId.HasValue) throw new Exception("You must provide a comment or post id.");
+
+            _conn.Perform(conn =>
+            {
+                if (postId.HasValue)
+                {
+                    if (conn.Count<Message>(x => x.ToUser == userId && x.Type == (int)MessageType.Mention && x.PostId == postId) == 0)
+                    {
+                        conn.Insert(new Message
+                        {
+                            Id = GuidUtil.NewSequentialId(),
+                            ToUser = userId,
+                            AuthorId = authorUserId,
+                            MessageType = MessageType.Mention,
+                            PostId = postId,
+                            IsNew = true
+                        });
+                    }
+                }
+
+                if (commentId.HasValue)
+                {
+                    if (conn.Count<Message>(x => x.ToUser == userId && x.Type == (int)MessageType.Mention && x.CommentId == commentId) == 0)
+                    {
+                        conn.Insert(new Message
+                        {
+                            Id = GuidUtil.NewSequentialId(),
+                            ToUser = userId,
+                            AuthorId = authorUserId,
+                            MessageType = MessageType.Mention,
+                            CommentId = commentId,
+                            IsNew = true
+                        });
+                    }
+                }
+            });
+        }
+
+        public void DeleteMention(Guid userId, Guid? postId, Guid? commentId)
+        {
+            if (postId.HasValue && commentId.HasValue) throw new Exception("You mast pass either post, or comment, but not both.");
+            if (!postId.HasValue && !commentId.HasValue) throw new Exception("You must provide a comment or post id.");
+
+            _conn.Perform(conn =>
+            {
+                if (postId.HasValue)
+                {
+                    conn.Delete<Message>(x => x.ToUser == userId && x.Type == (int)MessageType.Mention && x.PostId == postId);
+                }
+
+                if (commentId.HasValue)
+                {
+                    conn.Delete<Message>(x => x.ToUser == userId && x.Type == (int)MessageType.Mention && x.CommentId == commentId);
+                }
             });
         }
     }
