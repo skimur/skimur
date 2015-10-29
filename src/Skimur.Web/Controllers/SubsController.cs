@@ -147,7 +147,7 @@ namespace Skimur.Web.Controllers
                 sub = _subDao.GetSubByName(subName);
 
                 if (sub == null)
-                    return Redirect(Url.Subs(subName));
+                    throw new NotFoundException();
 
                 if (_userContext.CurrentUser != null)
                     _subActivityDao.MarkSubActive(_userContext.CurrentUser.Id, sub.Id);
@@ -178,6 +178,8 @@ namespace Skimur.Web.Controllers
                 // logged in users only see NSFW if preferences say so.
                 // If they want to see NSFW, they will see all content (SFW/NSFW).
                 nsfw: _userContext.CurrentUser == null ? false : (_userContext.CurrentUser.ShowNsfw ? (bool?)null : false),
+                // we are showing posts for a specific sub, so we can show stickies
+                stickyFirst: sub != null,
                 skip: ((pageNumber - 1) * pageSize),
                 take: pageSize);
 
@@ -189,7 +191,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, Guid id, CommentSortBy? commentsSort, Guid? commentId = null, int? limit = 100)
+        public ActionResult Post(string subName, Guid id, CommentSortBy? commentsSort, Guid? commentId = null, int? limit = 100, int context = 0)
         {
             var post = _postDao.GetPostById(id);
 
@@ -218,6 +220,8 @@ namespace Skimur.Web.Controllers
                 limit = 100;
             if (limit > 200)
                 limit = 200;
+            if (context < 0)
+                context = 0;
 
             if (!commentsSort.HasValue)
                 commentsSort = CommentSortBy.Best; // TODO: get suggested sort for this link, and if none, from the sub
@@ -228,12 +232,22 @@ namespace Skimur.Web.Controllers
             model.Sub = _subWrapper.Wrap(sub.Id, _userContext.CurrentUser);
             model.Comments = new CommentListModel();
             model.Comments.SortBy = commentsSort.Value;
+            model.ViewingSpecificComment = commentId.HasValue;
 
-            var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
-            var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter, comment: commentId, limit: limit, maxDepth: 5);
-            commentTreeContext.Sort = model.Comments.SortBy;
-            model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
+            try
+            {
+                var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
+                var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
+                var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter,
+                    comment: commentId, limit: limit, maxDepth: 5, context:context);
+                commentTreeContext.Sort = model.Comments.SortBy;
+                model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext,
+                    _userContext.CurrentUser);
+            }
+            catch (CommentNotFoundException ex)
+            {
+                throw new NotFoundException();
+            }
 
             return View(model);
         }
@@ -512,9 +526,9 @@ namespace Skimur.Web.Controllers
                 return View(model);
             }
 
-            // todo: success message
+            AddSuccessMessage("You sub has been succesfully created.");
 
-            return Redirect(Url.EditSub(response.SubName));
+            return Redirect(Url.Sub(response.SubName));
         }
 
         [SkimurAuthorize]

@@ -204,6 +204,7 @@ namespace Subs.Services.Impl
         public SeekedList<Guid> GetCommentsForUser(Guid userId,
              CommentSortBy? sortBy = null,
              CommentsTimeFilter? timeFilter = null,
+             bool showDeleted = false,
              int? skip = null,
              int? take = null)
         {
@@ -248,6 +249,9 @@ namespace Subs.Services.Impl
                 {
                     query.OrderByDescending(x => x.DateCreated);
                 }
+
+                if (!showDeleted)
+                    query.Where(x => !x.Deleted);
 
                 if (timeFilter.HasValue)
                 {

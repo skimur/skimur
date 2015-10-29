@@ -31,5 +31,7 @@ namespace Skimur.Web.Models
         public SubWrapped Sub { get; set; }
 
         public CommentListModel Comments { get; set; }
+
+        public bool ViewingSpecificComment { get; set; }
     }
 }

@@ -1,57 +1,69 @@
 ﻿@using Subs
 @model BannedUsersFromSub
 @{
-    ViewBag.Title = "Banned";
+    ViewBag.Title = "Banned users from /s/" + Model.Sub.Name;
 }
-<div class="form-group">
-    <ul class="nav nav-tabs">
-        <li role="presentation" class="active"><a href="#bans" data-toggle="tab">Bans</a></li>
-        <li role="presentation"><a href="#new-ban" data-toggle="tab">New</a></li>
-    </ul>
-</div>
-<div class="tab-content">
-    <div role="tabpanel" class="tab-pane active" id="bans">
-        <div class="panel">
-            <div class="input-group">
-                <input id="ban-search-query" type="text" class="form-control" placeholder="Search..." value="@Model.Query">
-                @if (!string.IsNullOrEmpty(Model.Query))
+
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        <h2 class="page-header">Ban users</h2>
+        <div class="form-group">
+            <ul class="nav nav-tabs">
+                <li role="presentation" class="active"><a href="#bans" data-toggle="tab">Bans</a></li>
+                <li role="presentation"><a href="#new-ban" data-toggle="tab">New</a></li>
+            </ul>
+        </div>
+        <div class="tab-content">
+            <div role="tabpanel" class="tab-pane active" id="bans">
+                <div class="panel">
+                    <div class="input-group">
+                        <input id="ban-search-query" type="text" class="form-control" placeholder="Search..." value="@Model.Query">
+                        @if (!string.IsNullOrEmpty(Model.Query))
+                        {
+                            <a href="@Url.SubBans(Model.Sub.Name)" class="input-group-addon btn btn-default"><span class="fa fa-close"></span></a>
+                        }
+                        <span id="ban-search-button" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
+                    </div>
+                </div>
+                @foreach (var ban in Model.Users)
                 {
-                    <a href="@Url.SubBans(Model.Sub.Name)" class="input-group-addon btn btn-default"><span class="fa fa-close"></span></a>
+                    @Html.Partial("_Ban", ban)
+                    if (Model.Users.IndexOf(ban) != Model.Users.Count - 1)
+                    {
+                        <hr/>
+                    }
                 }
-                <span id="ban-search-button" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
+                <hr/>
+                <div class="list-pager">
+                    @Html.Pager(Model.Users)
+                </div>
+            </div>
+            <div role="tabpanel" class="tab-pane" id="new-ban">
+                <form id="ban-form" class="form">
+                    <div class="form-group">
+                        <label class="control-label" for="@Html.IdFor(m => m.BanUser.UserName)">User name</label>
+                        @Html.TextBoxFor(m => m.BanUser.UserName, new {@class = "form-control"})
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="@Html.IdFor(m => m.BanUser.ReasonPrivate)">Reason (not shown to user)</label>
+                        @Html.TextAreaFor(m => m.BanUser.ReasonPrivate, new {@class = "form-control"})
+                    </div>
+                    <div class="form-group">
+                        <label class="control-label" for="@Html.IdFor(m => m.BanUser.ReasonPublic)">Reason (sent to user)</label>
+                        @Html.TextAreaFor(m => m.BanUser.ReasonPublic, new {@class = "form-control"})
+                    </div>
+                    <div class="form-group">
+                        <input id="ban-btn" type="submit" class="btn btn-primary" value="Ban"/>
+                    </div>
+                </form>
             </div>
         </div>
-        @foreach (var ban in Model.Users)
-        {
-            @Html.Partial("_Ban", ban)
-            if (Model.Users.IndexOf(ban) != Model.Users.Count - 1)
-            {
-                <hr />
-            }
-        }
-        <hr />
-        <div class="list-pager">
-            @Html.Pager(Model.Users)
-        </div>
+
     </div>
-    <div role="tabpanel" class="tab-pane" id="new-ban">
-        <form id="ban-form" class="form">
-            <div class="form-group">
-                <label class="control-label" for="@Html.IdFor(m => m.BanUser.UserName)">User name</label>
-                @Html.TextBoxFor(m => m.BanUser.UserName, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="@Html.IdFor(m => m.BanUser.ReasonPrivate)">Reason (not shown to user)</label>
-                @Html.TextAreaFor(m => m.BanUser.ReasonPrivate, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <label class="control-label" for="@Html.IdFor(m => m.BanUser.ReasonPublic)">Reason (sent to user)</label>
-                @Html.TextAreaFor(m => m.BanUser.ReasonPublic, new { @class = "form-control" })
-            </div>
-            <div class="form-group">
-                <input id="ban-btn" type="submit" class="btn btn-primary" value="Ban" />
-            </div>
-        </form>
+
+    <div class="col-lg-3 col-sm-4">
+        @{Html.RenderSideBar(subId: Model.Sub.Id);}
     </div>
 </div>
 

@@ -44,6 +44,8 @@ namespace Subs.ReadModel
 
         public bool? CanMarkRead { get; set; }
 
+        public bool PermaWithContext { get ;set; }
+
         #region INode
 
         public NodeType NodeType

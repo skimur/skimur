@@ -4,13 +4,13 @@
     switch (Model.InboxType)
     {
         case InboxType.All:
-            ViewBag.Title = "All";
+            ViewBag.Title = "All messages";
             break;
         case InboxType.Unread:
-            ViewBag.Title = "Unread";
+            ViewBag.Title = "Unread messages";
             break;
         case InboxType.Messages:
-            ViewBag.Title = "Messages";
+            ViewBag.Title = "Private messages";
             break;
         case InboxType.CommentReplies:
             ViewBag.Title = "Comment replies";
@@ -20,6 +20,15 @@
             break;
         case InboxType.Mentions:
             ViewBag.Title = "Mentions";
+            break;
+        case InboxType.ModeratorMail:
+            ViewBag.Title = "Moderator mail";
+            break;
+        case InboxType.ModeratorMailSent:
+            ViewBag.Title = "Sent moderator mail";
+            break;
+        case InboxType.ModeratorMailUnread:
+            ViewBag.Title = "Unread moderator mail";
             break;
     }
 }

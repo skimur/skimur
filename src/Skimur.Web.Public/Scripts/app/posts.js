@@ -280,6 +280,29 @@
         });
     }
 
+    var toggleSticky = function(element) {
+        var $post = getPost(element);
+        skimurui.confirmWarning("Are you sure?", "Yes!", function (confirmResult) {
+            if (confirmResult.confirmed) {
+                var sticky = $post.hasClass("sticky");
+                skimur.toggleSticky($post.data("post-id"), !sticky, function (result) {
+                    if (result.success) {
+                        if (sticky) {
+                            $post.removeClass("sticky");
+                            $("> .disc-body", $post).find(".disc-heading > .sticky").remove();
+                        } else {
+                            $post.addClass("sticky");
+                            $("> .disc-body", $post).find(".disc-heading > .sticky").remove();
+                            $("> .disc-body", $post).find(".disc-heading").prepend('<span class="sticky">Sticky</span>');
+                        }
+                    } else {
+                        skimurui.displayError(result.error);
+                    }
+                });
+            }
+        });
+    }
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -292,7 +315,8 @@
         unignoreReports: unignoreReports,
         startEdit: startEdit,
         delete: deletePost,
-        toggleNsfw: toggleNsfw
+        toggleNsfw: toggleNsfw,
+        toggleSticky: toggleSticky
     };
 
 })();

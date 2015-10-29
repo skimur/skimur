@@ -1,7 +1,7 @@
 ﻿@using Subs
 @model CreatePostModel
 @{
-    ViewBag.Title = "Create";
+    ViewBag.Title = "Submit a post";
 }
 
 <div class="row">
@@ -11,7 +11,7 @@
         {
             @Html.AntiForgeryToken()
 
-            <h4>Create a new post.</h4>
+            <h4>Submit a new post.</h4>
             <hr />
 
             <ul class="nav nav-tabs" role="tablist">
@@ -75,7 +75,7 @@
             </div>
 
             <div class="form-group">
-                <input type="submit" class="btn btn-primary" value="Create" onclick="this.form.submit(); $(this).buttonStartLoading();" />
+                <input type="submit" class="btn btn-primary" value="Submit" onclick="this.form.submit(); $(this).buttonStartLoading();" />
             </div>
         }
     </div>

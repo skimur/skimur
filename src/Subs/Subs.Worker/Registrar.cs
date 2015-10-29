@@ -59,6 +59,7 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<EditPostContent, EditPostContentResponse>, PostHandler>();
             container.Register<ICommandHandlerResponse<DeletePost, DeletePostResponse>, PostHandler>();
             container.Register<ICommandHandler<TogglePostNsfw>, PostHandler>();
+            container.Register<ICommandHandlerResponse<ToggleSticky, ToggleStickyResponse>, PostHandler>();
             
             container.Register<ICommandHandlerResponse<EditSubStylesCommand, EditSubStylesCommandResponse>, StylesHandler>();
 

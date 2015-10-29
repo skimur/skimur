@@ -44,13 +44,15 @@ namespace Subs.ReadModel
                 var currentComment = (Guid?)comment;
                 var path = new List<Guid>();
 
+                if (!commentTree.CommentIds.Contains(comment.Value))
+                    throw new CommentNotFoundException();
+
                 while (currentComment.HasValue && path.Count <= context)
                 {
                     path.Add(currentComment.Value);
                     currentComment = commentTree.Parents[currentComment.Value];
                 }
-
-
+                
                 result.DontCollapse.AddRange(path);
 
                 foreach (var commentId in path)

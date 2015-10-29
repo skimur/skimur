@@ -44,5 +44,9 @@ namespace Subs.Services
         void MarkMessagesAsUnread(List<Guid> messages);
 
         void DeleteNotificationsForComment(Guid commentId);
+
+        void InsertMention(Guid userId, Guid authorUserId, Guid? postId, Guid? commentId);
+
+        void DeleteMention(Guid userId, Guid? postId, Guid? commentId);
     }
 }

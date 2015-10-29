@@ -4,6 +4,13 @@
 @model SubPostsModel
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    if (Model.Sub != null)
+    {
+        ViewBag.Title = Model.Sub.Sub.Name;
+    }else if (Model.IsAll)
+    {
+        ViewBag.Title = "All";
+    }
 }
 
 @helper AppendSortUrl(string baseUrl, string sort)

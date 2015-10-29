@@ -21,6 +21,8 @@ namespace Subs.Services
             bool showDeleted = false,
             bool onlyAll = false,
             bool? nsfw = null,
+            bool? sticky = null,
+            bool stickyFirst = false,
             int? skip = null,
             int? take = null);
 
@@ -50,5 +52,7 @@ namespace Subs.Services
         void SetIgnoreReportsForPost(Guid postId, bool ignoreReports);
 
         void UpdateNumberOfCommentsForPost(Guid postId, int numberOfComments);
+
+        void SetStickyForPost(Guid postId, bool sticky);
     }
 }

@@ -130,5 +130,10 @@ namespace Membership
         /// </summary>
         [Alias("Styles")]
         public bool EnableStyles { get; set; }
+
+        /// <summary>
+        /// The IP address used when registering this account.
+        /// </summary>
+        public string Ip { get; set; }
     }
 }

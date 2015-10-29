@@ -3,6 +3,7 @@
 @model PostDetailsModel
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    ViewBag.Title = Model.Post.Post.Title;
 }
 
 <div class="row">
@@ -28,33 +29,41 @@
         }
 
         <div class="row">
-            @if (Model.Comments != null)
+            @if (Model.ViewingSpecificComment)
             {
-                <div class="page-header comments-header">
-                    <div class="comments-text">Comments</div>
-                    <div class="comments-sort">
-                        Sort by:
-                        <div class="btn-group">
-                            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
-                                @Model.Comments.SortBy <span class="caret"></span>
-                            </button>
-                            <ul class="dropdown-menu dropdown-menu-right">
-                                <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "best")">Best</a></li>
-                                <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "top")">Top</a></li>
-                                <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "new")">New</a></li>
-                                <li class="@(Model.Comments.SortBy == CommentSortBy.Controversial ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "controversial")">Controversial</a></li>
-                                <li class="@(Model.Comments.SortBy == CommentSortBy.Old ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "old")">Old</a></li>
-                                <li class="@(Model.Comments.SortBy == CommentSortBy.Qa ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "qa")">Qa</a></li>
-                            </ul>
-                        </div>
+                <div class="alert alert-info">
+                    You are viewing the discussion from a single comment thread. <br/>
+                    <a href="@Url.Post(Model.Sub.Sub, Model.Post.Post)" class="btn btn-default">View then rest of the comments <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            }
+            <div class="page-header comments-header">
+                <div class="comments-text">Comments</div>
+                <div class="comments-sort">
+                    Sort by:
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Model.Comments.SortBy <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "best")">Best</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "top")">Top</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "new")">New</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Controversial ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "controversial")">Controversial</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Old ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "old")">Old</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Qa ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "qa")">Qa</a></li>
+                        </ul>
                     </div>
                 </div>
-
+            </div>
+            @if (Model.Comments != null && Model.Comments.CommentNodes.Count > 0)
+            {
                 @Html.Partial("_CommentNodes", Model.Comments)
             }
             else
             {
-                <p>There are no comments yet.</p>
+                <div class="comments-container empty">
+                    <p>There are no comments yet.</p>
+                </div>
             }
         </div>
 
@@ -76,7 +85,10 @@
                 skimur.createComment("@Model.Post.Post.Id", null, $("#post-comment").val(), function (result) {
                     addCommentButton.buttonStopLoading();
                     if (result.success) {
-                        $(result.html).prependTo($(".comments-container"));
+                        var $commentsContainer = $(".comments-container");
+                        if ($commentsContainer.hasClass("empty"))
+                            $commentsContainer.empty();
+                        $(result.html).prependTo($commentsContainer);
                         $("#post-comment").val("");
                     } else {
                         skimurui.displayError(result.error);

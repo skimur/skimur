@@ -77,8 +77,8 @@ namespace Infrastructure.Messaging.RabbitMQ
                 {
                     using (var channel = messageProducer.Channel)
                     {
-                        channel.ExchangeDeclare(string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout),
-                                        ExchangeType.Fanout,
+                        channel.ExchangeDeclare(string.Concat(QueueNames.Exchange, ".", "events"),
+                                        ExchangeType.Direct,
                                         durable: true,
                                         autoDelete: false,
                                         arguments: null);
@@ -90,7 +90,7 @@ namespace Infrastructure.Messaging.RabbitMQ
                             arguments: null);
                         
                         channel.QueueBind(queueName,
-                                            string.Concat(QueueNames.Exchange, ".", ExchangeType.Fanout),
+                                            string.Concat(QueueNames.Exchange, ".", "events"),
                                             QueueNames<T>.In);
                     }
                 }

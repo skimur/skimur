@@ -1,7 +1,13 @@
 ﻿@using Subs
 @using Subs.ReadModel
 @model PostWrapped
-
+@{
+    bool canMarkRead = false;
+    if (ViewData.ContainsKey("CanMarkRead"))
+    {
+        canMarkRead = (bool)ViewData["CanMarkRead"];
+    }
+}
 <div class="disc post @PostClasses(Model)" data-post-id="@Model.Post.Id">
     <div class="disc-body">
         <div class="disc-left">
@@ -13,6 +19,10 @@
         </div>
         <div class="disc-main">
             <div class="disc-heading">
+                @if(Model.Post.Sticky)
+                {
+                    <span class="sticky">Sticky</span>
+                }
                 <a class="link" href="@PostUrl(Model)">@Model.Post.Title</a>
                 @if (Model.Verdict.HasValue)
                 {
@@ -105,6 +115,21 @@
                             <a href="javascript:void(0);" onclick="return skimurui.posts.toggleNsfw(this);"><span class="mark-sfw">mark sfw</span><span class="mark-nsfw">mark nsfw</span></a>
                         </li>
                     }
+                    if (Model.CanSticky)
+                    {
+                        <li class="toggle-sticky">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleSticky(this);">toggle sticky</a>
+                        </li>
+                    }
+                }
+                @if (canMarkRead)
+                {
+                    <li class="mark-unread">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                    </li>
+                    <li class="mark-read">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                    </li>
                 }
             </ul>
             @if (Model.CanManage && Model.Reports != null && Model.Reports.Count > 0)
@@ -152,6 +177,10 @@
     if (post.Post.Nsfw)
     {
         @(" nsfw")
+    }
+    if (post.Post.Sticky)
+    {
+        @(" sticky")
     }
 }
 

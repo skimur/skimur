@@ -101,6 +101,7 @@
     <Compile Include="Commands\SendMessage.cs" />
     <Compile Include="Commands\ConfigureReportIgnoring.cs" />
     <Compile Include="Commands\SubcribeToSub.cs" />
+    <Compile Include="Commands\ToggleSticky.cs" />
     <Compile Include="Commands\UnBanUserFromSub.cs" />
     <Compile Include="Commands\UnSubscribeToSub.cs" />
     <None Include="CommentBuilder.cs" />

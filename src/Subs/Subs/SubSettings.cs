@@ -11,6 +11,7 @@ namespace Subs
             ActivityExpirationSeconds = (int)TimeSpan.FromMinutes(15).TotalSeconds;
             MaximumNumberOfSubscribedSubs = 25;
             MaximumNumberOfModdedSubs = 10;
+            MaximumNumberOfStickyPosts = 2;
         }
 
         public int MinUserAgeCreateSub { get; set; }
@@ -20,5 +21,7 @@ namespace Subs
         public int MaximumNumberOfSubscribedSubs { get; set; }
 
         public int MaximumNumberOfModdedSubs { get; set; }
+
+        public int MaximumNumberOfStickyPosts { get; set; }
     }
 }
