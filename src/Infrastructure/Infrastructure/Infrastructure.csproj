@@ -82,6 +82,8 @@
     <Compile Include="Email\EmailSender.cs" />
     <Compile Include="Email\EmailServerSettings.cs" />
     <Compile Include="Email\IEmailSender.cs" />
+    <Compile Include="FileSystem\IFileSystem.cs" />
+    <Compile Include="FileSystem\LocalFileSystem.cs" />
     <Compile Include="IAggregateRoot.cs" />
     <Compile Include="IMapper.cs" />
     <Compile Include="IPathResolver.cs" />
