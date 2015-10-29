@@ -20,13 +20,13 @@ namespace Skimur.Web.Avatar
         private readonly IFileSystem _fileSystemProvider;
         private readonly IDirectoryInfo _avatarDirectoryInfo;
 
-        public AvatarService(ISettingsProvider<WebSettings> webSettings, IPathResolver pathResolver, IFileSystem fileSystemProvider)
+        public AvatarService(IPathResolver pathResolver, IFileSystem fileSystemProvider)
         {
             _pathResolver = pathResolver;
             _fileSystemProvider = fileSystemProvider;
 
             _avatarDirectoryInfo = _fileSystemProvider.GetDirectory("avatars");
-            if(!_avatarDirectoryInfo.Exists)
+            if (!_avatarDirectoryInfo.Exists)
                 _avatarDirectoryInfo.Create();
         }
 
@@ -41,9 +41,7 @@ namespace Skimur.Web.Avatar
                 {
                     if (!img.RawFormat.Equals(ImageFormat.Jpeg) && !img.RawFormat.Equals(ImageFormat.Png))
                         throw new Exception("Uploaded file is not recognized as an image.");
-
-                    var newKeyPath = GetAvatarPathByIdentifier(key);
-
+                    
                     var tempFile = Path.Combine(Path.GetTempPath(), Path.GetRandomFileName());
 
                     try
@@ -56,7 +54,14 @@ namespace Skimur.Web.Avatar
                             Mode = FitMode.Max
                         });
 
-                        File.Copy(tempFile, newKeyPath, true);
+                        var avatar = _avatarDirectoryInfo.GetFile(key + ".jpg");
+                        if(avatar.Exists)
+                            avatar.Delete();
+                        avatar.Open(FileMode.Create, stream =>
+                        {
+                            using (var imageStream = File.OpenRead(tempFile))
+                                imageStream.CopyTo(stream);
+                        });
                     }
                     catch (Exception ex)
                     {
@@ -82,17 +87,17 @@ namespace Skimur.Web.Avatar
             if (string.IsNullOrEmpty(key))
                 return null;
 
-            var path = GetAvatarPathByIdentifier(key);
-
-            if (File.Exists(path))
-                return File.OpenRead(path);
-
+            var avatar = _avatarDirectoryInfo.GetFile(key + ".jpg");
+            if (avatar.Exists)
+                return avatar.Open(FileMode.Open);
+            
             return null;
         }
 
         private string GetAvatarPathByIdentifier(string identifier)
         {
-            return Path.Combine(_avatarDirectory, identifier + ".jpg");
+
+            return Path.Combine(_avatarDirectoryInfo.ToString(), identifier + ".jpg");
         }
     }
 }

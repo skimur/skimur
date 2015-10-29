@@ -197,3 +197,4 @@ src/.vs/
 dist/
 nuget.exe
 project.sublime-workspace
+src/Skimur.Web.Public/Data/

@@ -19,6 +19,7 @@ namespace Skimur.Web.Controllers
 
         public ActionResult Key(string key)
         {
+            
             var avatarStream = _avatarService.GetAvatarStream(key);
 
             if (avatarStream != null)

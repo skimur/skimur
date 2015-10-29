@@ -1,5 +1,8 @@
 ﻿using System;
 using System.Web.Mvc;
+using Infrastructure;
+using Infrastructure.FileSystem;
+using Infrastructure.Settings;
 using Microsoft.AspNet.Identity;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
@@ -20,6 +23,13 @@ namespace Skimur.Web
             container.RegisterPerWebRequest<ApplicationSignInManager>();
             container.RegisterPerWebRequest<IUserContext, UserContext>();
             container.RegisterPerWebRequest<IContextService, ContextService>();
+
+            container.RegisterSingleton<IFileSystem>(() =>
+            {
+                var webSettings = container.GetInstance<ISettingsProvider<WebSettings>>();
+                var dataDirectory = container.GetInstance<IPathResolver>().Resolve(webSettings.Settings.DataDirectory);
+                return new LocalFileSystem(dataDirectory);
+            });
 
             container.RegisterMvcIntegratedFilterProvider();
 

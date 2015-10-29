@@ -12,11 +12,11 @@ namespace Skimur.Web
     {
         public WebSettings()
         {
-            AvatarDirectory = "~/Avatars";
+            DataDirectory = "~/Data/";
         }
 
-        public string AvatarDirectory { get; set; }
-        
         public string Announcement { get; set; }
+
+        public string DataDirectory { get; set; }
     }
 }
