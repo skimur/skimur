@@ -1,7 +1,13 @@
 ﻿@using Subs
 @using Subs.ReadModel
 @model PostWrapped
-
+@{
+    bool canMarkRead = false;
+    if (ViewData.ContainsKey("CanMarkRead"))
+    {
+        canMarkRead = (bool)ViewData["CanMarkRead"];
+    }
+}
 <div class="disc post @PostClasses(Model)" data-post-id="@Model.Post.Id">
     <div class="disc-body">
         <div class="disc-left">
@@ -115,6 +121,15 @@
                             <a href="javascript:void(0);" onclick="return skimurui.posts.toggleSticky(this);">toggle sticky</a>
                         </li>
                     }
+                }
+                @if (canMarkRead)
+                {
+                    <li class="mark-unread">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                    </li>
+                    <li class="mark-read">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                    </li>
                 }
             </ul>
             @if (Model.CanManage && Model.Reports != null && Model.Reports.Count > 0)

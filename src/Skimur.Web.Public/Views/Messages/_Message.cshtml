@@ -51,7 +51,7 @@
                 <span class="type">Comment reply:</span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
             </div>
         }
-        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead })
+        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead, PermaWithContext = true })
     }
     else if (Model.Message.MessageType == MessageType.PostReply && Model.Comment != null)
     {
@@ -61,7 +61,7 @@
                 <span class="type">Post reply: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
             </div>
         }
-        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead })
+        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead, PermaWithContext = true })
     }
     else if (Model.Message.MessageType == MessageType.Mention)
     {
@@ -79,11 +79,11 @@
         }
         if (Model.Comment != null)
         {
-            @Html.Partial("_CommentNode", new CommentNode(Model.Comment))
+            @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead, PermaWithContext = true})
         }
         else if (Model.Post != null)
         {
-            @Html.Partial("_Post", Model.Post)
+            @Html.Partial("_Post", Model.Post, new ViewDataDictionary { { "CanMarkRead", true }})
         }
     }
 </div>

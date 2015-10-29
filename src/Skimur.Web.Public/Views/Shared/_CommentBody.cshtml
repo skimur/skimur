@@ -30,7 +30,15 @@
             @if (!Model.Comment.Comment.Deleted)
             {
                 <li class="first">
-                    <a href="@Url.Comment(Model.Comment.Sub.Name, Model.Comment.Post, Model.Comment.Comment)">permalink</a>
+                    @if (Model.PermaWithContext)
+                    {
+                        <a href="@Url.Comment(Model.Comment.Sub.Name, Model.Comment.Post, Model.Comment.Comment)?context=3">context</a>
+                    }
+                    else
+                    {
+                        <a href="@Url.Comment(Model.Comment.Sub.Name, Model.Comment.Post, Model.Comment.Comment)">permalink</a>
+                    }
+
                 </li>
                 if (Model.Comment.CanDelete)
                 {

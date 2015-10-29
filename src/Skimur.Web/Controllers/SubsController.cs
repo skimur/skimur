@@ -191,7 +191,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        public ActionResult Post(string subName, Guid id, CommentSortBy? commentsSort, Guid? commentId = null, int? limit = 100)
+        public ActionResult Post(string subName, Guid id, CommentSortBy? commentsSort, Guid? commentId = null, int? limit = 100, int context = 0)
         {
             var post = _postDao.GetPostById(id);
 
@@ -220,6 +220,8 @@ namespace Skimur.Web.Controllers
                 limit = 100;
             if (limit > 200)
                 limit = 200;
+            if (context < 0)
+                context = 0;
 
             if (!commentsSort.HasValue)
                 commentsSort = CommentSortBy.Best; // TODO: get suggested sort for this link, and if none, from the sub
@@ -237,7 +239,7 @@ namespace Skimur.Web.Controllers
                 var commentTree = _commentDao.GetCommentTree(model.Post.Post.Id);
                 var commentTreeSorter = _commentDao.GetCommentTreeSorter(model.Post.Post.Id, model.Comments.SortBy);
                 var commentTreeContext = _commentTreeContextBuilder.Build(commentTree, commentTreeSorter,
-                    comment: commentId, limit: limit, maxDepth: 5);
+                    comment: commentId, limit: limit, maxDepth: 5, context:context);
                 commentTreeContext.Sort = model.Comments.SortBy;
                 model.Comments.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext,
                     _userContext.CurrentUser);
