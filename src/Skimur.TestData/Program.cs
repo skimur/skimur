@@ -32,6 +32,7 @@ namespace Skimur.TestData
                 new Infrastructure.Postgres.Registrar(),
                 new Infrastructure.Logging.Registrar(),
                 new Skimur.Markdown.Registrar(),
+                new Skimur.Scraper.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),
                 new Membership.Registrar());

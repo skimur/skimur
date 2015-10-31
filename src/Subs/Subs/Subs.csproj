@@ -88,6 +88,7 @@
     <Compile Include="Commands\EditPostContent.cs" />
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\EditSubStylesCommand.cs" />
+    <Compile Include="Commands\GenerateThumbnailForPost.cs" />
     <Compile Include="Commands\InviteModToSub.cs" />
     <Compile Include="Commands\MarkMessagesAsRead.cs" />
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />

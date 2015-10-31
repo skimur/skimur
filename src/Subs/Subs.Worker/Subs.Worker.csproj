@@ -52,6 +52,7 @@
     <Compile Include="Commands\PostHandler.cs" />
     <Compile Include="Commands\PostModerationHandler.cs" />
     <Compile Include="Commands\StylesHandler.cs" />
+    <Compile Include="Commands\ThumbnailHandler.cs" />
     <Compile Include="Events\KudosUpdateEventHandler.cs" />
     <Compile Include="Events\UserMentionNotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />

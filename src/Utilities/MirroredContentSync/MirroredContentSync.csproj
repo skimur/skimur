@@ -94,6 +94,10 @@
       <Project>{6e215bd9-7494-4c84-af04-5e700ce945b8}</Project>
       <Name>Skimur.Markdown</Name>
     </ProjectReference>
+    <ProjectReference Include="..\..\Skimur.Scraper\Skimur.Scraper.csproj">
+      <Project>{878ca67a-92a4-42d9-8d9d-2cde99a0234d}</Project>
+      <Name>Skimur.Scraper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>
       <Name>Skimur</Name>

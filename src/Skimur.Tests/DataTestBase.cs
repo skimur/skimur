@@ -57,6 +57,7 @@ namespace Skimur.Tests
                 new Infrastructure.Postgres.Registrar(),
                 new Infrastructure.Logging.Registrar(),
                 new Markdown.Registrar(),
+                new Scraper.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),
                 new Membership.Registrar()
