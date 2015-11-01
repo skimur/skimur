@@ -60,15 +60,38 @@
 .form-createpost {
     .submissiontext {
         .spinner {
-            text-align:center;
-            display:none;
+            text-align: center;
+            display: none;
         }
+
         &.loading {
             .heading, .body {
-                display:none;
+                display: none;
             }
+
             .spinner {
-                display:block;
+                display: block;
+            }
+        }
+    }
+}
+
+.post {
+    .disc-body {
+        .thumb {
+            a {
+                .thumbnail;
+                width: 70px;
+            }
+        }
+        /* these are left for someone else to style if they want */
+        .thumb-text, .thumb-none {
+            display: none;
+        }
+
+        .thumb, .thumb-text, .thumb-none {
+            a {
+                margin-bottom: 0px;
             }
         }
     }

@@ -1,6 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Drawing;
+using System.Drawing.Imaging;
 using System.Globalization;
 using System.IO;
 using System.Linq;
@@ -35,18 +36,25 @@ namespace Skimur.Scraper
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
 
             string html = null;
+            string contentType = null;
             using (var response = webRequest.GetResponse())
                 if (!string.IsNullOrEmpty(response.ContentType))
                 {
-                    // if the response indicates this is an image, than that is what we use as a thumbnail
-                    if (response.ContentType != null && response.ContentType.ToLower().StartsWith("image"))
-                        using (var responseStream = response.GetResponseStream())
-                            return Image.FromStream(responseStream);
+                    contentType = response.ContentType;
+                    if (!string.IsNullOrEmpty(contentType))
+                    {
+                        contentType = contentType.ToLower();
 
-                    if (response.ContentType.ToLower().StartsWith("text/html"))
-                        using (var responseStream = response.GetResponseStream())
+                        // if the response indicates this is an image, than that is what we use as a thumbnail
+                        if (contentType.StartsWith("image"))
+                            using (var responseStream = response.GetResponseStream())
+                                return ToJpeg(Image.FromStream(responseStream));
+
+                        if (contentType.StartsWith("text/html"))
+                            using (var responseStream = response.GetResponseStream())
                             using (var streamReader = new StreamReader(responseStream))
                                 html = streamReader.ReadToEnd();
+                    }
                 }
 
             if (!string.IsNullOrEmpty(html))
@@ -198,8 +206,37 @@ namespace Skimur.Scraper
         {
             var request = WebRequest.Create(url);
             using (var response = request.GetResponse())
-                using (var responseStream = response.GetResponseStream())
-                    return Image.FromStream(responseStream);
+            using (var responseStream = response.GetResponseStream())
+                return ToJpeg(Image.FromStream(responseStream));
+        }
+
+        private Image ToJpeg(Image image)
+        {
+            if (image == null) return null;
+
+            if(image.RawFormat.Equals(ImageFormat.Jpeg))
+                return image;
+
+            if (image.RawFormat.Equals(ImageFormat.Png))
+            {
+                // we need to save this as a jpeg.
+                // if don't do the following, transparent parts will become black.
+                // we need them to be white.
+                // Assumes myImage is the PNG you are converting
+
+                var b = new Bitmap(image.Width, image.Height);
+                b.SetResolution(image.HorizontalResolution, image.VerticalResolution);
+                using (var g = Graphics.FromImage(b))
+                {
+                    g.Clear(Color.White);
+                    g.DrawImageUnscaled(image, 0, 0);
+                }
+                
+                image.Dispose();
+                return b;
+            }
+
+            return image;
         }
     }
 }

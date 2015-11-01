@@ -58,7 +58,10 @@ namespace Subs.Services.Impl
 
         private string RandomKey()
         {
-            return Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            var key = Convert.ToBase64String(Guid.NewGuid().ToByteArray());
+            key = key.Replace("/", "_");
+            key = key.Replace("+", "-");
+            return key.Substring(0, 22);
         }
     }
 }
