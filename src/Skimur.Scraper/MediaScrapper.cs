@@ -34,6 +34,7 @@ namespace Skimur.Scraper
             var uriBase = new Uri(uri.GetLeftPart(UriPartial.Authority));
 
             var webRequest = (HttpWebRequest)WebRequest.Create(url);
+            webRequest.AutomaticDecompression = DecompressionMethods.Deflate | DecompressionMethods.GZip;
 
             string html = null;
             string contentType = null;
