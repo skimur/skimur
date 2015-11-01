@@ -4,22 +4,28 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
+using Infrastructure;
+using Infrastructure.FileSystem;
+using Infrastructure.Settings;
+using Skimur.Web.Mvc;
+using Skimur.Web.Services;
 using Subs.Services;
 
 namespace Skimur.Web.Controllers
 {
     public class ThumbnailController : BaseController
     {
-        private readonly IPostThumbnailService _postThumbnailService;
+        private readonly IThumbnailCacheService _thumbnailCacheService;
 
-        public ThumbnailController(IPostThumbnailService postThumbnailService)
+        public ThumbnailController(IThumbnailCacheService thumbnailCacheService)
         {
-            _postThumbnailService = postThumbnailService;
+            _thumbnailCacheService = thumbnailCacheService;
         }
 
-        public ActionResult Thumbnail(string thumbnail)
+        [LastModifiedCache]
+        public ActionResult Thumbnail(string thumbnail, ThumbnailType type)
         {
-            return File(_postThumbnailService.GetImage(thumbnail), System.Web.MimeMapping.GetMimeMapping(thumbnail));
+            return File(_thumbnailCacheService.GetThumbnail(thumbnail, type), System.Web.MimeMapping.GetMimeMapping(thumbnail));
         }
     }
 }

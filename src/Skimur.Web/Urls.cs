@@ -2,6 +2,7 @@
 using System.Web;
 using System.Web.Mvc;
 using System.Web.UI.WebControls;
+using Skimur.Web.Services;
 using Subs;
 
 // ReSharper disable Mvc.ActionNotResolved
@@ -207,9 +208,9 @@ namespace Skimur.Web
             return urlHelper.RouteUrl("SubStyles", new { subName });
         }
 
-        public static string Thumbnail(this UrlHelper urlHelper, string thumb)
+        public static string Thumbnail(this UrlHelper urlHelper, string thumb, ThumbnailType type)
         {
-            return urlHelper.RouteUrl("Thumbnail", new {thumbnail = thumb});
+            return urlHelper.RouteUrl("Thumbnail", new {thumbnail = thumb, type});
         }
     }
 }

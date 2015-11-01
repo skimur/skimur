@@ -349,7 +349,7 @@ namespace Skimur.Web
 
             routes.MapRoute(
                 name: "Thumbnail",
-                url: "thumbnail/{Thumbnail}",
+                url: "thumbnail/{type}/{thumbnail}",
                 defaults: new {controller="Thumbnail", action= "Thumbnail" });
 
             routes.MapRoute(

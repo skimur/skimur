@@ -13,10 +13,13 @@ namespace Skimur.Web
         public WebSettings()
         {
             DataDirectory = "~/Data/";
+            ThumbnailCache = "~/ThumbnailCache";
         }
 
         public string Announcement { get; set; }
 
         public string DataDirectory { get; set; }
+
+        public string ThumbnailCache { get; set; }
     }
 }

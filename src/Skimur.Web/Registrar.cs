@@ -8,6 +8,8 @@ using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
 using Skimur.Web.Avatar;
 using Skimur.Web.Identity;
+using Skimur.Web.Services;
+using Skimur.Web.Services.Impl;
 
 namespace Skimur.Web
 {
@@ -19,6 +21,7 @@ namespace Skimur.Web
             container.RegisterSingleton<IIdentityMessageService, ApplicationIdentityMessageService>();
             container.RegisterSingleton<ApplicationUserManager>();
             container.RegisterSingleton<IAvatarService, AvatarService>();
+            container.RegisterSingleton<IThumbnailCacheService, ThumbnailCacheService>();
 
             container.RegisterPerWebRequest<ApplicationSignInManager>();
             container.RegisterPerWebRequest<IUserContext, UserContext>();

@@ -198,3 +198,4 @@ dist/
 nuget.exe
 project.sublime-workspace
 src/Skimur.Web.Public/Data/
+src/Skimur.Web.Public/ThumbnailCache/
