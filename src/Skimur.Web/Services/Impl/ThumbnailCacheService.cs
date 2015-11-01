@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Text;
@@ -39,22 +40,48 @@ namespace Skimur.Web.Services.Impl
 
             // TODO: global sync lock?
 
-            using (var image = _postThumbnailService.GetImage(thumbnail))
+            using (var imageStream = _postThumbnailService.GetImage(thumbnail))
             {
                 switch (type)
                 {
                     case ThumbnailType.Full:
-                        using (var file = File.OpenWrite(possible))
-                            image.CopyTo(file);
+                        using (var fileStream = File.OpenWrite(possible))
+                            imageStream.CopyTo(fileStream);
                         break;
                     case ThumbnailType.Post:
-                        ImageBuilder.Current.Build(new ImageJob()
+
+                        using (var image = Image.FromStream(imageStream))
                         {
-                            Source = image,
-                            DisposeSourceObject = false,
-                            Dest = possible,
-                            Instructions = new Instructions("width=70&height=70&mode=max")
-                        });
+                            var instructions = new Instructions("width=70&height=70&scale=both");
+                            instructions.Width = 70;
+                            instructions.Height = 70;
+                            instructions.Scale = ScaleMode.Both;
+
+                            // we want horizontally long images to have no padding. simply render the images with a max width.
+                            // for vertically long images, we want to fill the entire canvas area with no black space on the sides.
+                            var ratio = image.Width / (double)image.Height;
+                            if (ratio >= 1.5)
+                            {
+                                // the image is REALLY wide, so, let's just fill, cropping the ends.
+                                instructions.Mode = FitMode.Crop;
+                            }else if (ratio >= 1)
+                            {
+                                // the image is wide
+                                instructions.Mode = FitMode.Max;
+                            }
+                            else
+                            {
+                                // the image is tall
+                                instructions.Mode = FitMode.Crop;
+                            }
+
+                            ImageBuilder.Current.Build(new ImageJob()
+                            {
+                                Source = image,
+                                Dest = possible,
+                                Instructions = instructions
+                            });
+                        }
                         break;
                     default:
                         throw new Exception("unknown type");
