@@ -209,6 +209,8 @@ namespace Subs.Worker.Commands
                 if (mentions != null && mentions.Count > 0)
                     _eventBus.Publish(new UsersMentioned { PostId = post.Id, Users = mentions });
 
+                _commandBus.Send(new GenerateThumbnailForPost { PostId = post.Id });
+
                 response.Title = command.Title;
                 response.PostId = post.Id;
             }

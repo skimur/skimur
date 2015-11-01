@@ -51,6 +51,7 @@ namespace Subs
             container.RegisterSingleton<IModeratorWrapper, ModeratorWrapper>();
             container.RegisterSingleton<ISubCssService, SubCssService>();
             container.RegisterSingleton<ISubCssDao, SubCssDao>();
+            container.RegisterSingleton<IPostThumbnailService, PostThumbnailService>();
         }
 
         public int Order

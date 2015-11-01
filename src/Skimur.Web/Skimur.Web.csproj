@@ -169,6 +169,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StylesController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
+    <Compile Include="Controllers\ThumbnailController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="HtmlHelpers.cs" />

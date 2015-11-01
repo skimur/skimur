@@ -63,6 +63,8 @@ namespace Subs.Worker
             
             container.Register<ICommandHandlerResponse<EditSubStylesCommand, EditSubStylesCommandResponse>, StylesHandler>();
 
+            container.Register<ICommandHandler<GenerateThumbnailForPost>, ThumbnailHandler>();
+
             container.Register<KudosUpdateEventHandler>();
             container.Register<ScoringAndSortingEventHandler>();
             container.Register<ReplyNotificationEventHandler>();

@@ -166,7 +166,7 @@ namespace Skimur.Web
 
             return items;
         }
-
+        
         public static void RenderSideBar(this HtmlHelper htmlHelper, string subName = null, Guid? subId = null, bool showSearch = true, bool showCreateSub = true, bool showSubmit = true)
         {
             htmlHelper.RenderAction("SideBar", "Common", new

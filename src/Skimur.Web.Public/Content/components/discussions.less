@@ -3,17 +3,19 @@
 }
 
 .disc {
-    position: relative;
+
+    margin-bottom:10px;
 
     .disc-body {
-        // the left side of the message (fit width)
+        .media;
+
         .disc-left {
-            float: left;
+            .media-left;
 
             .disc-voting {
                 color: @gray-light;
                 font-size: ceil((@font-size-base * 1.2));
-                margin-right: 15px;
+                margin-right: 10px;
                 margin-bottom: 10px;
 
                 .up, .votes, .down {
@@ -61,10 +63,10 @@
                 }
             }
         }
-        // the right side of the message (auto width)
+
         .disc-main {
-            overflow: hidden;
-            padding-bottom: 15px;
+            .media-body;
+
             // and headers for the message (if any).
             // posts of headings, comments/messages don't
             .disc-heading {
@@ -76,6 +78,10 @@
                 .expand {
                     margin-right: 3px;
                     padding: 1px;
+                }
+
+                .author {
+                    font-weight:bold !important;
                 }
             }
             // the actual content of the message the user will want to read (rendered markdown mostly)
@@ -140,10 +146,12 @@
             }
         }
     }
+
     // nested messages get a little indented
     .disc {
         margin-left: 15px;
         margin-bottom: 0px;
+        margin-top:10px;
         padding-left: 10px;
         border-left: 1px dotted #DDF;
     }
@@ -158,7 +166,7 @@
         }
         // the left content will also probally want to be hidden (if available)
         // no need to vote (etc) on content you can't read
-        .disc-left {
+        .disc-voting {
             visibility: hidden;
             height: 1px;
         }

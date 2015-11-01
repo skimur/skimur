@@ -206,5 +206,10 @@ namespace Skimur.Web
         {
             return urlHelper.RouteUrl("SubStyles", new { subName });
         }
+
+        public static string Thumbnail(this UrlHelper urlHelper, string thumb)
+        {
+            return urlHelper.RouteUrl("Thumbnail", new {thumbnail = thumb});
+        }
     }
 }

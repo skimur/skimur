@@ -21,7 +21,7 @@ namespace Migrations.Postgres
         {
             conn.Perform(x =>
             {
-                x.Execute("ALTER TABLE posots ADD COLUMN thumb text NULL;");
+                x.Execute("ALTER TABLE posts ADD COLUMN thumb text NULL;");
             });
         }
 
