@@ -52,10 +52,12 @@ namespace Skimur.Web.Services.Impl
 
                         using (var image = Image.FromStream(imageStream))
                         {
-                            var instructions = new Instructions("width=70&height=70&scale=both");
-                            instructions.Width = 70;
-                            instructions.Height = 70;
-                            instructions.Scale = ScaleMode.Both;
+                            var instructions = new Instructions("width=70&height=70&scale=both")
+                            {
+                                Width = 70,
+                                Height = 70,
+                                Scale = ScaleMode.Both
+                            };
 
                             // we want horizontally long images to have no padding. simply render the images with a max width.
                             // for vertically long images, we want to fill the entire canvas area with no black space on the sides.
