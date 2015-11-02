@@ -60,6 +60,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -88,6 +89,7 @@
     <Compile Include="Commands\EditPostContent.cs" />
     <Compile Include="Commands\EditSub.cs" />
     <Compile Include="Commands\EditSubStylesCommand.cs" />
+    <Compile Include="Commands\GenerateThumbnailForPost.cs" />
     <Compile Include="Commands\InviteModToSub.cs" />
     <Compile Include="Commands\MarkMessagesAsRead.cs" />
     <Compile Include="Commands\MarkMessagesAsUnread.cs" />
@@ -113,6 +115,8 @@
     <Compile Include="Events\UsersUnmentioned.cs" />
     <Compile Include="Events\VoteForCommentCasted.cs" />
     <Compile Include="Events\VoteForPostCasted.cs" />
+    <Compile Include="Services\IPostThumbnailService.cs" />
+    <Compile Include="Services\Impl\PostThumbnailService.cs" />
     <Compile Include="Message.cs" />
     <Compile Include="ModeratorInvite.cs" />
     <Compile Include="ModeratorPermissions.cs" />

@@ -54,5 +54,7 @@ namespace Subs.Services
         void UpdateNumberOfCommentsForPost(Guid postId, int numberOfComments);
 
         void SetStickyForPost(Guid postId, bool sticky);
+
+        void UpdateThumbnailForPost(Guid postId, string thumbnail);
     }
 }

@@ -38,5 +38,9 @@ namespace Infrastructure.FileSystem
         void Delete(bool recursive);
 
         IFileInfo GetFile(string file);
+
+        bool FileExists(string file);
+
+        void DeleteFile(string file);
     }
 }

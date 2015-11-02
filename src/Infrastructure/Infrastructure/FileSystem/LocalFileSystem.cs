@@ -93,6 +93,16 @@ namespace Infrastructure.FileSystem
             {
                 return new LocalFileInfo(System.IO.Path.Combine(_localPath, file), System.IO.Path.Combine(_relativePath, file));
             }
+
+            public bool FileExists(string file)
+            {
+                return File.Exists(System.IO.Path.Combine(_localPath, file));
+            }
+
+            public void DeleteFile(string file)
+            {
+                File.Delete(System.IO.Path.Combine(_localPath, file));
+            }
         }
     }
 }

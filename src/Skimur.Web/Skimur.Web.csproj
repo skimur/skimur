@@ -169,6 +169,7 @@
     <Compile Include="Controllers\ReportsController.cs" />
     <Compile Include="Controllers\StylesController.cs" />
     <Compile Include="Controllers\SubBansController.cs" />
+    <Compile Include="Controllers\ThumbnailController.cs" />
     <Compile Include="Controllers\UsersController.cs" />
     <Compile Include="Exceptions.cs" />
     <Compile Include="HtmlHelpers.cs" />
@@ -200,6 +201,7 @@
     <Compile Include="Models\UserViewModel.cs" />
     <Compile Include="Mvc\AjaxAttribute.cs" />
     <Compile Include="Mvc\AnnouncementFilterAttribute.cs" />
+    <Compile Include="Mvc\LastModifiedCacheAttribute.cs" />
     <Compile Include="Mvc\ParameterBasedOnFormNameAttribute.cs" />
     <Compile Include="Mvc\SkimurAuthorizeAttribute.cs" />
     <Compile Include="Mvc\SkimurHandleErrorAttribute.cs" />
@@ -208,6 +210,8 @@
     <Compile Include="Registrar.cs" />
     <Compile Include="Identity\ApplicationIdentityMessageService.cs" />
     <Compile Include="Routes.cs" />
+    <Compile Include="Services\Impl\ThumbnailCacheService.cs" />
+    <Compile Include="Services\IThumbnailCacheService.cs" />
     <Compile Include="Urls.cs" />
     <Compile Include="Urls.Messages.cs" />
     <Compile Include="Urls.Policies.cs" />

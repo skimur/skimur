@@ -350,5 +350,13 @@ namespace Subs.Services.Impl
                 conn.Update<Post>(new {Sticky = sticky}, x => x.Id == postId);
             });
         }
+
+        public void UpdateThumbnailForPost(Guid postId, string thumbnail)
+        {
+            _conn.Perform(conn =>
+            {
+                conn.Update<Post>(new { Thumb = thumbnail }, x => x.Id == postId);
+            });
+        }
     }
 }

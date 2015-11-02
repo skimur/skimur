@@ -62,6 +62,7 @@ namespace Skimur.Web.Public
                 new Infrastructure.Logging.Registrar(),
                 new Registrar(),
                 new Markdown.Registrar(),
+                new Scraper.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),
                 new Emails.Handlers.Registrar(),

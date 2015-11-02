@@ -544,6 +544,10 @@
       <Project>{6e215bd9-7494-4c84-af04-5e700ce945b8}</Project>
       <Name>Skimur.Markdown</Name>
     </ProjectReference>
+    <ProjectReference Include="..\Skimur.Scraper\Skimur.Scraper.csproj">
+      <Project>{878ca67a-92a4-42d9-8d9d-2cde99a0234d}</Project>
+      <Name>Skimur.Scraper</Name>
+    </ProjectReference>
     <ProjectReference Include="..\Subs\Subs.Worker\Subs.Worker.csproj">
       <Project>{454dcbfb-9497-4e9e-98df-3c4067978193}</Project>
       <Name>Subs.Worker</Name>

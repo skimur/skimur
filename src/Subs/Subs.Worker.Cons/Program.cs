@@ -22,6 +22,7 @@ namespace Subs.Worker.Cons
                 new Infrastructure.Postgres.Registrar(),
                 new Infrastructure.Logging.Registrar(),
                 new Skimur.Markdown.Registrar(),
+                new Skimur.Scraper.Registrar(),
                 new Subs.Registrar(),
                 new Registrar(),
                 new Membership.Registrar());

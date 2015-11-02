@@ -36,6 +36,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -52,6 +53,7 @@
     <Compile Include="Commands\PostHandler.cs" />
     <Compile Include="Commands\PostModerationHandler.cs" />
     <Compile Include="Commands\StylesHandler.cs" />
+    <Compile Include="Commands\ThumbnailHandler.cs" />
     <Compile Include="Events\KudosUpdateEventHandler.cs" />
     <Compile Include="Events\UserMentionNotificationHandler.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
@@ -88,6 +90,10 @@
     <ProjectReference Include="..\..\Skimur.Markdown\Skimur.Markdown.csproj">
       <Project>{6e215bd9-7494-4c84-af04-5e700ce945b8}</Project>
       <Name>Skimur.Markdown</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\..\Skimur.Scraper\Skimur.Scraper.csproj">
+      <Project>{878CA67A-92A4-42D9-8D9D-2CDE99A0234D}</Project>
+      <Name>Skimur.Scraper</Name>
     </ProjectReference>
     <ProjectReference Include="..\..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>

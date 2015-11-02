@@ -68,6 +68,7 @@
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
+    <Reference Include="System.Drawing" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -82,6 +83,7 @@
     <Compile Include="MarkdownTests.cs" />
     <Compile Include="NsfwDetectionTests.cs" />
     <Compile Include="TestBase.cs" />
+    <Compile Include="ThumbnailTests.cs" />
     <Compile Include="UrlParserTests.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
@@ -137,6 +139,10 @@
     <ProjectReference Include="..\Skimur.Markdown\Skimur.Markdown.csproj">
       <Project>{6e215bd9-7494-4c84-af04-5e700ce945b8}</Project>
       <Name>Skimur.Markdown</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Skimur.Scraper\Skimur.Scraper.csproj">
+      <Project>{878ca67a-92a4-42d9-8d9d-2cde99a0234d}</Project>
+      <Name>Skimur.Scraper</Name>
     </ProjectReference>
     <ProjectReference Include="..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>

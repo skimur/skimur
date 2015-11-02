@@ -74,6 +74,8 @@ namespace Subs
 
         public bool Sticky { get; set; }
 
+        public string Thumb { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {

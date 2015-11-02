@@ -35,7 +35,8 @@ namespace MirroredContentSync
                     new Membership.Registrar(),
                     new Subs.Registrar(),
                     new Subs.Worker.Registrar(),
-                    new Skimur.Markdown.Registrar());
+                    new Skimur.Markdown.Registrar(),
+                    new Skimur.Scraper.Registrar());
 
                 _mirrorSettings = SkimurContext.Resolve<ISettingsProvider<MirrorSettings>>().Settings;
                 _subService = SkimurContext.Resolve<ISubService>();
