@@ -405,6 +405,7 @@
     <Content Include="Views\Users\_SideBar.cshtml" />
     <Content Include="Views\Users\_Sorting.cshtml" />
     <Content Include="Views\Posts\PostList.cshtml" />
+    <Content Include="Views\Embedded\Embedded.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />

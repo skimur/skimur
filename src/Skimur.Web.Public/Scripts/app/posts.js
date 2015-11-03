@@ -303,6 +303,32 @@
         });
     }
 
+    var expando = function(element) {
+        var $post = getPost(element);
+
+        var $expandoModal = $("#expando-modal");
+
+        if ($expandoModal.length === 0) {
+            $expandoModal = $("<div id='expando-modal' class='modal fade expando-modal'>" +
+                "<div class='modal-dialog'>" +
+                        "<div class='modal-content'>" +
+                            "<div class='modal-body'>" +
+                            "</div>" +
+                            "<div class='modal-footer'>" +
+                            "</div>" +
+                        "</div>" +
+                    "</div>" +
+                "</div>");
+            $expandoModal.appendTo($("body"));
+            $expandoModal.modal({ show: false });
+        }
+
+        var $content = $(".modal-body", $expandoModal).empty();
+        var $footer = $(".modal-footer", $expandoModal).empty();
+
+        $expandoModal.modal("show");
+    };
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -316,7 +342,8 @@
         startEdit: startEdit,
         delete: deletePost,
         toggleNsfw: toggleNsfw,
-        toggleSticky: toggleSticky
+        toggleSticky: toggleSticky,
+        expando: expando
     };
 
 })();

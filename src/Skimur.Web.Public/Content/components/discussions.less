@@ -71,6 +71,20 @@
             // posts of headings, comments/messages don't
             .disc-heading {
             }
+
+            .disc-expando {
+                .fa;
+                .fa-mixin-icon(play-circle);
+                float:left;
+                font-size:33px;
+                margin:0px 5px 5px 0px;
+                cursor:pointer;
+                color:lighten(@brand-primary, 20%);
+                &:hover, &:focus{
+                    color:@brand-primary;
+                }
+            }
+
             // some quick info about the message (author, time, points, etc)
             .disc-tagline {
                 font-size: @font-size-small;
