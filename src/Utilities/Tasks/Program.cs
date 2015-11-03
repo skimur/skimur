@@ -5,12 +5,14 @@ using System.Runtime.InteropServices;
 using System.Text;
 using System.Threading.Tasks;
 using Infrastructure.Data;
+using Infrastructure.Messaging;
 using Membership;
 using Membership.Services;
 using PowerArgs;
 using ServiceStack.OrmLite;
 using Skimur;
 using Subs;
+using Subs.Commands;
 using Subs.Services;
 
 namespace Tasks
@@ -222,6 +224,26 @@ namespace Tasks
                 connectionProvider.Perform(conn => conn.Delete<Message>(x => x.ParentId == message.ParentId || x.Id == message.ParentId));
 
             connectionProvider.Perform(conn => conn.Delete<Message>(x => x.Id == messageId));
+        }
+
+        [ArgActionMethod, ArgDescription("Update all post thumbnails")]
+        public void UpdateAllThumbnails()
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var commandBus = SkimurContext.Resolve<ICommandBus>();
+
+            var postIds = connectionProvider.Perform(
+                conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int)PostType.Link).Select(x => x.Id)).Select(x => x.Id));
+
+            foreach (
+                var postId in
+                    postIds)
+            {
+                commandBus.Send(new GenerateThumbnailForPost
+                {
+                    PostId = postId
+                });
+            }
         }
     }
 
