@@ -1,0 +1,234 @@
+Debug:MigrationEngine:Initialize database versioner 
+Debug:Version:Define global mappings 
+Debug:Version:Create mapper and table instances 
+Debug:MigrationEngine:Initialize executor 
+Debug:MigrationEngine:Execute migrations 
+Debug:Executor:Start executing migrations 
+Info:Executor:Database Schema version is : 1 
+Debug:Executor:Schema migration version 1 is less than database version 
+Info:Executor:Database Schema version is : 1 
+Info:Executor:Executing migration to version 2 
+Error:Executor:Cassandra.AlreadyExistsException: Table skimur.userkarma already exists
+   at Cassandra.Tasks.TaskHelper.WaitToComplete(Task task, Int32 timeout)
+   at Cassandra.Session.Execute(IStatement statement)
+   at Cassandra.Session.Execute(String cqlQuery)
+   at Migrations.Casandra._0002_KarmaActivity.Execute(ISession session) in D:\Git\Skimur\src\Infrastructure\Migrations\Casandra\_0002_KarmaActivity.cs:line 20
+   at Skimur.Cassandra.Migrations.Executor.Execute(Migration migration) in D:\Git\Skimur\src\Skimur\Cassandra\Migrations\Executor.cs:line 49 Cassandra.AlreadyExistsException: Table skimur.userkarma already exists
+   at Cassandra.Tasks.TaskHelper.WaitToComplete(Task task, Int32 timeout)
+   at Cassandra.Session.Execute(IStatement statement)
+   at Cassandra.Session.Execute(String cqlQuery)
+   at Migrations.Casandra._0002_KarmaActivity.Execute(ISession session) in D:\Git\Skimur\src\Infrastructure\Migrations\Casandra\_0002_KarmaActivity.cs:line 20
+   at Skimur.Cassandra.Migrations.Executor.Execute(Migration migration) in D:\Git\Skimur\src\Skimur\Cassandra\Migrations\Executor.cs:line 49
+Debug:MigrationEngine:Initialize database versioner 
+Debug:Version:Create mapper and table instances 
+Debug:MigrationEngine:Initialize executor 
+Debug:MigrationEngine:Execute migrations 
+Debug:Executor:Start executing migrations 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 1 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 2 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 3 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 4 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 5 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 6 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 7 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 8 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 9 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 10 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 11 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 12 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 13 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 14 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 15 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 16 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 17 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 18 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 19 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 20 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 21 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 22 is less than database version 
+Debug:BusLifetime:Registering command handler CreateSub with response CreateSubResponse 
+Debug:BusLifetime:Registering command handler EditSub with response EditSubResponse 
+Debug:BusLifetime:Registering command handler SubcribeToSub with response SubcribeToSubResponse 
+Debug:BusLifetime:Registering command handler UnSubcribeToSub with response UnSubcribeToSubResponse 
+Debug:BusLifetime:Registering command handler CreateComment with response CreateCommentResponse 
+Debug:BusLifetime:Registering command handler EditComment with response EditCommentResponse 
+Debug:BusLifetime:Registering command handler DeleteComment with response DeleteCommentResponse 
+Debug:BusLifetime:Registering command handler BanUserFromSub with response BanUserFromSubResponse 
+Debug:BusLifetime:Registering command handler UnBanUserFromSub with response UnBanUserFromSubResponse 
+Debug:BusLifetime:Registering command handler UpdateUserSubBan with response UpdateUserSubBanResponse 
+Debug:BusLifetime:Registering command handler ApprovePost with response ApprovePostResponse 
+Debug:BusLifetime:Registering command handler RemovePost with response RemovePostResponse 
+Debug:BusLifetime:Registering command handler SendMessage with response SendMessageResponse 
+Debug:BusLifetime:Registering command handler ReplyMessage with response ReplyMessageResponse 
+Debug:BusLifetime:Registering command handler RemoveModFromSub with response RemoveModFromSubResponse 
+Debug:BusLifetime:Registering command handler ChangeModPermissionsForSub with response ChangeModPermissionsForSubResponse 
+Debug:BusLifetime:Registering command handler AddUserModToSub with response AddUserModToSubResponse 
+Debug:BusLifetime:Registering command handler InviteModToSub with response InviteModToSubResponse 
+Debug:BusLifetime:Registering command handler AcceptModInvitation with response AcceptModInvitationResponse 
+Debug:BusLifetime:Registering command handler RemoveModInviteFromSub with response RemoveModInviteFromSubResponse 
+Debug:BusLifetime:Registering command handler ChangeModInvitePermissions with response ChangeModInvitePermissionsResponse 
+Debug:BusLifetime:Registering command handler CreatePost with response CreatePostResponse 
+Debug:BusLifetime:Registering command handler EditPostContent with response EditPostContentResponse 
+Debug:BusLifetime:Registering command handler DeletePost with response DeletePostResponse 
+Debug:BusLifetime:Registering command handler ToggleSticky with response ToggleStickyResponse 
+Debug:BusLifetime:Registering command handler EditSubStylesCommand with response EditSubStylesCommandResponse 
+Debug:BusLifetime:Registering command handler CastVoteForPost 
+Debug:BusLifetime:Registering command handler CastVoteForComment 
+Debug:BusLifetime:Registering command handler MarkMessagesAsRead 
+Debug:BusLifetime:Registering command handler MarkMessagesAsUnread 
+Debug:BusLifetime:Registering command handler ReportComment 
+Debug:BusLifetime:Registering command handler ReportPost 
+Debug:BusLifetime:Registering command handler ConfigureReportIgnoring 
+Debug:BusLifetime:Registering command handler ClearReports 
+Debug:BusLifetime:Registering command handler TogglePostNsfw 
+Debug:BusLifetime:Registering command handler GenerateThumbnailForPost 
+Debug:BusLifetime:Registering command handler SendEmail 
+Debug:BusLifetime:Registering event handler VoteForPostCasted 
+Debug:BusLifetime:Registering event handler VoteForCommentCasted 
+Debug:BusLifetime:Registering event handler VoteForPostCasted 
+Debug:BusLifetime:Registering event handler VoteForCommentCasted 
+Debug:BusLifetime:Registering event handler CommentCreated 
+Debug:BusLifetime:Registering event handler CommentDeleted 
+Debug:BusLifetime:Registering event handler UsersMentioned 
+Debug:BusLifetime:Registering event handler UsersUnmentioned 
+Debug:BusLifetime:Registering event handler SubScriptionChanged 
+Debug:BusLifetime:Starting RabbitMQ server 
+Debug:MigrationEngine:Initialize database versioner 
+Debug:Version:Define global mappings 
+Debug:Version:Create mapper and table instances 
+Debug:MigrationEngine:Initialize executor 
+Debug:MigrationEngine:Execute migrations 
+Debug:Executor:Start executing migrations 
+Info:Executor:Database Schema version is : 1 
+Debug:Executor:Schema migration version 1 is less than database version 
+Info:Executor:Database Schema version is : 1 
+Info:Executor:Executing migration to version 2 
+Error:Executor:Cassandra.AlreadyExistsException: Table skimur.userkarma already exists
+   at Cassandra.Tasks.TaskHelper.WaitToComplete(Task task, Int32 timeout)
+   at Cassandra.Session.Execute(IStatement statement)
+   at Cassandra.Session.Execute(String cqlQuery)
+   at Migrations.Casandra._0002_KarmaActivity.Execute(ISession session) in D:\Git\Skimur\src\Infrastructure\Migrations\Casandra\_0002_KarmaActivity.cs:line 20
+   at Skimur.Cassandra.Migrations.Executor.Execute(Migration migration) in D:\Git\Skimur\src\Skimur\Cassandra\Migrations\Executor.cs:line 49 Cassandra.AlreadyExistsException: Table skimur.userkarma already exists
+   at Cassandra.Tasks.TaskHelper.WaitToComplete(Task task, Int32 timeout)
+   at Cassandra.Session.Execute(IStatement statement)
+   at Cassandra.Session.Execute(String cqlQuery)
+   at Migrations.Casandra._0002_KarmaActivity.Execute(ISession session) in D:\Git\Skimur\src\Infrastructure\Migrations\Casandra\_0002_KarmaActivity.cs:line 20
+   at Skimur.Cassandra.Migrations.Executor.Execute(Migration migration) in D:\Git\Skimur\src\Skimur\Cassandra\Migrations\Executor.cs:line 49
+Debug:MigrationEngine:Initialize database versioner 
+Debug:Version:Create mapper and table instances 
+Debug:MigrationEngine:Initialize executor 
+Debug:MigrationEngine:Execute migrations 
+Debug:Executor:Start executing migrations 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 1 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 2 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 3 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 4 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 5 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 6 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 7 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 8 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 9 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 10 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 11 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 12 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 13 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 14 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 15 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 16 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 17 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 18 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 19 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 20 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 21 is less than database version 
+Info:Executor:Database Schema version is : 22 
+Debug:Executor:Schema migration version 22 is less than database version 
+Debug:BusLifetime:Registering command handler CreateSub with response CreateSubResponse 
+Debug:BusLifetime:Registering command handler EditSub with response EditSubResponse 
+Debug:BusLifetime:Registering command handler SubcribeToSub with response SubcribeToSubResponse 
+Debug:BusLifetime:Registering command handler UnSubcribeToSub with response UnSubcribeToSubResponse 
+Debug:BusLifetime:Registering command handler CreateComment with response CreateCommentResponse 
+Debug:BusLifetime:Registering command handler EditComment with response EditCommentResponse 
+Debug:BusLifetime:Registering command handler DeleteComment with response DeleteCommentResponse 
+Debug:BusLifetime:Registering command handler BanUserFromSub with response BanUserFromSubResponse 
+Debug:BusLifetime:Registering command handler UnBanUserFromSub with response UnBanUserFromSubResponse 
+Debug:BusLifetime:Registering command handler UpdateUserSubBan with response UpdateUserSubBanResponse 
+Debug:BusLifetime:Registering command handler ApprovePost with response ApprovePostResponse 
+Debug:BusLifetime:Registering command handler RemovePost with response RemovePostResponse 
+Debug:BusLifetime:Registering command handler SendMessage with response SendMessageResponse 
+Debug:BusLifetime:Registering command handler ReplyMessage with response ReplyMessageResponse 
+Debug:BusLifetime:Registering command handler RemoveModFromSub with response RemoveModFromSubResponse 
+Debug:BusLifetime:Registering command handler ChangeModPermissionsForSub with response ChangeModPermissionsForSubResponse 
+Debug:BusLifetime:Registering command handler AddUserModToSub with response AddUserModToSubResponse 
+Debug:BusLifetime:Registering command handler InviteModToSub with response InviteModToSubResponse 
+Debug:BusLifetime:Registering command handler AcceptModInvitation with response AcceptModInvitationResponse 
+Debug:BusLifetime:Registering command handler RemoveModInviteFromSub with response RemoveModInviteFromSubResponse 
+Debug:BusLifetime:Registering command handler ChangeModInvitePermissions with response ChangeModInvitePermissionsResponse 
+Debug:BusLifetime:Registering command handler CreatePost with response CreatePostResponse 
+Debug:BusLifetime:Registering command handler EditPostContent with response EditPostContentResponse 
+Debug:BusLifetime:Registering command handler DeletePost with response DeletePostResponse 
+Debug:BusLifetime:Registering command handler ToggleSticky with response ToggleStickyResponse 
+Debug:BusLifetime:Registering command handler EditSubStylesCommand with response EditSubStylesCommandResponse 
+Debug:BusLifetime:Registering command handler CastVoteForPost 
+Debug:BusLifetime:Registering command handler CastVoteForComment 
+Debug:BusLifetime:Registering command handler MarkMessagesAsRead 
+Debug:BusLifetime:Registering command handler MarkMessagesAsUnread 
+Debug:BusLifetime:Registering command handler ReportComment 
+Debug:BusLifetime:Registering command handler ReportPost 
+Debug:BusLifetime:Registering command handler ConfigureReportIgnoring 
+Debug:BusLifetime:Registering command handler ClearReports 
+Debug:BusLifetime:Registering command handler TogglePostNsfw 
+Debug:BusLifetime:Registering command handler GenerateThumbnailForPost 
+Debug:BusLifetime:Registering command handler SendEmail 
+Debug:BusLifetime:Registering event handler VoteForPostCasted 
+Debug:BusLifetime:Registering event handler VoteForCommentCasted 
+Debug:BusLifetime:Registering event handler VoteForPostCasted 
+Debug:BusLifetime:Registering event handler VoteForCommentCasted 
+Debug:BusLifetime:Registering event handler CommentCreated 
+Debug:BusLifetime:Registering event handler CommentDeleted 
+Debug:BusLifetime:Registering event handler UsersMentioned 
+Debug:BusLifetime:Registering event handler UsersUnmentioned 
+Debug:BusLifetime:Registering event handler SubScriptionChanged 
+Debug:BusLifetime:Starting RabbitMQ server 

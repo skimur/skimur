@@ -5,9 +5,6 @@ using System.Web.Optimization;
 using System.Web.Routing;
 using BundleTransformer.Core.Transformers;
 using FluentValidation.Mvc;
-using Infrastructure.Logging;
-using Infrastructure.Messaging;
-using Infrastructure.Settings;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin;
 using Microsoft.Owin.Security;
@@ -15,6 +12,9 @@ using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
 using SimpleInjector;
+using Skimur.Logging;
+using Skimur.Messaging;
+using Skimur.Settings;
 using Skimur.Web.Middleware;
 using Skimur.Web.Public;
 
@@ -49,18 +49,9 @@ namespace Skimur.Web.Public
 
         public void ConfigureContainer()
         {
-            SkimurContext.ContainerInitialized += Infrastructure.Cassandra.Migrations.Migrations.Run;
-            SkimurContext.ContainerInitialized += Infrastructure.Postgres.Migrations.Migrations.Run;
-            SkimurContext.Initialize(new Infrastructure.Registrar(),
-                new Infrastructure.Settings.Registrar(),
-                new Infrastructure.Caching.Registrar(),
-                new Infrastructure.Email.Registrar(),
-                new Infrastructure.Messaging.Registrar(),
-                new Infrastructure.Messaging.RabbitMQ.Registrar(),
-                new Infrastructure.Cassandra.Registrar(),
-                new Infrastructure.Postgres.Registrar(),
-                new Infrastructure.Logging.Registrar(),
-                new Registrar(),
+            SkimurContext.ContainerInitialized += Cassandra.Migrations.Migrations.Run;
+            SkimurContext.ContainerInitialized += Postgres.Migrations.Migrations.Run;
+            SkimurContext.Initialize(new Registrar(),
                 new Markdown.Registrar(),
                 new Scraper.Registrar(),
                 new Subs.Registrar(),

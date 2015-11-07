@@ -3,8 +3,8 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.Messaging.Handling;
 using Membership.Services;
+using Skimur.Messaging.Handling;
 using Subs.Events;
 using Subs.Services;
 

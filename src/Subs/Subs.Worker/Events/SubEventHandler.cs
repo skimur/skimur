@@ -1,4 +1,4 @@
-﻿using Infrastructure.Messaging.Handling;
+﻿using Skimur.Messaging.Handling;
 using Subs.Events;
 using Subs.Services;
 

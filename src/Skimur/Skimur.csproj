@@ -33,13 +33,71 @@
     <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
+    <Reference Include="Cassandra, Version=2.7.0.0, Culture=neutral, PublicKeyToken=10b231fbfc8c4b4d, processorArchitecture=MSIL">
+      <HintPath>..\packages\CassandraCSharpDriver.2.7.2\lib\net40\Cassandra.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="LZ4, Version=1.0.9.93, Culture=neutral, PublicKeyToken=62e1b5ec1eec9bdd, processorArchitecture=MSIL">
+      <HintPath>..\packages\lz4net.1.0.9.93\lib\net4-client\LZ4.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
+      <HintPath>..\packages\NLog.4.2.0\lib\net45\NLog.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="Npgsql, Version=3.0.3.0, Culture=neutral, PublicKeyToken=5d8b90d52f46fda7, processorArchitecture=MSIL">
+      <HintPath>..\packages\Npgsql.3.0.3\lib\net45\Npgsql.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="RabbitMQ.Client, Version=3.5.6.0, Culture=neutral, PublicKeyToken=89e7d7c5feba84ce, processorArchitecture=MSIL">
+      <HintPath>..\packages\RabbitMQ.Client.3.5.6\lib\net40\RabbitMQ.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.4.0.46\lib\net40\ServiceStack.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Client, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Client.4.0.46\lib\net40\ServiceStack.Client.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Common, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Common.4.0.46\lib\net40\ServiceStack.Common.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Interfaces, Version=4.0.0.0, Culture=neutral, PublicKeyToken=e06fbc6124f57c43, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Interfaces.4.0.46\lib\portable-wp80+sl5+net40+win8+monotouch+monoandroid+xamarin.ios10\ServiceStack.Interfaces.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.4.0.46\lib\net45\ServiceStack.OrmLite.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.OrmLite.PostgreSQL, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.OrmLite.PostgreSQL.4.0.46\lib\net40\ServiceStack.OrmLite.PostgreSQL.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.RabbitMq, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.RabbitMq.4.0.46\lib\net40\ServiceStack.RabbitMq.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Redis, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Redis.4.0.46\lib\net40\ServiceStack.Redis.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
+    <Reference Include="ServiceStack.Text, Version=4.0.46.0, Culture=neutral, processorArchitecture=MSIL">
+      <HintPath>..\packages\ServiceStack.Text.4.0.46\lib\net40\ServiceStack.Text.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="SimpleInjector, Version=3.0.5.0, Culture=neutral, PublicKeyToken=984cb50dea722e99, processorArchitecture=MSIL">
       <HintPath>..\packages\SimpleInjector.3.0.5\lib\net45\SimpleInjector.dll</HintPath>
       <Private>True</Private>
     </Reference>
     <Reference Include="System" />
+    <Reference Include="System.Configuration" />
     <Reference Include="System.Core" />
     <Reference Include="System.Drawing" />
+    <Reference Include="System.Web" />
     <Reference Include="System.Xml.Linq" />
     <Reference Include="System.Data.DataSetExtensions" />
     <Reference Include="Microsoft.CSharp" />
@@ -50,19 +108,90 @@
     <Compile Include="..\GlobalAssemblyInfo.cs">
       <Link>GlobalAssemblyInfo.cs</Link>
     </Compile>
+    <Compile Include="Caching\Cache.cs" />
+    <Compile Include="Caching\CacheTime.cs" />
+    <Compile Include="Caching\ICache.cs" />
+    <Compile Include="Cassandra\CassandraConnectionStringProvider.cs" />
+    <Compile Include="Cassandra\ICassandraConnectionStringProvider.cs" />
+    <Compile Include="Cassandra\Migrations\DB\DatabaseVersion.cs" />
+    <Compile Include="Cassandra\Migrations\DB\IVersioner.cs" />
+    <Compile Include="Cassandra\Migrations\DB\PocoMapper.cs" />
+    <Compile Include="Cassandra\Migrations\DB\Versioner.cs" />
+    <Compile Include="Cassandra\Migrations\Executor.cs" />
+    <Compile Include="Cassandra\Migrations\IMigrationEngine.cs" />
+    <Compile Include="Cassandra\Migrations\IMigrationResourceFinder.cs" />
+    <Compile Include="Cassandra\Migrations\Migration.cs" />
+    <Compile Include="Cassandra\Migrations\MigrationEngine.cs" />
+    <Compile Include="Cassandra\Migrations\MigrationResourceFinder.cs" />
+    <Compile Include="Cassandra\Migrations\MigrationResources.cs" />
+    <Compile Include="Cassandra\Migrations\Migrations.cs" />
+    <Compile Include="Cassandra\Migrations\MigrationType.cs" />
     <Compile Include="ColorPallete.cs" />
     <Compile Include="CommentExtensions.cs" />
     <Compile Include="Common.cs" />
+    <Compile Include="Data\ConnectionStringProvider.cs" />
+    <Compile Include="Data\IConnectionStringProvider.cs" />
+    <Compile Include="Data\IDbConnectionProvider.cs" />
+    <Compile Include="Data\SqlConnectionProvider.cs" />
+    <Compile Include="Email\EmailSender.cs" />
+    <Compile Include="Email\EmailServerSettings.cs" />
+    <Compile Include="Email\IEmailSender.cs" />
+    <Compile Include="FileSystem\IFileSystem.cs" />
+    <Compile Include="FileSystem\LocalFileSystem.cs" />
+    <Compile Include="IMapper.cs" />
+    <Compile Include="IPathResolver.cs" />
     <Compile Include="IRegistrar.cs" />
+    <Compile Include="ISettings.cs" />
+    <Compile Include="Logging\ILogger.cs" />
+    <Compile Include="Logging\Logger.cs" />
+    <Compile Include="Mapper.cs" />
+    <Compile Include="Messaging\Handling\CommandDiscovery.cs" />
+    <Compile Include="Messaging\Handling\EventDiscovery.cs" />
+    <Compile Include="Messaging\Handling\ICommandDiscovery.cs" />
+    <Compile Include="Messaging\Handling\ICommandHandler.cs" />
+    <Compile Include="Messaging\Handling\ICommandRegistrar.cs" />
+    <Compile Include="Messaging\Handling\IEventDiscovery.cs" />
+    <Compile Include="Messaging\Handling\IEventHandler.cs" />
+    <Compile Include="Messaging\Handling\IEventRegistrar.cs" />
+    <Compile Include="Messaging\IBusLifetime.cs" />
+    <Compile Include="Messaging\ICommand.cs" />
+    <Compile Include="Messaging\ICommandBus.cs" />
+    <Compile Include="Messaging\ICommandReturns.cs" />
+    <Compile Include="Messaging\IEvent.cs" />
+    <Compile Include="Messaging\IEventBus.cs" />
+    <Compile Include="Messaging\IEventPublisher.cs" />
+    <Compile Include="Messaging\RabbitMQ\BusLifetime.cs" />
+    <Compile Include="Messaging\RabbitMQ\CommandBus.cs" />
+    <Compile Include="Messaging\RabbitMQ\EventBus.cs" />
+    <Compile Include="PathResolver.cs" />
+    <Compile Include="Postgres\Migrations\DB\DatabaseVersion.cs" />
+    <Compile Include="Postgres\Migrations\DB\IVersioner.cs" />
+    <Compile Include="Postgres\Migrations\DB\Versioner.cs" />
+    <Compile Include="Postgres\Migrations\Executor.cs" />
+    <Compile Include="Postgres\Migrations\IMigrationEngine.cs" />
+    <Compile Include="Postgres\Migrations\IMigrationResourceFinder.cs" />
+    <Compile Include="Postgres\Migrations\Migration.cs" />
+    <Compile Include="Postgres\Migrations\MigrationEngine.cs" />
+    <Compile Include="Postgres\Migrations\MigrationResourceFinder.cs" />
+    <Compile Include="Postgres\Migrations\MigrationResources.cs" />
+    <Compile Include="Postgres\Migrations\Migrations.cs" />
+    <Compile Include="Postgres\Migrations\MigrationType.cs" />
     <Compile Include="PriorityQueue\PriorityQueue.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
     <Compile Include="SeekedList.cs" />
+    <Compile Include="Settings\ISettingsProvider.cs" />
+    <Compile Include="Settings\JsonFileSettingsProvider.cs" />
     <Compile Include="SkimurContext.cs" />
     <Compile Include="TimeHelper.cs" />
     <Compile Include="UrlParser.cs" />
+    <Compile Include="Utils\GuidUtil.cs" />
   </ItemGroup>
   <ItemGroup>
+    <None Include="app.config" />
     <None Include="packages.config" />
+  </ItemGroup>
+  <ItemGroup>
+    <Folder Include="Email\Data\" />
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />
   <!-- To modify your build process, add your task inside one of the targets below and uncomment it. 

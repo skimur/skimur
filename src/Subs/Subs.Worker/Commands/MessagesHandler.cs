@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using Infrastructure.Logging;
-using Infrastructure.Messaging.Handling;
-using Infrastructure.Utils;
 using Membership;
 using Membership.Services;
 using Skimur;
+using Skimur.Logging;
 using Skimur.Markdown;
+using Skimur.Messaging.Handling;
+using Skimur.Utils;
 using Subs.Commands;
 using Subs.ReadModel;
 using Subs.Services;

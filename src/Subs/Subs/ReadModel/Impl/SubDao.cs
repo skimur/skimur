@@ -1,5 +1,5 @@
-﻿using Infrastructure;
-using Infrastructure.Data;
+﻿using Skimur;
+using Skimur.Data;
 using Subs.Services;
 using Subs.Services.Impl;
 

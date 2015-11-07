@@ -31,7 +31,7 @@ namespace Skimur
             {
                 uri = new Uri(url);
             }
-            catch (Exception ex)
+            catch (Exception)
             {
                 return false;
             }

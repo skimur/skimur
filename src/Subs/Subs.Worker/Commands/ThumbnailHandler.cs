@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Drawing;
-using Infrastructure.FileSystem;
-using Infrastructure.Logging;
-using Infrastructure.Messaging.Handling;
+using Skimur.Logging;
+using Skimur.Messaging.Handling;
 using Skimur.Scraper;
 using Subs.Commands;
 using Subs.Services;

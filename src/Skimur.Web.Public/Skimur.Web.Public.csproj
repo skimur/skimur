@@ -496,46 +496,6 @@
       <Project>{61e7e1a8-0b14-4892-968a-5ed2f6b02366}</Project>
       <Name>Emails.Handlers</Name>
     </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
-      <Project>{9aef4e4b-8584-4a15-91a2-9bdb05a4ec1a}</Project>
-      <Name>Infrastructure.Caching</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Cassandra\Infrastructure.Cassandra.csproj">
-      <Project>{85e9da82-e70c-48d6-b95e-37343a0a2349}</Project>
-      <Name>Infrastructure.Cassandra</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Email\Infrastructure.Email.csproj">
-      <Project>{09714176-2e5c-4343-ae4f-92703a570eae}</Project>
-      <Name>Infrastructure.Email</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj">
-      <Project>{bbe64678-393a-46e3-996f-99314feb68ee}</Project>
-      <Name>Infrastructure.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Messaging.RabbitMQ\Infrastructure.Messaging.RabbitMQ.csproj">
-      <Project>{b140c823-507a-4cbb-bba0-d120a942caf1}</Project>
-      <Name>Infrastructure.Messaging.RabbitMQ</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
-      <Project>{C6B0B972-C670-44C4-8B32-73F1F60446D3}</Project>
-      <Name>Infrastructure.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Postgres\Infrastructure.Postgres.csproj">
-      <Project>{5183bfb2-2537-465c-b89d-e407b8ee8f13}</Project>
-      <Name>Infrastructure.Postgres</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Settings\Infrastructure.Settings.csproj">
-      <Project>{88f01eb4-4319-43db-ac7c-7f79be5b15df}</Project>
-      <Name>Infrastructure.Settings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure\Infrastructure.csproj">
-      <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
-      <Name>Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Migrations\Migrations.csproj">
-      <Project>{dda1dcba-4ee4-4d86-9748-02dd9ef1767d}</Project>
-      <Name>Migrations</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Membership\Membership\Membership.csproj">
       <Project>{64ac9cb0-b80b-449a-9c75-fe45f8745fdf}</Project>
       <Name>Membership</Name>
@@ -563,6 +523,10 @@
     <ProjectReference Include="..\Skimur\Skimur.csproj">
       <Project>{82db3086-36ce-4b0b-b374-426d891e2e16}</Project>
       <Name>Skimur</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Migrations\Migrations.csproj">
+      <Project>{dda1dcba-4ee4-4d86-9748-02dd9ef1767d}</Project>
+      <Name>Migrations</Name>
     </ProjectReference>
   </ItemGroup>
   <PropertyGroup>

@@ -5,8 +5,6 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web.Mvc;
 using Infrastructure;
-using Infrastructure.FileSystem;
-using Infrastructure.Settings;
 using Skimur.Web.Mvc;
 using Skimur.Web.Services;
 using Subs.Services;

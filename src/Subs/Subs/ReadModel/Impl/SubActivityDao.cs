@@ -1,12 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using Cassandra;
 using Infrastructure.Caching;
-using Infrastructure.Settings;
 using Skimur;
+using Skimur.Settings;
 using Subs.Services.Impl;
 
 namespace Subs.ReadModel.Impl

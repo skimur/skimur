@@ -9,7 +9,7 @@ using ServiceStack.DataAnnotations;
 namespace Subs
 {
     [Alias("SubUserBans")]
-    public class SubUserBan : IAggregateRoot
+    public class SubUserBan
     {
         public Guid Id { get; set; }
 

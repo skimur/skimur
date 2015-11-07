@@ -1,11 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using System.Web.Mvc;
-using Infrastructure.Logging;
-using Infrastructure.Messaging;
+using Skimur.Logging;
+using Skimur.Messaging;
 using Skimur.Web.Models;
 using Skimur.Web.Mvc;
 using Subs;

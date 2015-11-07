@@ -9,7 +9,7 @@ using ServiceStack.DataAnnotations;
 namespace Subs
 {
     [Alias("Comments")]
-    public class Comment : IAggregateRoot
+    public class Comment
     {
         /// <summary>
         /// The id of this message

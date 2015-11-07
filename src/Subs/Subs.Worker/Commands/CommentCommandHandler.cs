@@ -2,13 +2,13 @@
 using System.Collections.Generic;
 using System.Diagnostics;
 using System.Linq;
-using Infrastructure.Logging;
-using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
-using Infrastructure.Utils;
 using Membership.Services;
 using Skimur;
+using Skimur.Logging;
 using Skimur.Markdown;
+using Skimur.Messaging;
+using Skimur.Messaging.Handling;
+using Skimur.Utils;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;

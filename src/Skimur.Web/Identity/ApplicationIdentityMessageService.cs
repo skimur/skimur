@@ -1,8 +1,7 @@
 ﻿using System.Threading.Tasks;
 using Emails.Commands;
-using Infrastructure.Email;
-using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
+using Skimur.Messaging;
 
 namespace Skimur.Web.Identity
 {

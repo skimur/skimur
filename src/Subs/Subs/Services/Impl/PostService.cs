@@ -2,9 +2,9 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Infrastructure.Data;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
 using Subs.ReadModel;
 
 namespace Subs.Services.Impl

@@ -1,7 +1,7 @@
 ﻿using System;
-using Infrastructure.Logging;
-using Infrastructure.Messaging.Handling;
 using Membership.Services;
+using Skimur.Logging;
+using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.Services;
 

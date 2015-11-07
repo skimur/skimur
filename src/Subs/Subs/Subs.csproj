@@ -216,34 +216,6 @@
     <Compile Include="Vote.cs" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
-      <Project>{9AEF4E4B-8584-4A15-91A2-9BDB05A4EC1A}</Project>
-      <Name>Infrastructure.Caching</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Cassandra\Infrastructure.Cassandra.csproj">
-      <Project>{85e9da82-e70c-48d6-b95e-37343a0a2349}</Project>
-      <Name>Infrastructure.Cassandra</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj">
-      <Project>{BBE64678-393A-46E3-996F-99314FEB68EE}</Project>
-      <Name>Infrastructure.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
-      <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>
-      <Name>Infrastructure.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Postgres\Infrastructure.Postgres.csproj">
-      <Project>{5183bfb2-2537-465c-b89d-e407b8ee8f13}</Project>
-      <Name>Infrastructure.Postgres</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure.Settings\Infrastructure.Settings.csproj">
-      <Project>{88F01EB4-4319-43DB-AC7C-7F79BE5B15DF}</Project>
-      <Name>Infrastructure.Settings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\..\Infrastructure\Infrastructure\Infrastructure.csproj">
-      <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
-      <Name>Infrastructure</Name>
-    </ProjectReference>
     <ProjectReference Include="..\..\Membership\Membership\Membership.csproj">
       <Project>{64ac9cb0-b80b-449a-9c75-fe45f8745fdf}</Project>
       <Name>Membership</Name>

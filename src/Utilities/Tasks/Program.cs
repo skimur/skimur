@@ -1,16 +1,13 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Data;
-using Infrastructure.Messaging;
 using Membership;
 using Membership.Services;
 using PowerArgs;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
+using Skimur.Messaging;
 using Subs;
 using Subs.Commands;
 using Subs.Services;
@@ -21,18 +18,9 @@ namespace Tasks
     {
         static void Main(string[] args)
         {
-            SkimurContext.ContainerInitialized += Infrastructure.Cassandra.Migrations.Migrations.Run;
-            SkimurContext.ContainerInitialized += Infrastructure.Postgres.Migrations.Migrations.Run;
-            SkimurContext.Initialize(new Infrastructure.Registrar(),
-                new Infrastructure.Settings.Registrar(),
-                new Infrastructure.Caching.Registrar(),
-                new Infrastructure.Email.Registrar(),
-                new Infrastructure.Messaging.Registrar(),
-                new Infrastructure.Messaging.RabbitMQ.Registrar(),
-                new Infrastructure.Cassandra.Registrar(),
-                new Infrastructure.Postgres.Registrar(),
-                new Infrastructure.Logging.Registrar(),
-                new Skimur.Markdown.Registrar(),
+            SkimurContext.ContainerInitialized += Skimur.Cassandra.Migrations.Migrations.Run;
+            SkimurContext.ContainerInitialized += Skimur.Postgres.Migrations.Migrations.Run;
+            SkimurContext.Initialize(new Skimur.Markdown.Registrar(),
                 new Subs.Registrar(),
                 new Membership.Registrar());
 

@@ -1,11 +1,10 @@
 ﻿using System;
 using System.Web.Mvc;
-using Infrastructure;
-using Infrastructure.FileSystem;
-using Infrastructure.Settings;
 using Microsoft.AspNet.Identity;
 using SimpleInjector;
 using SimpleInjector.Integration.Web.Mvc;
+using Skimur.FileSystem;
+using Skimur.Settings;
 using Skimur.Web.Avatar;
 using Skimur.Web.Identity;
 using Skimur.Web.Services;

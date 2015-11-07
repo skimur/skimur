@@ -1,10 +1,6 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure;
+﻿using System.Collections.Generic;
 using RedditSharp.Things;
+using Skimur;
 
 namespace MirroredContentSync.Settings
 {

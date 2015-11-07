@@ -2,10 +2,10 @@
 using System.Linq;
 using System.Threading.Tasks;
 using System.Web.Mvc;
-using Infrastructure.Messaging;
 using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Identity.Owin;
 using Microsoft.Owin.Security;
+using Skimur.Messaging;
 using Skimur.Web.Identity;
 using Skimur.Web.Models;
 using Skimur.Web.Mvc;
