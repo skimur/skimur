@@ -77,6 +77,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Tasks", "Utilities\Tasks\Ta
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skimur.Scraper", "Skimur.Scraper\Skimur.Scraper.csproj", "{878CA67A-92A4-42D9-8D9D-2CDE99A0234D}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "Skimur.Embed", "Skimur.Embed\Skimur.Embed.csproj", "{C930E03E-71E9-4611-8DCB-B0E3CF77FFD5}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -199,6 +201,10 @@ Global
 		{878CA67A-92A4-42D9-8D9D-2CDE99A0234D}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{878CA67A-92A4-42D9-8D9D-2CDE99A0234D}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{878CA67A-92A4-42D9-8D9D-2CDE99A0234D}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C930E03E-71E9-4611-8DCB-B0E3CF77FFD5}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C930E03E-71E9-4611-8DCB-B0E3CF77FFD5}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C930E03E-71E9-4611-8DCB-B0E3CF77FFD5}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C930E03E-71E9-4611-8DCB-B0E3CF77FFD5}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

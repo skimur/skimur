@@ -326,6 +326,8 @@
         var $content = $(".modal-body", $expandoModal).empty();
         var $footer = $(".modal-footer", $expandoModal).empty();
 
+        $("<iframe />").attr("src", "http://localhost:45191/").appendTo($content);
+
         $expandoModal.modal("show");
     };
 
