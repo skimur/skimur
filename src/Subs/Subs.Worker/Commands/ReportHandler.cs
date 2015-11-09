@@ -1,6 +1,6 @@
 ﻿using System.Linq;
-using Infrastructure.Messaging.Handling;
 using Membership.Services;
+using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.Services;
 

@@ -1,13 +1,7 @@
-﻿using NUnit.Framework;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Security.Policy;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Data;
+﻿using System.Collections.Generic;
 using ServiceStack.DataAnnotations;
 using ServiceStack.OrmLite;
+using Skimur.Data;
 
 namespace Skimur.Tests
 {
@@ -30,8 +24,8 @@ namespace Skimur.Tests
         {
             base.Setup();
 
-            Infrastructure.Cassandra.Migrations.Migrations.Run(_container);
-            Infrastructure.Postgres.Migrations.Migrations.Run(_container);
+            Skimur.Cassandra.Migrations.Migrations.Run(_container);
+            Skimur.Postgres.Migrations.Migrations.Run(_container);
 
             _conn = _container.GetInstance<IDbConnectionProvider>();
             _conn.Perform(conn =>
@@ -47,15 +41,6 @@ namespace Skimur.Tests
 
             result.AddRange(new List<IRegistrar>
             {
-                new Infrastructure.Registrar(),
-                new Infrastructure.Settings.Registrar(),
-                new Infrastructure.Caching.Registrar(),
-                new Infrastructure.Email.Registrar(),
-                new Infrastructure.Messaging.Registrar(),
-                new Infrastructure.Messaging.RabbitMQ.Registrar(),
-                new Infrastructure.Cassandra.Registrar(),
-                new Infrastructure.Postgres.Registrar(),
-                new Infrastructure.Logging.Registrar(),
                 new Markdown.Registrar(),
                 new Scraper.Registrar(),
                 new Subs.Registrar(),

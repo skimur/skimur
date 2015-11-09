@@ -1,8 +1,8 @@
 ﻿using System;
-using Infrastructure.Data;
-using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
+using Skimur.Utils;
 
 namespace Subs.Services.Impl
 {

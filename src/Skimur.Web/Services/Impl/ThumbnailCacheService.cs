@@ -1,14 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Configuration;
 using ImageResizer;
-using Infrastructure;
-using Infrastructure.Settings;
+using Skimur.Settings;
 using Subs.Services;
 
 namespace Skimur.Web.Services.Impl

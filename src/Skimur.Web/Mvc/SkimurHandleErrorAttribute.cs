@@ -7,7 +7,7 @@ using System.Text;
 using System.Threading.Tasks;
 using System.Web;
 using System.Web.Mvc;
-using Infrastructure.Logging;
+using Skimur.Logging;
 using static System.String;
 
 namespace Skimur.Web.Mvc

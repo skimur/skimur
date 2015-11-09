@@ -5,9 +5,9 @@ using System.Text;
 using System.Threading.Tasks;
 using Emails.Commands;
 using Emails.Handlers.Commands;
-using Infrastructure.Messaging.Handling;
 using SimpleInjector;
 using Skimur;
+using Skimur.Messaging.Handling;
 
 namespace Emails.Handlers
 {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
-using Infrastructure.Settings;
-using Infrastructure.Utils;
 using Membership.Services;
 using Skimur;
 using Skimur.Markdown;
+using Skimur.Messaging;
+using Skimur.Messaging.Handling;
+using Skimur.Settings;
+using Skimur.Utils;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;

@@ -1,10 +1,5 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
+using Skimur.Messaging;
 
 namespace Subs.Commands
 {

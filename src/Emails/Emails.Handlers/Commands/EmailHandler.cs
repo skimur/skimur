@@ -4,9 +4,9 @@ using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
 using Emails.Commands;
-using Infrastructure.Email;
-using Infrastructure.Messaging.Handling;
-using Infrastructure.Settings;
+using Skimur.Email;
+using Skimur.Messaging.Handling;
+using Skimur.Settings;
 
 namespace Emails.Handlers.Commands
 {

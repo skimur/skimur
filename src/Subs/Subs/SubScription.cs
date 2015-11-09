@@ -9,7 +9,7 @@ using ServiceStack.DataAnnotations;
 namespace Subs
 {
     [Alias("SubScriptions")]
-    public class SubScription : IAggregateRoot
+    public class SubScription
     {
         public virtual Guid Id { get; set; }
 

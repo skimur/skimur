@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Linq;
 using Cassandra;
-using Infrastructure.Settings;
+using Skimur.Settings;
 
 namespace Subs.Services.Impl
 {

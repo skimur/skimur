@@ -1,6 +1,6 @@
-﻿using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
-using Membership.Services;
+﻿using Membership.Services;
+using Skimur.Messaging;
+using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;

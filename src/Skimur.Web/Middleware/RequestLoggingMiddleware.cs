@@ -3,9 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.Logging;
-using Infrastructure.Settings;
 using Microsoft.Owin;
+using Skimur.Logging;
+using Skimur.Settings;
 
 namespace Skimur.Web.Middleware
 {

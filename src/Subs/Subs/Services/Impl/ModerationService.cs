@@ -1,13 +1,11 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Data;
-using Infrastructure.Utils;
 using Membership;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
+using Skimur.Utils;
 
 namespace Subs.Services.Impl
 {

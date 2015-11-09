@@ -3,10 +3,9 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
 using SimpleInjector;
 using Skimur;
+using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Worker.Commands;
@@ -64,6 +63,8 @@ namespace Subs.Worker
             container.Register<ICommandHandlerResponse<EditSubStylesCommand, EditSubStylesCommandResponse>, StylesHandler>();
 
             container.Register<ICommandHandler<GenerateThumbnailForPost>, ThumbnailHandler>();
+
+            container.Register<ICommandHandler<GenerateEmbeddedMediaObject>, EmbededHandler>();
 
             container.Register<KudosUpdateEventHandler>();
             container.Register<ScoringAndSortingEventHandler>();

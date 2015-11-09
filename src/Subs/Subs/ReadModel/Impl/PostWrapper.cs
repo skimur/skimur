@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using Membership;
 using Membership.Services;
+using Newtonsoft.Json;
 
 namespace Subs.ReadModel.Impl
 {

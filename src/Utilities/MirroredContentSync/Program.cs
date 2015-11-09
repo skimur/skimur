@@ -1,16 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Linq;
-using System.Net;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
-using Infrastructure.Settings;
 using Membership.Services;
 using MirroredContentSync.Settings;
 using RedditSharp;
 using Skimur;
+using Skimur.Messaging.Handling;
+using Skimur.Settings;
 using Subs;
 using Subs.Commands;
 using Subs.Services;
@@ -28,11 +23,7 @@ namespace MirroredContentSync
         {
             try
             {
-                SkimurContext.Initialize(new Infrastructure.Registrar(),
-                    new Infrastructure.Settings.Registrar(),
-                    new Infrastructure.Messaging.RabbitMQ.Registrar(),
-                    new Infrastructure.Logging.Registrar(),
-                    new Membership.Registrar(),
+                SkimurContext.Initialize(new Membership.Registrar(),
                     new Subs.Registrar(),
                     new Subs.Worker.Registrar(),
                     new Skimur.Markdown.Registrar(),

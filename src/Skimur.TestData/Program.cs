@@ -1,13 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
 using Membership.Services;
-using Newtonsoft.Json.Linq;
 using RedditSharp;
+using Skimur.Messaging;
+using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.ReadModel;
 using Post = RedditSharp.Things.Post;
@@ -20,18 +17,9 @@ namespace Skimur.TestData
 
         static void Main(string[] args)
         {
-            SkimurContext.ContainerInitialized += Infrastructure.Cassandra.Migrations.Migrations.Run;
-            SkimurContext.ContainerInitialized += Infrastructure.Postgres.Migrations.Migrations.Run;
-            SkimurContext.Initialize(new Infrastructure.Registrar(),
-                new Infrastructure.Settings.Registrar(),
-                new Infrastructure.Caching.Registrar(),
-                new Infrastructure.Email.Registrar(),
-                new Infrastructure.Messaging.Registrar(),
-                new Infrastructure.Messaging.RabbitMQ.Registrar(),
-                new Infrastructure.Cassandra.Registrar(),
-                new Infrastructure.Postgres.Registrar(),
-                new Infrastructure.Logging.Registrar(),
-                new Skimur.Markdown.Registrar(),
+            SkimurContext.ContainerInitialized += Skimur.Cassandra.Migrations.Migrations.Run;
+            SkimurContext.ContainerInitialized += Skimur.Postgres.Migrations.Migrations.Run;
+            SkimurContext.Initialize(new Skimur.Markdown.Registrar(),
                 new Skimur.Scraper.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),

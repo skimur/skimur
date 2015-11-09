@@ -1,5 +1,5 @@
-﻿using Infrastructure.Messaging;
-using Infrastructure.Messaging.Handling;
+﻿using Skimur.Messaging;
+using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;

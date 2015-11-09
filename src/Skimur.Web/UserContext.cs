@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Web;
-using Infrastructure.Utils;
 using Membership;
 using Membership.Services;
 using Microsoft.AspNet.Identity;
 using Microsoft.Owin.Security;
+using Skimur.Utils;
 
 namespace Skimur.Web
 {

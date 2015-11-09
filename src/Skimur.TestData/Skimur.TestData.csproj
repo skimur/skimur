@@ -69,46 +69,6 @@
     <None Include="packages.config" />
   </ItemGroup>
   <ItemGroup>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Caching\Infrastructure.Caching.csproj">
-      <Project>{9aef4e4b-8584-4a15-91a2-9bdb05a4ec1a}</Project>
-      <Name>Infrastructure.Caching</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Cassandra\Infrastructure.Cassandra.csproj">
-      <Project>{85e9da82-e70c-48d6-b95e-37343a0a2349}</Project>
-      <Name>Infrastructure.Cassandra</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Email\Infrastructure.Email.csproj">
-      <Project>{09714176-2e5c-4343-ae4f-92703a570eae}</Project>
-      <Name>Infrastructure.Email</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Logging\Infrastructure.Logging.csproj">
-      <Project>{bbe64678-393a-46e3-996f-99314feb68ee}</Project>
-      <Name>Infrastructure.Logging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Messaging.RabbitMQ\Infrastructure.Messaging.RabbitMQ.csproj">
-      <Project>{b140c823-507a-4cbb-bba0-d120a942caf1}</Project>
-      <Name>Infrastructure.Messaging.RabbitMQ</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Messaging\Infrastructure.Messaging.csproj">
-      <Project>{c6b0b972-c670-44c4-8b32-73f1f60446d3}</Project>
-      <Name>Infrastructure.Messaging</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Postgres\Infrastructure.Postgres.csproj">
-      <Project>{5183bfb2-2537-465c-b89d-e407b8ee8f13}</Project>
-      <Name>Infrastructure.Postgres</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure.Settings\Infrastructure.Settings.csproj">
-      <Project>{88f01eb4-4319-43db-ac7c-7f79be5b15df}</Project>
-      <Name>Infrastructure.Settings</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Infrastructure\Infrastructure.csproj">
-      <Project>{96b29923-9a5b-4e16-a88a-e9a9fbf2acb8}</Project>
-      <Name>Infrastructure</Name>
-    </ProjectReference>
-    <ProjectReference Include="..\Infrastructure\Migrations\Migrations.csproj">
-      <Project>{dda1dcba-4ee4-4d86-9748-02dd9ef1767d}</Project>
-      <Name>Migrations</Name>
-    </ProjectReference>
     <ProjectReference Include="..\Membership\Membership\Membership.csproj">
       <Project>{64ac9cb0-b80b-449a-9c75-fe45f8745fdf}</Project>
       <Name>Membership</Name>
@@ -132,6 +92,10 @@
     <ProjectReference Include="..\Subs\Subs\Subs.csproj">
       <Project>{8566e066-9b0f-4e7b-97a0-a2d40978de26}</Project>
       <Name>Subs</Name>
+    </ProjectReference>
+    <ProjectReference Include="..\Utilities\Migrations\Migrations.csproj">
+      <Project>{dda1dcba-4ee4-4d86-9748-02dd9ef1767d}</Project>
+      <Name>Migrations</Name>
     </ProjectReference>
   </ItemGroup>
   <Import Project="$(MSBuildToolsPath)\Microsoft.CSharp.targets" />

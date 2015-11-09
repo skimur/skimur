@@ -304,7 +304,12 @@
     }
 
     var expando = function(element) {
+
         var $post = getPost(element);
+
+        debugger;
+        var media = $post.data("media");
+
 
         var $expandoModal = $("#expando-modal");
 
@@ -325,6 +330,8 @@
 
         var $content = $(".modal-body", $expandoModal).empty();
         var $footer = $(".modal-footer", $expandoModal).empty();
+
+
 
         $("<iframe />").attr("src", "http://localhost:45191/").appendTo($content);
 

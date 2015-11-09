@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
-using Infrastructure.Data;
-using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
+using Skimur.Utils;
 
 namespace Membership.Services.Impl
 {

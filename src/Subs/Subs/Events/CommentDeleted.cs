@@ -1,5 +1,5 @@
 ﻿using System;
-using Infrastructure.Messaging;
+using Skimur.Messaging;
 
 namespace Subs.Events
 {

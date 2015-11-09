@@ -2,9 +2,10 @@
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
-using Infrastructure.Data;
+using Newtonsoft.Json;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
 using Subs.ReadModel;
 
 namespace Subs.Services.Impl
@@ -356,6 +357,21 @@ namespace Subs.Services.Impl
             _conn.Perform(conn =>
             {
                 conn.Update<Post>(new { Thumb = thumbnail }, x => x.Id == postId);
+            });
+        }
+
+        public void UpdateMediaObjectForPost(Guid postId, Post.MediaObject mediaObject)
+        {
+            _conn.Perform(conn =>
+            {
+                if (mediaObject == null)
+                    conn.Update<Post>(new {Media = (object) null}, x => x.Id == postId);
+                else
+                    conn.Update<Post>(new {Media = JsonConvert.SerializeObject(mediaObject, new JsonSerializerSettings
+                    {
+                        // save some space
+                        NullValueHandling = NullValueHandling.Ignore
+                    })}, x => x.Id == postId);
             });
         }
     }

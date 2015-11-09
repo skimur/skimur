@@ -4,10 +4,10 @@ using System.Linq;
 using System.Security.Cryptography.X509Certificates;
 using System.Text;
 using System.Threading.Tasks;
-using Infrastructure.Data;
-using Infrastructure.Utils;
 using ServiceStack.OrmLite;
 using Skimur;
+using Skimur.Data;
+using Skimur.Utils;
 
 namespace Subs.Services.Impl
 {

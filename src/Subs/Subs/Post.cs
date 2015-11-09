@@ -5,11 +5,12 @@ using System.Text;
 using System.Threading.Tasks;
 using Infrastructure;
 using ServiceStack.DataAnnotations;
+using Skimur.Embed;
 
 namespace Subs
 {
     [Alias("Posts")]
-    public class Post : IAggregateRoot
+    public class Post
     {
         public Guid Id { get; set; }
 
@@ -76,11 +77,29 @@ namespace Subs
 
         public string Thumb { get; set; }
 
+        [CustomField("json")]
+        public string Media { get; set; }
+
         [Ignore]
         public Verdict PostVerdict
         {
             get { return (Verdict)Verdict; }
             set { Verdict = (int)value; }
+        }
+
+        public class MediaObject
+        {
+            public EmbeddedResultType Type { get; set; }
+            
+            public string ProviderName { get; set; }
+            
+            public string Url { get; set; }
+            
+            public string Html { get; set; }
+            
+            public int? Width { get; set; }
+            
+            public int? Height { get; set; }
         }
     }
 

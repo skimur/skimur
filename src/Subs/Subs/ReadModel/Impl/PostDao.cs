@@ -1,5 +1,4 @@
-﻿using Infrastructure.Data;
-using Subs.Services;
+﻿using Skimur.Data;
 using Subs.Services.Impl;
 
 namespace Subs.ReadModel.Impl

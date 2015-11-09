@@ -1,12 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure.Messaging.Handling;
 using Membership;
 using Membership.Services;
 using NUnit.Framework;
+using Skimur.Messaging.Handling;
 using Skimur.Tests;
 using Subs.Commands;
 using Subs.Services;
