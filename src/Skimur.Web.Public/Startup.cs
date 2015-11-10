@@ -88,6 +88,8 @@ namespace Skimur.Web.Public
                 "~/Scripts/markedHelper.js",
                 "~/Scripts/to-markdown.js",
                 "~/Scripts/bootstrap-markdown.js",
+                "~/Scripts/jquery.magnific-popup.js",
+                "~/Scripts/app/magnific-popup-module.js",
                 "~/Scripts/app/api.js",
                 "~/Scripts/app/ui.js",
                 "~/Scripts/app/login.js",

@@ -64,16 +64,16 @@ namespace Skimur.Embed
         /// <summary>
         /// The URL parameter represents a high-res image to display
         /// </summary>
-        Photo,
+        Photo = 0,
         /// <summary>
         /// The HTML property should be used to render html content
         /// </summary>
-        Html,
+        Html = 1,
         /// <summary>
         /// The Url represents a page that should be loaded in an <iframe /> element,
         /// using the URL parameter
         /// </summary>
         // ReSharper disable once InconsistentNaming
-        IFrame
+        IFrame = 2
     }
 }

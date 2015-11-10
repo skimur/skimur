@@ -307,6 +307,7 @@
     <Content Include="Content\img\avatar.jpg" />
     <Content Include="Content\img\avatar.png" />
     <Content Include="Content\img\logo.png" />
+    <Content Include="Content\magnific\magnific-popup.css" />
     <Content Include="Content\site.less" />
     <Content Include="Content\components\sidebar.less" />
     <Content Include="Content\components\layout.less" />
@@ -319,6 +320,7 @@
     <Content Include="Scripts\ace\worker-css.js" />
     <Content Include="Scripts\app\api.js" />
     <Content Include="Scripts\app\comments.js" />
+    <Content Include="Scripts\app\magnific-popup-module.js" />
     <Content Include="Scripts\app\messages.js" />
     <Content Include="Scripts\app\moderators.js" />
     <Content Include="Scripts\app\ui.js" />
@@ -330,6 +332,7 @@
     <Content Include="Scripts\bootstrap-notify.js" />
     <Content Include="Scripts\chart.js" />
     <Content Include="Scripts\jquery.validate.bootstrap.js" />
+    <Content Include="Scripts\jquery.magnific-popup.js" />
     <Content Include="Scripts\marked.js" />
     <Content Include="Scripts\markedHelper.js" />
     <Content Include="Scripts\moment.js" />
@@ -487,6 +490,7 @@
       <CopyToOutputDirectory>Always</CopyToOutputDirectory>
     </Content>
     <Content Include="Content\components\users.less" />
+    <Content Include="Content\components\popup.less" />
     <None Include="NLog.xsd">
       <SubType>Designer</SubType>
     </None>
