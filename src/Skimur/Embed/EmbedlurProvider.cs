@@ -38,6 +38,15 @@ namespace Skimur.Embed
             {
                 result = JsonConvert.DeserializeObject<OEmbedJsonResult>(GetRequest(url));
             }
+            catch (WebException ex)
+            {
+                if (ex.Status == WebExceptionStatus.ProtocolError)
+                {
+                    if (((HttpWebResponse) ex.Response).StatusCode == HttpStatusCode.NotFound)
+                        return null;
+                }
+                throw;
+            }
             catch (HttpException ex)
             {
                 if (ex.WebEventCode == (int)HttpStatusCode.NotFound)
