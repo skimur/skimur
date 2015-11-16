@@ -138,11 +138,11 @@ namespace Tasks
             // delete the users posts
             foreach (var post in connectionProvider.Perform(conn => conn.Select<Post>(x => x.UserId == user.Id)))
                 DeletePost(post.Id);
-            
+
             connectionProvider.Perform(conn => conn.Delete<Message>(x => x.ToUser == user.Id));
             connectionProvider.Perform(conn => conn.Delete<Message>(x => x.AuthorId == user.Id));
         }
-        
+
         [ArgActionMethod, ArgDescription("Delete comment")]
         public void DeleteComment(Guid commentId)
         {
@@ -157,11 +157,11 @@ namespace Tasks
 
             connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.CommentId == comment.Id));
             connectionProvider.Perform(conn => conn.Delete<Report.CommentReport>(x => x.CommentId == comment.Id));
-            
+
             // delete any messages associated with this comment
             foreach (var messageId in connectionProvider.Perform(conn => conn.Select<Message>(x => x.CommentId == comment.Id).Select(x => x.Id)))
                 DeleteMessageThread(messageId);
-            
+
             // delete child comments
             foreach (var childComment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.ParentId == comment.Id)))
                 DeleteComment(childComment.Id);
@@ -183,7 +183,7 @@ namespace Tasks
 
             connectionProvider.Perform(conn => conn.Delete<Vote>(x => x.PostId == post.Id));
             connectionProvider.Perform(conn => conn.Delete<Report.PostReport>(x => x.PostId == post.Id));
-            
+
             // delete any messages associated with this post
             foreach (var messageId in connectionProvider.Perform(conn => conn.Select<Message>(x => x.PostId == post.Id).Select(x => x.Id)))
                 DeleteMessageThread(messageId);
@@ -233,6 +233,38 @@ namespace Tasks
                 });
             }
         }
-    }
 
+        [ArgActionMethod, ArgDescription("Attempt to update embedded media items")]
+        public void RetryEmbeddedMedia(bool force = false)
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var commandBus = SkimurContext.Resolve<ICommandBus>();
+
+            var postIds = connectionProvider.Perform(
+                conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int)PostType.Link).Select(x => x.Id)).Select(x => x.Id));
+
+            foreach (
+                var postId in
+                    postIds)
+            {
+                commandBus.Send(new GenerateEmbeddedMediaObject
+                {
+                    PostId = postId,
+                    Force = force
+                });
+            }
+        }
+
+        [ArgActionMethod, ArgDescription("Attempt to update embedded media for a single post")]
+        public void RetryEmbeddedMediaForPost(Guid postId, bool force = false)
+        {
+            var commandBus = SkimurContext.Resolve<ICommandBus>();
+
+            commandBus.Send(new GenerateEmbeddedMediaObject
+            {
+                PostId = postId,
+                Force = force
+            });
+        }
+    }
 }
