@@ -25,7 +25,7 @@ module.exports = function() {
       'app/subs.js',
       'app/messages.js',
       'app/moderators.js',
-      'app/magnific-popup-module.js.js'
+      'app/magnific-popup-module.js'
   	],
     useStaticAssets: 'true',
     staticAssetsHost: 'https://jjj.skimur.com/',
