@@ -15,6 +15,7 @@ module.exports = function() {
       'markedHelper.js',
       'to-markdown.js',
       'bootstrap-markdown.js',
+      'jquery.magnific-popup.js',
       'app/api.js',
       'app/ui.js',
       'app/login.js',
@@ -23,7 +24,8 @@ module.exports = function() {
       'app/posts.js',
       'app/subs.js',
       'app/messages.js',
-      'app/moderators.js'
+      'app/moderators.js',
+      'app/magnific-popup-module.js.js'
   	],
     useStaticAssets: 'true',
     staticAssetsHost: 'https://jjj.skimur.com/',
