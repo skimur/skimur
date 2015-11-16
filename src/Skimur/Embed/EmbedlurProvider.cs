@@ -73,14 +73,6 @@ namespace Skimur.Embed
                 case "link":
                     // we handle links just find, don't need a special embeded object for it. DERP!
                     return null; 
-                case "photo":
-                    // this embeded result type will have a fancy photo viewer.
-                    return new EmbeddedResult(
-                        EmbeddedResultType.Photo, 
-                        result.ProviderName, 
-                        url:result.Url, 
-                        width:width, 
-                        height:height);
                 default:
                     var endpoint = _embedSettings.Settings.EmbedlurEndpoint;
                     if (!endpoint.EndsWith("/"))

@@ -74,14 +74,18 @@
 
             .disc-expando {
                 .fa;
-                .fa-mixin-icon(play-circle);
+                .fa-mixin-icon(plus-square);
                 float:left;
                 font-size:33px;
                 margin:0px 5px 5px 0px;
                 cursor:pointer;
-                color:lighten(@brand-primary, 20%);
+                color:lighten(@gray, 40%);
                 &:hover, &:focus{
                     color:@brand-primary;
+                }
+
+                &.expanded {
+                    .fa-mixin-icon(minus-square);
                 }
             }
 
