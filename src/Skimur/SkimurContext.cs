@@ -11,6 +11,7 @@ using ServiceStack.Redis;
 using SimpleInjector;
 using Skimur.Data;
 using Skimur.Email;
+using Skimur.Embed;
 using Skimur.Logging;
 using Skimur.Messaging;
 using Skimur.Messaging.Handling;
@@ -107,6 +108,8 @@ namespace Skimur
                 _container.RegisterSingleton<ICommandBus, CommandBus>();
                 _container.RegisterSingleton<IEventBus, EventBus>();
                 _container.RegisterSingleton<IBusLifetime, BusLifetime>();
+
+                _container.Register<IEmbeddedProvider, ContextualEmbededProvider>();
 
                 foreach (var registrar in registrars.OrderBy(x => x.Order))
                     registrar.Register(_container);

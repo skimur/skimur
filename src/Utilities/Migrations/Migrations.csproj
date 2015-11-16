@@ -100,6 +100,7 @@
     <Compile Include="Postgres\_0020_StickyPosts.cs" />
     <Compile Include="Postgres\_0021_AccountIp.cs" />
     <Compile Include="Postgres\_0022_PostThumbnail.cs" />
+    <Compile Include="Postgres\_0023_PostMediaExpando.cs" />
     <Compile Include="Properties\AssemblyInfo.cs" />
   </ItemGroup>
   <ItemGroup>

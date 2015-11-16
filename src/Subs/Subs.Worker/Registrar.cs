@@ -64,6 +64,8 @@ namespace Subs.Worker
 
             container.Register<ICommandHandler<GenerateThumbnailForPost>, ThumbnailHandler>();
 
+            container.Register<ICommandHandler<GenerateEmbeddedMediaObject>, EmbededHandler>();
+
             container.Register<KudosUpdateEventHandler>();
             container.Register<ScoringAndSortingEventHandler>();
             container.Register<ReplyNotificationEventHandler>();

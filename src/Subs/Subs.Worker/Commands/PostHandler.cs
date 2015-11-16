@@ -6,6 +6,7 @@ using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 using Membership.Services;
 using Skimur;
+using Skimur.Embed;
 using Skimur.Logging;
 using Skimur.Markdown;
 using Skimur.Messaging;
@@ -35,6 +36,7 @@ namespace Subs.Worker.Commands
         private readonly IPermissionService _permissionService;
         private readonly ISettingsProvider<SubSettings> _subSettings;
         private readonly IEventBus _eventBus;
+        private readonly IEmbeddedProvider _embeddedProvider;
 
         public PostHandler(IMarkdownCompiler markdownCompiler,
             ILogger<PostHandler> logger,
@@ -45,7 +47,8 @@ namespace Subs.Worker.Commands
             ICommandBus commandBus,
             IPermissionService permissionService,
             ISettingsProvider<SubSettings> subSettings,
-            IEventBus eventBus)
+            IEventBus eventBus,
+            IEmbeddedProvider embeddedProvider)
         {
             _markdownCompiler = markdownCompiler;
             _logger = logger;
@@ -57,6 +60,7 @@ namespace Subs.Worker.Commands
             _permissionService = permissionService;
             _subSettings = subSettings;
             _eventBus = eventBus;
+            _embeddedProvider = embeddedProvider;
         }
 
         public CreatePostResponse Handle(CreatePost command)
@@ -147,7 +151,7 @@ namespace Subs.Worker.Commands
                     // todo: make sure the domain isn't banned
 
                     // todo: make sure the url wasn't already submitted
-                    
+
                 }
                 else if (command.PostType == PostType.Text)
                 {
@@ -173,7 +177,7 @@ namespace Subs.Worker.Commands
                 else
                     // Let's see if the user marked this as NSFW.
                     isNsfw = Common.IsNsfw(command.Title);
-                
+
                 var post = new Post
                 {
                     Id = GuidUtil.NewSequentialId(),
@@ -210,6 +214,9 @@ namespace Subs.Worker.Commands
                     _eventBus.Publish(new UsersMentioned { PostId = post.Id, Users = mentions });
 
                 _commandBus.Send(new GenerateThumbnailForPost { PostId = post.Id });
+
+                if (_embeddedProvider.IsEnabled)
+                    _commandBus.Send(new GenerateEmbeddedMediaObject { PostId = post.Id });
 
                 response.Title = command.Title;
                 response.PostId = post.Id;
@@ -265,10 +272,10 @@ namespace Subs.Worker.Commands
                         return response;
                     }
                 }
-                
+
                 List<string> oldMentions = null;
                 List<string> newMentions = null;
-                
+
                 try
                 {
                     _markdownCompiler.Compile(post.Content, out oldMentions);
@@ -435,7 +442,7 @@ namespace Subs.Worker.Commands
                 {
                     // we are trying to sticky something, let's see if we reached our limit.
                     // we don't need to check this limit of we are UN-stickying a post.
-                    var currentStickied = _postService.GetPosts(new List<Guid> {post.SubId}, sticky: true);
+                    var currentStickied = _postService.GetPosts(new List<Guid> { post.SubId }, sticky: true);
                     if (currentStickied.Count >= _subSettings.Settings.MaximumNumberOfStickyPosts)
                     {
                         response.Error = string.Format("You are only allowed {0} stickied posts.",

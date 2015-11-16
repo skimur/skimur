@@ -56,5 +56,7 @@ namespace Subs.Services
         void SetStickyForPost(Guid postId, bool sticky);
 
         void UpdateThumbnailForPost(Guid postId, string thumbnail);
+
+        void UpdateMediaObjectForPost(Guid postId, Post.MediaObject mediaObject);
     }
 }

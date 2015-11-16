@@ -41,6 +41,10 @@
       <HintPath>..\packages\lz4net.1.0.9.93\lib\net4-client\LZ4.dll</HintPath>
       <Private>True</Private>
     </Reference>
+    <Reference Include="Newtonsoft.Json, Version=7.0.0.0, Culture=neutral, PublicKeyToken=30ad4fe6b2a6aeed, processorArchitecture=MSIL">
+      <HintPath>..\packages\Newtonsoft.Json.7.0.1\lib\net45\Newtonsoft.Json.dll</HintPath>
+      <Private>True</Private>
+    </Reference>
     <Reference Include="NLog, Version=4.0.0.0, Culture=neutral, PublicKeyToken=5120e14c03d0593c, processorArchitecture=MSIL">
       <HintPath>..\packages\NLog.4.2.0\lib\net45\NLog.dll</HintPath>
       <Private>True</Private>
@@ -136,6 +140,11 @@
     <Compile Include="Email\EmailSender.cs" />
     <Compile Include="Email\EmailServerSettings.cs" />
     <Compile Include="Email\IEmailSender.cs" />
+    <Compile Include="Embed\ContextualEmbededProvider.cs" />
+    <Compile Include="Embed\EmbedlurProvider.cs" />
+    <Compile Include="Embed\EmbedSettings.cs" />
+    <Compile Include="Embed\IEmbeddedProvider.cs" />
+    <Compile Include="Embed\NullEmbeddedProvider.cs" />
     <Compile Include="FileSystem\IFileSystem.cs" />
     <Compile Include="FileSystem\LocalFileSystem.cs" />
     <Compile Include="IMapper.cs" />

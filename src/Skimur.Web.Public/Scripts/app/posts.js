@@ -1,5 +1,9 @@
 ﻿; skimurui.posts = (function () {
 
+    var mediaPhoto = 0;
+    var mediaHtml = 1;
+    var mediaIFrame = 2;
+
     var getPost = function (element) {
         return $(element).closest(".post");
     };
@@ -95,7 +99,7 @@
         }
     };
 
-    var approve = function(element) {
+    var approve = function (element) {
         var $post = getPost(element);
         skimurui.confirmInfo("Are you sure?", "Yes, approve it!", function (confirmResult) {
             if (confirmResult.confirmed) {
@@ -114,7 +118,7 @@
 
     var remove = function (element) {
         var $post = getPost(element);
-        skimurui.confirmWarning("Are you sure?", "Yes, remove it!", function(confirmResult) {
+        skimurui.confirmWarning("Are you sure?", "Yes, remove it!", function (confirmResult) {
             if (confirmResult.confirmed) {
                 skimur.removePost($post.data("post-id"), function (result) {
                     if (result.success) {
@@ -157,7 +161,7 @@
         post.staging.removeClass("hidden");
     };
 
-    var toggleReports = function(element) {
+    var toggleReports = function (element) {
         var $post = getPost(element);
         var $reports = $(".disc-reports", $post);
         if ($reports.hasClass("hidden")) {
@@ -167,9 +171,9 @@
         }
     };
 
-    var clearReports = function(element) {
+    var clearReports = function (element) {
         var $post = getPost(element);
-        skimur.clearReportsForPost($post.data("post-id"), function(result) {
+        skimur.clearReportsForPost($post.data("post-id"), function (result) {
             if (result.success) {
                 $(".disc-reports, .disc-options .reports, .disc-options .clear-reports", $post).remove();
 
@@ -179,9 +183,9 @@
         });
     }
 
-    var ignoreReports = function(element) {
+    var ignoreReports = function (element) {
         var $post = getPost(element);
-        skimur.ignoreReportsForPost($post.data("post-id"), function(result) {
+        skimur.ignoreReportsForPost($post.data("post-id"), function (result) {
             if (result.success) {
                 $post.removeClass("reports-unignored").addClass("reports-ignored");
             } else {
@@ -201,7 +205,7 @@
         });
     }
 
-    var startEdit = function(element) {
+    var startEdit = function (element) {
         var post = cancel(element);
         var $textArea = $("<textarea />")
             .appendTo(post.staging)
@@ -240,12 +244,12 @@
         $textArea.focus();
     };
 
-    var toggleNsfw = function(element) {
+    var toggleNsfw = function (element) {
         var $post = getPost(element);
-        skimurui.confirmWarning("Are you sure?", "Yes!", function(confirmResult) {
+        skimurui.confirmWarning("Are you sure?", "Yes!", function (confirmResult) {
             if (confirmResult.confirmed) {
                 var nsfw = $post.hasClass("nsfw");
-                skimur.togglePostNsfw($post.data("post-id"), !nsfw, function(result) {
+                skimur.togglePostNsfw($post.data("post-id"), !nsfw, function (result) {
                     if (result.success) {
                         if (nsfw) {
                             $post.removeClass("nsfw");
@@ -263,7 +267,7 @@
         });
     }
 
-    var deletePost = function(element) {
+    var deletePost = function (element) {
         var $post = getPost(element);
 
         skimurui.confirmDelete(function (result) {
@@ -280,7 +284,7 @@
         });
     }
 
-    var toggleSticky = function(element) {
+    var toggleSticky = function (element) {
         var $post = getPost(element);
         skimurui.confirmWarning("Are you sure?", "Yes!", function (confirmResult) {
             if (confirmResult.confirmed) {
@@ -303,6 +307,39 @@
         });
     }
 
+    var expando = function (element) {
+
+        var $post = getPost(element);
+
+        var media = $post.data("media");
+
+        switch (media.Type) {
+            case mediaPhoto:
+                $.magnificPopup.open({
+                    items: {
+                        src: media.Url,
+                        provider: media.ProviderName
+                    },
+                    type: 'image'
+                });
+                break;
+            case mediaHtml:
+                break;
+            case mediaIFrame:
+                $.magnificPopup.open({
+                    items: {
+                        src: media.Url,
+                        provider: media.ProviderName
+                    },
+                    type: 'skimuriframe'
+                });
+                break;
+            default:
+                // do nothing
+                break;
+        }
+    };
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -316,7 +353,8 @@
         startEdit: startEdit,
         delete: deletePost,
         toggleNsfw: toggleNsfw,
-        toggleSticky: toggleSticky
+        toggleSticky: toggleSticky,
+        expando: expando
     };
 
 })();
