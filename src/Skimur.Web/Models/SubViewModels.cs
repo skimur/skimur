@@ -1,5 +1,6 @@
 ﻿using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Subs;
 using Subs.ReadModel;
 
@@ -14,8 +15,10 @@ namespace Skimur.Web.Models
         public string Description { get; set; }
 
         [DisplayName("Sidebar text")]
+        [AllowHtml]
         public string SidebarText { get; set; }
 
+        [AllowHtml]
         [DisplayName("Submission text")]
         public string SubmissionText { get; set; }
 

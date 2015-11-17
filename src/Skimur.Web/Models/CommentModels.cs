@@ -3,6 +3,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Text;
 using System.Threading.Tasks;
+using System.Web.Mvc;
 using Subs;
 using Subs.ReadModel;
 using Subs.Services;
@@ -20,6 +21,7 @@ namespace Skimur.Web.Models
 
         public Guid? ParentId { get; set; }
 
+        [AllowHtml]
         public string Body { get; set; }
 
         public bool SendReplies { get; set; }
@@ -29,6 +31,7 @@ namespace Skimur.Web.Models
     {
         public Guid CommentId { get; set; }
 
+        [AllowHtml]
         public string Body { get; set; }
     }
     

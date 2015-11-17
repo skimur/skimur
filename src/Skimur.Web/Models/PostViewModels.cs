@@ -1,5 +1,7 @@
-﻿using System.ComponentModel;
+﻿using System;
+using System.ComponentModel;
 using System.ComponentModel.DataAnnotations;
+using System.Web.Mvc;
 using Subs;
 using Subs.ReadModel;
 
@@ -11,6 +13,7 @@ namespace Skimur.Web.Models
         
         public string Url { get; set; }
         
+        [AllowHtml]
         public string Content { get; set; }
 
         public PostType PostType { get; set; }
@@ -22,6 +25,14 @@ namespace Skimur.Web.Models
         public bool NotifyReplies { get; set; }
 
         public SubWrapped Sub { get; set; }
+    }
+
+    public class EditPostModel
+    {
+        public Guid PostId { get; set; }
+
+        [AllowHtml]
+        public string Content { get; set; }
     }
     
     public class PostDetailsModel
