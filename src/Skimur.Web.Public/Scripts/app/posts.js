@@ -11,7 +11,7 @@
     var cancel = function (element) {
 
         var $post = getPost(element);
-
+        $post.removeClass("editing");
         // hide any content that may be staged (editing/banning/etc).
         var $staging = $post.find("> .disc-body .disc-staging").addClass("hidden").empty();
 
@@ -207,6 +207,7 @@
 
     var startEdit = function (element) {
         var post = cancel(element);
+        post.post.addClass("editing");
         var $textArea = $("<textarea />")
             .appendTo(post.staging)
             .val(post.post.find("> .disc-body .disc-content-unformatted").val());
@@ -340,6 +341,27 @@
         }
     };
 
+    var expandoText = function(element) {
+        var $post = getPost(element);
+        var $expando = $(".disc-expando", $post);
+        var $content = $(".disc-content", $post);
+
+        if (!$content.hasClass("previewed")) {
+            // move this text below the post options
+            $content.addClass("previewed");
+            var $main = $(".disc-main", $post);
+            $content.appendTo($main);
+        }
+
+        if ($expando.hasClass("expanded")) {
+            $expando.removeClass("expanded");
+            $content.addClass("hide");
+        } else {
+            $expando.addClass("expanded");
+            $content.removeClass("hide");
+        }
+    };
+
     return {
         voteUp: voteUp,
         voteDown: voteDown,
@@ -354,7 +376,8 @@
         delete: deletePost,
         toggleNsfw: toggleNsfw,
         toggleSticky: toggleSticky,
-        expando: expando
+        expando: expando,
+        expandoText: expandoText
     };
 
 })();

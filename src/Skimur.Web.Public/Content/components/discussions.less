@@ -74,7 +74,6 @@
 
             .disc-expando {
                 .fa;
-                .fa-mixin-icon(plus-square);
                 float:left;
                 font-size:33px;
                 margin:0px 5px 5px 0px;
@@ -83,9 +82,14 @@
                 &:hover, &:focus{
                     color:@brand-primary;
                 }
-
                 &.expanded {
                     .fa-mixin-icon(minus-square);
+                }
+                &.text {
+                    .fa-mixin-icon(plus-square);
+                }
+                &.media {
+                    .fa-mixin-icon(play-circle);
                 }
             }
 
