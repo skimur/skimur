@@ -4,11 +4,11 @@ namespace Skimur.Logging
 {
     public interface ILogger
     {
-        void Error(object message, Exception ex = null);
+        void Error(string message, Exception ex = null);
 
-        void Debug(object message, Exception ex = null);
+        void Debug(string message, Exception ex = null);
 
-        void Info(object message, Exception ex = null);
+        void Info(string message, Exception ex = null);
     }
 
     public interface ILogger<T> : ILogger

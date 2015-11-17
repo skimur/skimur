@@ -19,28 +19,28 @@ namespace Skimur.Logging
 
         public Logger(Type type) : this(type.Name) { }
                     
-        public void Error(object message, Exception ex = null)
+        public void Error(string message, Exception ex = null)
         {
             if (ex == null)
                 _log.Error(message);
             else
-                _log.Error(ex);
+                _log.Error(ex, message);
         }
 
-        public void Debug(object message, Exception ex = null)
+        public void Debug(string message, Exception ex = null)
         {
             if (ex == null)
                 _log.Debug(message);
             else
-                _log.Debug(ex);
+                _log.Debug(ex, message);
         }
 
-        public void Info(object message, Exception ex = null)
+        public void Info(string message, Exception ex = null)
         {
             if (ex == null)
                 _log.Info(message);
             else
-                _log.Info(ex);
+                _log.Info(ex, message);
         }
 
         public static ILogger<T> For<T>()
