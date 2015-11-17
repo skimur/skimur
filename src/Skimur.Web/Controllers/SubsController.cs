@@ -278,9 +278,9 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        public ActionResult SearchSub(string subBame, string query, PostsSearchSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
+        public ActionResult SearchSub(string subName, string query, PostsSearchSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
         {
-            if (string.IsNullOrEmpty(subBame))
+            if (string.IsNullOrEmpty(subName))
                 return Redirect(Url.Subs());
 
             if (sort == null)
@@ -289,10 +289,10 @@ namespace Skimur.Web.Controllers
             if (time == null)
                 time = PostsTimeFilter.All;
 
-            var sub = _subDao.GetSubByName(subBame);
+            var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                return Redirect(Url.Subs(subBame));
+                return Redirect(Url.Subs(subName));
 
             if (pageNumber == null || pageNumber < 1)
                 pageNumber = 1;
