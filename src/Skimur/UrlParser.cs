@@ -9,37 +9,58 @@ namespace Skimur
 {
     public class UrlParser
     {
-        public static bool TryParseUrl(string url, out string domain, out string scheme)
+        public static bool TryParseUrl(string url, out string formattedUrl, out string domain, out string scheme)
         {
             domain = null;
             scheme = null;
+            formattedUrl = null;
 
             if (string.IsNullOrEmpty(url)) return false;
-
-            url = url.ToLower();
-
-            if (!url.Contains("://"))
-            {
-                url = "http://" + url;
-            }
-
-            if (!Regex.IsMatch(url, @"^(http|https|):\/\/[a-zA-Z0-9\-\.]+\.[a-zA-Z](:[a-zA-Z0-9]*)?/?([a-zA-Z0-9\-\._\?\,\'/\\\+&amp;%\$#\=~])*[^\.\,\)\(\s]$"))
-                return false;
-
+            
             Uri uri;
             try
             {
-                uri = new Uri(url);
+                uri = PrepUrlRecursive(url);
             }
             catch (Exception)
             {
                 return false;
             }
 
-            domain = uri.Host.StartsWith("www.") ? uri.Host.Substring(4) : uri.Host;
-            scheme = uri.Scheme;
+            if (string.IsNullOrEmpty(uri.Host)) return false;
+
+            domain = uri.Host.ToLower();
+
+            if (domain.StartsWith("www."))
+                domain = domain.Substring(4);
+            
+            if (!domain.Contains("."))
+                return false; // domain should have at least 1 period (.com, .io, etc)
+
+            if (string.IsNullOrEmpty(uri.Scheme)) return false;
+
+            scheme = uri.Scheme.ToLower();
+
+            formattedUrl = uri.ToString();
 
             return true;
+        }
+
+        private static Uri PrepUrlRecursive(string url, int pass = 1)
+        {
+            if(pass >= 10) throw new Exception("Recursive error prepping url for inspection.");
+
+            try
+            {
+                return new Uri(url);
+            }
+            catch (UriFormatException ex)
+            {
+                if (ex.Message == "Invalid URI: The format of the URI could not be determined.")
+                    return PrepUrlRecursive("http://" + url, pass + 1);
+
+                throw;
+            }
         }
     }
 }

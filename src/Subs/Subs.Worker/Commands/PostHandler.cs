@@ -132,12 +132,15 @@ namespace Subs.Worker.Commands
 
                     // todo: improve url validation
                     string scheme;
-                    if (!UrlParser.TryParseUrl(command.Url, out domain, out scheme))
+                    string formattedUrl;
+                    if (!UrlParser.TryParseUrl(command.Url, out formattedUrl, out domain, out scheme))
                     {
                         response.Error = "The url appears to be invalid.";
                         return response;
                     }
-
+                    
+                    command.Url = formattedUrl;
+                    
                     switch (scheme)
                     {
                         case "http":
