@@ -4,6 +4,7 @@ using Membership.Services;
 using MirroredContentSync.Settings;
 using RedditSharp;
 using Skimur;
+using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Settings;
 using Subs;
@@ -80,8 +81,8 @@ namespace MirroredContentSync
                             continue;
                         }
 
-                        var createPostResponse = SkimurContext.Resolve<ICommandHandlerResponse<CreatePost, CreatePostResponse>>()
-                            .Handle(new CreatePost
+                        var createPostResponse = SkimurContext.Resolve<ICommandBus>().Send<CreatePost, CreatePostResponse>(
+                            new CreatePost
                             {
                                 CreatedByUserId = botUser.Id,
                                 Title = redditPost.Title,
@@ -106,8 +107,8 @@ namespace MirroredContentSync
                             continue;
                         }
 
-                        var createCommentResponse = SkimurContext.Resolve<ICommandHandlerResponse<CreateComment, CreateCommentResponse>>()
-                           .Handle(new CreateComment
+                        var createCommentResponse = SkimurContext.Resolve<ICommandBus>().Send<CreateComment, CreateCommentResponse>(
+                           new CreateComment
                            {
                                PostId = createPostResponse.PostId.Value,
                                DateCreated = Common.CurrentTime(),
