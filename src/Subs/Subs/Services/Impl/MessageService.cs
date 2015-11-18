@@ -207,6 +207,7 @@ namespace Subs.Services.Impl
                         conn.Insert(new Message
                         {
                             Id = GuidUtil.NewSequentialId(),
+                            DateCreated = Common.CurrentTime(),
                             ToUser = userId,
                             AuthorId = authorUserId,
                             MessageType = MessageType.Mention,
@@ -223,6 +224,7 @@ namespace Subs.Services.Impl
                         conn.Insert(new Message
                         {
                             Id = GuidUtil.NewSequentialId(),
+                            DateCreated = Common.CurrentTime(),
                             ToUser = userId,
                             AuthorId = authorUserId,
                             MessageType = MessageType.Mention,
