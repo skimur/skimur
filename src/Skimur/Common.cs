@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Text;
 using System.Text.RegularExpressions;
 
 namespace Skimur
@@ -30,6 +31,12 @@ namespace Skimur
             }
 
             return value;
+        }
+
+        public static string RemoveBOM(this string value)
+        {
+            if (string.IsNullOrEmpty(value)) return value;
+            return value.Trim('\uFEFF');
         }
 
         public static int Fuzz(int value)

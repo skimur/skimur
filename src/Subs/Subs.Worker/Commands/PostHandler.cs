@@ -130,6 +130,9 @@ namespace Subs.Worker.Commands
                         return response;
                     }
 
+                    // check https://github.com/skimur/skimur/issues/83
+                    command.Url = command.Url.RemoveBOM();
+
                     // todo: improve url validation
                     string scheme;
                     string formattedUrl;
