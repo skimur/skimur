@@ -266,5 +266,23 @@ namespace Tasks
                 Force = force
             });
         }
+
+        [ArgActionMethod, ArgDescription("Fix issues with some links containing a UTF-8 BOM")]
+        public void FixLinksWithBOM()
+        {
+            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+
+            var posts = connectionProvider.Perform(
+                conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int) PostType.Link)));
+
+            foreach (var post in posts)
+            {
+                if (post.PostType == PostType.Link && !string.IsNullOrEmpty(post.Url))
+                {
+                    post.Url = post.Url.RemoveBOM();
+                    connectionProvider.Perform(conn => conn.Update<Post>(new {post.Url}, x => x.Id == post.Id));
+                }
+            }
+        }
     }
 }
