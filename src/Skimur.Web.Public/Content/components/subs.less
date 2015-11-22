@@ -1,6 +1,37 @@
 ﻿
-.btn-sub.subscribed {
-    .btn-primary;
+.btn-sub {
+    text-align:center;
+
+    > .sub, > .unsub, > .subbed {
+        min-width:82px;
+        display:block;
+    }
+
+    > .sub .icon {
+        .fa;
+        .fa-mixin-icon(plus-circle);
+    }
+
+    &.subscribed {
+        > .sub, > .unsub {
+            display: none;
+        }
+        .btn-primary;
+        &:hover {
+            > .subbed {
+                display:none;
+            }
+            > .unsub {
+                display:block;
+            }
+            .btn-danger;
+        }
+    }
+    &.unsubscribed {
+        > .subbed, > .unsub {
+            display: none;
+        }
+    }
 }
 
 .sub {
@@ -42,6 +73,6 @@
 
 .sub-info {
     .sub-name {
-        margin-top:0;
+        margin-top: 0;
     }
 }

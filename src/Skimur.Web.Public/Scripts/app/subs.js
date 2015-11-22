@@ -16,7 +16,6 @@
                 $button.removeClass("disabled");
                 if (result.success) {
                     $button.removeClass("subscribed").addClass("unsubscribed");
-                    $button.html("unsubscribed");
                 } else {
                     skimurui.displayError(result.error);
                 }
@@ -27,7 +26,6 @@
                 $button.removeClass("disabled");
                 if (result.success) {
                     $button.removeClass("unsubscribed").addClass("subscribed");
-                    $button.html("subscribed");
                 } else {
                     skimurui.displayError(result.error);
                 }
