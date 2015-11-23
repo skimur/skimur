@@ -18,6 +18,16 @@ namespace Skimur.Web
             routes.IgnoreRoute("{resource}.axd/{*pathInfo}");
 
             routes.MapRoute(
+                name:"Subs",
+                url:"subs",
+                defaults:new {controller="Subs", action="Popular"});
+
+            routes.MapRoute(
+                name: "SubsNew",
+                url: "subs/new",
+                defaults: new { controller = "Subs", action = "New" });
+
+            routes.MapRoute(
                 name: "Frontpage",
                 url: "",
                 defaults: new { controller = "Posts", action = "Frontpage" });

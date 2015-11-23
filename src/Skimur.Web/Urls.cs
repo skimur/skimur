@@ -35,7 +35,12 @@ namespace Skimur.Web
 
         public static string Subs(this UrlHelper urlHelper, string query = null)
         {
-            return urlHelper.Action("Index", "Subs", new { query });
+            return urlHelper.RouteUrl("Subs");
+        }
+
+        public static string SubsNew(this UrlHelper urlHelper)
+        {
+            return urlHelper.RouteUrl("SubsNew");
         }
 
         public static string Sub(this UrlHelper urlHelper, string subName)

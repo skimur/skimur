@@ -33,6 +33,7 @@ namespace Subs.ReadModel
     public enum SubsSortBy
     {
         Relevance,
-        Subscribers
+        Subscribers,
+        New
     }
 }

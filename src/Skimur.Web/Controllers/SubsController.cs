@@ -71,17 +71,51 @@ namespace Skimur.Web.Controllers
             _subActivityDao = subActivityDao;
         }
 
-        public ActionResult Index(string query)
+        public ActionResult Popular(string query, int? pageNumber, int? pageSize)
         {
+            ViewBag.NavigationKey = "popular";
+
             ViewBag.Query = query;
 
-            return View(_subWrapper.Wrap(
-                _subDao.GetAllSubs(query,
-                    sortBy: !string.IsNullOrEmpty(query) ? SubsSortBy.Relevance : SubsSortBy.Subscribers,
-                    nsfw: _userContext.CurrentNsfw),
-                _userContext.CurrentUser));
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 24;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
+            var subs = _subDao.GetAllSubs(query,
+                sortBy: SubsSortBy.Subscribers,
+                nsfw: _userContext.CurrentNsfw,
+                skip: ((pageNumber - 1) * pageSize),
+                take: pageSize);
+
+            return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(subs, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, subs.HasMore));
         }
-        
+
+        public ActionResult New(int? pageNumber, int? pageSize)
+        {
+            ViewBag.NavigationKey = "new";
+
+            if (pageNumber == null || pageNumber < 1)
+                pageNumber = 1;
+            if (pageSize == null)
+                pageSize = 24;
+            if (pageSize > 100)
+                pageSize = 100;
+            if (pageSize < 1)
+                pageSize = 1;
+
+            var subs = _subDao.GetAllSubs(sortBy: SubsSortBy.New,
+                nsfw: _userContext.CurrentNsfw,
+                skip: ((pageNumber - 1) * pageSize),
+                take: pageSize);
+
+            return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(subs, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, subs.HasMore));
+        }
+
         public ActionResult SearchSub(string subName, string query, PostsSearchSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
         {
             if (string.IsNullOrEmpty(subName))

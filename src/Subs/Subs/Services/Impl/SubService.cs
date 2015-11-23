@@ -47,6 +47,9 @@ namespace Subs.Services.Impl
                     case SubsSortBy.Subscribers:
                         query.OrderByDescending(x => x.NumberOfSubscribers);
                         break;
+                    case SubsSortBy.New:
+                        query.OrderByDescending(x => x.CreatedDate);
+                        break;
                 }
 
                 query.SelectExpression = "SELECT \"id\"";

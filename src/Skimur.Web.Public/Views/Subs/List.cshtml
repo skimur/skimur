@@ -1,11 +1,31 @@
-﻿@model List<Subs.ReadModel.SubWrapped>
+﻿@model PagedList<Subs.ReadModel.SubWrapped>
 @{
     ViewBag.Title = "Subs";
 }
 
+@section header {
+    @Html.Partial("_HeaderNav")
+}
+
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        <h2 class="page-header">@ViewBag.Title</h2>
+
+        <div class="row">
+            <div class="col-lg-4">
+                <div class="panel panel-search">
+                    <div class="input-group">
+                        <input id="subQuery" type="text" class="form-control" placeholder="Search..." value="@ViewBag.Query">
+                        @if (!string.IsNullOrEmpty(ViewBag.Query))
+                        {
+                            <a class="input-group-addon btn btn-primary" href="@Url.Subs()"><span class="fa fa-close"></span></a>
+                        }
+                        <span id="subQuerySearch" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
+                    </div>
+                </div>
+            </div>
+        </div>
+
+
         @if (Model.Count == 0)
         {
             <p>
@@ -28,14 +48,16 @@
                 }
             }
         }
-    </div>
-    <div class="col-lg-3 col-sm-4">
-        <div class="panel">
-            <div class="input-group">
-                <input id="subQuery" type="text" class="form-control" placeholder="Search..." value="@ViewBag.Query">
-                <span id="subQuerySearch" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
+        @if (Model.HasPreviousPage || Model.HasNextPage)
+        {
+        <div class="row">
+            <div class="list-pager">
+                @Html.Pager(Model)
             </div>
         </div>
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
         @{ Html.RenderSideBar(showSearch: false); }
     </div>
 </div>

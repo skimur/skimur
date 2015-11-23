@@ -342,7 +342,7 @@
     <Content Include="Views\Shared\_LayoutCentered.cshtml" />
     <Content Include="Views\Shared\_LayoutEmpty.cshtml" />
     <Content Include="Views\Shared\_Footer.cshtml" />
-    <Content Include="Views\Subs\Index.cshtml" />
+    <Content Include="Views\Subs\List.cshtml" />
     <Content Include="Views\Subs\Create.cshtml" />
     <Content Include="Views\Subs\Edit.cshtml" />
     <Content Include="Views\Posts\Posts.cshtml" />
@@ -409,6 +409,7 @@
     <Content Include="Views\Posts\PostList.cshtml" />
     <Content Include="Views\Embedded\Embedded.cshtml" />
     <Content Include="Settings\EmbedSettings.json" />
+    <Content Include="Views\Subs\_HeaderNav.cshtml" />
   </ItemGroup>
   <ItemGroup>
     <Content Include="favicon.ico" />
