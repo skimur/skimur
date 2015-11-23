@@ -240,12 +240,12 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "Submit",
                 url: "submit",
-                defaults: new { controller = "Subs", action = "CreatePost" });
+                defaults: new { controller = "Posts", action = "Create" });
 
             routes.MapRoute(
                 name: "SubmitWithSub",
                 url: "s/{subName}/submit",
-                defaults: new { controller = "Subs", action = "CreatePost" });
+                defaults: new { controller = "Posts", action = "Create" });
 
             routes.MapRoute(
                 name: "MessageCompose",

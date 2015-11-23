@@ -347,5 +347,78 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
+
+        [SkimurAuthorize]
+        public ActionResult Create(string subName = null, string type = null)
+        {
+            SubWrapped sub = null;
+
+            if (!string.IsNullOrEmpty(subName))
+            {
+                sub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
+                if (sub == null) throw new HttpException(404, "sub not found");
+            }
+
+            if (!string.IsNullOrEmpty(type))
+            {
+                type = type.ToLower();
+            }
+
+            // this prevents the case of the url "{subName}" to override the "SubName" property of the view model.
+            ModelState.Clear();
+
+            return View(new CreatePostModel
+            {
+                PostToSub = sub != null ? sub.Sub.Name : null,
+                Sub = sub,
+                PostType = type == "text" ? PostType.Text : PostType.Link,
+                NotifyReplies = true
+            });
+        }
+
+        [SkimurAuthorize]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public ActionResult Create(CreatePostModel model, string subName = null)
+        {
+            SubWrapped sub = null;
+
+            if (!string.IsNullOrEmpty(subName))
+            {
+                sub = _subWrapper.Wrap(_subDao.GetSubByName(subName), _userContext.CurrentUser);
+                if (sub == null) throw new HttpException(404, "sub not found");
+            }
+
+            model.Sub = sub;
+
+            var response = _commandBus.Send<CreatePost, CreatePostResponse>(new CreatePost
+            {
+                CreatedByUserId = _userContext.CurrentUser.Id,
+                IpAddress = Request.UserHostAddress,
+                Title = model.Title,
+                Url = model.Url,
+                Content = model.Content,
+                PostType = model.PostType,
+                SubName = model.PostToSub,
+                NotifyReplies = model.NotifyReplies
+            });
+
+            if (!string.IsNullOrEmpty(response.Error))
+            {
+                ModelState.AddModelError(string.Empty, response.Error);
+                return View(model);
+            }
+
+            if (!response.PostId.HasValue)
+            {
+                // TODO: log
+                ModelState.AddModelError(string.Empty, "Unknown error creating post.");
+                return View(model);
+            }
+
+            // todo: success message
+
+            return Redirect(Url.Post(model.PostToSub, response.PostId.Value, response.Title));
+        }
     }
 }

@@ -347,7 +347,7 @@
     <Content Include="Views\Subs\Edit.cshtml" />
     <Content Include="Views\Posts\Posts.cshtml" />
     <Content Include="Views\Subs\_TopBar.cshtml" />
-    <Content Include="Views\Subs\CreatePost.cshtml" />
+    <Content Include="Views\Posts\Create.cshtml" />
     <Content Include="Views\Shared\_LayoutFull.cshtml" />
     <Content Include="Views\Subs\_ModerationSideBar.cshtml" />
     <Content Include="Views\Users\User.cshtml" />
