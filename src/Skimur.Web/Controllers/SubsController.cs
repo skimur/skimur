@@ -82,33 +82,6 @@ namespace Skimur.Web.Controllers
                 _userContext.CurrentUser));
         }
         
-        [Ajax, HttpPost]
-        public ActionResult MoreComments(Guid postId, CommentSortBy? sort, string children, int depth)
-        {
-            if (!sort.HasValue)
-                sort = CommentSortBy.Best; // TODO: get suggested sort for this link, and if none, from the sub
-
-            var commentTree = _commentDao.GetCommentTree(postId);
-            var commentTreeSorter = _commentDao.GetCommentTreeSorter(postId, sort.Value);
-            var commentTreeContext = _commentTreeContextBuilder.Build(commentTree,
-                commentTreeSorter,
-                children.Split(',').Select(x => Guid.Parse(x)).ToList(),
-                limit: 20,
-                maxDepth: 5);
-            commentTreeContext.Sort = sort.Value;
-
-            var model = new CommentListModel();
-            model.SortBy = sort.Value;
-            model.CommentNodes = _commentNodeHierarchyBuilder.Build(commentTree, commentTreeContext, _userContext.CurrentUser);
-
-            return Json(new
-            {
-                success = true,
-                error = (string)null,
-                html = RenderView("_CommentNodes", model)
-            });
-        }
-
         public ActionResult SearchSub(string subName, string query, PostsSearchSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)
         {
             if (string.IsNullOrEmpty(subName))
@@ -361,75 +334,6 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.Sub(response.SubName));
         }
         
-        [SkimurAuthorize, Ajax, HttpPost]
-        public ActionResult CreateComment(CreateCommentModel model)
-        {
-            var dateCreated = Common.CurrentTime();
-            var response = _commandBus.Send<CreateComment, CreateCommentResponse>(new CreateComment
-            {
-                PostId = model.PostId,
-                ParentId = model.ParentId,
-                DateCreated = dateCreated,
-                AuthorIpAddress = Request.UserHostAddress,
-                AuthorUserName = _userContext.CurrentUser.UserName,
-                Body = model.Body,
-                SendReplies = model.SendReplies
-            });
-
-            if (!string.IsNullOrEmpty(response.Error))
-                return CommonJsonResult(response.Error);
-
-            if (!response.CommentId.HasValue)
-                throw new Exception("No error was given, which indicates success, but no comment id was returned.");
-
-            var node = _commentWrapper.Wrap(response.CommentId.Value, _userContext.CurrentUser);
-
-            return Json(new
-            {
-                success = true,
-                commentId = response.CommentId,
-                html = RenderView("_CommentNode", new CommentNode(node))
-            });
-        }
-
-        [SkimurAuthorize, Ajax, HttpPost]
-        public ActionResult EditComment(EditCommentModel model)
-        {
-            var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
-            {
-                DateEdited = Common.CurrentTime(),
-                CommentId = model.CommentId,
-                Body = model.Body
-            });
-
-            if (!string.IsNullOrEmpty(response.Error))
-                return CommonJsonResult(response.Error);
-
-            var html = RenderView("_CommentBody", new CommentNode(_commentWrapper.Wrap(model.CommentId, _userContext.CurrentUser)));
-
-            return Json(new
-            {
-                success = true,
-                commentId = model.CommentId,
-                // we don't render the whole comment, just the body.
-                // this is because we want to leave the children in-tact on the ui
-                html
-            });
-        }
-
-        [SkimurAuthorize, Ajax, HttpPost]
-        public ActionResult DeleteComment(Guid commentId)
-        {
-            var response = _commandBus.Send<DeleteComment, DeleteCommentResponse>(new DeleteComment
-            {
-                CommentId = commentId,
-                UserName = _userContext.CurrentUser.UserName,
-                DateDeleted = Common.CurrentTime()
-            });
-
-            return CommonJsonResult(response.Error);
-        }
-
         public ActionResult TopBar()
         {
             return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));

@@ -165,7 +165,7 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "MoreComments",
                 url: "morecomments",
-                defaults: new { controller = "Subs", action = "MoreComments" });
+                defaults: new { controller = "Comments", action = "More" });
 
             routes.MapRoute(
                 name: "User",
@@ -200,17 +200,17 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "CreateComment",
                 url: "createcomment",
-                defaults: new { controller = "Subs", action = "CreateComment" });
+                defaults: new { controller = "Comments", action = "Create" });
 
             routes.MapRoute(
                name: "EditComment",
                url: "editcomment",
-               defaults: new { controller = "Subs", action = "EditComment" });
+               defaults: new { controller = "Comments", action = "Edit" });
 
             routes.MapRoute(
                 name: "DeleteComment",
                 url: "deletecomment",
-                defaults: new { controller = "Subs", action = "DeleteComment" });
+                defaults: new { controller = "Comments", action = "Delete" });
 
             routes.MapRoute(
                 name: "DeletePost",
