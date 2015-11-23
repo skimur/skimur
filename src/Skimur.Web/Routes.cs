@@ -20,27 +20,27 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "Frontpage",
                 url: "",
-                defaults: new { controller = "Subs", action = "Frontpage" });
+                defaults: new { controller = "Posts", action = "Frontpage" });
 
             routes.MapRoute(
               name: "FrontpageHot",
               url: "hot",
-              defaults: new { controller = "Subs", action = "Frontpage", sort = "hot" });
+              defaults: new { controller = "Posts", action = "Frontpage", sort = "hot" });
 
             routes.MapRoute(
                name: "FrontpageNew",
                url: "new",
-               defaults: new { controller = "Subs", action = "Frontpage", sort = "new" });
+               defaults: new { controller = "Posts", action = "Frontpage", sort = "new" });
 
             routes.MapRoute(
                name: "FrontpageControversial",
                url: "controversial",
-               defaults: new { controller = "Subs", action = "Frontpage", sort = "controversial" });
+               defaults: new { controller = "Posts", action = "Frontpage", sort = "controversial" });
 
             routes.MapRoute(
                name: "FrontpageTop",
                url: "top",
-               defaults: new { controller = "Subs", action = "Frontpage", sort = "top" });
+               defaults: new { controller = "Posts", action = "Frontpage", sort = "top" });
 
             routes.MapRoute(
                 name: "Search",
@@ -75,27 +75,27 @@ namespace Skimur.Web
             routes.MapRoute(
                name: "Sub",
                url: "s/{subName}",
-               defaults: new { controller = "Subs", action = "Posts" });
+               defaults: new { controller = "Posts", action = "Posts" });
 
             routes.MapRoute(
                name: "SubHot",
                url: "s/{subName}/hot",
-               defaults: new { controller = "Subs", action = "Posts", sort = "hot" });
+               defaults: new { controller = "Posts", action = "Posts", sort = "hot" });
 
             routes.MapRoute(
                name: "SubNew",
                url: "s/{subName}/new",
-               defaults: new { controller = "Subs", action = "Posts", sort = "new" });
+               defaults: new { controller = "Posts", action = "Posts", sort = "new" });
 
             routes.MapRoute(
                name: "SubControversial",
                url: "s/{subName}/controversial",
-               defaults: new { controller = "Subs", action = "Posts", sort = "controversial" });
+               defaults: new { controller = "Posts", action = "Posts", sort = "controversial" });
 
             routes.MapRoute(
                name: "SubTop",
                url: "s/{subName}/top",
-               defaults: new { controller = "Subs", action = "Posts", sort = "top" });
+               defaults: new { controller = "Posts", action = "Posts", sort = "top" });
 
             routes.MapRoute(
                name: "SubSearch",
@@ -125,12 +125,12 @@ namespace Skimur.Web
             routes.MapRoute(
                 name: "Post",
                 url: "s/{subName}/post/{id}/{title}",
-                defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
+                defaults: new { controller = "Posts", action = "Post", title = UrlParameter.Optional });
 
             routes.MapRoute(
                 name: "PostComment",
                 url: "s/{subName}/post/{id}/{title}/c/{commentId}",
-                defaults: new { controller = "Subs", action = "Post", title = UrlParameter.Optional });
+                defaults: new { controller = "Posts", action = "Post", title = UrlParameter.Optional });
 
             routes.MapRoute(
                 name: "SubBans",

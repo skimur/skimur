@@ -345,7 +345,7 @@
     <Content Include="Views\Subs\Index.cshtml" />
     <Content Include="Views\Subs\Create.cshtml" />
     <Content Include="Views\Subs\Edit.cshtml" />
-    <Content Include="Views\Subs\Posts.cshtml" />
+    <Content Include="Views\Posts\Posts.cshtml" />
     <Content Include="Views\Subs\_TopBar.cshtml" />
     <Content Include="Views\Subs\CreatePost.cshtml" />
     <Content Include="Views\Shared\_LayoutFull.cshtml" />
@@ -355,7 +355,7 @@
     <Content Include="Views\Shared\_Post.cshtml" />
     <Content Include="Views\Common\_SideBarSearch.cshtml" />
     <Content Include="Views\Subs\Search.cshtml" />
-    <Content Include="Views\Subs\Post.cshtml" />
+    <Content Include="Views\Posts\Post.cshtml" />
     <Content Include="Views\Shared\_CommentNodes.cshtml" />
     <Content Include="Views\Shared\_LoginModal.cshtml" />
     <Content Include="Views\Shared\LoginModal\Register.cshtml" />
