@@ -194,7 +194,6 @@
     <Compile Include="Models\EmbeddedModels.cs" />
     <Compile Include="Models\ManageViewModels.cs" />
     <Compile Include="Models\MessageModels.cs" />
-    <Compile Include="Models\ModerationSideBarModel.cs" />
     <Compile Include="Models\ModeratorViewModels.cs" />
     <Compile Include="Models\PostViewModels.cs" />
     <Compile Include="Models\ReportModels.cs" />

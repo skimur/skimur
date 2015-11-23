@@ -349,7 +349,6 @@
     <Content Include="Views\Subs\_TopBar.cshtml" />
     <Content Include="Views\Posts\Create.cshtml" />
     <Content Include="Views\Shared\_LayoutFull.cshtml" />
-    <Content Include="Views\Subs\_ModerationSideBar.cshtml" />
     <Content Include="Views\Users\User.cshtml" />
     <Content Include="Views\Subs\_SubDetails.cshtml" />
     <Content Include="Views\Shared\_Post.cshtml" />
