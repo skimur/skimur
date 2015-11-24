@@ -261,6 +261,9 @@ namespace Skimur.Web.Controllers
         [ValidateAntiForgeryToken]
         public ActionResult ExternalLogin(string provider, string returnUrl)
         {
+            // ensure Session has at least one value
+            Session["EnableExternalAuth"] = true;
+
             // Request a redirect to the external login provider
             return new ChallengeResult(provider, Url.Action("ExternalLoginCallback", "Account", new { ReturnUrl = returnUrl }), _authenticationManager);
         }
