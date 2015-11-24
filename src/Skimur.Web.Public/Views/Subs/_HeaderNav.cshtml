@@ -1,5 +1,4 @@
 ﻿@{
-    // the model is a boolean indicating if we are a mod or not
     var navigationKey = ViewBag.NavigationKey;
 }
 <div class="header-nav">
@@ -7,6 +6,10 @@
         <ul class="nav nav-tabs">
             <li class="@(navigationKey == "popular" ? "active" : null)"><a href="@Url.Subs()">@Title("popular")</a></li>
             <li class="@(navigationKey == "new" ? "active" : null)"><a href="@Url.SubsNew()">@Title("new")</a></li>
+            @if (Request.IsAuthenticated)
+            {
+                <li class="@(navigationKey == "subscribed" || navigationKey == "moderating" ? "active" : null)"><a href="@Url.SubsSubscribed()">@Title("subscribed")</a></li>
+            }
         </ul>
     </div>
     <div class="visible-xs-block">
@@ -18,6 +21,10 @@
                 <ul class="dropdown-menu">
                     <li class="@(navigationKey == "popular" ? "active" : null)"><a href="@Url.Subs()">@Title("popular")</a></li>
                     <li class="@(navigationKey == "new" ? "active" : null)"><a href="@Url.SubsNew()">@Title("new")</a></li>
+                    @if (Request.IsAuthenticated)
+                    {
+                        <li class="@(navigationKey == "subscribed" || navigationKey == "moderating" ? "active" : null)"><a href="@Url.SubsSubscribed()">@Title("subscribed")</a></li>
+                    }
                 </ul>
             </li>
         </ul>
@@ -34,5 +41,11 @@
         case "new":
                 <text>New</text>
             break;
+        case "subscribed":
+                <text>My subs</text>
+        break;
+        case "moderating":
+                <text>My subs</text>
+        break;
     }
 }

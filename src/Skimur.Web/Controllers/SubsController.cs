@@ -33,6 +33,7 @@ namespace Skimur.Web.Controllers
         private readonly IMembershipService _membershipService;
         private readonly ISettingsProvider<SubSettings> _subSettings;
         private readonly ISubActivityDao _subActivityDao;
+        private readonly IModerationDao _moderationDao;
 
         public SubsController(IContextService contextService,
             ISubDao subDao,
@@ -50,7 +51,8 @@ namespace Skimur.Web.Controllers
             ICommentWrapper commentWrapper,
             IMembershipService membershipService,
             ISettingsProvider<SubSettings> subSettings,
-            ISubActivityDao subActivityDao)
+            ISubActivityDao subActivityDao,
+            IModerationDao moderationDao)
         {
             _contextService = contextService;
             _subDao = subDao;
@@ -69,6 +71,7 @@ namespace Skimur.Web.Controllers
             _membershipService = membershipService;
             _subSettings = subSettings;
             _subActivityDao = subActivityDao;
+            _moderationDao = moderationDao;
         }
 
         public ActionResult Popular(string query, int? pageNumber, int? pageSize)
@@ -114,6 +117,22 @@ namespace Skimur.Web.Controllers
                 take: pageSize);
 
             return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(subs, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, subs.HasMore));
+        }
+
+        [SkimurAuthorize]
+        public ActionResult Subscribed()
+        {
+            ViewBag.NavigationKey = "subscribed";
+            
+            return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser), 1, int.MaxValue, false));
+        }
+
+        [SkimurAuthorize]
+        public ActionResult Moderating()
+        {
+            ViewBag.NavigationKey = "moderating";
+            
+            return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(_moderationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id), _userContext.CurrentUser), 1, int.MaxValue, false));
         }
 
         public ActionResult SearchSub(string subName, string query, PostsSearchSortBy? sort, PostsTimeFilter? time, int? pageNumber, int? pageSize)

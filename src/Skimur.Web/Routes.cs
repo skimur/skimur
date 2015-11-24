@@ -28,6 +28,16 @@ namespace Skimur.Web
                 defaults: new { controller = "Subs", action = "New" });
 
             routes.MapRoute(
+                name: "SubsSubscribed",
+                url: "subs/subscribed",
+                defaults: new {controller="Subs", action="Subscribed"});
+
+            routes.MapRoute(
+               name: "SubsModerating",
+               url: "subs/moderating",
+               defaults: new { controller = "Subs", action = "Moderating" });
+            
+            routes.MapRoute(
                 name: "Frontpage",
                 url: "",
                 defaults: new { controller = "Posts", action = "Frontpage" });

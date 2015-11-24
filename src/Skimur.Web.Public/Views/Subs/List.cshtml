@@ -1,6 +1,22 @@
 ﻿@model PagedList<Subs.ReadModel.SubWrapped>
 @{
     ViewBag.Title = "Subs";
+    var navigationKey = (string)ViewBag.NavigationKey;
+    switch (navigationKey)
+    {
+        case "popular":
+            ViewBag.Title = "Popular subs";
+            break;
+        case "new":
+            ViewBag.Title = "New subs";
+            break;
+        case "subscribed":
+            ViewBag.Title = "Subscribed subs";
+            break;
+        case "moderating":
+            ViewBag.Title = "Moderating subs";
+            break;
+    }
 }
 
 @section header {
@@ -10,21 +26,20 @@
 <div class="row">
     <div class="col-lg-9 col-sm-8">
 
-        <div class="row">
-            <div class="col-lg-4">
-                <div class="panel panel-search">
-                    <div class="input-group">
-                        <input id="subQuery" type="text" class="form-control" placeholder="Search..." value="@ViewBag.Query">
-                        @if (!string.IsNullOrEmpty(ViewBag.Query))
-                        {
-                            <a class="input-group-addon btn btn-primary" href="@Url.Subs()"><span class="fa fa-close"></span></a>
-                        }
-                        <span id="subQuerySearch" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
-                    </div>
-                </div>
-            </div>
-        </div>
+        @if (navigationKey != "subscribed" && navigationKey != "moderating")
+        {
+            <h2 class="page-header">@ViewBag.Title</h2>
+        }
 
+        @if (navigationKey == "subscribed" || navigationKey == "moderating")
+        {
+            <div class="form-group">
+                <ul class="nav nav-tabs">
+                    <li class="@(navigationKey == "subscribed" ? "active" : null)"><a href="@Url.SubsSubscribed()">Subscribed</a></li>
+                    <li class="@(navigationKey == "moderating" ? "active" : null)"><a href="@Url.SubsModerating()">Moderating</a></li>
+                </ul>
+            </div>
+        }
 
         @if (Model.Count == 0)
         {
@@ -50,14 +65,25 @@
         }
         @if (Model.HasPreviousPage || Model.HasNextPage)
         {
-        <div class="row">
-            <div class="list-pager">
-                @Html.Pager(Model)
+            <div class="row">
+                <div class="list-pager">
+                    @Html.Pager(Model)
+                </div>
             </div>
-        </div>
         }
     </div>
     <div class="col-lg-3 col-sm-4">
+        <div class="panel panel-search">
+            <div class="input-group">
+                <input id="subQuery" type="text" class="form-control" placeholder="Search..." value="@ViewBag.Query">
+                @if (!string.IsNullOrEmpty(ViewBag.Query))
+                {
+                    <a class="input-group-addon btn btn-primary" href="@Url.Subs()"><span class="fa fa-close"></span></a>
+                }
+                <span id="subQuerySearch" class="input-group-addon btn btn-primary"><span class="fa fa-search"></span></span>
+            </div>
+        </div>
+
         @{ Html.RenderSideBar(showSearch: false); }
     </div>
 </div>
