@@ -1,0 +1,32 @@
+﻿
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio 14
+VisualStudioVersion = 14.0.23107.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "src", "src", "{C0000431-281C-40C4-9918-EF1258B5E2AB}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Solution Items", "Solution Items", "{D81A4076-1A21-4825-AC47-EBF05860676F}"
+	ProjectSection(SolutionItems) = preProject
+		global.json = global.json
+	EndProjectSection
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur", "src\Skimur\Skimur.xproj", "{A3F1115A-8EFD-4FF9-8186-F07F16066930}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{A3F1115A-8EFD-4FF9-8186-F07F16066930}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{A3F1115A-8EFD-4FF9-8186-F07F16066930}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{A3F1115A-8EFD-4FF9-8186-F07F16066930}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{A3F1115A-8EFD-4FF9-8186-F07F16066930}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(NestedProjects) = preSolution
+		{A3F1115A-8EFD-4FF9-8186-F07F16066930} = {C0000431-281C-40C4-9918-EF1258B5E2AB}
+	EndGlobalSection
+EndGlobal

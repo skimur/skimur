@@ -1,0 +1,30 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Skimur",
+  "authors": [ "Skimur" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+  "compile": [ "../GlobalAssemblyInfo.cs" ],
+
+  "frameworks": {
+    "net451": {
+      "frameworkAssemblies": {
+        "System.Configuration": "4.0.0.0",
+        "System.Drawing": "4.0.0.0",
+        "System.Web": "4.0.0.0",
+        "System.Data": "4.0.0.0"
+      }
+    }
+  },
+
+  "dependencies": {
+    "CassandraCSharpDriver": "2.7.2",
+    "NLog": "4.2.0",
+    "ServiceStack.OrmLite.PostgreSQL": "4.0.46",
+    "ServiceStack.RabbitMq": "4.0.46",
+    "ServiceStack.Redis": "4.0.46",
+    "SimpleInjector": "3.0.5",
+    "Newtonsoft.Json": "7.0.1"
+  }
+}
