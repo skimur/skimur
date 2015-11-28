@@ -1,0 +1,30 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Skimur.Web Class Library",
+  "authors": [ "Paul" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.ComponentModel.DataAnnotations": "4.0.0.0",
+        "System.Web": "4.0.0.0"
+      }
+    }
+  },
+
+  "dependencies": {
+    "Skimur": "",
+    "Subs": "",
+    "Emails": "",
+    "Microsoft.AspNet.Mvc": "5.2.3",
+    "FluentValidation.MVC5": "5.6.2.0",
+    "Microsoft.AspNet.Identity.Core": "2.2.1",
+    "Microsoft.AspNet.Identity.Owin": "2.2.1",
+    "Microsoft.Web.Infrastructure": "1.0.0",
+    "ImageResizer": "3.4.3",
+    "Microsoft.AspNet.Web.Optimization": "1.1.3"
+  }
+}

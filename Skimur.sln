@@ -18,6 +18,10 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Subs", "src\Subs\Subs\Subs.
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Membership", "src\Membership\Membership\Membership.xproj", "{32B33BF3-EA75-41BC-A25E-7E641EB92BD8}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.Web", "src\Skimur.Web\Skimur.Web.xproj", "{BB729E11-4659-4310-BBBA-530185AC6C33}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Emails", "src\Emails\Emails\Emails.xproj", "{EEF2709B-285B-4A3B-BE99-814F98DCD573}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -36,6 +40,14 @@ Global
 		{32B33BF3-EA75-41BC-A25E-7E641EB92BD8}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{32B33BF3-EA75-41BC-A25E-7E641EB92BD8}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{32B33BF3-EA75-41BC-A25E-7E641EB92BD8}.Release|Any CPU.Build.0 = Release|Any CPU
+		{BB729E11-4659-4310-BBBA-530185AC6C33}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{BB729E11-4659-4310-BBBA-530185AC6C33}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{BB729E11-4659-4310-BBBA-530185AC6C33}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{BB729E11-4659-4310-BBBA-530185AC6C33}.Release|Any CPU.Build.0 = Release|Any CPU
+		{EEF2709B-285B-4A3B-BE99-814F98DCD573}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{EEF2709B-285B-4A3B-BE99-814F98DCD573}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{EEF2709B-285B-4A3B-BE99-814F98DCD573}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{EEF2709B-285B-4A3B-BE99-814F98DCD573}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
