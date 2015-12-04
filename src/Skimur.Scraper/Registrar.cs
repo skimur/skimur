@@ -1,17 +1,12 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using SimpleInjector;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur.Scraper
 {
     public class Registrar : IRegistrar
     {
-        public void Register(Container container)
+        public void Register(IServiceCollection serviceCollection)
         {
-            container.RegisterSingleton<IMediaScrapper, MediaScrapper>();
+            serviceCollection.AddSingleton<IMediaScrapper, MediaScrapper>();
         }
 
         public int Order { get { return 0; } }

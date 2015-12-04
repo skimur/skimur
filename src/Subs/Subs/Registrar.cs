@@ -8,50 +8,51 @@ using Subs.ReadModel;
 using Subs.ReadModel.Impl;
 using Subs.Services;
 using Subs.Services.Impl;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Subs
 {
     public class Registrar : IRegistrar
     {
-        public void Register(SimpleInjector.Container container)
+        public void Register(IServiceCollection serviceCollection)
         {
-            container.RegisterSingleton<IModeratorInviteWrapper, ModeratorInviteWrapper>();
-            container.RegisterSingleton<IModerationInviteService, ModerationInviteService>();
-            container.RegisterSingleton<IModerationInviteDao, ModerationInviteDao>();
-            container.RegisterSingleton<IKarmaService, KarmaService>();
-            container.RegisterSingleton<IKarmaDao, KarmaDao>();
-            container.RegisterSingleton<IModerationService, ModerationService>();
-            container.RegisterSingleton<IModerationDao, ModerationDao>();
-            container.RegisterSingleton<IReportService, ReportService>();
-            container.RegisterSingleton<IReportDao, ReportDao>();
-            container.RegisterSingleton<ISubActivityService, SubActivityService>();
-            container.RegisterSingleton<ISubActivityDao, SubActivityDao>();
-            container.RegisterSingleton<ISubUserBanService, SubUserBanService>();
-            container.RegisterSingleton<ISubUserBanDao, SubUserBanDao>();
-            container.RegisterSingleton<ISubService, SubService>();
-            container.RegisterSingleton<ISubDao, SubDao>();
-            container.RegisterSingleton<IPostService, PostService>();
-            container.RegisterSingleton<IPostDao, PostDao>();
-            container.RegisterSingleton<IVoteService, VoteService>();
-            container.RegisterSingleton<IVoteDao, VoteDao>();
-            container.RegisterSingleton<ICommentService, CommentService>();
-            container.RegisterSingleton<ICommentDao, CommentDao>();
-            container.RegisterSingleton<IPermissionService, PermissionService>();
-            container.RegisterSingleton<IPermissionDao, PermissionDao>();
-            container.RegisterSingleton<IMessageService, MessageService>();
-            container.RegisterSingleton<IMessageDao, MessageDao>();
-            container.RegisterSingleton<ICommentTreeBuilder, CommentTreeBuilder>();
-            container.RegisterSingleton<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
-            container.RegisterSingleton<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
-            container.RegisterSingleton<ICommentWrapper, CommentWrapper>();
-            container.RegisterSingleton<IPostWrapper, PostWrapper>();
-            container.RegisterSingleton<ISubWrapper, SubWrapper>();
-            container.RegisterSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
-            container.RegisterSingleton<IMessageWrapper, MessageWrapper>();
-            container.RegisterSingleton<IModeratorWrapper, ModeratorWrapper>();
-            container.RegisterSingleton<ISubCssService, SubCssService>();
-            container.RegisterSingleton<ISubCssDao, SubCssDao>();
-            container.RegisterSingleton<IPostThumbnailService, PostThumbnailService>();
+            serviceCollection.AddSingleton<IModeratorInviteWrapper, ModeratorInviteWrapper>();
+            serviceCollection.AddSingleton<IModerationInviteService, ModerationInviteService>();
+            serviceCollection.AddSingleton<IModerationInviteDao, ModerationInviteDao>();
+            serviceCollection.AddSingleton<IKarmaService, KarmaService>();
+            serviceCollection.AddSingleton<IKarmaDao, KarmaDao>();
+            serviceCollection.AddSingleton<IModerationService, ModerationService>();
+            serviceCollection.AddSingleton<IModerationDao, ModerationDao>();
+            serviceCollection.AddSingleton<IReportService, ReportService>();
+            serviceCollection.AddSingleton<IReportDao, ReportDao>();
+            serviceCollection.AddSingleton<ISubActivityService, SubActivityService>();
+            serviceCollection.AddSingleton<ISubActivityDao, SubActivityDao>();
+            serviceCollection.AddSingleton<ISubUserBanService, SubUserBanService>();
+            serviceCollection.AddSingleton<ISubUserBanDao, SubUserBanDao>();
+            serviceCollection.AddSingleton<ISubService, SubService>();
+            serviceCollection.AddSingleton<ISubDao, SubDao>();
+            serviceCollection.AddSingleton<IPostService, PostService>();
+            serviceCollection.AddSingleton<IPostDao, PostDao>();
+            serviceCollection.AddSingleton<IVoteService, VoteService>();
+            serviceCollection.AddSingleton<IVoteDao, VoteDao>();
+            serviceCollection.AddSingleton<ICommentService, CommentService>();
+            serviceCollection.AddSingleton<ICommentDao, CommentDao>();
+            serviceCollection.AddSingleton<IPermissionService, PermissionService>();
+            serviceCollection.AddSingleton<IPermissionDao, PermissionDao>();
+            serviceCollection.AddSingleton<IMessageService, MessageService>();
+            serviceCollection.AddSingleton<IMessageDao, MessageDao>();
+            serviceCollection.AddSingleton<ICommentTreeBuilder, CommentTreeBuilder>();
+            serviceCollection.AddSingleton<ICommentTreeContextBuilder, CommentTreeContextBuilder>();
+            serviceCollection.AddSingleton<ICommentNodeHierarchyBuilder, CommentNodeHierarchyBuilder>();
+            serviceCollection.AddSingleton<ICommentWrapper, CommentWrapper>();
+            serviceCollection.AddSingleton<IPostWrapper, PostWrapper>();
+            serviceCollection.AddSingleton<ISubWrapper, SubWrapper>();
+            serviceCollection.AddSingleton<ISubUserBanWrapper, SubUserBanWrapper>();
+            serviceCollection.AddSingleton<IMessageWrapper, MessageWrapper>();
+            serviceCollection.AddSingleton<IModeratorWrapper, ModeratorWrapper>();
+            serviceCollection.AddSingleton<ISubCssService, SubCssService>();
+            serviceCollection.AddSingleton<ISubCssDao, SubCssDao>();
+            serviceCollection.AddSingleton<IPostThumbnailService, PostThumbnailService>();
         }
 
         public int Order

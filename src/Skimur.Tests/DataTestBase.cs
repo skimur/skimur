@@ -2,6 +2,7 @@
 using ServiceStack.DataAnnotations;
 using ServiceStack.OrmLite;
 using Skimur.Data;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur.Tests
 {
@@ -24,10 +25,10 @@ namespace Skimur.Tests
         {
             base.Setup();
 
-            Skimur.Cassandra.Migrations.Migrations.Run(_container);
-            Skimur.Postgres.Migrations.Migrations.Run(_container);
+            Cassandra.Migrations.Migrations.Run(_serviceProvider);
+            Postgres.Migrations.Migrations.Run(_serviceProvider);
 
-            _conn = _container.GetInstance<IDbConnectionProvider>();
+            _conn = _serviceProvider.GetService<IDbConnectionProvider>();
             _conn.Perform(conn =>
             {
                 conn.ExecuteProcedure(new ClearDatabaseFunction());

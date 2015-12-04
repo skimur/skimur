@@ -7,7 +7,7 @@ using Skimur.Messaging.Handling;
 using Skimur.Tests;
 using Subs.Commands;
 using Subs.Services;
-using Subs.Worker;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Subs.Tests
 {
@@ -217,11 +217,11 @@ namespace Subs.Tests
         protected override void Setup()
         {
             base.Setup();
-            _membershipService = _container.GetInstance<IMembershipService>();
-            _createSubHandler = _container.GetInstance<ICommandHandlerResponse<CreateSub, CreateSubResponse>>();
-            _sendMessageHandler = _container.GetInstance<ICommandHandlerResponse<SendMessage, SendMessageResponse>>();
-            _replyMessageHandler = _container.GetInstance<ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>>();
-            _messageService = _container.GetInstance<IMessageService>();
+            _membershipService = _serviceProvider.GetService<IMembershipService>();
+            _createSubHandler = _serviceProvider.GetService<ICommandHandlerResponse<CreateSub, CreateSubResponse>>();
+            _sendMessageHandler = _serviceProvider.GetService<ICommandHandlerResponse<SendMessage, SendMessageResponse>>();
+            _replyMessageHandler = _serviceProvider.GetService<ICommandHandlerResponse<ReplyMessage, ReplyMessageResponse>>();
+            _messageService = _serviceProvider.GetService<IMessageService>();
         }
     }
 }
