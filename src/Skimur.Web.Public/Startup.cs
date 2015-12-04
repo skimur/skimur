@@ -11,12 +11,14 @@ using Microsoft.Owin.Security;
 using Microsoft.Owin.Security.Cookies;
 using Microsoft.Owin.Security.DataProtection;
 using Owin;
-using SimpleInjector;
 using Skimur.Logging;
 using Skimur.Messaging;
 using Skimur.Settings;
 using Skimur.Web.Middleware;
 using Skimur.Web.Public;
+using Microsoft.Extensions.DependencyInjection;
+using System.Collections.Generic;
+using System.Linq;
 
 // ReSharper disable once RedundantNameQualifier
 
@@ -51,6 +53,10 @@ namespace Skimur.Web.Public
         {
             SkimurContext.ContainerInitialized += Cassandra.Migrations.Migrations.Run;
             SkimurContext.ContainerInitialized += Postgres.Migrations.Migrations.Run;
+            SkimurContext.ContainerInitialized += provider =>
+            {
+                DependencyResolver.SetResolver(new ServiceProviderDependencyResolver(provider));
+            };
             SkimurContext.Initialize(new Registrar(),
                 new Markdown.Registrar(),
                 new Scraper.Registrar(),
@@ -134,13 +140,39 @@ namespace Skimur.Web.Public
                 app.UseGoogleAuthentication(googleClientId, googleSecret);
         }
 
-        public void Register(Container container)
+        public void Register(IServiceCollection serviceCollection)
         {
-            container.RegisterPerWebRequest(() => HttpContext.Current.GetOwinContext().Authentication);
-            container.RegisterSingleton(_app.GetDataProtectionProvider());
-            container.RegisterMvcControllers(typeof(global::Skimur.Web.Registrar).Assembly);
+            serviceCollection.AddScoped(provider => HttpContext.Current.GetOwinContext().Authentication);
+            serviceCollection.AddSingleton(provider => _app.GetDataProtectionProvider());
+            foreach(var potentialController in typeof(global::Skimur.Web.Registrar).Assembly.GetTypes())
+            {
+                if(typeof(Controller).IsAssignableFrom(potentialController))
+                {
+                    serviceCollection.AddScoped(potentialController);
+                }
+            }
         }
 
         public int Order { get { return 0; } }
+    }
+
+    public class ServiceProviderDependencyResolver : IDependencyResolver
+    {
+        IServiceProvider _serviceProvider;
+
+        public ServiceProviderDependencyResolver(IServiceProvider serviceProvider)
+        {
+            _serviceProvider = serviceProvider;
+        }
+
+        public object GetService(Type serviceType)
+        {
+            return SkimurContext.Resolve(serviceType);
+        }
+
+        public IEnumerable<object> GetServices(Type serviceType)
+        {
+            return Enumerable.Empty<object>();
+        }
     }
 }

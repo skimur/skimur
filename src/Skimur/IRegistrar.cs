@@ -1,10 +1,10 @@
-﻿using SimpleInjector;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur
 {
     public interface IRegistrar
     {
-        void Register(Container container);
+        void Register(IServiceCollection serviceCollection);
 
         int Order { get; }
     }

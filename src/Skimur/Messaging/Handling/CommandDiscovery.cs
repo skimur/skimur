@@ -1,28 +1,26 @@
-﻿using System;
+﻿using Microsoft.Extensions.DependencyInjection;
+using System;
 using System.Linq;
 using System.Reflection;
-using SimpleInjector;
 
 namespace Skimur.Messaging.Handling
 {
     public class CommandDiscovery : ICommandDiscovery
     {
-        private readonly Container _container;
+        private readonly IServiceCollection _services;
 
-        public CommandDiscovery(Container container)
+        public CommandDiscovery(IServiceCollection services)
         {
-            _container = container;
+            _services = services;
         }
 
         public void Register(ICommandRegistrar registrar)
         {
-            var registrations = _container.GetCurrentRegistrations();
-
-            foreach (var registration in registrations)
+            foreach (var service in _services.Select(x => x.ServiceType))
             {
-                if (typeof (ICommandHandler).IsAssignableFrom(registration.ServiceType))
+                if (typeof (ICommandHandler).IsAssignableFrom(service))
                 {
-                    var genericArguements = registration.ServiceType.GetGenericArguments();
+                    var genericArguements = service.GetGenericArguments();
                     if (genericArguements.Count() == 1)
                         RegisterCommandHandler(genericArguements[0], registrar);
                     else
