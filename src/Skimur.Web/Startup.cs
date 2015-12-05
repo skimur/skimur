@@ -93,24 +93,21 @@ namespace Skimur.Web
         public void Register(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IConfiguration>(provider => Configuration);
-            //// Add framework services.
-            //services.AddEntityFramework()
-            //    .AddSqlServer()
-            //    .AddDbContext<ApplicationDbContext>(options =>
-            //        options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
 
-            //services.AddIdentity<ApplicationUser, ApplicationRole>()
-            //    .AddEntityFrameworkStores<ApplicationDbContext>()
-            //    .AddDefaultTokenProviders();
+            serviceCollection.AddScoped<ApplicationUserStore>();
+            serviceCollection.AddScoped<IUserStore<User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IRoleStore<Role>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IPasswordHasher<User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IUserValidator<User>>(provider => provider.GetService<ApplicationUserStore>());
 
-            serviceCollection.AddIdentity<User, Role>().AddDefaultTokenProviders()
-                .AddUserStore<ApplicationUserStore>()
-                .AddRoleStore<ApplicationUserStore>();
-
+            serviceCollection.AddIdentity<User, Role>(options => 
+            {
+                options.Password.RequireNonLetterOrDigit = false;
+                options.Password.RequireUppercase = false;
+            }).AddDefaultTokenProviders();
 
             serviceCollection.AddMvc();
-
-            //// Add application services.
+            
             serviceCollection.AddSingleton<IEmailSender, AuthMessageSender>();
             serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
         }

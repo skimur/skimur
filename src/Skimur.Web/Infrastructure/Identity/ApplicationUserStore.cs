@@ -10,23 +10,28 @@ using System.ComponentModel;
 
 namespace Skimur.Web.Infrastructure.Identity
 {
-    public class ApplicationUserStore : 
-        IUserStore<User>, 
+    public class ApplicationUserStore :
+        IUserStore<User>,
         IRoleStore<Role>,
-        IUserPasswordStore<User>
+        IUserPasswordStore<User>,
+        IPasswordHasher<User>,
+        IUserValidator<User>
     {
         IMembershipService _membershipService;
+        IPasswordManager _passwordManager;
 
-        public ApplicationUserStore(IMembershipService membershipService)
+        public ApplicationUserStore(IMembershipService membershipService,
+            IPasswordManager passwordManager)
         {
             _membershipService = membershipService;
+            _passwordManager = passwordManager;
         }
 
         #region IUserStore
 
         Task<IdentityResult> IUserStore<User>.CreateAsync(User user, CancellationToken cancellationToken)
         {
-            return Task.Factory.StartNew(() => 
+            return Task.Factory.StartNew(() =>
             {
                 _membershipService.InsertUser(user);
                 return IdentityResult.Success;
@@ -42,7 +47,7 @@ namespace Skimur.Web.Infrastructure.Identity
                 return IdentityResult.Success;
             });
         }
-        
+
         Task<User> IUserStore<User>.FindByIdAsync(string userId, CancellationToken cancellationToken)
         {
             return Task.Factory.StartNew(() =>
@@ -103,7 +108,7 @@ namespace Skimur.Web.Infrastructure.Identity
                 throw new ArgumentNullException(nameof(user));
 
             user.UserName = userName;
-            
+
             return Task.FromResult(0);
         }
 
@@ -202,6 +207,61 @@ namespace Skimur.Web.Infrastructure.Identity
 
         #endregion
 
+        #region IPasswordHasher
+
+        string IPasswordHasher<User>.HashPassword(User user, string password)
+        {
+            return _passwordManager.HashPassword(password);
+        }
+
+        PasswordVerificationResult IPasswordHasher<User>.VerifyHashedPassword(User user, string hashedPassword, string providedPassword)
+        {
+            return _passwordManager.VerifyHashedPassword(hashedPassword, providedPassword) ? PasswordVerificationResult.Success : PasswordVerificationResult.Failed;
+        }
+
+        #endregion
+
+        #region IUserValidator
+
+        Task<IdentityResult> IUserValidator<User>.ValidateAsync(UserManager<User> manager, User user)
+        {
+            var validationResult = _membershipService.ValidateUser(user);
+
+            if (validationResult == UserValidationResult.Success)
+                return Task.FromResult(IdentityResult.Success);
+
+            var errors = new List<string>();
+
+            if (validationResult.HasFlag(UserValidationResult.UnknownError))
+            {
+                errors.Add("Unknown error updating user.");
+            }
+            if (validationResult.HasFlag(UserValidationResult.InvalidUserName))
+            {
+                errors.Add("Invalid user name.");
+            }
+            if (validationResult.HasFlag(UserValidationResult.UserNameInUse))
+            {
+                errors.Add("The user name is already in use.");
+            }
+            if (validationResult.HasFlag(UserValidationResult.CantChangeUsername))
+            {
+                errors.Add("The user name cannot be changed.");
+            }
+            if (validationResult.HasFlag(UserValidationResult.InvalidEmail))
+            {
+                errors.Add("The email is invalid.");
+            }
+            if (validationResult.HasFlag(UserValidationResult.EmailInUse))
+            {
+                errors.Add("The email has already been registered.");
+            }
+
+            return Task.FromResult(IdentityResult.Failed(errors.Select(x => new IdentityError { Description = x }).ToArray()));
+        }
+
+        #endregion
+        
         public virtual Guid ConvertIdFromString(string id)
         {
             if (string.IsNullOrEmpty(id))
