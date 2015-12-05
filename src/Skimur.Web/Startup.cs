@@ -4,17 +4,20 @@ using System.Linq;
 using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-using Microsoft.AspNet.Identity.EntityFramework;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
-using Skimur.Web.Models;
 using Skimur.Web.Services;
+using Skimur.Utils;
+using Skimur.Web.Infrastructure.Identity;
+using Microsoft.AspNet.Identity;
+using Membership;
+using Skimur.Web.Services.Impl;
 
 namespace Skimur.Web
 {
-    public class Startup
+    public class Startup : IRegistrar
     {
         public Startup(IHostingEnvironment env)
         {
@@ -34,25 +37,17 @@ namespace Skimur.Web
         }
 
         public IConfigurationRoot Configuration { get; set; }
-
+        
         // This method gets called by the runtime. Use this method to add services to the container.
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            // Add framework services.
-            services.AddEntityFramework()
-                .AddSqlServer()
-                .AddDbContext<ApplicationDbContext>(options =>
-                    options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
-
-            services.AddIdentity<ApplicationUser, IdentityRole>()
-                .AddEntityFrameworkStores<ApplicationDbContext>()
-                .AddDefaultTokenProviders();
-
-            services.AddMvc();
-
-            // Add application services.
-            services.AddTransient<IEmailSender, AuthMessageSender>();
-            services.AddTransient<ISmsSender, AuthMessageSender>();
+            SkimurContext.ContainerInitialized += Cassandra.Migrations.Migrations.Run;
+            SkimurContext.ContainerInitialized += Postgres.Migrations.Migrations.Run;
+            SkimurContext.Initialize(
+                new ServiceCollectionRegistrar(services, 0), 
+                this,
+                new Membership.Registrar());
+            return SkimurContext.ServiceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -70,18 +65,6 @@ namespace Skimur.Web
             else
             {
                 app.UseExceptionHandler("/Home/Error");
-
-                // For more details on creating database during deployment see http://go.microsoft.com/fwlink/?LinkID=615859
-                try
-                {
-                    using (var serviceScope = app.ApplicationServices.GetRequiredService<IServiceScopeFactory>()
-                        .CreateScope())
-                    {
-                        serviceScope.ServiceProvider.GetService<ApplicationDbContext>()
-                             .Database.Migrate();
-                    }
-                }
-                catch { }
             }
 
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
@@ -102,5 +85,36 @@ namespace Skimur.Web
 
         // Entry point for the application.
         public static void Main(string[] args) => WebApplication.Run<Startup>(args);
+
+        #region IRegistrar
+
+        public int Order => 0;
+
+        public void Register(IServiceCollection serviceCollection)
+        {
+            serviceCollection.AddSingleton<IConfiguration>(provider => Configuration);
+            //// Add framework services.
+            //services.AddEntityFramework()
+            //    .AddSqlServer()
+            //    .AddDbContext<ApplicationDbContext>(options =>
+            //        options.UseSqlServer(Configuration["Data:DefaultConnection:ConnectionString"]));
+
+            //services.AddIdentity<ApplicationUser, ApplicationRole>()
+            //    .AddEntityFrameworkStores<ApplicationDbContext>()
+            //    .AddDefaultTokenProviders();
+
+            serviceCollection.AddIdentity<User, Role>().AddDefaultTokenProviders()
+                .AddUserStore<ApplicationUserStore>()
+                .AddRoleStore<ApplicationUserStore>();
+
+
+            serviceCollection.AddMvc();
+
+            //// Add application services.
+            serviceCollection.AddSingleton<IEmailSender, AuthMessageSender>();
+            serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
+        }
+
+        #endregion
     }
 }

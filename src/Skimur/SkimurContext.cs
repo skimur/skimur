@@ -146,6 +146,15 @@ namespace Skimur
             return Resolve(typeof(T)) as T;
         }
 
+        public static IServiceProvider ServiceProvider
+        {
+            get
+            {
+                EnsureInitialized();
+                return _serviceProvider;
+            }
+        }
+
         private static void EnsureInitialized()
         {
             if (_serviceProvider == null) throw new Exception("The YenContext has not been initialized.");

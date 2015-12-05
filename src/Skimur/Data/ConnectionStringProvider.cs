@@ -1,4 +1,5 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
+using System;
 
 namespace Skimur.Data
 {
@@ -18,16 +19,16 @@ namespace Skimur.Data
         /// <summary>
         /// Initializes a new instance of the <see cref="ConnectionStringProvider"/> class.
         /// </summary>
-        public ConnectionStringProvider()
+        public ConnectionStringProvider(IConfiguration configuration)
         {
-            var connection = System.Configuration.ConfigurationManager.AppSettings["Postgres"];
+            var connection = configuration.Get<string>("Data:Postgres", null);
 
-            if(connection == null) return;
+            if (connection == null) return;
 
             if (string.IsNullOrEmpty(connection))
                 return;
 
-            _connectionString = connection == "registry" ? GetConnectionStringFromRegistry() : connection;
+            _connectionString = connection;
         }
 
         #endregion
@@ -48,15 +49,6 @@ namespace Skimur.Data
         public string ConnectionString
         {
             get { return _connectionString; }
-        }
-
-        #endregion
-
-        #region Methods
-
-        private string GetConnectionStringFromRegistry()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion
