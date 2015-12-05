@@ -232,3 +232,4 @@ dist/
 .vagrant/
 nuget.exe
 project.sublime-workspace
+src/Skimur.Web/wwwroot/lib/
