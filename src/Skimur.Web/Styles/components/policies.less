@@ -1,0 +1,24 @@
+﻿.policies-contentpolicy, .policies-useragreement, .policies-privacypolicy {
+    .policies-sidebar {
+        &.affix-top {
+            /*no need to do anything*/
+        }
+
+        &.affix {
+            position: fixed;
+            top: 20px;
+            /*medium*/
+            @media (min-width: @screen-md-min) {
+                width:212.5px;
+            }
+            /*large*/
+            @media (min-width: @screen-lg-min) {
+                width:262.5px;
+            }
+        }
+
+        &.affix-bottom {
+            /*no need to do anything*/
+        }
+    }
+}

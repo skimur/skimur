@@ -1,0 +1,111 @@
+﻿.post {
+
+    .disc-heading {
+        margin: 0;
+
+        .link {
+            font-size: @font-size-large;
+        }
+
+        .verdict {
+            &.approved {
+                color: green;
+                .fa;
+                .fa-mixin-icon(check);
+            }
+
+            &.removed {
+                color: red;
+                .fa;
+                .fa-mixin-icon(ban);
+            }
+        }
+
+        .domain {
+            font-size: @font-size-small;
+            color: @gray;
+
+            &:hover,
+            &:focus {
+                color: darken(@gray, 50%);
+            }
+        }
+    }
+
+    &.removed {
+        .disc-body {
+            .disc-main {
+                .disc-options {
+                    > li.remove {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &.approved {
+        .disc-body {
+            .disc-main {
+                .disc-options {
+                    > li.approve {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .disc-content.previewed{
+        clear:both;
+        .well;
+        padding:10px;
+    }
+
+    // lets hide the display content while we are editing it in a seperate text editor
+    &.editing {
+        .disc-content {
+            display:none;
+        }
+    }
+}
+
+.form-createpost {
+    .submissiontext {
+        .spinner {
+            text-align: center;
+            display: none;
+        }
+
+        &.loading {
+            .heading, .body {
+                display: none;
+            }
+
+            .spinner {
+                display: block;
+            }
+        }
+    }
+}
+
+.post {
+    .disc-body {
+        .thumb {
+            a {
+                .thumbnail;
+                width: 70px;
+            }
+        }
+        /* these are left for someone else to style if they want */
+        .thumb-text, .thumb-none {
+            display: none;
+        }
+
+        .thumb, .thumb-text, .thumb-none {
+            a {
+                margin-bottom: 0px;
+            }
+        }
+    }
+}

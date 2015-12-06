@@ -1,1 +1,24 @@
 ﻿@import "bower_components\bootstrap\less\bootstrap";
+@import "bower_components\bootstrap-markdown\less\bootstrap-markdown";
+@import "bower_components\font-awesome\less\font-awesome";
+@import "bower_components\bootstrap-social\bootstrap-social";
+@import (css) "bower_components\sweetalert\dist\sweetalert.css";
+
+.fa-mixin-icon(@icon){
+  @var: "fa-var-@{icon}";
+  &:before { content: @@var; }
+}
+
+@import "components/common.less";
+@import "components/layout.less";
+@import "components/sidebar.less";
+@import "components/discussions.less";
+@import "components/createpost.less";
+@import "components/posts.less";
+@import "components/subs.less";
+@import "components/misc.less";
+@import "components/comments.less";
+@import "components/policies.less";
+@import "components/messages.less";
+@import "components/users.less";
+@import "components/popup.less";

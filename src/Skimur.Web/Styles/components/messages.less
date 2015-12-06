@@ -1,0 +1,41 @@
+﻿.message {
+    &.message-unread {
+        background: @gray-lighter;
+
+        .disc-body {
+            .disc-main {
+                .disc-options {
+                    > li.mark-unread {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    &.message-read {
+        .disc-body {
+            .disc-main {
+                .disc-options {
+                    > li.mark-read {
+                        display: none;
+                    }
+                }
+            }
+        }
+    }
+
+    .message-header {
+        font-size: @font-size-small;
+
+        .type {
+            font-weight: bold;
+        }
+
+        .post {
+            font-style: italic;
+        }
+
+        margin-bottom: 5px;
+    }
+}
