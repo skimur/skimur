@@ -233,3 +233,4 @@ dist/
 nuget.exe
 project.sublime-workspace
 src/Skimur.Web/wwwroot/lib/
+src/Skimur.Web/bower_components/
