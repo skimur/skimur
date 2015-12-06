@@ -2,7 +2,7 @@
 @import "bower_components\bootstrap-markdown\less\bootstrap-markdown";
 @import "bower_components\font-awesome\less\font-awesome";
 @import "bower_components\bootstrap-social\bootstrap-social";
-@import (css) "bower_components\sweetalert\dist\sweetalert.css";
+@import (inline) "bower_components\sweetalert\dist\sweetalert.css";
 
 .fa-mixin-icon(@icon){
   @var: "fa-var-@{icon}";
@@ -21,4 +21,4 @@
 @import "components/policies.less";
 @import "components/messages.less";
 @import "components/users.less";
-@import "components/popup.less";
+@import "components/popup";

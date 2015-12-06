@@ -31,6 +31,11 @@ gulp.task("clean:css", function (cb) {
 
 gulp.task("clean", ["clean:js", "clean:css"]);
 
+gulp.task("compile:font", function (cb) {
+    return gulp.src("bower_components/font-awesome/fonts/*.*")
+        .pipe(gulp.dest(paths.webroot + "fonts"));
+})
+
 gulp.task("compile:js", function (cb) {
     return gulp.src(bowerScripts)
         .pipe(concat("site.js"))
@@ -44,4 +49,4 @@ gulp.task("compile:css", function (cb) {
             .pipe(gulp.dest(project.webroot + '/css'));
 });
 
-gulp.task("compile", ["compile:js", "compile:css"]);
+gulp.task("compile", ["compile:js", "compile:css", "compile:font"]);
