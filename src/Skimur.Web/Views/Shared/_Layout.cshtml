@@ -31,7 +31,7 @@
     @Component.Invoke("Topbar")
     <div class="layout-header">
         <div class="layout-header-banner">
-            <a href="/" class="banner"><img src="/content/img/logo.png" /></a>
+            <a href="/" class="banner"><img src="/img/logo.png" /></a>
         </div>
         @if (IsSectionDefined("header"))
         {
@@ -40,7 +40,7 @@
             </div>
         }
         <div class="layout-header-account">
-            @*TODO: @{ Html.RenderAction("Account", "Common");}*@
+            @Component.Invoke("AccountHeader")
         </div>
     </div>
     @RenderBody()
