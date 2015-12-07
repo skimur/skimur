@@ -1,0 +1,31 @@
+﻿@model SubPostsModel
+
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    ViewBag.Title = "Unmoderated posts for /s/" + Model.Sub.Sub.Name;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        <h2 class="page-header">Unmoderated posts</h2>
+        @if (Model.Posts != null && Model.Posts.Count > 0)
+        {
+            foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_Post", post)
+            }
+        }
+        else
+        {
+            <p>There are no unmoderated posts.</p>
+        }
+        <div class="row">
+            <div class="list-pager">
+                <a class="btn btn-default" href="@Url.Unmoderated(Model.Sub.Sub.Name)">Refresh</a>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @{Html.RenderSideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null);}
+    </div>
+</div>

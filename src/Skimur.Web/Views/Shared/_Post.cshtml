@@ -1,0 +1,256 @@
+﻿@using Skimur.Web.Services
+@using Subs
+@using Subs.ReadModel
+@model PostWrapped
+@{
+    bool canMarkRead = false;
+    if (ViewData.ContainsKey("CanMarkRead"))
+    {
+        canMarkRead = (bool)ViewData["CanMarkRead"];
+    }
+
+    bool hidablePostText = true;
+    if (ViewData.ContainsKey("HidablePostText"))
+    {
+        hidablePostText = (bool)ViewData["HidablePostText"];
+    }
+}
+<div class="disc post @PostClasses(Model)" data-post-id="@Model.Post.Id" data-media="@Model.Post.Media">
+    <div class="disc-body">
+        <div class="disc-left">
+            <div class="disc-voting @(Model.CurrentUserVote != null ? Model.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">
+                <span class="up login-required" onclick="return skimurui.posts.voteUp(this)"></span>
+                <span class="votes">@(Model.Post.VoteUpCount - Model.Post.VoteDownCount)</span>
+                <span class="down login-required" onclick="return skimurui.posts.voteDown(this)"></span>
+            </div>
+        </div>
+        @if (Model.Post.PostType == PostType.Link)
+        {
+            if (!string.IsNullOrEmpty(Model.Post.Thumb))
+            {
+                <div class="disc-left thumb">
+                    <a href="@PostUrl(Model) ">
+                     <img src="@Url.Thumbnail(Model.Post.Thumb, ThumbnailType.Post)">
+                    </a>
+                </div>
+            }
+            else
+            {
+                <div class="disc-left thumb-none">
+                    <a href="@PostUrl(Model) "></a>
+             </div>
+            }
+        }
+        else
+        {
+            <div class="disc-left thumb-text">
+                <a href="@PostUrl(Model)"></a>
+         </div>
+        }
+        <div class="disc-main">
+            <div class="disc-heading">
+                @if (Model.Post.Sticky)
+                {
+                    <span class="sticky">Sticky</span>
+                }
+                <a class="link" href="@PostUrl(Model)">@Model.Post.Title</a>
+                @if (Model.Verdict.HasValue)
+                {
+                    if (Model.Verdict == Verdict.ModApproved)
+                    {
+                        <span class="verdict approved"></span>
+                    }
+                    else if (Model.Verdict == Verdict.ModRemoved)
+                    {
+                        <span class="verdict removed"></span>
+                    }
+                    else
+                    {
+                        <span class="verdict none"></span>
+                    }
+                }
+                @if (!string.IsNullOrEmpty(Model.Post.Mirrored))
+                {
+                    <span class="mirror @Model.Post.Mirrored.ToLower()" title="mirrored from @Model.Post.Mirrored"></span>
+                }
+                @(DomainLink(Model))
+            </div>
+            @if (Model.Post.PostType == PostType.Link && !string.IsNullOrEmpty(Model.Post.Media))
+            {
+                <div class="disc-expando media" onclick="return skimurui.posts.expando(this);"></div>
+            }
+            else if (hidablePostText && Model.Post.PostType == PostType.Text && !string.IsNullOrEmpty(Model.Post.ContentFormatted))
+            {
+                <div class="disc-expando text" onclick="return skimurui.posts.expandoText(this);"></div>
+            }
+            <div class="disc-tagline">
+                Posted @Html.Age(Model.Post.DateCreated) ago by <a href="/user/@Model.Author.UserName">@Model.Author.UserName</a> to <a href="@Url.Sub(Model.Sub.Name)">/s/@Model.Sub.Name</a>
+            </div>
+            @if (Model.Post.PostType == PostType.Text)
+            {
+                <div class="disc-content @(hidablePostText ? "hide" : "")">
+                    @Html.Raw(Model.Post.ContentFormatted)
+                </div>
+                <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Post.Content)</textarea>
+            }
+            <ul class="disc-options">
+                @if (Model.Post.Nsfw)
+                {
+                    <li class="nsfw">
+                        <span class="nsfw">NSFW</span>
+                    </li>
+                }
+                <li class="first comments">
+                    <a href="@Url.Post(Model.Sub, Model.Post)">@(Model.Post.NumberOfComments > 0 ? (Model.Post.NumberOfComments == 1 ? "1 comment" : Model.Post.NumberOfComments + " comments") : "comment")</a>
+                </li>
+                @if (!Model.Post.Deleted)
+                {
+                    if (Model.CanDelete)
+                    {
+                        <li class="delete">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.delete(this)">delete</a>
+                        </li>
+                    }
+                    if (Model.CanEdit)
+                    {
+                        <li class="edit">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.startEdit(this)">edit</a>
+                        </li>
+                    }
+                    if (Model.CanManage)
+                    {
+                        <li class="remove">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.remove(this)" class="delete">remove</a>
+                        </li>
+                        <li class="approve">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.approve(this)" class="delete">approve</a>
+                        </li>
+                    }
+                    if (Model.CanReport)
+                    {
+                        <li class="report">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.report(this);">report</a>
+                        </li>
+                    }
+                    if (Model.CanManage)
+                    {
+                        if (Model.Reports != null && Model.Reports.Count > 0)
+                        {
+                            <li class="reports">
+                                <a href="javascript:void(0);" onclick="return skimurui.posts.toggleReports(this);">reports (@Model.Reports.Count)</a>
+                            </li>
+                            <li class="clear-reports">
+                                <a href="javascript:void(0);" onclick="return skimurui.posts.clearReports(this);">clear reports</a>
+                            </li>
+                        }
+                        <li class="ignore-reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.ignoreReports(this);">ignore reports</a>
+                        </li>
+                        <li class="unignore-reports">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.unignoreReports(this);">unignore reports</a>
+                        </li>
+                        <li class="toggle-nsfw">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleNsfw(this);"><span class="mark-sfw">mark sfw</span><span class="mark-nsfw">mark nsfw</span></a>
+                        </li>
+                    }
+                    if (Model.CanSticky)
+                    {
+                        <li class="toggle-sticky">
+                            <a href="javascript:void(0);" onclick="return skimurui.posts.toggleSticky(this);">toggle sticky</a>
+                        </li>
+                    }
+                }
+                @if (canMarkRead)
+                {
+                    <li class="mark-unread">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                    </li>
+                    <li class="mark-read">
+                        <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                    </li>
+                }
+            </ul>
+            @if (Model.CanManage && Model.Reports != null && Model.Reports.Count > 0)
+            {
+                <div class="disc-reports hidden">
+                    @foreach (var report in Model.Reports)
+                    {
+                        <div class="report-summary">
+                            <b>Reports:</b><br />
+                            @report.Reason&nbsp;
+                            @if (!string.IsNullOrEmpty(report.UserName))
+                            {
+                                <text>(reported by <a href="@Url.User(report.UserName)">@report.UserName</a>)</text>
+                            }
+                        </div>
+                    }
+                </div>
+            }
+            <div class="disc-staging"></div>
+        </div>
+    </div>
+</div>
+@functions
+{
+    public static HtmlString PostClasses(PostWrapped post)
+    {
+        string classes = string.Empty;
+        if (post.Verdict.HasValue)
+        {
+            if (post.Verdict == Verdict.ModApproved)
+            {
+                classes += " approved";
+            }
+            else if (post.Verdict == Verdict.ModRemoved)
+            {
+                classes += " removed";
+            }
+        }
+        if (post.CanDelete && post.Post.Deleted)
+        {
+            classes += " deleted";
+        }
+        if (post.CanManage)
+        {
+            classes += post.Post.IgnoreReports ? " reports-ignored" : " reports-unignored";
+        }
+        if (post.Post.Nsfw)
+        {
+            classes += " nsfw";
+        }
+        if (post.Post.Sticky)
+        {
+            classes += " sticky";
+        }
+        return new HtmlString(classes);
+    }
+
+    public static HtmlString DomainLink(PostWrapped post)
+    {
+        if (post.Post.PostType == PostType.Link)
+        {
+            if (!string.IsNullOrEmpty(post.Post.Domain))
+            {
+                return new HtmlString("");
+            }
+        }
+        else if (post.Post.PostType == PostType.Text)
+        {
+            return new HtmlString("");
+        }
+        return HtmlString.Empty;
+    }
+
+    public static HtmlString PostUrl(PostWrapped post)
+    {
+        if(post.Post.PostType == PostType.Link)
+        {
+            return new HtmlString(post.Post.Url);
+        }
+        else
+        {
+            return new HtmlString("");
+            //return Url.Post(post.Sub, post.Post);
+        }
+    }
+}

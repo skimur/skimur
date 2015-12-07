@@ -74,13 +74,13 @@ namespace Skimur.Web
 
             app.UseIdentity();
 
+            app.UseSession();
+
             // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
 
             app.UseMvc(routes =>
             {
-                routes.MapRoute(
-                    name: "default",
-                    template: "{controller=Home}/{action=Index}/{id?}");
+                Infrastructure.Routes.Register(routes);
             });
         }
 
@@ -112,6 +112,9 @@ namespace Skimur.Web
 
             serviceCollection.AddScoped<IUserContext, UserContext>();
             serviceCollection.AddScoped<IContextService, ContextService>();
+
+            serviceCollection.AddSession();
+            serviceCollection.AddCaching(); // adds a default in-memory implementation of IDistributedCache
         }
 
         #endregion

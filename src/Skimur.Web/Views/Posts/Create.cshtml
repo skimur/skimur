@@ -1,0 +1,137 @@
+﻿@using Subs
+@model CreatePostModel
+@{
+    ViewBag.Title = "Submit a post";
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+
+        @using (Html.BeginForm(null, null, FormMethod.Post, new { action = Url.CreatePost(Model.Sub != null ? Model.Sub.Sub.Name : null), @class = "form form-createpost", role = "form" }))
+        {
+            @Html.AntiForgeryToken()
+
+            <h4>Submit a new post.</h4>
+            <hr />
+
+            <ul class="nav nav-tabs" role="tablist">
+                <li id="linkpost-tab" role="presentation" class="@(Model.PostType == PostType.Link ? "active" : "")"><a href="#linkpost" aria-controls="home" role="tab" data-toggle="tab">Link</a></li>
+                <li id="textpost-tab" role="presentation" class="@(Model.PostType == PostType.Text ? "active" : "")"><a href="#textpost" aria-controls="profile" role="tab" data-toggle="tab">Text</a></li>
+            </ul>
+
+            @Html.HiddenFor(m => m.PostType)
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.Title, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.Title, new { @class = "form-control" })
+            </div>
+
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Link ? "active" : "")" id="linkpost">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Url, new { @class = "control-label" })
+                        @Html.TextBoxFor(m => m.Url, new { @class = "form-control" })
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane @(Model.PostType == PostType.Text ? "active" : "")" id="textpost">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.Content, new { @class = "control-label" })
+                        @Html.TextAreaFor(m => m.Content, new { @class = "form-control", rows=10 })
+                    </div>
+                </div>
+            </div>
+
+            <div class="form-group">
+                @Html.LabelFor(m => m.PostToSub, new { @class = "control-label" })
+                @Html.TextBoxFor(m => m.PostToSub, new { @class = "form-control" })
+            </div>
+
+            if (Model.Sub != null && !string.IsNullOrEmpty(Model.Sub.Sub.SubmissionTextFormatted))
+            {
+                <div class="form-group panel panel-info submissiontext">
+                    <div class="panel-heading heading">Submitting to <span class="subname">@Model.Sub.Sub.Name</span></div>
+                    <div class="panel-body body">
+                        @Html.Raw(Model.Sub.Sub.SubmissionTextFormatted)
+                    </div>
+                    <div class="panel-body spinner">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            }
+            else
+            {
+                <div class="form-group panel panel-info submissiontext hidden">
+                    <div class="panel-heading heading">Submitting to <span class="subname"></span></div>
+                    <div class="panel-body body"> </div>
+                    <div class="panel-body spinner">
+                        <i class="fa fa-spinner fa-spin"></i>
+                    </div>
+                </div>
+            }
+
+            <div class="form-group">
+                @Html.CheckBoxFor(m => m.NotifyReplies)
+                @Html.LabelFor(m => m.NotifyReplies)
+            </div>
+
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Submit" onclick="this.form.submit(); $(this).buttonStartLoading();" />
+            </div>
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @{Html.RenderSideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null, showSubmit: false);}
+    </div>
+</div>
+
+
+
+<script type="text/javascript">
+    $(function () {
+        $("#linkpost-tab").click(function (e) {
+            $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Link");
+        });
+        $("#textpost-tab").click(function (e) {
+            $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Text");
+        });
+
+        var startSubmissionTextLoading = function() {
+            $(".submissiontext").removeClass("hidden").addClass("loading");
+        };
+
+        var hideSubmissionText = function() {
+            $(".submissiontext").addClass("hidden").removeClass("loading");
+        };
+
+        var showSubmissionText = function(subName, submissionText) {
+            $(".submissiontext .heading .subname").text(subName);
+            $(".submissiontext .body").html(submissionText);
+            $(".submissiontext").removeClass("loading").removeClass("hidden");
+        };
+
+        $("#@Html.IdFor(m => m.PostToSub)").bind("input propertychange", function (evt) {
+            if (window.event && event.type == "propertychange" && event.propertyName != "value")
+                return;
+
+            startSubmissionTextLoading();
+
+            window.clearTimeout($(this).data("timeout"));
+
+            $(this).data("timeout", setTimeout(function () {
+                skimur.submissionText($("#@Html.IdFor(m => m.PostToSub)").val(), null, function(result) {
+                    if (!result.success) {
+                        hideSubmissionText();
+                    } else {
+                        if (result.sub_found && result.submission_text) {
+                            showSubmissionText(result.name, result.submission_text);
+                        } else {
+                            hideSubmissionText();
+                        }
+                    }
+                });
+            }, 500));
+        });
+
+        $("#@Html.IdFor(m => m.Content)").markdown({ iconlibrary: "fa", width: "form-group" });
+    });
+</script>

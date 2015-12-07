@@ -1,0 +1,6 @@
+﻿@model List<Subs.ReadModel.PostWrapped>
+    
+@foreach (var post in Model)
+{
+    Html.RenderPartial("_Post", post);
+}

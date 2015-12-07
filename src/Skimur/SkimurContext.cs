@@ -19,6 +19,7 @@ using Microsoft.Extensions.DependencyInjection;
 using Skimur.Cassandra;
 using System.Diagnostics;
 using System.Web;
+using Microsoft.Extensions.Configuration;
 
 namespace Skimur
 {
@@ -56,8 +57,9 @@ namespace Skimur
 
                 collection.AddSingleton<ICache, RedisCache>();
                 collection.AddSingleton<IRedisClientsManager>(provider =>{
-                    var readWrite = ConfigurationManager.AppSettings["RedisReadWrite"];
-                    var read = ConfigurationManager.AppSettings["RedisRead"];
+                    var configuration = provider.GetService<IConfiguration>();
+                    var readWrite = configuration.Get<string>("Data:RedisReadWrite");
+                    var read = configuration.Get<string>("Data:RedisRead");
                     return new PooledRedisClientManager(readWrite.Split(';'), read.Split(';'));
                 });
 
@@ -94,7 +96,8 @@ namespace Skimur
 
                 collection.AddSingleton(provider =>
                 {
-                    var rabbitMqHost = ConfigurationManager.AppSettings["RabbitMQHost"];
+                    var configuration = provider.GetService<IConfiguration>();
+                    var rabbitMqHost = configuration.Get<string>("Data:RabbitMQHost");
                     if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
 
                     return new RabbitMqServer(rabbitMqHost)

@@ -18,7 +18,30 @@ paths.concatJsDest = paths.webroot + "js/site.js";
 paths.concatCssDest = paths.webroot + "css/site.css";
 
 var bowerScripts = [
-    "bower_components/jquery/dist/jquery.js"
+    "bower_components/jquery/dist/jquery.js",
+    "bower_components/jquery-validation/dist/jquery.validate.js",
+    "bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
+    "Scripts/jquery.validate.bootstrap.js",
+    "bower_components/modernizr/modernizr.js",
+    "bower_components/bootstrap/dist/js/bootstrap.js",
+    "bower_components/respondJs/src/respond.js",
+    "bower_components/remarkable-bootstrap-notify/bootstrap-notify.js",
+    "bower_components/sweetalert/dist/sweetalert-dev.js",
+    "bower_components/marked/lib/marked.js",
+    "Scripts/markedHelper.js",
+    "bower_components/to-markdown/dist/to-markdown.js",
+    "bower_components/bootstrap-markdown/js/bootstrap-markdown.js",
+    "bower_components/magnific-popup/dist/jquery.magnific-popup.js",
+    "Scripts/app/magnific-popup-module.js",
+    "Scripts/app/api.js",
+    "Scripts/app/ui.js",
+    "Scripts/app/login.js",
+    "Scripts/app/misc.js",
+    "Scripts/app/comments.js",
+    "Scripts/app/posts.js",
+    "Scripts/app/subs.js",
+    "Scripts/app/messages.js",
+    "Scripts/app/moderators.js"
 ];
 
 gulp.task("clean:js", function (cb) {

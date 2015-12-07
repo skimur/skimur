@@ -29,6 +29,20 @@
         </div>
     }
     @Component.Invoke("Topbar")
+    <div class="layout-header">
+        <div class="layout-header-banner">
+            <a href="/" class="banner"><img src="/content/img/logo.png" /></a>
+        </div>
+        @if (IsSectionDefined("header"))
+        {
+            <div class="layout-header-content">
+                @RenderSection("header")
+            </div>
+        }
+        <div class="layout-header-account">
+            @*TODO: @{ Html.RenderAction("Account", "Common");}*@
+        </div>
+    </div>
     @RenderBody()
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)

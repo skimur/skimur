@@ -1,0 +1,101 @@
+﻿@using ServiceStack
+@using Subs
+@using Subs.ReadModel
+@model SubPostsModel
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    if (Model.Sub != null)
+    {
+        ViewBag.Title = Model.Sub.Sub.Name;
+    }
+    else if (Model.IsAll)
+    {
+        ViewBag.Title = "All";
+    }
+}
+@functions 
+{
+    public static HtmlString AppendSortUrl(string baseUrl, string sort)
+    {
+        if (string.IsNullOrEmpty(baseUrl) || baseUrl == "/")
+        {
+            return new HtmlString("/" + sort);
+        }
+        else
+        {
+            if (string.IsNullOrEmpty(sort))
+            {
+                return new HtmlString(baseUrl);
+            }
+            else
+            {
+                return new HtmlString(baseUrl + "/" + sort);
+            }
+        }
+    }
+}
+@section header {
+    @{
+        string urlBase;
+        if (Model.Sub != null)
+        {
+            urlBase = "/s/" + Model.Sub.Sub.Name;
+        }
+        else if (Model.IsAll)
+        {
+            urlBase = "/s/all";
+        }
+        else
+        {
+            urlBase = "/";
+        }
+    }
+    <div class="header-nav">
+        <div class="hidden-xs">
+            <ul class="nav nav-tabs">
+                <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@AppendSortUrl(urlBase, null)">Hot</a></li>
+                <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@AppendSortUrl(urlBase, "new")">New</a></li>
+                <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@AppendSortUrl(urlBase, "controversial")">Controversial</a></li>
+                <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@AppendSortUrl(urlBase, "top")">Top</a></li>
+            </ul>
+        </div>
+        <div class="visible-xs-block">
+            <ul class="nav nav-tabs">
+                <li class="dropdown active">
+                    <a class="dropdown-toggle" data-toggle="dropdown" href="javascript:void(0);">
+                        @Model.SortBy.ToString() <span class="caret"></span>
+                    </a>
+                    <ul class="dropdown-menu">
+                        <li class="@(Model.SortBy == PostsSortBy.Hot ? "active" : null)"><a href="@AppendSortUrl(urlBase, null)">Hot</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.New ? "active" : null)"><a href="@AppendSortUrl(urlBase, "new")">New</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Controversial ? "active" : null)"><a href="@AppendSortUrl(urlBase, "controversial")">Controversial</a></li>
+                        <li class="@(Model.SortBy == PostsSortBy.Top ? "active" : null)"><a href="@AppendSortUrl(urlBase, "top")">Top</a></li>
+                    </ul>
+                </li>
+            </ul>
+        </div>
+    </div>
+}
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        @if (Model.Posts != null)
+        {
+            foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_Post", post)
+            }
+            if (Model.Posts.HasPreviousPage || Model.Posts.HasNextPage)
+            {
+                <div class="row">
+                    <div class="list-pager">
+                        @Html.Pager(Model.Posts)
+                    </div>
+                </div>
+            }
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @*TODO:*@
+        @*@{Html.RenderSideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null);}*@
+    </div>
+</div>
