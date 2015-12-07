@@ -17,7 +17,18 @@
         };
     </script>
 </head>
-<body>
+@{
+    var controller = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+}
+<body class="@(controller)-@(action)">
+    @if (!string.IsNullOrEmpty(ViewBag.Announcement))
+    {
+        <div class="layout-announcement">
+            @Html.Raw(ViewBag.Announcement)
+        </div>
+    }
+    @Component.Invoke("Topbar")
     @RenderBody()
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)

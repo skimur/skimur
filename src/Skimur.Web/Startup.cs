@@ -46,7 +46,8 @@ namespace Skimur.Web
             SkimurContext.Initialize(
                 new ServiceCollectionRegistrar(services, 0), 
                 this,
-                new Membership.Registrar());
+                new Membership.Registrar(),
+                new Subs.Registrar());
             return SkimurContext.ServiceProvider;
         }
 
@@ -93,13 +94,14 @@ namespace Skimur.Web
         public void Register(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IConfiguration>(provider => Configuration);
+            serviceCollection.AddSingleton<IEmailSender, AuthMessageSender>();
+            serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
 
             serviceCollection.AddScoped<ApplicationUserStore>();
             serviceCollection.AddScoped<IUserStore<User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IRoleStore<Role>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IPasswordHasher<User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IUserValidator<User>>(provider => provider.GetService<ApplicationUserStore>());
-
             serviceCollection.AddIdentity<User, Role>(options => 
             {
                 options.Password.RequireNonLetterOrDigit = false;
@@ -107,9 +109,9 @@ namespace Skimur.Web
             }).AddDefaultTokenProviders();
 
             serviceCollection.AddMvc();
-            
-            serviceCollection.AddSingleton<IEmailSender, AuthMessageSender>();
-            serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
+
+            serviceCollection.AddScoped<IUserContext, UserContext>();
+            serviceCollection.AddScoped<IContextService, ContextService>();
         }
 
         #endregion
