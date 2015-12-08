@@ -175,7 +175,10 @@ namespace Skimur.Web.Controllers
                 ViewData["ReturnUrl"] = returnUrl;
                 ViewData["LoginProvider"] = info.LoginProvider;
                 var email = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Email);
-                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { Email = email });
+                var userName = info.ExternalPrincipal.FindFirstValue(ClaimTypes.Name);
+                if (!string.IsNullOrEmpty(userName))
+                    userName = userName.Replace(" ", "_");
+                return View("ExternalLoginConfirmation", new ExternalLoginConfirmationViewModel { UserName = userName, Email = email });
             }
         }
 
@@ -199,7 +202,7 @@ namespace Skimur.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new Membership.User { UserName = model.Email, Email = model.Email };
+                var user = new Membership.User { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {

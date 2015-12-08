@@ -15,7 +15,8 @@ namespace Skimur.Web.Infrastructure.Identity
         IRoleStore<Role>,
         IUserPasswordStore<User>,
         IPasswordHasher<User>,
-        IUserValidator<User>
+        IUserValidator<User>,
+        IUserLoginStore<User>
     {
         IMembershipService _membershipService;
         IPasswordManager _passwordManager;
@@ -261,7 +262,36 @@ namespace Skimur.Web.Infrastructure.Identity
         }
 
         #endregion
+
+        #region IUserLoginStore
+
+        Task IUserLoginStore<User>.AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
+        {
+            _membershipService.AddRemoteLogin(user.Id, login.LoginProvider, login.ProviderKey);
+            return Task.FromResult(0);
+        }
+
+        Task IUserLoginStore<User>.RemoveLoginAsync(User user, string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
+            _membershipService.RemoveRemoteLogin(user.Id, loginProvider, providerKey);
+            return Task.FromResult(0);
+        }
+
+        Task<IList<UserLoginInfo>> IUserLoginStore<User>.GetLoginsAsync(User user, CancellationToken cancellationToken)
+        {
+            var logins = _membershipService.GetRemoteLoginsForUser(user.Id)
+                .Select(x => new UserLoginInfo(x.LoginProvider, x.LoginKey, x.LoginProvider /*todo*/))
+                .ToList();
+            return Task.FromResult((IList<UserLoginInfo>)logins);
+        }
+
+        Task<User> IUserLoginStore<User>.FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_membershipService.FindUserByExternalLogin(loginProvider, providerKey));
+        }
         
+        #endregion
+
         public virtual Guid ConvertIdFromString(string id)
         {
             if (string.IsNullOrEmpty(id))

@@ -75,8 +75,12 @@ namespace Skimur.Web
             app.UseIdentity();
 
             app.UseSession();
-
-            // To configure external authentication please see http://go.microsoft.com/fwlink/?LinkID=532715
+            
+            app.UseFacebookAuthentication(options =>
+            {
+                options.AppId = Configuration["Skimur:Authentication:Facebook:AppId"];
+                options.AppSecret = Configuration["Skimur:Authentication:Facebook:AppSecret"];
+            });
 
             app.UseMvc(routes =>
             {
