@@ -235,3 +235,6 @@ project.sublime-workspace
 src/Skimur.Web/wwwroot/lib/
 src/Skimur.Web/bower_components/
 temp/
+src/Skimur.Web/wwwroot/fonts/
+src/Skimur.Web/wwwroot/css/
+src/Skimur.Web/wwwroot/js/
