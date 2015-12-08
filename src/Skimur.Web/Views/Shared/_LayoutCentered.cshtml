@@ -1,0 +1,22 @@
+﻿@{
+    Layout = "_Layout";
+}
+<div class="container body-content">
+    @if (IsSectionDefined("messages"))
+    {
+        @RenderSection("messages")
+    }
+    else
+    {
+        @Html.ErrorMessages()
+        @Html.SuccessMessages()
+    }
+    @RenderBody()
+    @Html.Partial("_Footer")
+</div>
+@section scripts {
+    @RenderSection("scripts", false)
+}
+@section header {
+    @RenderSection("header", false)
+}

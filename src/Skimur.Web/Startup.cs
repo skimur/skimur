@@ -81,6 +81,13 @@ namespace Skimur.Web
                 options.AppId = Configuration["Skimur:Authentication:Facebook:AppId"];
                 options.AppSecret = Configuration["Skimur:Authentication:Facebook:AppSecret"];
             });
+            
+            app.UseGoogleAuthentication(options =>
+            {
+                options.ClientId = Configuration["Skimur:Authentication:Google:ClientId"];
+                options.ClientSecret = Configuration["Skimur:Authentication:Google:ClientSecret"];
+                options.Scope.Add("https://www.googleapis.com/auth/plus.profile.emails.read");
+            });
 
             app.UseMvc(routes =>
             {
