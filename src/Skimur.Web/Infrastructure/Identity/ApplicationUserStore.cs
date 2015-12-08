@@ -16,7 +16,8 @@ namespace Skimur.Web.Infrastructure.Identity
         IUserPasswordStore<User>,
         IPasswordHasher<User>,
         IUserValidator<User>,
-        IUserLoginStore<User>
+        IUserLoginStore<User>,
+        IUserEmailStore<User>
     {
         IMembershipService _membershipService;
         IPasswordManager _passwordManager;
@@ -289,7 +290,49 @@ namespace Skimur.Web.Infrastructure.Identity
         {
             return Task.FromResult(_membershipService.FindUserByExternalLogin(loginProvider, providerKey));
         }
-        
+
+        #endregion
+
+        #region IUserEmailStore
+
+        Task IUserEmailStore<User>.SetEmailAsync(User user, string email, CancellationToken cancellationToken)
+        {
+            user.Email = email;
+            return Task.FromResult(0);
+        }
+
+        Task<string> IUserEmailStore<User>.GetEmailAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Email);
+        }
+
+        Task<bool> IUserEmailStore<User>.GetEmailConfirmedAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.EmailConfirmed);
+        }
+
+        Task IUserEmailStore<User>.SetEmailConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
+        {
+            user.EmailConfirmed = confirmed;
+            return Task.FromResult(0);
+        }
+
+        Task<User> IUserEmailStore<User>.FindByEmailAsync(string normalizedEmail, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(_membershipService.GetUserByEmail(normalizedEmail));
+        }
+
+        Task<string> IUserEmailStore<User>.GetNormalizedEmailAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.Email);
+        }
+
+        Task IUserEmailStore<User>.SetNormalizedEmailAsync(User user, string normalizedEmail, CancellationToken cancellationToken)
+        {
+            user.Email = normalizedEmail;
+            return Task.FromResult(0);
+        }
+
         #endregion
 
         public virtual Guid ConvertIdFromString(string id)

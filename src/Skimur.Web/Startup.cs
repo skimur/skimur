@@ -1,10 +1,6 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 using Microsoft.AspNet.Builder;
 using Microsoft.AspNet.Hosting;
-using Microsoft.Data.Entity;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Logging;
@@ -12,7 +8,6 @@ using Skimur.Web.Services;
 using Skimur.Utils;
 using Skimur.Web.Infrastructure.Identity;
 using Microsoft.AspNet.Identity;
-using Membership;
 using Skimur.Web.Services.Impl;
 
 namespace Skimur.Web
@@ -47,7 +42,12 @@ namespace Skimur.Web
                 new ServiceCollectionRegistrar(services, 0), 
                 this,
                 new Membership.Registrar(),
+                new Emails.Handlers.Registrar(),
                 new Subs.Registrar());
+
+            // this will start the command listeners for subs, email, etc.
+            SkimurContext.Resolve<Messaging.IBusLifetime>();
+
             return SkimurContext.ServiceProvider;
         }
 
@@ -109,11 +109,11 @@ namespace Skimur.Web
             serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
 
             serviceCollection.AddScoped<ApplicationUserStore>();
-            serviceCollection.AddScoped<IUserStore<User>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IRoleStore<Role>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IPasswordHasher<User>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IUserValidator<User>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddIdentity<User, Role>(options => 
+            serviceCollection.AddScoped<IUserStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IRoleStore<Membership.Role>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IPasswordHasher<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IUserValidator<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddIdentity<Membership.User, Membership.Role>(options => 
             {
                 options.Password.RequireNonLetterOrDigit = false;
                 options.Password.RequireUppercase = false;
@@ -126,6 +126,10 @@ namespace Skimur.Web
 
             serviceCollection.AddSession();
             serviceCollection.AddCaching(); // adds a default in-memory implementation of IDistributedCache
+            serviceCollection.AddRouting(options =>
+            {
+                options.LowercaseUrls = true;
+            });
         }
 
         #endregion

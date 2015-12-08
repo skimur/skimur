@@ -33,6 +33,8 @@
     "Subs": "",
     "Migrations": "",
     "Membership": "",
+    "Emails": "",
+    "Emails.Handlers": "",
     "ImageResizer": "4.0.4"
   },
 

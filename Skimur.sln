@@ -26,6 +26,8 @@ Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "Utilities", "Utilities", "{
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Migrations", "src\Utilities\Migrations\Migrations.xproj", "{6F501D93-46EA-4A78-8DD5-8FD4DD06F063}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Emails.Handlers", "src\Emails\Emails.Handlers\Emails.Handlers.xproj", "{E27D4B2C-0DE1-457F-A1CB-8A4394116558}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -56,6 +58,10 @@ Global
 		{6F501D93-46EA-4A78-8DD5-8FD4DD06F063}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{6F501D93-46EA-4A78-8DD5-8FD4DD06F063}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{6F501D93-46EA-4A78-8DD5-8FD4DD06F063}.Release|Any CPU.Build.0 = Release|Any CPU
+		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
