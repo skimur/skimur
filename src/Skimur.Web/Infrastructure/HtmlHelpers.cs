@@ -59,26 +59,46 @@ namespace Skimur.Web.Infrastructure
 
         public static HtmlString ErrorMessages(this IHtmlHelper helper)
         {
-            var errorMessages = helper.ViewContext.TempData["ErrorMessages"] as List<string>;
+            List<string> messages = null;
+            
+            var errorMessagesArray = helper.ViewContext.TempData["ErrorMessages"] as string[];
+
+            if(errorMessagesArray != null && errorMessagesArray.Length > 0)
+            {
+                if (messages == null)
+                    messages = new List<string>();
+                foreach (var message in errorMessagesArray)
+                    messages.Add(message);
+            }
+
+            var errorMessagesList = helper.ViewContext.TempData["ErrorMessages"] as List<string>;
+
+            if (errorMessagesList != null && errorMessagesList.Count > 0)
+            {
+                if (messages == null)
+                    messages = new List<string>();
+                foreach (var message in errorMessagesList)
+                    messages.Add(message);
+            }
 
             if (!helper.ViewData.ModelState.IsValid)
             {
-                var modelErrors = helper.ViewData.ModelState[String.Empty];
+                var modelErrors = helper.ViewData.ModelState[string.Empty];
                 if (modelErrors != null && modelErrors.Errors.Count > 0)
                 {
-                    if (errorMessages == null)
-                        errorMessages = new List<string>();
-                    errorMessages.AddRange(modelErrors.Errors.Select(modelError => modelError.ErrorMessage));
+                    if (messages == null)
+                        messages = new List<string>();
+                    messages.AddRange(modelErrors.Errors.Select(modelError => modelError.ErrorMessage));
                 }
             }
 
-            if (errorMessages == null || !errorMessages.Any()) return HtmlString.Empty;
+            if (messages == null || messages.Count == 0) return HtmlString.Empty;
 
             var html = new StringBuilder();
             html.Append("<div class=\"validation-summary-errors alert alert-danger\"><ul>");
-            foreach (var errorMessage in errorMessages)
+            foreach (var message in messages)
             {
-                html.Append("<li>" + errorMessage + "</li>");
+                html.Append("<li>" + message + "</li>");
             }
             html.Append("</ul></div>");
 
@@ -87,18 +107,38 @@ namespace Skimur.Web.Infrastructure
 
         public static HtmlString SuccessMessages(this IHtmlHelper helper)
         {
-            var successMessages = helper.ViewContext.TempData["SuccessMessages"] as List<string>;
+            List<string> messages = null;
 
-            if (successMessages == null)
+            var successMessagesArray = helper.ViewContext.TempData["SuccessMessages"] as string[];
+
+            if(successMessagesArray != null && successMessagesArray.Length > 0)
+            {
+                if (messages == null)
+                    messages = new List<string>();
+                foreach(var message in successMessagesArray)
+                    messages.Add(message);
+            }
+
+            var successMessagesList = helper.ViewContext.TempData["SuccessMessages"] as List<string>;
+
+            if (successMessagesList != null && successMessagesList.Count > 0)
+            {
+                if (messages == null)
+                    messages = new List<string>();
+                foreach (var message in successMessagesList)
+                    messages.Add(message);
+            }
+
+            if (messages == null)
                 return HtmlString.Empty;
 
-            if (!successMessages.Any()) return HtmlString.Empty;
+            if (messages.Count == 0) return HtmlString.Empty;
 
             var html = new StringBuilder();
             html.Append("<div class=\"validation-summary-infos alert alert-info\"><ul>");
-            foreach (var successMessage in successMessages)
+            foreach (var message in messages)
             {
-                html.Append("<li>" + successMessage + "</li>");
+                html.Append("<li>" + message + "</li>");
             }
             html.Append("</ul></div>");
 
