@@ -14,11 +14,8 @@ using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Messaging.RabbitMQ;
 using Skimur.Settings;
-using Cache = System.Web.Caching.Cache;
 using Microsoft.Extensions.DependencyInjection;
 using Skimur.Cassandra;
-using System.Diagnostics;
-using System.Web;
 using Microsoft.Extensions.Configuration;
 
 namespace Skimur
@@ -122,33 +119,7 @@ namespace Skimur
                 ContainerInitialized(_serviceProvider);
             }
         }
-
-        public static object Resolve(Type type)
-        {
-            EnsureInitialized();
-            if(HttpContext.Current == null)
-            {
-                return _serviceProvider.GetService(type);
-            }
-            else
-            {
-                var scope = HttpContext.Current.Items["Scope"] as IServiceScope;
-                if(scope != null)
-                {
-                    return scope.ServiceProvider.GetService(type);
-                }
-                else
-                {
-                    return _serviceProvider.GetService(type);
-                }
-            }
-        }
-
-        public static T Resolve<T>() where T : class
-        {
-            return Resolve(typeof(T)) as T;
-        }
-
+        
         public static IServiceProvider ServiceProvider
         {
             get
