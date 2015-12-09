@@ -10,7 +10,7 @@ namespace Skimur.Settings
 
         public JsonFileSettingsProvider(IPathResolver pathResolver)
         {
-            _file = Path.Combine(pathResolver.Resolve("~/Settings/"), typeof(T).Name + ".json");
+            _file = Path.Combine(pathResolver.Resolve(Path.Combine("~","Settings")), typeof(T).Name + ".json");
             Settings = File.Exists(_file) ? JsonSerializer.DeserializeFromString<T>(File.ReadAllText(_file)) : new T();
             if(Settings == null)
                 Settings = new T();

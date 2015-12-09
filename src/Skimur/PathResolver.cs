@@ -1,6 +1,6 @@
 ﻿using System;
 using System.IO;
-using System.Web.Hosting;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace Skimur
 {
@@ -8,17 +8,15 @@ namespace Skimur
     {
         public string Resolve(string path)
         {
-            if (HostingEnvironment.IsHosted)
-            {
-                if(Path.IsPathRooted(path))
-                    return path;
-                return HostingEnvironment.MapPath(path);
-            }
-                
-            if (path.StartsWith("~/"))
-                return Path.Combine(AppDomain.CurrentDomain.BaseDirectory, path.Substring(2));
+            var appEnv = CallContextServiceLocator.Locator.ServiceProvider.GetService(typeof(IApplicationEnvironment)) as IApplicationEnvironment;
 
-            throw new NotSupportedException();
+            if (Path.IsPathRooted(path))
+                return path;
+
+            if (path.StartsWith("~" + Path.DirectorySeparatorChar))
+                return Path.GetFullPath(Path.Combine(appEnv.ApplicationBasePath, path.Substring(2)));
+
+            return Path.GetFullPath(Path.Combine(appEnv.ApplicationBasePath, path));
         }
     }
 }

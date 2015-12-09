@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -9,8 +10,8 @@ namespace Skimur.Web.Infrastructure
     {
         public WebSettings()
         {
-            DataDirectory = "~/Data/";
-            ThumbnailCache = "~/ThumbnailCache";
+            DataDirectory = Path.Combine("~", "Data");
+            ThumbnailCache = Path.Combine("~", "ThumbnailCache");
         }
 
         public string Announcement { get; set; }
