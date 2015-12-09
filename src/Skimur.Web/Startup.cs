@@ -89,6 +89,8 @@ namespace Skimur.Web
                 options.Scope.Add("https://www.googleapis.com/auth/plus.profile.emails.read");
             });
 
+            app.UseMiddleware<ErrorHandlerMiddleware>();
+
             app.UseMvc(routes =>
             {
                 Infrastructure.Routes.Register(routes);

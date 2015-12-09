@@ -7,28 +7,30 @@ using System.Web;
 
 namespace Skimur.Web.Infrastructure
 {
-    public abstract class BaseHttpExceptionException : HttpException
+    public class BaseHttpException : Exception
     {
-        protected BaseHttpExceptionException(HttpStatusCode httpCode)
-            : base((int)httpCode, string.Empty)
+        public BaseHttpException(string message, HttpStatusCode statusCode)
+            : base(message)
         {
-
+            StatusCode = statusCode;
         }
+
+        public HttpStatusCode StatusCode { get; }
     }
 
-    public class NotFoundException : BaseHttpExceptionException
+    public class NotFoundException : BaseHttpException
     {
         public NotFoundException()
-            : base(HttpStatusCode.NotFound)
+            : base(string.Empty, HttpStatusCode.NotFound)
         {
 
         }
     }
 
-    public class UnauthorizedException : BaseHttpExceptionException
+    public class UnauthorizedException : BaseHttpException
     {
         public UnauthorizedException()
-            : base(HttpStatusCode.Unauthorized)
+            : base(string.Empty, HttpStatusCode.Unauthorized)
         {
 
         }
