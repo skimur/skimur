@@ -1,79 +1,39 @@
-﻿@model IndexViewModel
+﻿@model ProfileViewModel
+
 @{
-    ViewData["Title"] = "Manage your account";
+    Layout = "_LayoutManageAccount";
+    ViewData["Title"] = "Profile";
 }
 
-<h2>@ViewData["Title"].</h2>
-<p class="text-success">@ViewData["StatusMessage"]</p>
-<div>
-    <h4>Change your account settings</h4>
-    <hr />
-    <dl class="dl-horizontal">
-        <dt>Password:</dt>
-        <dd>
-            [
-            @if (Model.HasPassword)
-            {
-                <a asp-controller="Manage" asp-action="ChangePassword">Change</a>
-            }
-            else
-            {
-                <a asp-controller="Manage" asp-action="SetPassword">Create</a>
-            }
-            ]
-        </dd>
-        <dt>External Logins:</dt>
-        <dd>
+<h2 class="page-header">@ViewData["Title"]</h2>
 
-            @Model.Logins.Count [<a asp-controller="Manage" asp-action="ManageLogins">Manage</a>]
-        </dd>
-
-
-        <dt>Phone Number:</dt>
-        <dd>
-            <p>
-                Phone Numbers can used as a second factor of verification in two-factor authentication.
-                See <a href="http://go.microsoft.com/fwlink/?LinkID=532713">this article</a>
-                for details on setting up this ASP.NET application to support two-factor authentication using SMS.
-            </p>
-            @*@(Model.PhoneNumber ?? "None") [
-                @if (Model.PhoneNumber != null)
-                {
-                    <a asp-controller="Manage" asp-action="AddPhoneNumber">Change</a>
-                        @: &nbsp;|&nbsp;
-                        <a asp-controller="Manage" asp-action="RemovePhoneNumber">Remove</a>
-                }
-                else
-                {
-                    <a asp-controller="Manage" asp-action="AddPhoneNumber">Add</a>
-                }
-                ]*@
-        </dd>
-
-        <dt>Two-Factor Authentication:</dt>
-        <dd>
-            <p>
-                There are no two-factor authentication providers configured. See <a href="http://go.microsoft.com/fwlink/?LinkID=532713">this article</a>
-                for setting up this application to support two-factor authentication.
-            </p>
-            @*@if (Model.TwoFactor)
-                {
-                    <form asp-controller="Manage" asp-action="DisableTwoFactorAuthentication" method="post" class="form-horizontal" role="form">
-                        <text>
-                            Enabled
-                            <button type="submit" class="btn btn-link">Disable</button>
-                        </text>
-                    </form>
-                }
-                else
-                {
-                    <form asp-controller="Manage" asp-action="EnableTwoFactorAuthentication" method="post" class="form-horizontal" role="form">
-                        <text>
-                            Disabled
-                            <button type="submit" class="btn btn-link">Enable</button>
-                        </text>
-                    </form>
-                }*@
-        </dd>
-    </dl>
-</div>
+<form asp-controller="Manage" asp-action="Index" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" role="form" enctype="multipart/form-data">
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="AvatarFile" class="control-label"></label>
+        <div class="avatar-edit">
+            @{ await Html.RenderPartialAsync("_Avatar", !string.IsNullOrEmpty(Model.AvatarIdentifier) ? Model.AvatarIdentifier : string.Empty); }
+            <input asp-for="AvatarFile" type="file" class="avatar-file-upload" />
+            <input asp-for="AvatarIdentifier" type="hidden" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="FullName" class="control-label"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Bio" class="control-label"></label>
+        <input asp-for="Bio" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Url" class="control-label"></label>
+        <input asp-for="Url" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Location" class="control-label"></label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Update profile" class="btn btn-primary" />
+    </div>
+</form>

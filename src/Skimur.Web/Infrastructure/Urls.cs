@@ -193,7 +193,7 @@ namespace Skimur.Web.Infrastructure
         public static string AvatarUrl(this IUrlHelper urlHelper, string avatarIdentifier)
         {
             if (string.IsNullOrEmpty(avatarIdentifier))
-                return urlHelper.Content("~/content/img/avatar.jpg");
+                return urlHelper.Content("~/img/avatar.jpg");
 
             return urlHelper.Content("~/avatar/" + avatarIdentifier);
         }

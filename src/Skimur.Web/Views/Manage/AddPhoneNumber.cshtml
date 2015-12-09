@@ -1,5 +1,6 @@
 ﻿@model AddPhoneNumberViewModel
 @{
+    Layout = "_LayoutManageAccount";
     ViewData["Title"] = "Add Phone Number";
 }
 
@@ -21,7 +22,3 @@
         </div>
     </div>
 </form>
-
-@section Scripts {
-    @{ await Html.RenderPartialAsync("_ValidationScriptsPartial"); }
-}

@@ -9,65 +9,98 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.Extensions.Logging;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels.Manage;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.ViewModels;
+using Membership.Services;
+using Microsoft.AspNet.Http;
 
 namespace Skimur.Web.Controllers
 {
     [Authorize]
-    public class ManageController : Controller
+    public class ManageController : BaseController
     {
         private readonly UserManager<Membership.User> _userManager;
         private readonly SignInManager<Membership.User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
+        private readonly IAvatarService _avatarService;
+        private readonly IMembershipService _membershipService;
 
         public ManageController(
-        UserManager<Membership.User> userManager,
-        SignInManager<Membership.User> signInManager,
-        IEmailSender emailSender,
-        ISmsSender smsSender,
-        ILoggerFactory loggerFactory)
+            UserManager<Membership.User> userManager,
+            SignInManager<Membership.User> signInManager,
+            IEmailSender emailSender,
+            ISmsSender smsSender,
+            ILoggerFactory loggerFactory,
+            IAvatarService avatarService,
+            IMembershipService membershipService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
             _emailSender = emailSender;
             _smsSender = smsSender;
             _logger = loggerFactory.CreateLogger<ManageController>();
+            _avatarService = avatarService;
+            _membershipService = membershipService;
         }
-
-        //
-        // GET: /Manage/Index
-        [HttpGet]
-        public async Task<IActionResult> Index(ManageMessageId? message = null)
+        
+        public async Task<ActionResult> Index()
         {
-            ViewData["StatusMessage"] =
-                message == ManageMessageId.ChangePasswordSuccess ? "Your password has been changed."
-                : message == ManageMessageId.SetPasswordSuccess ? "Your password has been set."
-                : message == ManageMessageId.SetTwoFactorSuccess ? "Your two-factor authentication provider has been set."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : message == ManageMessageId.AddPhoneSuccess ? "Your phone number was added."
-                : message == ManageMessageId.RemovePhoneSuccess ? "Your phone number was removed."
-                : "";
+            ViewBag.ManageNavigationKey = "Profile";
 
             var user = await GetCurrentUserAsync();
-            var model = new IndexViewModel
+
+            return View(new ProfileViewModel
             {
-                HasPassword = await _userManager.HasPasswordAsync(user),
-                PhoneNumber = await _userManager.GetPhoneNumberAsync(user),
-                TwoFactor = await _userManager.GetTwoFactorEnabledAsync(user),
-                Logins = await _userManager.GetLoginsAsync(user),
-                BrowserRemembered = await _signInManager.IsTwoFactorClientRememberedAsync(user)
-            };
-            return View(model);
+                AvatarIdentifier = user.AvatarIdentifier,
+                FullName = user.FullName,
+                Bio = user.Bio,
+                Url = user.Url,
+                Location = user.Location
+            });
         }
 
+        [ActionName("Index")]
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Index(ProfileViewModel model, IEnumerable<IFormFile> files)
+        {
+            ViewBag.ManageNavigationKey = "Profile";
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await GetCurrentUserAsync();
+
+            if (model.AvatarFile != null)
+            {
+                try
+                {
+                    var avatarKey = _avatarService.UploadAvatar(model.AvatarFile, user.UserName);
+                    _membershipService.UpdateUserAvatar(user.Id, avatarKey);
+                    model.AvatarIdentifier = avatarKey;
+                }
+                catch (Exception ex)
+                {
+                    ModelState.AddModelError(string.Empty, ex.Message);
+                    return View(model);
+                }
+            }
+
+            _membershipService.UpdateUserProfile(user.Id, model.FullName, model.Bio, model.Url, model.Location);
+
+            AddSuccessMessage("Your profile has been updated.");
+
+            return View(model);
+        }
+        
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
         {
-            ManageMessageId? message = ManageMessageId.Error;
             var user = await GetCurrentUserAsync();
             if (user != null)
             {
@@ -75,10 +108,14 @@ namespace Skimur.Web.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    message = ManageMessageId.RemoveLoginSuccess;
+                    AddSuccessMessage("The external login was removed.");
+                }
+                else
+                {
+                    AddErrorMessage("An error has occurred.");
                 }
             }
-            return RedirectToAction(nameof(ManageLogins), new { Message = message });
+            return RedirectToAction(nameof(ManageLogins));
         }
 
         //
@@ -164,7 +201,8 @@ namespace Skimur.Web.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.AddPhoneSuccess });
+                    AddSuccessMessage("Your phone number was added.");
+                    return RedirectToAction(nameof(Index));
                 }
             }
             // If we got this far, something failed, redisplay the form
@@ -184,10 +222,32 @@ namespace Skimur.Web.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.RemovePhoneSuccess });
+                    AddSuccessMessage("Your phone number was removed.");
+                    return RedirectToAction(nameof(Index));
+                }
+                else
+                {
+                    foreach(var error in result.Errors)
+                    {
+                        AddErrorMessage(error.Description);
+                    }
                 }
             }
-            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+            else
+            {
+                AddErrorMessage("An error has occurred.");
+            }
+            
+            return RedirectToAction(nameof(Index));
+        }
+
+        [HttpGet]
+        public async Task<ActionResult> Password()
+        {
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
+            return await _userManager.HasPasswordAsync(user)
+                ? RedirectToAction(nameof(ChangePassword))
+                : RedirectToAction(nameof(SetPassword));
         }
 
         //
@@ -216,12 +276,20 @@ namespace Skimur.Web.Controllers
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User changed their password successfully.");
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.ChangePasswordSuccess });
+                    AddSuccessMessage("Your password has been changed.");
                 }
-                AddErrors(result);
-                return View(model);
+                else
+                {
+                    foreach(var error in result.Errors)
+                        AddErrorMessage(error.Description);
+                }
             }
-            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+            else
+            {
+                AddErrorMessage("An error has occurred.");
+            }
+            
+            return View(model);
         }
 
         //
@@ -250,23 +318,29 @@ namespace Skimur.Web.Controllers
                 if (result.Succeeded)
                 {
                     await _signInManager.SignInAsync(user, isPersistent: false);
-                    return RedirectToAction(nameof(Index), new { Message = ManageMessageId.SetPasswordSuccess });
+                    AddSuccessMessage("Your password has been set.");
+                    return RedirectToAction(nameof(ChangePassword));
                 }
-                AddErrors(result);
-                return View(model);
+                else
+                {
+                    foreach (var error in result.Errors)
+                    {
+                        AddErrorMessage(error.Description);
+                    }
+                }
             }
-            return RedirectToAction(nameof(Index), new { Message = ManageMessageId.Error });
+            else
+            {
+                AddErrorMessage("An error has occurred.");
+            }
+            
+            return View(model);
         }
 
         //GET: /Manage/ManageLogins
         [HttpGet]
-        public async Task<IActionResult> ManageLogins(ManageMessageId? message = null)
+        public async Task<IActionResult> ManageLogins()
         {
-            ViewData["StatusMessage"] =
-                message == ManageMessageId.RemoveLoginSuccess ? "The external login was removed."
-                : message == ManageMessageId.AddLoginSuccess ? "The external login was added."
-                : message == ManageMessageId.Error ? "An error has occurred."
-                : "";
             var user = await GetCurrentUserAsync();
             if (user == null)
             {
@@ -307,35 +381,25 @@ namespace Skimur.Web.Controllers
             var info = await _signInManager.GetExternalLoginInfoAsync(User.GetUserId());
             if (info == null)
             {
-                return RedirectToAction(nameof(ManageLogins), new { Message = ManageMessageId.Error });
+                AddErrorMessage("An error has occurred.");
+                return RedirectToAction(nameof(ManageLogins));
             }
             var result = await _userManager.AddLoginAsync(user, info);
-            var message = result.Succeeded ? ManageMessageId.AddLoginSuccess : ManageMessageId.Error;
-            return RedirectToAction(nameof(ManageLogins), new { Message = message });
+
+            if (result.Succeeded)
+            {
+                AddSuccessMessage("The external login was added.");
+            }
+            else
+            {
+                AddErrorMessage("An error has occurred.");
+            }
+
+            return RedirectToAction(nameof(ManageLogins));
         }
 
         #region Helpers
-
-        private void AddErrors(IdentityResult result)
-        {
-            foreach (var error in result.Errors)
-            {
-                ModelState.AddModelError(string.Empty, error.Description);
-            }
-        }
-
-        public enum ManageMessageId
-        {
-            AddPhoneSuccess,
-            AddLoginSuccess,
-            ChangePasswordSuccess,
-            SetTwoFactorSuccess,
-            SetPasswordSuccess,
-            RemoveLoginSuccess,
-            RemovePhoneSuccess,
-            Error
-        }
-
+        
         private async Task<Membership.User> GetCurrentUserAsync()
         {
             return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());

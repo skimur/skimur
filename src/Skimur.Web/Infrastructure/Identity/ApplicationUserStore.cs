@@ -17,7 +17,9 @@ namespace Skimur.Web.Infrastructure.Identity
         IPasswordHasher<User>,
         IUserValidator<User>,
         IUserLoginStore<User>,
-        IUserEmailStore<User>
+        IUserEmailStore<User>,
+        IUserPhoneNumberStore<User>,
+        IUserTwoFactorStore<User>
     {
         IMembershipService _membershipService;
         IPasswordManager _passwordManager;
@@ -331,6 +333,47 @@ namespace Skimur.Web.Infrastructure.Identity
         {
             user.Email = normalizedEmail;
             return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region IUserPhoneNumberStore
+
+        Task IUserPhoneNumberStore<User>.SetPhoneNumberAsync(User user, string phoneNumber, CancellationToken cancellationToken)
+        {
+            user.PhoneNumber = phoneNumber;
+            return Task.FromResult(0);
+        }
+
+        Task<string> IUserPhoneNumberStore<User>.GetPhoneNumberAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.PhoneNumber);
+        }
+
+        Task<bool> IUserPhoneNumberStore<User>.GetPhoneNumberConfirmedAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.PhoneNumberConfirmed);
+        }
+
+        Task IUserPhoneNumberStore<User>.SetPhoneNumberConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
+        {
+            user.PhoneNumberConfirmed = confirmed;
+            return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region IUserTwoFactorStore
+
+        Task IUserTwoFactorStore<User>.SetTwoFactorEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+        {
+            user.TwoFactorEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        Task<bool> IUserTwoFactorStore<User>.GetTwoFactorEnabledAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.TwoFactorEnabled);
         }
 
         #endregion

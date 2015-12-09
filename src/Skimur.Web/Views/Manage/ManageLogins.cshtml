@@ -1,12 +1,12 @@
 ﻿@model ManageLoginsViewModel
 @using Microsoft.AspNet.Http.Authentication
 @{
+    Layout = "_LayoutManageAccount";
     ViewData["Title"] = "Manage your external logins";
 }
 
 <h2>@ViewData["Title"].</h2>
 
-<p class="text-success">@ViewData["StatusMessage"]</p>
 @if (Model.CurrentLogins.Count > 0)
 {
     <h4>Registered Logins</h4>

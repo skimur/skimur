@@ -1,0 +1,18 @@
+﻿@{
+    var currentNavigationKey = ViewBag.ManageNavigationKey;
+}
+<ul class="nav nav-pills nav-stacked">
+    @RenderLink(Html, "Profile", Url.ManageProfile(), "Profile")
+    @RenderLink(Html, "Preferences", Url.ManagePreferences(), "Preferences")
+    @RenderLink(Html, "Email", Url.ManageEmail(), "Email")
+    @RenderLink(Html, "Password", Url.ManagePassword(), "Password")
+    @RenderLink(Html, "Logins", Url.ManageLogins(), "Logins")
+</ul>
+
+@functions {
+    public static HtmlString RenderLink(IHtmlHelper helper, string navigationKey, string url, string title)
+    {
+        var html = "<li class=\"" + (helper.ViewBag.ManageNavigationKey == navigationKey ? "active" : "") + "\"><a href=\"" + url + "\">" + title + "</a></li>";
+        return new HtmlString(html);
+    }
+}

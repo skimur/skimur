@@ -21,6 +21,7 @@
   </ItemGroup>
   <ItemGroup>
     <DnxInvisibleFolder Include="bower_components\" />
+    <DnxInvisibleFolder Include="Data\" />
   </ItemGroup>
   <Import Project="$(VSToolsPath)\DNX\Microsoft.DNX.targets" Condition="'$(VSToolsPath)' != ''" />
 </Project>

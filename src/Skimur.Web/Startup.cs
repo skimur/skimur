@@ -9,6 +9,9 @@ using Skimur.Utils;
 using Skimur.Web.Infrastructure.Identity;
 using Microsoft.AspNet.Identity;
 using Skimur.Web.Services.Impl;
+using Skimur.FileSystem;
+using Skimur.Settings;
+using Skimur.Web.Infrastructure;
 
 namespace Skimur.Web
 {
@@ -46,7 +49,7 @@ namespace Skimur.Web
                 new Subs.Registrar());
 
             // this will start the command listeners for subs, email, etc.
-            SkimurContext.Resolve<Messaging.IBusLifetime>();
+            SkimurContext.ServiceProvider.GetService<Messaging.IBusLifetime>();
 
             return SkimurContext.ServiceProvider;
         }
@@ -93,7 +96,7 @@ namespace Skimur.Web
 
             app.UseMvc(routes =>
             {
-                Infrastructure.Routes.Register(routes);
+                Routes.Register(routes);
             });
         }
 
@@ -109,12 +112,20 @@ namespace Skimur.Web
             serviceCollection.AddSingleton<IConfiguration>(provider => Configuration);
             serviceCollection.AddSingleton<IEmailSender, AuthMessageSender>();
             serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
-
+            serviceCollection.AddSingleton<IAvatarService, AvatarService>();
+            serviceCollection.AddSingleton<IFileSystem>(provider =>
+            {
+                var webSettings = provider.GetService<ISettingsProvider<WebSettings>>();
+                var dataDirectory = provider.GetService<IPathResolver>().Resolve(webSettings.Settings.DataDirectory);
+                return new LocalFileSystem(dataDirectory);
+            });
+            
             serviceCollection.AddScoped<ApplicationUserStore>();
             serviceCollection.AddScoped<IUserStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IRoleStore<Membership.Role>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IPasswordHasher<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IUserValidator<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<ILookupNormalizer, ApplicationLookupNormalizer>();
             serviceCollection.AddIdentity<Membership.User, Membership.Role>(options => 
             {
                 options.Password.RequireNonLetterOrDigit = false;
