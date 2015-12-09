@@ -94,7 +94,39 @@ namespace Skimur.Web.Controllers
 
             return View(model);
         }
-        
+
+        public async Task<ActionResult> Preferences()
+        {
+            ViewBag.ManageNavigationKey = "Preferences";
+
+            var user = await GetCurrentUserAsync();
+
+            return View(new UserPreferencesViewModel
+            {
+                ShowNsfw = user.ShowNsfw,
+                EnableStyles = user.EnableStyles
+            });
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> Preferences(UserPreferencesViewModel model)
+        {
+            ViewBag.ManageNavigationKey = "Preferences";
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await GetCurrentUserAsync();
+            user.ShowNsfw = model.ShowNsfw;
+            user.EnableStyles = model.EnableStyles;
+            await _userManager.UpdateAsync(user);
+
+            AddSuccessMessage("Your preferences have been updated.");
+
+            return View(model);
+        }
+
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
