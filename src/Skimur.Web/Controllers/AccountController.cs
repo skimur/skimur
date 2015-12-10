@@ -107,10 +107,13 @@ namespace Skimur.Web.Controllers
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
-                    var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
-                    var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
-                    await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
-                        "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    if (!string.IsNullOrEmpty(user.Email))
+                    {
+                        var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                        var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                        await _emailSender.SendEmailAsync(model.Email, "Confirm your account",
+                            "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                    }
 
                     await _signInManager.SignInAsync(user, isPersistent: false);
                     _logger.LogInformation(3, "User created a new account with password.");
@@ -214,6 +217,15 @@ namespace Skimur.Web.Controllers
                     result = await _userManager.AddLoginAsync(user, info);
                     if (result.Succeeded)
                     {
+                        // send an e-mail confirmation
+                        if (!string.IsNullOrEmpty(user.Email))
+                        {
+                            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                            await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                                "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+                        }
+
                         await _signInManager.SignInAsync(user, isPersistent: false);
                         _logger.LogInformation(6, "User created an account using {Name} provider.", info.LoginProvider);
                         return RedirectToLocal(returnUrl);
