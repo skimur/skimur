@@ -1,0 +1,61 @@
+﻿@model ManageEmailViewModel
+@using Microsoft.AspNet.Http.Authentication
+@{
+    Layout = "_LayoutManageAccount";
+    ViewData["Title"] = "Manage email";
+}
+
+<h2 class="page-header">@ViewData["Title"]</h2>
+
+<div class="form-group">
+    <label>Current email</label>
+    <p class="form-control-static">
+        @(!string.IsNullOrEmpty(Model.CurrentEmail) ? Model.CurrentEmail : "not set")
+    </p>
+</div>
+
+@if (!string.IsNullOrEmpty(Model.CurrentEmail) && !Model.IsCurrentEmailConfirmed)
+{
+    <form asp-controller="Manage" asp-action="ReSendEmailConfirmation" method="post" role="form">
+        <p class="alert alert-info">
+            <strong>NOTE:</strong> Your email is not currently confirmed. Doing so will help you recover passwords, and will also help you look less like spam.<br />
+            <a href="javascript:void(0);" onclick="$(this).closest('form').submit()"><strong>Click here</strong></a> to confirm your email address.
+        </p>
+    </form>
+}
+
+@if (!Model.IsPasswordSet)
+{
+    <p class="alert alert-info">
+        <strong>NOTE:</strong> In order to update your email address, you must have a password established. <a href="@Url.SetPassword()"><strong>Click here</strong></a> to set establish a password on your account.
+    </p>
+}
+else
+{
+    <form asp-controller="Manage" asp-action="ManageEmail" method="post" role="form">
+        @if (!string.IsNullOrEmpty(Model.CurrentEmail))
+        {
+            <h4>Change email</h4>
+        }
+        else
+        {
+            <h4>Set email</h4>
+        }
+        <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+        <div class="form-group">
+            <label asp-for="Password" class="control-label"></label>
+            <input asp-for="Password" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="NewEmail" class="control-label"></label>
+            <input asp-for="NewEmail" class="form-control" />
+        </div>
+        <div class="form-group">
+            <label asp-for="NewEmailConfirmed" class="control-label"></label>
+            <input asp-for="NewEmailConfirmed" class="form-control" />
+        </div>
+        <div class="form-group">
+            <input type="submit" value="@(!string.IsNullOrEmpty(Model.CurrentEmail) ? "Change email" : "Set email")" class="btn btn-primary" />
+        </div>
+    </form>
+}

@@ -369,6 +369,87 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
+        public async Task<ActionResult> ManageEmail()
+        {
+            ViewBag.ManageNavigationKey = "Email";
+
+            var user = await GetCurrentUserAsync();
+
+            var model = new ManageEmailViewModel();
+            model.CurrentEmail = user.Email;
+            model.IsCurrentEmailConfirmed = user.EmailConfirmed;
+            model.IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ManageEmail(ManageEmailViewModel model)
+        {
+            ViewBag.ManageNavigationKey = "Email";
+
+            var user = await GetCurrentUserAsync();
+            model.CurrentEmail = user.Email;
+            model.IsCurrentEmailConfirmed = user.EmailConfirmed;
+            model.IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash);
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            if(!(await _userManager.CheckPasswordAsync(user, model.Password)))
+            {
+                ModelState.AddModelError(string.Empty, "The provided password is invalid.");
+                return View(model);
+            }
+            
+            if (string.Equals(user.Email, model.NewEmail, StringComparison.CurrentCultureIgnoreCase))
+            {
+                ModelState.AddModelError(string.Empty, "The email provided is already set for this account.");
+                return View(model);
+            }
+
+            user.Email = model.NewEmail;
+            user.EmailConfirmed = false;
+            var result = await _userManager.UpdateAsync(user);
+
+            if (result.Succeeded)
+            {
+                // send a confirmation email
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+
+                model.CurrentEmail = user.Email;
+                model.IsCurrentEmailConfirmed = false;
+
+                AddSuccessMessage("Your e-mail has been changed. A email has been sent to confirm the email address.");
+                return View(model);
+            }
+            else
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
+
+            return View(model);
+        }
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<ActionResult> ReSendEmailConfirmation()
+        {
+            var user = await GetCurrentUserAsync();
+
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+
+            AddSuccessMessage("A confirmation email has been sent.");
+
+            return RedirectToAction("ManageEmail");
+        }
+
         //GET: /Manage/ManageLogins
         [HttpGet]
         public async Task<IActionResult> ManageLogins()
