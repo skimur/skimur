@@ -60,8 +60,7 @@ namespace Skimur.Web.Controllers
                 Location = user.Location
             });
         }
-
-        [ActionName("Index")]
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> Index(ProfileViewModel model, IEnumerable<IFormFile> files)
@@ -95,6 +94,8 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
+        #region Preferences
+
         public async Task<ActionResult> Preferences()
         {
             ViewBag.ManageNavigationKey = "Preferences";
@@ -127,12 +128,16 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
+        #endregion
+
         //
         // POST: /Manage/RemoveLogin
         [HttpPost]
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
         {
+            ViewBag.ManageNavigationKey = "Logins";
+
             var user = await GetCurrentUserAsync();
             if (user != null)
             {
@@ -287,6 +292,8 @@ namespace Skimur.Web.Controllers
         [HttpGet]
         public IActionResult ChangePassword()
         {
+            ViewBag.ManageNavigationKey = "Password";
+
             return View();
         }
 
@@ -296,6 +303,8 @@ namespace Skimur.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
         {
+            ViewBag.ManageNavigationKey = "Password";
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -329,6 +338,8 @@ namespace Skimur.Web.Controllers
         [HttpGet]
         public IActionResult SetPassword()
         {
+            ViewBag.ManageNavigationKey = "Password";
+
             return View();
         }
 
@@ -338,6 +349,8 @@ namespace Skimur.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
         {
+            ViewBag.ManageNavigationKey = "Password";
+
             if (!ModelState.IsValid)
             {
                 return View(model);
@@ -454,6 +467,8 @@ namespace Skimur.Web.Controllers
         [HttpGet]
         public async Task<IActionResult> ManageLogins()
         {
+            ViewBag.ManageNavigationKey = "Logins";
+
             var user = await GetCurrentUserAsync();
             if (user == null)
             {
@@ -461,11 +476,11 @@ namespace Skimur.Web.Controllers
             }
             var userLogins = await _userManager.GetLoginsAsync(user);
             var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
-            ViewData["ShowRemoveButton"] = user.PasswordHash != null || userLogins.Count > 1;
             return View(new ManageLoginsViewModel
             {
                 CurrentLogins = userLogins,
-                OtherLogins = otherLogins
+                OtherLogins = otherLogins,
+                IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash)
             });
         }
 
