@@ -30,7 +30,7 @@ namespace Skimur.Web.Infrastructure
 
             if (pager.HasPreviousPage)
             {
-                sb.Append(string.Format("<a class=\"btn btn-default\" href=\"{0}\">{1}</a>", Urls.ModifyQuery(null, baseUrl, "pageNumber", (pager.PageNumber - 1).ToString()), "Previous"));
+                sb.Append(string.Format("<a class=\"btn btn-default\" href=\"{0}\">{1}</a>", Urls.ModifyQuery(baseUrl, "pageNumber", (pager.PageNumber - 1).ToString()), "Previous"));
                 if (pager.HasNextPage)
                 {
                     sb.Append("&nbsp;&nbsp;");
@@ -39,7 +39,7 @@ namespace Skimur.Web.Infrastructure
 
             if (pager.HasNextPage)
             {
-                sb.Append(string.Format("<a class=\"btn btn-default\" href=\"{0}\">{1}</a>", Urls.ModifyQuery(null, baseUrl, "pageNumber", (pager.PageNumber + 1).ToString()), "Next"));
+                sb.Append(string.Format("<a class=\"btn btn-default\" href=\"{0}\">{1}</a>", Urls.ModifyQuery(baseUrl, "pageNumber", (pager.PageNumber + 1).ToString()), "Next"));
             }
 
             return new HtmlString(sb.ToString());

@@ -1,16 +1,17 @@
 ﻿@using Subs
 @using Subs.ReadModel
+@using System.Security.Claims
 @model PostDetailsModel
 @{
     Layout = "~/Views/Shared/_LayoutFull.cshtml";
     ViewBag.Title = Model.Post.Post.Title;
+    var dictionary = new Microsoft.AspNet.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+    dictionary["HidablePostText"] = false;
 }
-
 <div class="row">
     <div class="col-lg-9 col-sm-8">
-        @Html.Partial("_Post", Model.Post, new ViewDataDictionary { { "HidablePostText", false /*show text by default*/ } })
-
-        @if (Request.IsAuthenticated)
+        @Html.Partial("_Post", Model.Post, dictionary)
+        @if (User.IsSignedIn())
         {
             <div class="row">
                 <div class="form-group">
@@ -27,13 +28,12 @@
                 <a href="javascript:skimurui.login.display('You must be logged in to comment.');" class="btn btn-default btn-lg"><span class="fa fa-comment"></span> Add comment</a>
             </div>
         }
-
         <div class="row">
             @if (Model.ViewingSpecificComment)
             {
                 <div class="alert alert-info">
-                    You are viewing the discussion from a single comment thread. <br/>
-                    <a href="@Url.Post(Model.Sub.Sub, Model.Post.Post)" class="btn btn-default">View then rest of the comments <i class="fa fa-arrow-circle-right"></i></a>
+                    You are viewing the discussion from a single comment thread. <br />
+                    <a href="@Url.Post(Model.Sub.Sub, Model.Post.Post)" class="btn btn-default">View the rest of the comments <i class="fa fa-arrow-circle-right"></i></a>
                 </div>
             }
             <div class="page-header comments-header">
@@ -45,12 +45,12 @@
                             @Model.Comments.SortBy <span class="caret"></span>
                         </button>
                         <ul class="dropdown-menu dropdown-menu-right">
-                            <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "best")">Best</a></li>
-                            <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "top")">Top</a></li>
-                            <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "new")">New</a></li>
-                            <li class="@(Model.Comments.SortBy == CommentSortBy.Controversial ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "controversial")">Controversial</a></li>
-                            <li class="@(Model.Comments.SortBy == CommentSortBy.Old ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "old")">Old</a></li>
-                            <li class="@(Model.Comments.SortBy == CommentSortBy.Qa ? "active" : null)"><a href="@Url.ModifyQuery("commentsSort", "qa")">Qa</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "best")">Best</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "top")">Top</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "new")">New</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Controversial ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "controversial")">Controversial</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Old ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "old")">Old</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Qa ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "qa")">Qa</a></li>
                         </ul>
                     </div>
                 </div>
@@ -67,13 +67,11 @@
             }
         </div>
 
-
     </div>
     <div class="col-lg-3 col-sm-4">
-        @{Html.RenderSideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null);}
+        @Component.SideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null)
     </div>
 </div>
-
 @section scripts {
     <script type="text/javascript">
         $(function () {

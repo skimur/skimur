@@ -1,36 +1,52 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Http;
+using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Routing;
+using Microsoft.AspNet.WebUtilities;
 using Skimur.Web.Services;
 using Subs;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web;
 
 namespace Skimur.Web.Infrastructure
 {
     public static class Urls
     {
-        public static string ModifyQuery(this IUrlHelper urlHelper, HttpContext context, string name, string value)
+        public static string ModifyQuery(this HttpContext context, string name, string value)
         {
-            var url = context.Request.Url;
-            if (url == null) throw new ArgumentNullException();
+            var query = new Dictionary<string, string>();
 
-            return urlHelper.ModifyQuery(url.PathAndQuery, name, value);
+            if(context.Request.Query != null && context.Request.Query.Count > 0)
+            {
+                foreach(var q in context.Request.Query)
+                {
+                    query[q.Key] = q.Value;
+                }
+            }
+
+            query[name] = value;
+
+            return QueryHelpers.AddQueryString(context.Request.Path, query);
         }
 
-        public static string ModifyQuery(this IUrlHelper urlHelper, string url, string name, string value)
+        public static string ModifyQuery(string url, string name, string value)
         {
-            if (url == null) throw new ArgumentNullException();
-            var queryStartIndex = url.IndexOf("?");
+            var query = new Dictionary<string, string>();
 
-            if (queryStartIndex == -1)
-                return url + "?" + name + "=" + value;
+            var currentQuery = QueryHelpers.ParseQuery(url);
 
-            var queries = HttpUtility.ParseQueryString(url.Substring(queryStartIndex));
-            queries[name] = value;
-            return url.Substring(0, queryStartIndex) + "?" + queries;
+            if (currentQuery != null && currentQuery.Count > 0)
+            {
+                foreach (var q in currentQuery)
+                {
+                    query[q.Key] = q.Value;
+                }
+            }
+
+            query[name] = value;
+
+            return QueryHelpers.AddQueryString(url, query);
         }
 
         public static string Subs(this IUrlHelper urlHelper, string query = null)
