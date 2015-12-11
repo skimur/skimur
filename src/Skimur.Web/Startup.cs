@@ -12,6 +12,7 @@ using Skimur.Web.Services.Impl;
 using Skimur.FileSystem;
 using Skimur.Settings;
 using Skimur.Web.Infrastructure;
+using Microsoft.AspNet.Mvc.ViewComponents;
 
 namespace Skimur.Web
 {
@@ -132,6 +133,7 @@ namespace Skimur.Web
                 options.Password.RequireUppercase = false;
             }).AddDefaultTokenProviders();
 
+            serviceCollection.AddScoped<IViewComponentInvokerFactory, ViewComponentInvokerFactory>();
             serviceCollection.AddMvc();
 
             serviceCollection.AddScoped<IUserContext, UserContext>();
