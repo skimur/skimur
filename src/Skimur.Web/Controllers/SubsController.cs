@@ -303,19 +303,18 @@ namespace Skimur.Web.Controllers
         [SkimurAuthorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, CreateEditSubModel model)
+        public ActionResult Edit(string subName, CreateEditSubModel model)
         {
-            var name = id;
-            model.IsEditing = true;
-            model.Name = name;
-
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(subName))
                 return Redirect(Url.Subs());
 
-            var sub = _subDao.GetSubByName(name);
+            model.IsEditing = true;
+            model.Name = subName;
+            
+            var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                return Redirect(Url.Subs(name));
+                return Redirect(Url.Subs(subName));
 
             if (!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
                 throw new UnauthorizedException();
@@ -323,7 +322,7 @@ namespace Skimur.Web.Controllers
             var response = _commandBus.Send<EditSub, EditSubResponse>(new EditSub
             {
                 EditedByUserId = _userContext.CurrentUser.Id,
-                Name = name,
+                Name = subName,
                 Description = model.Description,
                 SidebarText = model.SidebarText,
                 SubmissionText = model.SubmissionText,
@@ -387,12 +386,7 @@ namespace Skimur.Web.Controllers
 
             return Redirect(Url.Sub(response.SubName));
         }
-
-        public ActionResult TopBar()
-        {
-            return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
-        }
-
+        
         [SkimurAuthorize, Ajax, HttpPost]
         public ActionResult Subscribe(string subName)
         {

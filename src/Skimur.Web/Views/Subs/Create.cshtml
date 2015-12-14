@@ -4,7 +4,6 @@
 }
 <h2 class="page-header">@ViewBag.Title</h2>
 <form asp-controller="Subs" asp-action="Create" method="post" class="form-horizontal" role="form">
-    @*@Html.ValidationSummary("", new { @class = "text-danger" }) TODO:*@
     @{ await Html.RenderPartialAsync("_SubCreateEdit", Model); }
     <div class="form-group">
         <div class="col-md-offset-2 col-md-10">
