@@ -181,5 +181,31 @@ namespace Skimur.Web.Infrastructure
             var attributes = (DescriptionAttribute[])value.GetType().GetField(value.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
             return (attributes.Length > 0) ? attributes[0].Description : value.ToString();
         }
+
+        public static string ModeratorPermissionsText(this IHtmlHelper htmlHelper, ModeratorPermissions permissions)
+        {
+            if (permissions.HasPermission(ModeratorPermissions.All))
+                return "Full";
+
+            if (permissions == ModeratorPermissions.None)
+                return "None";
+
+            var list = new List<string>();
+
+            if (permissions.HasPermission(ModeratorPermissions.Access))
+                list.Add("Access");
+            if (permissions.HasPermission(ModeratorPermissions.Config))
+                list.Add("Config");
+            if (permissions.HasPermission(ModeratorPermissions.Flair))
+                list.Add("Flair");
+            if (permissions.HasPermission(ModeratorPermissions.Mail))
+                list.Add("Mail");
+            if (permissions.HasPermission(ModeratorPermissions.Posts))
+                list.Add("Posts");
+            if (permissions.HasPermission(ModeratorPermissions.Styles))
+                list.Add("Styles");
+
+            return string.Join(", ", list);
+        }
     }
 }

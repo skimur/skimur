@@ -26,13 +26,13 @@ namespace Skimur.Markdown
 
         public string Compile(string markdown, out List<string> mentions)
         {
-            mentions = null;
+            mentions = new List<string>();
 
             var invoke = _nodeServices.InvokeExport<MarkdownCompileResult>(_scriptsDirectory.CompileScriptPath, "compileMarkdown", markdown);
             invoke.Wait();
 
             if (invoke.Result.Mentions != null && invoke.Result.Mentions.Count > 0)
-                mentions = invoke.Result.Mentions;
+                mentions.AddRange(invoke.Result.Mentions);
 
             return invoke.Result.Result;
         }

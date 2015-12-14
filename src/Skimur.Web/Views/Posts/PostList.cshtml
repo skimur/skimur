@@ -2,5 +2,5 @@
     
 @foreach (var post in Model)
 {
-    Html.RenderPartial("_Post", post);
+    await Html.RenderPartialAsync("_Post", post);
 }

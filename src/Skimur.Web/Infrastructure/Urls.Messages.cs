@@ -67,27 +67,27 @@ namespace Skimur.Web.Infrastructure
             return urlHelper.RouteUrl("MessageForSub", new { subName });
         }
 
-        public static string MessagesForSubUnread(this UrlHelper urlHelper, string subName)
+        public static string MessagesForSubUnread(this IUrlHelper urlHelper, string subName)
         {
             return urlHelper.RouteUrl("MessageForSubUnread", new { subName });
         }
 
-        public static string MessagesForSubSent(this UrlHelper urlHelper, string subName)
+        public static string MessagesForSubSent(this IUrlHelper urlHelper, string subName)
         {
             return urlHelper.RouteUrl("MessageForSubSent", new { subName });
         }
         
-        public static string MessagesForModeratedSubs(this UrlHelper urlHelper)
+        public static string MessagesForModeratedSubs(this IUrlHelper urlHelper)
         {
             return urlHelper.RouteUrl("MessageForModerator");
         }
 
-        public static string MessagesForModeratedSubsUnread(this UrlHelper urlHelper)
+        public static string MessagesForModeratedSubsUnread(this IUrlHelper urlHelper)
         {
             return urlHelper.RouteUrl("MessageForModeratorUnread");
         }
 
-        public static string MessagesForModeratedSubsSent(this UrlHelper urlHelper)
+        public static string MessagesForModeratedSubsSent(this IUrlHelper urlHelper)
         {
             return urlHelper.RouteUrl("MessageForModeratorSent");
         }
