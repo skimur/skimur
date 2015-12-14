@@ -28,6 +28,16 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Migrations", "src\Utilities
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Emails.Handlers", "src\Emails\Emails.Handlers\Emails.Handlers.xproj", "{E27D4B2C-0DE1-457F-A1CB-8A4394116558}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Subs.Worker", "src\Subs\Subs.Worker\Subs.Worker.xproj", "{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.Markdown", "src\Skimur.Markdown\Skimur.Markdown.xproj", "{2D0707B0-50C9-4B50-82F7-F5C36A1D7C89}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.Scraper", "src\Skimur.Scraper\Skimur.Scraper.xproj", "{C209DCE3-B716-4637-AEE7-306049F40806}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "3rd Party", "3rd Party", "{C33F77C7-8FE5-4276-B6F3-26D61FC01E1B}"
+EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNet.NodeServices", "submodules\NodeServices\Microsoft.AspNet.NodeServices\Microsoft.AspNet.NodeServices.xproj", "{B0FA4175-8B29-4904-9780-28B3C24B0567}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -62,6 +72,22 @@ Global
 		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{E27D4B2C-0DE1-457F-A1CB-8A4394116558}.Release|Any CPU.Build.0 = Release|Any CPU
+		{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2}.Release|Any CPU.Build.0 = Release|Any CPU
+		{2D0707B0-50C9-4B50-82F7-F5C36A1D7C89}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{2D0707B0-50C9-4B50-82F7-F5C36A1D7C89}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{2D0707B0-50C9-4B50-82F7-F5C36A1D7C89}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{2D0707B0-50C9-4B50-82F7-F5C36A1D7C89}.Release|Any CPU.Build.0 = Release|Any CPU
+		{C209DCE3-B716-4637-AEE7-306049F40806}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{C209DCE3-B716-4637-AEE7-306049F40806}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{C209DCE3-B716-4637-AEE7-306049F40806}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{C209DCE3-B716-4637-AEE7-306049F40806}.Release|Any CPU.Build.0 = Release|Any CPU
+		{B0FA4175-8B29-4904-9780-28B3C24B0567}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{B0FA4175-8B29-4904-9780-28B3C24B0567}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{B0FA4175-8B29-4904-9780-28B3C24B0567}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{B0FA4175-8B29-4904-9780-28B3C24B0567}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -70,5 +96,7 @@ Global
 		{A71F4B15-FF8E-4179-9980-B2F8211432D6} = {7F9A6E76-23A6-46B0-A334-FE1579D71518}
 		{32B33BF3-EA75-41BC-A25E-7E641EB92BD8} = {C2B1D5B8-22D5-4FE6-B6E6-06360C2F4627}
 		{6F501D93-46EA-4A78-8DD5-8FD4DD06F063} = {B9E1D1F3-BD21-403F-AA30-8FA43E473BA2}
+		{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2} = {7F9A6E76-23A6-46B0-A334-FE1579D71518}
+		{B0FA4175-8B29-4904-9780-28B3C24B0567} = {C33F77C7-8FE5-4276-B6F3-26D61FC01E1B}
 	EndGlobalSection
 EndGlobal

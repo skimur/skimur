@@ -1,5 +1,5 @@
 ﻿{
-  "projects": [ "src", "test", "src/Membership", "src/Subs", "src/Emails", "src/Utilities" ],
+  "projects": [ "src", "test", "src/Membership", "src/Subs", "src/Emails", "src/Utilities", "submodules/NodeServices" ],
   "sdk": {
     "version": "1.0.0-rc1-final"
   }

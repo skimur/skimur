@@ -1,7 +1,4 @@
-﻿using JavaScriptEngineSwitcher.Core;
-using JavaScriptEngineSwitcher.V8;
-using JavaScriptEngineSwitcher.V8.Configuration;
-using Microsoft.Extensions.DependencyInjection;
+﻿using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur.Markdown
 {
@@ -9,7 +6,6 @@ namespace Skimur.Markdown
     {
         public void Register(IServiceCollection serviceCollection)
         {
-            serviceCollection.AddTransient<IJsEngine>(provider => new V8JsEngine());
             serviceCollection.AddSingleton<IMarkdownCompiler, MarkdownCompiler>();
         }
 

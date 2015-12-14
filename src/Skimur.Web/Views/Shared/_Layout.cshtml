@@ -46,6 +46,12 @@
     @RenderBody()
     <script src="~/js/site.js" asp-append-version="true"></script>
     @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        skimurui.isLoggedIn = @User.IsSignedIn().ToString().ToLower();
+        $.each(q, function(index, f) {
+            $(f);
+        });
+    </script>
     @{ await Html.RenderPartialAsync("_Analytics"); }
     @{ await Html.RenderPartialAsync("_LoginModal", new LoginViewModel()); }
 </body>

@@ -1,0 +1,72 @@
+﻿@model CreateEditSubModel
+<div class="form-group">
+    <label asp-for="Name" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        @if (Model.IsEditing)
+        {
+            <p class="form-control-static">@Model.Name</p>
+        }
+        else
+        {
+            <input asp-for="Name" type="text" class="form-control" />
+        }
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="Description" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <textarea asp-for="Description" class="form-control"></textarea>
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="SidebarText" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <textarea asp-for="SidebarText" class="form-control"></textarea>
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="SubmissionText" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <textarea asp-for="SubmissionText" class="form-control"></textarea>
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="SubType" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <select asp-for="SubType" asp-items="Html.ItemsForEnum(x => x.SubType)" class="form-control"></select>
+    </div>
+</div>
+
+<div class="form-group">
+    <label asp-for="Nsfw" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="Nsfw" type="checkbox" />
+    </div>
+</div>
+<div class="form-group">
+    <label asp-for="InAll" class="col-md-2 control-label"></label>
+    <div class="col-md-10">
+        <input asp-for="InAll" type="checkbox" />
+    </div>
+</div>
+
+@if (Model.IsDefault.HasValue)
+{
+    <div class="form-group">
+        <label asp-for="IsDefault" class="col-md-2 control-label"></label>
+        <div class="col-md-10">
+            <input asp-for="IsDefault" type="checkbox" />
+        </div>
+    </div>
+}
+
+<script type="text/javascript">
+    $(function () {
+        $("#@Html.IdFor(x => x.SidebarText)").markdown({ iconlibrary: "fa" });
+        $("#@Html.IdFor(x => x.SubmissionText)").markdown({ iconlibrary: "fa" });
+    });
+</script>

@@ -13,6 +13,10 @@ using Skimur.FileSystem;
 using Skimur.Settings;
 using Skimur.Web.Infrastructure;
 using Microsoft.AspNet.Mvc.ViewComponents;
+using System.Collections.Generic;
+using System.Linq;
+using System.IO;
+using Skimur.Markdown;
 
 namespace Skimur.Web
 {
@@ -47,7 +51,12 @@ namespace Skimur.Web
                 this,
                 new Membership.Registrar(),
                 new Emails.Handlers.Registrar(),
-                new Subs.Registrar());
+                new Subs.Registrar(),
+                new Subs.Worker.Registrar(),
+                new Skimur.Markdown.Registrar(),
+                new Skimur.Scraper.Registrar());
+            
+            
 
             // this will start the command listeners for subs, email, etc.
             SkimurContext.ServiceProvider.GetService<Messaging.IBusLifetime>();

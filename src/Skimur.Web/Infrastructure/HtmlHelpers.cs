@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Mvc.Rendering;
+﻿using Microsoft.AspNet.Mvc.ModelBinding;
+using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.ViewFeatures;
 using Skimur.Web.ViewModels;
 using Subs;
@@ -6,6 +7,7 @@ using System;
 using System.Collections.Generic;
 using System.ComponentModel;
 using System.Linq;
+using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
 
@@ -143,6 +145,41 @@ namespace Skimur.Web.Infrastructure
             html.Append("</ul></div>");
 
             return new HtmlString(html.ToString());
+        }
+
+        public static IList<SelectListItem> ItemsForEnum<TModel, TProperty>(this IHtmlHelper<TModel> helper, Expression<Func<TModel, TProperty>> expression)
+        {
+            var metadata = ExpressionMetadataProvider.FromLambdaExpression(expression, helper.ViewData, helper.MetadataProvider);
+
+            var enumType = metadata.ModelType;
+            var isNullable = false;
+
+            {
+                var underlyingType = Nullable.GetUnderlyingType(enumType);
+                if (underlyingType != null)
+                {
+                    isNullable = true;
+                    enumType = underlyingType;
+                }
+            }
+
+            var items = Enum.GetValues(typeof(TProperty)).Cast<TProperty>().Select(x => new SelectListItem
+            {
+                Text = GetEnumDescription(x),
+                Value = x.ToString(),
+                Selected = x.Equals(metadata.Model)
+            }).ToList();
+
+            if (isNullable)
+                items.Insert(0, new SelectListItem { Text = "", Value = "", Selected = metadata.Model == null });
+
+            return items;
+        }
+
+        public static string GetEnumDescription<TEnum>(TEnum value)
+        {
+            var attributes = (DescriptionAttribute[])value.GetType().GetField(value.ToString()).GetCustomAttributes(typeof(DescriptionAttribute), false);
+            return (attributes.Length > 0) ? attributes[0].Description : value.ToString();
         }
     }
 }
