@@ -1,0 +1,30 @@
+﻿@model ReportedPostsViewModel
+@{
+    Layout = "_LayoutFull";
+    ViewBag.Title = "Reported posts for /s/" + Model.Sub.Name;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        <div class="form-group">
+            <ul class="nav nav-tabs">
+                <li class="@(ViewBag.ManageNavigationKey == "reportedposts" ? "active" : "")"><a href="@Url.ReportedPosts(Model.Sub.Name)">Reported posts</a></li>
+                <li class="@(ViewBag.ManageNavigationKey == "reportedcomments" ? "active" : "")"><a href="@Url.ReportedComments(Model.Sub.Name)">Reported comments</a></li>
+            </ul>
+        </div>
+        @if (Model.Posts != null && Model.Posts.Count > 0)
+        {
+            foreach (var post in Model.Posts)
+            {
+                @Html.Partial("_Post", post)
+            }
+        }
+        else
+        {
+            <p>There are no posts to display.</p>
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @Component.SideBar(subId: Model.Sub.Id)
+    </div>
+</div>
