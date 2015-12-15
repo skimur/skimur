@@ -1,0 +1,54 @@
+﻿@{
+    Layout = "_LayoutCentered";
+    ViewBag.Title = "User agreement";
+}
+
+<div class="container body-content">
+    <div class="row">
+        <div class="col-md-3 body-content-side hidden-sm hidden-xs">
+            <div class="policies-sidebar">
+                <ul class="nav nav-stacked nav-pills">
+                    <li><a href="#todo">TODO</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 body-content-main">
+            <div class="page-header">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            <section id="todo">
+                <h3>TODO</h3>
+                <p>TODO</p>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.policies-sidebar').affix({
+            offset: {
+                top: $(".layout-topbar").height() + $(".layout-header").height()
+            }
+        });
+        $('.policies-sidebar a[href*=#]:not([href=#])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').stop().animate({
+                        scrollTop: target.offset().top - 50
+                    }, 1000);
+                    if (history.pushState) {
+                        history.pushState(null, null, '#' + this.hash.slice(1));
+                        return false;
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

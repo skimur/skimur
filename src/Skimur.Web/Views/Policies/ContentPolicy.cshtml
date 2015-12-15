@@ -1,0 +1,99 @@
+﻿@{
+    Layout = "_LayoutCentered";
+    ViewBag.Title = "Content policy";
+}
+
+<div class="container body-content">
+    <div class="row">
+        <div class="col-md-3 body-content-side hidden-sm hidden-xs">
+            <div class="policies-sidebar">
+                <ul class="nav nav-stacked nav-pills">
+                    <li><a href="#unwelcome-content">Unwelcome content</a></li>
+                    <li><a href="#prohibited-behavior">Prohibited behavior</a></li>
+                    <li><a href="#nsfw">NSFW (not safe for work) content</a></li>
+                    <li><a href="#enforcement">Enforcement</a></li>
+                    <li><a href="#moderation">Moderation within communities</a></li>
+                </ul>
+            </div>
+        </div>
+        <div class="col-md-9 body-content-main">
+            <div class="page-header">
+                <h2>@ViewBag.Title</h2>
+            </div>
+            <section>
+                <p>Skimur is a platform for communities to discuss, connect, and share in an open environment. The nature of this content might be funny, serious, offensive, or anywhere in between. While participating, it’s important to keep in mind this value above all others: show enough respect to others so that we all may continue to enjoy Skimur for what it is.</p>
+            </section>
+            <section id="unwelcome-content">
+                <h3>Unwelcome content</h3>
+                <p>While Skimur generally provides a lot of leeway in what content is acceptable, here are some guidelines for content that is not. Please keep in mind the spirit in which these were written, and know that looking for loopholes is a waste of time.</p>
+                <p>Imagery is defined as videos, pictures or digital images.</p>
+                <p>Content is considered illegal if it:</p>
+                <ul>
+                    <li>Infringes upon a copyright or trademark.</li>
+                    <li>Contains imagery of any person in a state of nudity or engaged in any act of sexual conduct, taken without permission.</li>
+                    <li>Contains imagery that encourages or promotes pedophilia, or sexual imagery–including animated content–that includes individuals under the age of 18.</li>
+                    <li>Is personal and confidential information.</li>
+                    <li>Impersonates someone in a misleading or deceptive manner. However, satire and parody are ok.</li>
+                    <li>Is spam.</li>
+                </ul>
+            </section>
+            <section id="prohibited-behavior">
+                <h3>Prohibited behavior</h3>
+                <p>In addition to not submitting unwelcome content, the following behaviors are prohibited on Skimur.</p>
+                <ul>
+                    <li>Asking for votes or engaging in vote manipulation.</li>
+                    <li>Creating multiple accounts to evade punishment or avoid restrictions.</li>
+                </ul>
+            </section>
+            <section id="nsfw">
+                <h3>NSFW (not safe for work) content</h3>
+                <p>Content that contains nudity, pornography, or profanity, which a reasonable viewer may not want to be seen accessing in a public or formal setting such as in a workplace should be tagged as NSFW.</p>
+            </section>
+            <section id="enforcement">
+                <h3>Enforcement</h3>
+                <p>We have a variety of ways of enforcing our rules, including, but not limited to:</p>
+                <ul>
+                    <li>Asking you nicely to knock it off.</li>
+                    <li>Asking you less nicely.</li>
+                    <li>Temporary or permanent suspension of accounts.</li>
+                    <li>Removal of privileges from, or adding restrictions to, accounts.</li>
+                    <li>Removal of content.</li>
+                    <li>Banning of Skimur communities.</li>
+                </ul>
+            </section>
+            <section id="moderation">
+                <h3>Moderation within communities</h3>
+                <p>Individual communities on Skimur may have their own rules in addition to ours and their own moderators to enforce them. Skimur provides tools to aid moderators, but does not prescribe their usage.</p>
+            </section>
+        </div>
+    </div>
+</div>
+
+<script type="text/javascript">
+    $(function () {
+        $('.policies-sidebar').affix({
+            offset: {
+                top: $(".layout-topbar").height() + $(".layout-header").height()
+            }
+        });
+        $('.policies-sidebar a[href*=#]:not([href=#])').click(function () {
+            if (location.pathname.replace(/^\//, '') == this.pathname.replace(/^\//, '') && location.hostname == this.hostname) {
+                var target = $(this.hash);
+                target = target.length ? target : $('[name=' + this.hash.slice(1) + ']');
+                if (target.length) {
+                    $('html,body').stop().animate({
+                        scrollTop: target.offset().top - 50
+                    }, 1000);
+                    if (history.pushState) {
+                        history.pushState(null, null, '#' + this.hash.slice(1));
+                        return false;
+                    }
+                }
+            }
+        });
+    });
+</script>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}
