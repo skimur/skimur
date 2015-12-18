@@ -9,7 +9,7 @@ namespace Skimur.Web.Infrastructure
 {
     public class BaseHttpException : Exception
     {
-        public BaseHttpException(string message, HttpStatusCode statusCode)
+        public BaseHttpException(HttpStatusCode statusCode, string message)
             : base(message)
         {
             StatusCode = statusCode;
@@ -21,7 +21,7 @@ namespace Skimur.Web.Infrastructure
     public class NotFoundException : BaseHttpException
     {
         public NotFoundException()
-            : base(string.Empty, HttpStatusCode.NotFound)
+            : base(HttpStatusCode.NotFound, string.Empty)
         {
 
         }
@@ -30,7 +30,7 @@ namespace Skimur.Web.Infrastructure
     public class UnauthorizedException : BaseHttpException
     {
         public UnauthorizedException()
-            : base(string.Empty, HttpStatusCode.Unauthorized)
+            : base(HttpStatusCode.Unauthorized, string.Empty)
         {
 
         }
