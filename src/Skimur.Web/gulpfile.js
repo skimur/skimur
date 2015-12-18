@@ -13,11 +13,9 @@ var project = require('./project.json');
 var paths = {
     webroot: "./" + project.webroot + "/"
 };
-
 paths.concatJsDest = paths.webroot + "js/site.js";
 paths.concatCssDest = paths.webroot + "css/site.css";
-
-var bowerScripts = [
+paths.concatJsScripts = [
     "bower_components/jquery/dist/jquery.js",
     "bower_components/jquery-validation/dist/jquery.validate.js",
     "bower_components/jquery-validation-unobtrusive/jquery.validate.unobtrusive.js",
@@ -43,6 +41,11 @@ var bowerScripts = [
     "Scripts/app/messages.js",
     "Scripts/app/moderators.js"
 ];
+paths.aceJsScripts = [
+    "bower_components/ace-builds/src/ace.js",
+    "bower_components/ace-builds/src/theme-github.js",
+    "bower_components/ace-builds/src/mode-css.js"
+];
 
 gulp.task("clean:js", function (cb) {
     rimraf(paths.concatJsDest, cb);
@@ -60,8 +63,13 @@ gulp.task("compile:font", function (cb) {
 })
 
 gulp.task("compile:js", function (cb) {
-    return gulp.src(bowerScripts)
+    return gulp.src(paths.concatJsScripts)
         .pipe(concat("site.js"))
+        .pipe(gulp.dest(paths.webroot + "js"));
+});
+
+gulp.task("compile:js-ace", function(cb) {
+    return gulp.src(paths.aceJsScripts)
         .pipe(gulp.dest(paths.webroot + "js"));
 });
 
@@ -72,4 +80,4 @@ gulp.task("compile:css", function (cb) {
             .pipe(gulp.dest(project.webroot + '/css'));
 });
 
-gulp.task("compile", ["compile:js", "compile:css", "compile:font"]);
+gulp.task("compile", ["compile:js", "compile:js-ace", "compile:css", "compile:font"]);

@@ -1,0 +1,120 @@
+﻿@using Subs
+@model StylesEditModel
+
+@{
+    ViewBag.Title = "Styles for /s/" + Model.Sub.Name;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        <h1 class="page-header">Styles</h1>
+        <form asp-antiforgery="true" action="@Url.Styles(Model.Sub.Name)" method="post" class="form form-substyles" role="form">
+            <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+            <ul class="nav nav-tabs" role="tablist">
+                <li id="none-tab" role="presentation" class="@(Model.CssType == CssType.None ? "active" : "")" data-css-type="@CssType.None"><a href="#none" role="tab" data-toggle="tab">None</a></li>
+                <li id="embedded-tab" role="presentation" class="@(Model.CssType == CssType.Embedded ? "active" : "")" data-css-type="@CssType.Embedded"><a href="#embedded" role="tab" data-toggle="tab">Embedded</a></li>
+                <li id="external-tab" role="presentation" class="@(Model.CssType == CssType.ExternalCss ? "active" : "")" data-css-type="@CssType.ExternalCss"><a href="#external" role="tab" data-toggle="tab">External</a></li>
+                <li id="github-css-tab" role="presentation" class="@(Model.CssType == CssType.GitHubCss ? "active" : "")" data-css-type="@CssType.GitHubCss"><a href="#githubcss" role="tab" data-toggle="tab"><i class="fa fa-github"></i> Github CSS</a></li>
+                <li id="github-less-tab" role="presentation" class="@(Model.CssType == CssType.GitHubLess ? "active" : "")" data-css-type="@CssType.GitHubLess"><a href="#githubless" role="tab" data-toggle="tab"><i class="fa fa-github"></i> Github LESS</a></li>
+            </ul>
+            @Html.HiddenFor(m => m.CssType)
+            <div class="tab-content">
+                <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.None ? "active" : "")" id="none">
+                    <div class="form-group">
+                        <p class="alert alert-default">
+                            No styles will be rendered.
+                        </p>
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.Embedded ? "active" : "")" id="embedded">
+                    <div class="form-group">
+                        <span asp-validation-for="Embedded"></span>
+                        <pre id="embedded-editor" style="height: 500px;">@Model.Embedded</pre>
+                    </div>
+                    @Html.HiddenFor(m => m.Embedded)
+                </div>
+                <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.ExternalCss ? "active" : "")" id="external">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.ExternalCss)
+                        @Html.TextBoxFor(m => m.ExternalCss, new { @class = "form-control", placeholder = "https://somewhere.com/style.css" })
+                        @Html.ValidationMessageFor(x => x.ExternalCss)
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.GitHubCss ? "active" : "")" id="githubcss">
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GitHubCssProjectName)
+                        @Html.TextBoxFor(m => m.GitHubCssProjectName, new { @class = "form-control", placeholder = "User/Repository" })
+                        @Html.ValidationMessageFor(x => x.GitHubCssProjectName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GitHubCssProjectTag)
+                        @Html.TextBoxFor(m => m.GitHubCssProjectTag, new { @class = "form-control", placeholder = "v1.0.0" })
+                        @Html.ValidationMessageFor(x => x.GitHubCssProjectTag)
+                    </div>
+                </div>
+                <div role="tabpanel" class="tab-pane @(Model.CssType == CssType.GitHubLess ? "active" : "")" id="githubless">
+                    <div class="alert alert-warning">
+                        <b>Heads up!</b> This feature is not implemented at the moment. Stay tuned for updates!
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GitHubLessProjectName)
+                        @Html.TextBoxFor(m => m.GitHubLessProjectName, new { @class = "form-control", placeholder = "User/Repository" })
+                        @Html.ValidationMessageFor(x => x.GitHubLessProjectName)
+                    </div>
+                    <div class="form-group">
+                        @Html.LabelFor(m => m.GitHubLessProjectTag)
+                        @Html.TextBoxFor(m => m.GitHubLessProjectTag, new { @class = "form-control", placeholder = "v1.0.0" })
+                        @Html.ValidationMessageFor(x => x.GitHubLessProjectTag)
+                    </div>
+                </div>
+            </div>
+            <div class="form-group form-group-buttons">
+                <button class="btn btn-default" name="preview" onclick="submitEditCssForm(this)">Preview</button>
+                <button class="btn btn-primary" name="save" onclick="submitEditCssForm(this)">Save</button>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @Component.SideBar(subId: Model.Sub.Id)
+    </div>
+</div>
+
+<script src="~/js/ace.js" asp-append-version="true"></script>
+<script type="text/javascript">
+
+    var editor = ace.edit("embedded-editor");
+    editor.setShowPrintMargin(false);
+    editor.setTheme("ace/theme/github");
+    editor.getSession().setMode("ace/mode/css");
+
+    $(function() {
+        $("#none-tab, #embedded-tab, #external-tab, #github-css-tab, #github-less-tab").click(function(e) {
+            $("#@Html.IdFor(m => m.CssType)").val($(this).data("css-type"));
+        });
+    });
+
+    function submitEditCssForm(button) {
+        $('#@Html.IdFor(m => m.Embedded)').val(editor.getSession().getValue());
+        if ($(".form-substyles").valid()) {
+            $(button).buttonStartLoading();
+            $(".form-substyles")
+                .append($("<input />").attr("type", "hidden").attr("name", $(button).attr("name")))
+                .submit();
+            return true;
+        }
+        return false;
+    }
+
+</script>
+
+@section messages {
+    @if (!Model.StyledEnabledForUser)
+    {
+        <div class="alert alert-warning">
+            Your account is configured to not allow subs to display custom styles. It is recommended to enable this when adjusting styles.<br/>
+            <a href="@Url.ManagePreferences()" class="btn btn-default">Manage preferences</a>
+        </div>   
+    }
+    @Html.ErrorMessages()
+    @Html.SuccessMessages()
+}

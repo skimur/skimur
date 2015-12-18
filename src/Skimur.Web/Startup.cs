@@ -143,7 +143,10 @@ namespace Skimur.Web
             }).AddDefaultTokenProviders();
 
             serviceCollection.AddScoped<IViewComponentInvokerFactory, ViewComponentInvokerFactory>();
-            serviceCollection.AddMvc();
+            serviceCollection.AddMvc(options =>
+            {
+                options.ModelValidatorProviders.Add(new FluentValidationModelValidatorProvider());
+            });
 
             serviceCollection.AddScoped<IUserContext, UserContext>();
             serviceCollection.AddScoped<IContextService, ContextService>();

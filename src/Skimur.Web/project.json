@@ -38,7 +38,8 @@
     "Membership": "",
     "Emails": "",
     "Emails.Handlers": "",
-    "ImageResizer": "4.0.4"
+    "ImageResizer": "4.0.4",
+    "FluentValidation": "5.6.2"
   },
 
   "commands": {

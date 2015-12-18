@@ -15,7 +15,7 @@ using Skimur.Web.ViewModels.Account;
 namespace Skimur.Web.Controllers
 {
     [Authorize]
-    public class AccountController : Controller
+    public class AccountController : BaseController
     {
         private readonly UserManager<Membership.User> _userManager;
         private readonly SignInManager<Membership.User> _signInManager;
@@ -50,7 +50,7 @@ namespace Skimur.Web.Controllers
         [HttpPost]
         [AllowAnonymous]
         [ValidateAntiForgeryToken]
-        public async Task<IActionResult> Login(LoginViewModel model, string returnUrl = null)
+        public async Task<ActionResult> Login(LoginViewModel model, string returnUrl = null)
         {
             ViewData["ReturnUrl"] = returnUrl;
             if (ModelState.IsValid)
@@ -457,19 +457,7 @@ namespace Skimur.Web.Controllers
         {
             return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }
-
-        private IActionResult RedirectToLocal(string returnUrl)
-        {
-            if (Url.IsLocalUrl(returnUrl))
-            {
-                return Redirect(returnUrl);
-            }
-            else
-            {
-                return RedirectToAction(nameof(HomeController.Index), "Home");
-            }
-        }
-
+        
         #endregion
     }
 }

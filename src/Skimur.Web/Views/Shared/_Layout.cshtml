@@ -7,6 +7,7 @@
     <meta name="description" content="Skimur: Speak, be heard." />
     <title>@ViewData["Title"] - Skimur</title>
     <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    @Component.Invoke("Styles", ViewContext.RouteData.Values["subName"])
     <script type="text/javascript">
         window.q = [];
         window.$ = function (f) {
