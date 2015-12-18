@@ -33,8 +33,8 @@ namespace Skimur.Web.Infrastructure
         public static string ModifyQuery(string url, string name, string value)
         {
             var query = new Dictionary<string, string>();
-
-            var currentQuery = QueryHelpers.ParseQuery(url);
+            
+            var currentQuery = QueryHelpers.ParseQuery(url.Contains("?") ? url.Substring(url.IndexOf("?")) : string.Empty);
 
             if (currentQuery != null && currentQuery.Count > 0)
             {
@@ -46,7 +46,7 @@ namespace Skimur.Web.Infrastructure
 
             query[name] = value;
 
-            return QueryHelpers.AddQueryString(url, query);
+            return QueryHelpers.AddQueryString(url.Contains("?") ? url.Substring(0, url.IndexOf("?")) : string.Empty, query);
         }
 
         public static string Subs(this IUrlHelper urlHelper, string query = null)

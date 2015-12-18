@@ -33,7 +33,7 @@
 @functions {
     public void RenderSortListItem(UserViewModel.SortByEnum sort)
     {
-        var url = Context.Request.Path;
+        var url = Context.Request.Path.ToString();
         url = Urls.ModifyQuery(url, "sort", sort.ToString().ToLower());
         if (sort == UserViewModel.SortByEnum.Controversial || sort == UserViewModel.SortByEnum.Top)
         {
@@ -47,7 +47,7 @@
 
     public void RenderTimeFilterListItem(UserViewModel.TimeFilterEnum filter)
     {
-        var url = Context.Request.Path;
+        var url = Context.Request.Path.ToString();
         url = Urls.ModifyQuery(url, "sort", Model.SortBy.ToString().ToLower());
         url = Urls.ModifyQuery(url, "filter", filter.ToString().ToLower());
 
