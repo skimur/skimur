@@ -1,0 +1,102 @@
+﻿@model UserViewModel
+<div class="form-group">
+    Sort by:
+    <div class="btn-group">
+        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+            @{ RenderSortDisplay(Model.SortBy); } <span class="caret"></span>
+        </button>
+        <ul class="dropdown-menu dropdown-menu-left">
+            @{ RenderSortListItem(UserViewModel.SortByEnum.New); }
+            @{ RenderSortListItem(UserViewModel.SortByEnum.Hot); }
+            @{ RenderSortListItem(UserViewModel.SortByEnum.Top); }
+            @{ RenderSortListItem(UserViewModel.SortByEnum.Controversial); }
+        </ul>
+    </div>
+    @if (Model.SortBy == UserViewModel.SortByEnum.Top || Model.SortBy == UserViewModel.SortByEnum.Controversial)
+    {
+        <text>&nbsp;From:</text>
+        <div class="btn-group">
+            <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown">
+                @{ RenderTimeFilterDisplay(Model.TimeFilter); } <span class="caret"></span>
+            </button>
+            <ul class="dropdown-menu dropdown-menu-left">
+                @{ RenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Hour); }
+                @{ RenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Day); }
+                @{ RenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Week); }
+                @{ RenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Month); }
+                @{ RenderTimeFilterListItem(UserViewModel.TimeFilterEnum.Year); }
+                @{ RenderTimeFilterListItem(UserViewModel.TimeFilterEnum.All); }
+            </ul>
+        </div>
+    }
+</div>
+@functions {
+    public void RenderSortListItem(UserViewModel.SortByEnum sort)
+    {
+        var url = Context.Request.Path;
+        url = Urls.ModifyQuery(url, "sort", sort.ToString().ToLower());
+        if (sort == UserViewModel.SortByEnum.Controversial || sort == UserViewModel.SortByEnum.Top)
+        {
+            url = Urls.ModifyQuery(url, "filter", Model.TimeFilter.ToString().ToLower());
+        }
+
+        ViewContext.Writer.Write($"<li class=\"{(Model.SortBy == sort ? "active" : null)}\"><a href=\"{url}\">");
+        RenderSortDisplay(sort);
+        ViewContext.Writer.Write("</a></li>");
+    }
+
+    public void RenderTimeFilterListItem(UserViewModel.TimeFilterEnum filter)
+    {
+        var url = Context.Request.Path;
+        url = Urls.ModifyQuery(url, "sort", Model.SortBy.ToString().ToLower());
+        url = Urls.ModifyQuery(url, "filter", filter.ToString().ToLower());
+
+        ViewContext.Writer.Write($"<li class=\"{ (Model.TimeFilter == filter ? "active" : null)}\"><a href=\"{url}\">");
+        RenderTimeFilterDisplay(filter);
+        ViewContext.Writer.Write("</a></li>");
+    }
+
+    public void RenderTimeFilterDisplay(UserViewModel.TimeFilterEnum timeFilter)
+    {
+        switch (timeFilter)
+        {
+            case UserViewModel.TimeFilterEnum.Hour:
+                ViewContext.Writer.Write("Past hour");
+                break;
+            case UserViewModel.TimeFilterEnum.Day:
+                ViewContext.Writer.Write("Past day");
+                break;
+            case UserViewModel.TimeFilterEnum.Week:
+                ViewContext.Writer.Write("Past week");
+                break;
+            case UserViewModel.TimeFilterEnum.Month:
+                ViewContext.Writer.Write("Past month");
+                break;
+            case UserViewModel.TimeFilterEnum.Year:
+                ViewContext.Writer.Write("Past year");
+                break;
+            case UserViewModel.TimeFilterEnum.All:
+                ViewContext.Writer.Write("All time");
+                break;
+        }
+    }
+
+    public void RenderSortDisplay(UserViewModel.SortByEnum sort)
+    {
+        switch (sort)
+        {
+            case UserViewModel.SortByEnum.New:
+                ViewContext.Writer.Write("New");
+                break;
+            case UserViewModel.SortByEnum.Hot:
+                ViewContext.Writer.Write("Hot");
+                break;
+            case UserViewModel.SortByEnum.Top:
+                ViewContext.Writer.Write("Top");
+                break;
+            case UserViewModel.SortByEnum.Controversial:
+                ViewContext.Writer.Write("Controversial");
+                break;
+        }
+    }
+}
