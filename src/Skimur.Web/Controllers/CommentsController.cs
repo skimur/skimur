@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
 using Skimur.Web.Infrastructure;
 using Skimur.Web.Services;
@@ -36,7 +37,7 @@ namespace Skimur.Web.Controllers
             _commentDao = commentDao;
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Create(CreateCommentModel model)
         {
             var dateCreated = Common.CurrentTime();
@@ -67,7 +68,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Edit(EditCommentModel model)
         {
             var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
@@ -92,7 +93,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Delete(Guid commentId)
         {
             var response = _commandBus.Send<DeleteComment, DeleteCommentResponse>(new DeleteComment

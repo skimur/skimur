@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Logging;
 using Skimur.Messaging;
 using Skimur.Web.Infrastructure;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
-    [SkimurAuthorize]
+    [Authorize]
     public class MessagesController : BaseController
     {
         private readonly ICommandBus _commandBus;

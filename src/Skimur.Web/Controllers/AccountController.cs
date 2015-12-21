@@ -11,6 +11,7 @@ using Microsoft.Data.Entity;
 using Microsoft.Extensions.Logging;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels.Account;
+using Skimur.Web.Infrastructure;
 
 namespace Skimur.Web.Controllers
 {

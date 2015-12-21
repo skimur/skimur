@@ -157,6 +157,12 @@ namespace Skimur.Web
             {
                 options.LowercaseUrls = true;
             });
+
+            serviceCollection.AddOptions();
+            serviceCollection.Configure<IdentityOptions>(options =>
+            {
+                options.Cookies.ApplicationCookie.Events = new CustomCookieAuthenticationEvents();
+            });
         }
 
         #endregion

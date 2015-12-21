@@ -12,6 +12,7 @@ using Microsoft.AspNet.Session;
 using Microsoft.AspNet.Http;
 using Skimur.Web.Infrastructure;
 using Subs.Commands;
+using Microsoft.AspNet.Authorization;
 
 namespace Skimur.Web.Controllers
 {
@@ -39,7 +40,7 @@ namespace Skimur.Web.Controllers
             _commandBus = commandBus;
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Edit(string subName)
         {
             var sub = _subDao.GetSubByName(subName);
@@ -73,7 +74,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         [ParameterBasedOnFormName("save", "shouldSave"), ParameterBasedOnFormName("preview", "shouldPreview")]

@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
 using Skimur.Web.Infrastructure;
 using Skimur.Web.Services;
@@ -14,7 +15,7 @@ using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
-    [SkimurAuthorize]
+    [Authorize]
     public class SubBansController : BaseController
     {
         private readonly ISubUserBanDao _subUserBanDao;

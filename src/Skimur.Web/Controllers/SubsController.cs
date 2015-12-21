@@ -1,4 +1,5 @@
 ﻿using Membership.Services;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
 using Skimur.Settings;
@@ -120,7 +121,7 @@ namespace Skimur.Web.Controllers
             return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(subs, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, subs.HasMore));
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Subscribed()
         {
             ViewBag.NavigationKey = "subscribed";
@@ -128,7 +129,7 @@ namespace Skimur.Web.Controllers
             return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser), 1, int.MaxValue, false));
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Moderating()
         {
             ViewBag.NavigationKey = "moderating";
@@ -300,7 +301,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Edit(string subName, CreateEditSubModel model)
@@ -343,7 +344,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Create()
         {
             var model = new CreateEditSubModel();
@@ -358,7 +359,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateEditSubModel model)
@@ -387,7 +388,7 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.Sub(response.SubName));
         }
         
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Subscribe(string subName)
         {
             var response = _commandBus.Send<SubcribeToSub, SubcribeToSubResponse>(new SubcribeToSub
@@ -399,7 +400,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Success, response.Error);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult UnSubscribe(string subName)
         {
             var response = _commandBus.Send<UnSubcribeToSub, UnSubcribeToSubResponse>(new UnSubcribeToSub
@@ -411,7 +412,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Success, response.Error);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult VotePost(Guid postId, VoteType type)
         {
             _commandBus.Send(new CastVoteForPost
@@ -426,7 +427,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult UnVotePost(Guid postId)
         {
             _commandBus.Send(new CastVoteForPost
@@ -441,7 +442,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult VoteComment(Guid commentId, VoteType type)
         {
             _commandBus.Send(new CastVoteForComment
@@ -456,7 +457,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult UnVoteComment(Guid commentId)
         {
             _commandBus.Send(new CastVoteForComment

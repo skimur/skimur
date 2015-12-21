@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
 using Skimur.Web.Infrastructure;
 using Skimur.Web.Services;
@@ -54,7 +55,7 @@ namespace Skimur.Web.Controllers
             _commentNodeHierarchyBuilder = commentNodeHierarchyBuilder;
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Unmoderated(string subName)
         {
             if (string.IsNullOrEmpty(subName))
@@ -75,7 +76,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Approve(Guid postId)
         {
             var response = _commandBus.Send<ApprovePost, ApprovePostResponse>(new ApprovePost
@@ -87,7 +88,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Remove(Guid postId)
         {
             var response = _commandBus.Send<RemovePost, RemovePostResponse>(new RemovePost
@@ -99,7 +100,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Edit(EditPostModel model)
         {
             var response = _commandBus.Send<EditPostContent, EditPostContentResponse>(new EditPostContent
@@ -122,7 +123,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Delete(Guid postId, string reason)
         {
             var response = _commandBus.Send<DeletePost, DeletePostResponse>(new DeletePost
@@ -135,7 +136,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult ToggleNsfw(Guid postId, bool nsfw)
         {
             _commandBus.Send(new TogglePostNsfw
@@ -148,7 +149,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult ToggleSticky(Guid postId, bool sticky)
         {
             var response = _commandBus.Send<ToggleSticky, ToggleStickyResponse>(new ToggleSticky
@@ -349,7 +350,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Create(string subName = null, string type = null)
         {
             SubWrapped sub = null;
@@ -377,7 +378,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreatePostModel model, string subName = null)
