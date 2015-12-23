@@ -1,9 +1,8 @@
 
-var PROJECT='Skimur'
-var VERSION='0.0.1'
-var FULL_VERSION='${VERSION}'
-var AUTHORS='${PROJECT} contributors'
+var VERSION='0.1'
+var FULL_VERSION='0.1'
+var AUTHORS='Paul Knopf'
 
+use import="Common"
 
 use-standard-lifecycle
-k-standard-goals
