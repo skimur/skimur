@@ -24,7 +24,7 @@
     "ServiceStack.OrmLite.PostgreSQL": "4.0.46",
     "ServiceStack.RabbitMq": "4.0.46",
     "ServiceStack.Redis": "4.0.46",
-    "Newtonsoft.Json": "7.0.1",
+    "Newtonsoft.Json": "8.0.1-beta3",
     "Microsoft.Extensions.DependencyInjection": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.Binder": "1.0.0-rc1-final",
     "Microsoft.Extensions.PlatformAbstractions": "1.0.0-rc1-final"

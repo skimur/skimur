@@ -17,6 +17,7 @@ using System.Collections.Generic;
 using System.Linq;
 using System.IO;
 using Skimur.Markdown;
+using Microsoft.AspNet.StaticFiles;
 
 namespace Skimur.Web
 {
@@ -120,6 +121,8 @@ namespace Skimur.Web
         public void Register(IServiceCollection serviceCollection)
         {
             serviceCollection.AddSingleton<IConfiguration>(provider => Configuration);
+            serviceCollection.AddSingleton<IContentTypeProvider, FileExtensionContentTypeProvider>();
+            serviceCollection.AddSingleton<IThumbnailCacheService, ThumbnailCacheService>();
             serviceCollection.AddSingleton<IEmailSender, AuthMessageSender>();
             serviceCollection.AddSingleton<ISmsSender, AuthMessageSender>();
             serviceCollection.AddSingleton<IAvatarService, AvatarService>();

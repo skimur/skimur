@@ -239,3 +239,4 @@ src/Skimur.Web/wwwroot/fonts/
 src/Skimur.Web/wwwroot/css/
 src/Skimur.Web/wwwroot/js/
 src/Skimur.Web/Data/
+src/Skimur.Web/ThumbnailCache/
