@@ -41,14 +41,14 @@ namespace Skimur.Web
         }
 
         public IConfigurationRoot Configuration { get; set; }
-        
+
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
             SkimurContext.ContainerInitialized += Cassandra.Migrations.Migrations.Run;
             SkimurContext.ContainerInitialized += Postgres.Migrations.Migrations.Run;
             SkimurContext.Initialize(
-                new ServiceCollectionRegistrar(services, 0), 
+                new ServiceCollectionRegistrar(services, 0),
                 this,
                 new Membership.Registrar(),
                 new Emails.Handlers.Registrar(),
@@ -56,8 +56,8 @@ namespace Skimur.Web
                 new Subs.Worker.Registrar(),
                 new Skimur.Markdown.Registrar(),
                 new Skimur.Scraper.Registrar());
-            
-            
+
+
 
             // this will start the command listeners for subs, email, etc.
             SkimurContext.ServiceProvider.GetService<Messaging.IBusLifetime>();
@@ -89,19 +89,29 @@ namespace Skimur.Web
             app.UseIdentity();
 
             app.UseSession();
-            
-            app.UseFacebookAuthentication(options =>
+
+            var facebookAppId = Configuration["Skimur:Authentication:Facebook:AppId"];
+            var facebookAppSecret = Configuration["Skimur:Authentication:Facebook:AppSecret"];
+            if (!string.IsNullOrEmpty(facebookAppId) && !string.IsNullOrEmpty(facebookAppSecret))
             {
-                options.AppId = Configuration["Skimur:Authentication:Facebook:AppId"];
-                options.AppSecret = Configuration["Skimur:Authentication:Facebook:AppSecret"];
-            });
-            
-            app.UseGoogleAuthentication(options =>
+                app.UseFacebookAuthentication(options =>
+                {
+                    options.AppId = facebookAppId;
+                    options.AppSecret = facebookAppSecret;
+                });
+            }
+
+            var googleClientId = Configuration["Skimur:Authentication:Google:ClientId"];
+            var googleClientSecret = Configuration["Skimur:Authentication:Google:ClientSecret"];
+            if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
             {
-                options.ClientId = Configuration["Skimur:Authentication:Google:ClientId"];
-                options.ClientSecret = Configuration["Skimur:Authentication:Google:ClientSecret"];
-                options.Scope.Add("https://www.googleapis.com/auth/plus.profile.emails.read");
-            });
+                app.UseGoogleAuthentication(options =>
+                {
+                    options.ClientId = googleClientId;
+                    options.ClientSecret = googleClientSecret;
+                    options.Scope.Add("https://www.googleapis.com/auth/plus.profile.emails.read");
+                });
+            }
 
             app.UseMiddleware<ErrorHandlerMiddleware>();
 
@@ -132,14 +142,14 @@ namespace Skimur.Web
                 var dataDirectory = provider.GetService<IPathResolver>().Resolve(webSettings.Settings.DataDirectory);
                 return new LocalFileSystem(dataDirectory);
             });
-            
+
             serviceCollection.AddScoped<ApplicationUserStore>();
             serviceCollection.AddScoped<IUserStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IRoleStore<Membership.Role>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IPasswordHasher<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IUserValidator<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<ILookupNormalizer, ApplicationLookupNormalizer>();
-            serviceCollection.AddIdentity<Membership.User, Membership.Role>(options => 
+            serviceCollection.AddIdentity<Membership.User, Membership.Role>(options =>
             {
                 options.Password.RequireNonLetterOrDigit = false;
                 options.Password.RequireUppercase = false;

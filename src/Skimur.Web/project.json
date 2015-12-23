@@ -58,7 +58,9 @@
 
   "publishExclude": [
     "**.user",
-    "**.vspscc"
+    "**.vspscc",
+    "Scripts/",
+    "Styles/"
   ],
 
   "scripts": {
