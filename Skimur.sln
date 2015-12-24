@@ -40,6 +40,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Microsoft.AspNet.NodeServic
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MirroredContentSync", "src\Utilities\MirroredContentSync\MirroredContentSync.xproj", "{834F7598-1126-4DCD-BF92-882F5A8A293E}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Tasks", "src\Utilities\Tasks\Tasks.xproj", "{0A9B8219-5D8C-407E-983F-7BDB8E64DF84}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -94,6 +96,10 @@ Global
 		{834F7598-1126-4DCD-BF92-882F5A8A293E}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{834F7598-1126-4DCD-BF92-882F5A8A293E}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{834F7598-1126-4DCD-BF92-882F5A8A293E}.Release|Any CPU.Build.0 = Release|Any CPU
+		{0A9B8219-5D8C-407E-983F-7BDB8E64DF84}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{0A9B8219-5D8C-407E-983F-7BDB8E64DF84}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{0A9B8219-5D8C-407E-983F-7BDB8E64DF84}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{0A9B8219-5D8C-407E-983F-7BDB8E64DF84}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -105,5 +111,6 @@ Global
 		{4E29E115-D01B-4BE0-B415-BEF3F1D94AE2} = {7F9A6E76-23A6-46B0-A334-FE1579D71518}
 		{B0FA4175-8B29-4904-9780-28B3C24B0567} = {C33F77C7-8FE5-4276-B6F3-26D61FC01E1B}
 		{834F7598-1126-4DCD-BF92-882F5A8A293E} = {B9E1D1F3-BD21-403F-AA30-8FA43E473BA2}
+		{0A9B8219-5D8C-407E-983F-7BDB8E64DF84} = {B9E1D1F3-BD21-403F-AA30-8FA43E473BA2}
 	EndGlobalSection
 EndGlobal

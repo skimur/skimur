@@ -11,20 +11,31 @@ using Skimur.Messaging;
 using Subs;
 using Subs.Commands;
 using Subs.Services;
+using Microsoft.Extensions.DependencyInjection;
+using Microsoft.Extensions.Configuration;
 
 namespace Tasks
 {
-    class Program
+    class Program : IRegistrar
     {
         static void Main(string[] args)
         {
-            SkimurContext.ContainerInitialized += Skimur.Cassandra.Migrations.Migrations.Run;
-            SkimurContext.ContainerInitialized += Skimur.Postgres.Migrations.Migrations.Run;
-            SkimurContext.Initialize(new Skimur.Markdown.Registrar(),
+            SkimurContext.Initialize(new Program(),
                 new Subs.Registrar(),
                 new Membership.Registrar());
 
             Args.InvokeAction<Tasks>(args);
+        }
+
+        public int Order => 0;
+
+        public void Register(IServiceCollection serviceCollection)
+        {
+            // Set up configuration sources.
+            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+            builder.AddEnvironmentVariables();
+
+            serviceCollection.AddInstance<IConfiguration>(builder.Build());
         }
     }
 
@@ -37,11 +48,10 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Update kudos for all users")]
         public void UpdateKudos()
         {
-
-            var membershipService = SkimurContext.Resolve<IMembershipService>();
-            var karmaService = SkimurContext.Resolve<IKarmaService>();
-            var postService = SkimurContext.Resolve<IPostService>();
-            var commentService = SkimurContext.Resolve<ICommentService>();
+            var membershipService = SkimurContext.ServiceProvider.GetRequiredService<IMembershipService>();
+            var karmaService = SkimurContext.ServiceProvider.GetRequiredService<IKarmaService>();
+            var postService = SkimurContext.ServiceProvider.GetRequiredService<IPostService>();
+            var commentService = SkimurContext.ServiceProvider.GetRequiredService<ICommentService>();
 
             int currentIndex = 0;
             int pageSize = 10;
@@ -93,7 +103,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Delete a sub")]
         public void DeleteSub(string subName)
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var sub = connectionProvider.Perform(conn => conn.Single<Sub>(x => x.Name.ToLower() == subName.ToLower()));
             if (sub == null)
@@ -122,7 +132,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Delete a user")]
         public void DeleteUser(string userName)
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var user = connectionProvider.Perform(conn => conn.Single<User>(x => x.UserName.ToLower() == userName.ToLower()));
             if (user == null)
@@ -146,7 +156,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Delete comment")]
         public void DeleteComment(Guid commentId)
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var comment = connectionProvider.Perform(conn => conn.Single<Comment>(x => x.Id == commentId));
             if (comment == null)
@@ -172,7 +182,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Delete post")]
         public void DeletePost(Guid postId)
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var post = connectionProvider.Perform(conn => conn.Single<Post>(x => x.Id == postId));
             if (post == null)
@@ -199,7 +209,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Delete message")]
         public void DeleteMessageThread(Guid messageId)
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var message = connectionProvider.Perform(conn => conn.Single<Message>(x => x.Id == messageId));
             if (message == null)
@@ -217,8 +227,8 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Update all post thumbnails")]
         public void UpdateAllThumbnails()
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
-            var commandBus = SkimurContext.Resolve<ICommandBus>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
+            var commandBus = SkimurContext.ServiceProvider.GetRequiredService<ICommandBus>();
 
             var postIds = connectionProvider.Perform(
                 conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int)PostType.Link).Select(x => x.Id)).Select(x => x.Id));
@@ -237,8 +247,8 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Attempt to update embedded media items")]
         public void RetryEmbeddedMedia(bool force = false)
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
-            var commandBus = SkimurContext.Resolve<ICommandBus>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
+            var commandBus = SkimurContext.ServiceProvider.GetRequiredService<ICommandBus>();
 
             var postIds = connectionProvider.Perform(
                 conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int)PostType.Link).Select(x => x.Id)).Select(x => x.Id));
@@ -258,7 +268,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Attempt to update embedded media for a single post")]
         public void RetryEmbeddedMediaForPost(Guid postId, bool force = false)
         {
-            var commandBus = SkimurContext.Resolve<ICommandBus>();
+            var commandBus = SkimurContext.ServiceProvider.GetRequiredService<ICommandBus>();
 
             commandBus.Send(new GenerateEmbeddedMediaObject
             {
@@ -270,7 +280,7 @@ namespace Tasks
         [ArgActionMethod, ArgDescription("Fix issues with some links containing a UTF-8 BOM")]
         public void FixLinksWithBOM()
         {
-            var connectionProvider = SkimurContext.Resolve<IDbConnectionProvider>();
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var posts = connectionProvider.Perform(
                 conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int) PostType.Link)));
