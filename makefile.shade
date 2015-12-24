@@ -1,8 +1,62 @@
 
-var VERSION='0.1'
-var FULL_VERSION='0.1'
-var AUTHORS='Paul Knopf'
-
 use import="Common"
 
-use-standard-lifecycle
+var BUILD_NUMBER='9999'
+var BASE_DIR="${Directory.GetCurrentDirectory()}"
+var BUILD_DIR="${Path.Combine(BASE_DIR, "build")}"
+var DIST_DIR="${Path.Combine(BASE_DIR, "dist")}"
+var CONFIGURATION="Debug"
+
+@{
+	var appVeyorBuildNumber = System.Environment.GetEnvironmentVariable("APPVEYOR_BUILD_NUMBER");
+	if(!string.IsNullOrEmpty(appVeyorBuildNumber))
+		BUILD_NUMBER = appVeyorBuildNumber;
+	System.Environment.SetEnvironmentVariable("DNX_BUILD_VERSION", BUILD_NUMBER, EnvironmentVariableTarget.Process);
+}
+
+log info="Build number: ${BUILD_NUMBER}"
+log info="Base directory: ${BASE_DIR}"
+log info="Build directory: ${BUILD_DIR}"
+log info="Distribution directory: ${DIST_DIR}"
+
+#default .prepare .compile .test
+
+#ci .prepare .clean .config-release .compile .test .deploy
+
+#prepare
+	node-install
+	bower-install
+	gulp-install
+	dnvm-install
+	dnvm-use version='1.0.0-rc1-final'
+
+#config-release
+	@{
+		CONFIGURATION="Release";
+	}
+
+#config-debug
+	@{
+		CONFIGURATION="Debug";
+	}
+
+#clean
+	@{
+		if(Directory.Exists(BUILD_DIR))
+			Directory.Delete(BUILD_DIR, true);
+		if(Directory.Exists(DIST_DIR))
+			Directory.Delete(DIST_DIR, true);
+	}
+
+#compile
+	dnu dnuCommand='restore "src"'
+	dnu dnuCommand='build "src/Skimur.Web/project.json"'
+	dnu dnuCommand='publish "src/Skimur.Web/project.json" -o "build"'
+
+#test
+	@{
+		Log.Warn("TODO: Testing...");
+	}
+
+#deploy
+	dnu dnuCommand='publish "src/Skimur.Web/project.json" -o "build"'

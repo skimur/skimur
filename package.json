@@ -2,7 +2,7 @@
   "dependencies": {
     "del": "^2.0.2",
     "fs": "0.0.2",
-    "gulp": "*",
+    "gulp": "^3.9.0",
     "gulp-change": "^1.0.0",
     "gulp-clean": "^0.3.1",
     "gulp-concat": "^2.6.0",
