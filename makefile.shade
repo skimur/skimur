@@ -7,6 +7,8 @@ var BUILD_DIR="${Path.Combine(BASE_DIR, "build")}"
 var DIST_DIR="${Path.Combine(BASE_DIR, "dist")}"
 var CONFIGURATION="Debug"
 
+
+
 @{
 	var appVeyorBuildNumber = System.Environment.GetEnvironmentVariable("APPVEYOR_BUILD_NUMBER");
 	if(!string.IsNullOrEmpty(appVeyorBuildNumber))
@@ -50,8 +52,7 @@ log info="Distribution directory: ${DIST_DIR}"
 
 #compile
 	dnu dnuCommand='restore "src"'
-	dnu dnuCommand='build "src/Skimur.Web/project.json"'
-	dnu dnuCommand='publish "src/Skimur.Web/project.json" -o "build"'
+	dnu dnuCommand='publish "src/Skimur.Web/project.json" --configuration ${CONFIGURATION} -o "build/web"'
 
 #test
 	@{
@@ -59,4 +60,54 @@ log info="Distribution directory: ${DIST_DIR}"
 	}
 
 #deploy
-	dnu dnuCommand='publish "src/Skimur.Web/project.json" -o "build"'
+	@{
+		if(!Directory.Exists(DIST_DIR))
+			Directory.CreateDirectory(DIST_DIR);
+
+		var destination =  Path.Combine(DIST_DIR, "web");
+
+		if(!Directory.Exists(destination))
+			Directory.CreateDirectory(destination);
+
+		DirectoryCopy(Path.Combine(BUILD_DIR, "web"), destination, true);
+	}
+
+functions @{
+	void DirectoryCopy(string sourceDirName, string destDirName, bool copySubDirs)
+    {
+        // Get the subdirectories for the specified directory.
+        DirectoryInfo dir = new DirectoryInfo(sourceDirName);
+
+        if (!dir.Exists)
+        {
+            throw new DirectoryNotFoundException(
+                "Source directory does not exist or could not be found: "
+                + sourceDirName);
+        }
+
+        DirectoryInfo[] dirs = dir.GetDirectories();
+        // If the destination directory doesn't exist, create it.
+        if (!Directory.Exists(destDirName))
+        {
+            Directory.CreateDirectory(destDirName);
+        }
+
+        // Get the files in the directory and copy them to the new location.
+        FileInfo[] files = dir.GetFiles();
+        foreach (FileInfo file in files)
+        {
+            string temppath = Path.Combine(destDirName, file.Name);
+            file.CopyTo(temppath, false);
+        }
+
+        // If copying subdirectories, copy them and their contents to new location.
+        if (copySubDirs)
+        {
+            foreach (DirectoryInfo subdir in dirs)
+            {
+                string temppath = Path.Combine(destDirName, subdir.Name);
+                DirectoryCopy(subdir.FullName, temppath, copySubDirs);
+            }
+        }
+    }
+}
