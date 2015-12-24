@@ -52,7 +52,9 @@ log info="Distribution directory: ${DIST_DIR}"
 
 #compile
 	dnu dnuCommand='restore "src"'
-	dnu dnuCommand='publish "src/Skimur.Web/project.json" --configuration ${CONFIGURATION} -o "build/web"'
+	dnu dnuCommand='publish "src/Skimur.Web/project.json" --configuration ${CONFIGURATION} -o "build/Web"'
+	dnu dnuCommand='publish "src/Utilities/MirroredContentSync/project.json" --configuration ${CONFIGURATION} -o "build/MirroredContentSync"'
+	dnu dnuCommand='publish "src/Utilities/Tasks/project.json" --configuration ${CONFIGURATION} -o "build/Tasks"'
 
 #test
 	@{
@@ -64,12 +66,26 @@ log info="Distribution directory: ${DIST_DIR}"
 		if(!Directory.Exists(DIST_DIR))
 			Directory.CreateDirectory(DIST_DIR);
 
-		var destination =  Path.Combine(DIST_DIR, "web");
+		var destination =  Path.Combine(DIST_DIR, "Web");
 
 		if(!Directory.Exists(destination))
 			Directory.CreateDirectory(destination);
 
-		DirectoryCopy(Path.Combine(BUILD_DIR, "web"), destination, true);
+		DirectoryCopy(Path.Combine(BUILD_DIR, "Web"), destination, true);
+
+		destination =  Path.Combine(DIST_DIR, "MirroredContentSync");
+
+		if(!Directory.Exists(destination))
+			Directory.CreateDirectory(destination);
+
+		DirectoryCopy(Path.Combine(BUILD_DIR, "MirroredContentSync"), destination, true);
+
+		destination =  Path.Combine(DIST_DIR, "Tasks");
+
+		if(!Directory.Exists(destination))
+			Directory.CreateDirectory(destination);
+
+		DirectoryCopy(Path.Combine(BUILD_DIR, "Tasks"), destination, true);
 	}
 
 functions @{
