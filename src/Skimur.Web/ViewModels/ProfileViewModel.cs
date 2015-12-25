@@ -10,18 +10,18 @@ namespace Skimur.Web.ViewModels
 {
     public class ProfileViewModel
     {
-        [DisplayName("Full name")]
+        [Display(Name = "Full name")]
         [MaxLength(50, ErrorMessage = "Full name name cannot be more than 50 characters.")]
         public string FullName { get; set; }
 
-        [DisplayName("Bio")]
+        [Display(Name = "Bio")]
         [MaxLength(150, ErrorMessage = "Bio cannot be more than 150 characters.")]
         public string Bio { get; set; }
 
-        [DisplayName("Url")]
+        [Display(Name = "Url")]
         public string Url { get; set; }
 
-        [DisplayName("Location")]
+        [Display(Name = "Location")]
         [MaxLength(75, ErrorMessage = "Location cannot be more than 75 characters.")]
         public string Location { get; set; }
 

@@ -3,6 +3,7 @@ using Subs.ReadModel;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
+using System.ComponentModel.DataAnnotations;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -19,10 +20,10 @@ namespace Skimur.Web.ViewModels
 
         public PostType PostType { get; set; }
 
-        [DisplayName("Sub name")]
+        [Display(Name = "Sub name")]
         public string PostToSub { get; set; }
 
-        [DisplayName("Notify replies")]
+        [Display(Name = "Notify replies")]
         public bool NotifyReplies { get; set; }
 
         public SubWrapped Sub { get; set; }

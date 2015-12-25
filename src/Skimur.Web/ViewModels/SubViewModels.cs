@@ -11,30 +11,30 @@ namespace Skimur.Web.ViewModels
 {
     public class CreateEditSubModel
     {
-        [DisplayName("Name")]
+        [Display(Name="Name")]
         public string Name { get; set; }
 
-        [DisplayName("Description")]
+        [Display(Name = "Description")]
         public string Description { get; set; }
 
         // TODO: Request validation
-        [DisplayName("Sidebar text")]
+        [Display(Name = "Sidebar text")]
         public string SidebarText { get; set; }
-        
+
         // TODO: Request validation
-        [DisplayName("Submission text")]
+        [Display(Name = "Submission text")]
         public string SubmissionText { get; set; }
 
-        [DisplayName("Type")]
+        [Display(Name = "Type")]
         public SubType SubType { get; set; }
 
-        [DisplayName("Is default")]
+        [Display(Name = "Is default")]
         public bool? IsDefault { get; set; }
 
-        [DisplayName("Show in /s/all?")]
+        [Display(Name = "Show in /s/all?")]
         public bool InAll { get; set; }
 
-        [DisplayName("18 or older content?")]
+        [Display(Name = "18 or older content?")]
         public bool Nsfw { get; set; }
 
         public bool IsEditing { get; set; }
