@@ -152,7 +152,7 @@ namespace Skimur.Web
             {
                 options.Password.RequireNonLetterOrDigit = false;
                 options.Password.RequireUppercase = false;
-            });
+            }).AddDefaultTokenProviders();
 
             serviceCollection.AddScoped<IViewComponentInvokerFactory, ViewComponentInvokerFactory>();
             serviceCollection.AddMvc(options =>
