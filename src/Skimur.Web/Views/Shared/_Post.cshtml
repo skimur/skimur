@@ -192,7 +192,7 @@
 </div>
 @functions
 {
-    public static HtmlString PostClasses(PostWrapped post)
+    public HtmlString PostClasses(PostWrapped post)
     {
         string classes = string.Empty;
         if (post.Verdict.HasValue)
@@ -225,7 +225,7 @@
         return new HtmlString(classes);
     }
 
-    public static HtmlString DomainLink(PostWrapped post)
+    public HtmlString DomainLink(PostWrapped post)
     {
         if (post.Post.PostType == PostType.Link)
         {
@@ -241,7 +241,7 @@
         return HtmlString.Empty;
     }
 
-    public static HtmlString PostUrl(PostWrapped post)
+    public HtmlString PostUrl(PostWrapped post)
     {
         if(post.Post.PostType == PostType.Link)
         {
@@ -249,8 +249,7 @@
         }
         else
         {
-            return new HtmlString("");
-            //return Url.Post(post.Sub, post.Post);
+            return new HtmlString(Url.Post(post.Sub, post.Post));
         }
     }
 }
