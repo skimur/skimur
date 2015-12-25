@@ -6,7 +6,12 @@
     <meta name="keywords" content="skimur, skimur.com, comment, post, link, submit, share" />
     <meta name="description" content="Skimur: Speak, be heard." />
     <title>@ViewData["Title"] - Skimur</title>
-    <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    <environment names="Development">
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    </environment>
+    <environment names="Production">
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
     @Component.Invoke("Styles", ViewContext.RouteData.Values["subName"])
     <script type="text/javascript">
         window.q = [];
@@ -45,7 +50,12 @@
         </div>
     </div>
     @RenderBody()
-    <script src="~/js/site.js" asp-append-version="true"></script>
+    <environment names="Development">
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Production">
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
     @RenderSection("scripts", required: false)
     <script type="text/javascript">
         skimurui.isLoggedIn = @User.IsSignedIn().ToString().ToLower();

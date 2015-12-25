@@ -68,8 +68,6 @@ namespace Skimur.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            app.UseMiddleware<IpBlockerMiddleware>();
-
             loggerFactory.AddConsole(Configuration.GetSection("Logging"));
             loggerFactory.AddDebug();
 
@@ -77,12 +75,13 @@ namespace Skimur.Web
             {
                 app.UseBrowserLink();
                 app.UseDeveloperExceptionPage();
-                app.UseDatabaseErrorPage();
             }
             else
             {
                 app.UseExceptionHandler("/Home/Error");
             }
+
+            app.UseMiddleware<IpBlockerMiddleware>();
 
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
 
@@ -114,9 +113,7 @@ namespace Skimur.Web
                     options.Scope.Add("https://www.googleapis.com/auth/plus.profile.emails.read");
                 });
             }
-
-            app.UseMiddleware<ErrorHandlerMiddleware>();
-
+            
             app.UseMvc(routes =>
             {
                 Routes.Register(routes);
@@ -155,7 +152,7 @@ namespace Skimur.Web
             {
                 options.Password.RequireNonLetterOrDigit = false;
                 options.Password.RequireUppercase = false;
-            }).AddDefaultTokenProviders();
+            });
 
             serviceCollection.AddScoped<IViewComponentInvokerFactory, ViewComponentInvokerFactory>();
             serviceCollection.AddMvc(options =>

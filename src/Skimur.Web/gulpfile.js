@@ -53,21 +53,32 @@ var components = {
                 "bower_components/ace-builds/src/ace.js"
             ],
             fileName: "ace.js",
-            dest: paths.webroot + "js/"
+            dest: paths.webroot + "js/",
+            skipMin:true
         },
         aceThemeGitHub: {
             scripts: [
                 "bower_components/ace-builds/src/theme-github.js"
             ],
             fileName: "theme-github.js",
-            dest: paths.webroot + "js/"
+            dest: paths.webroot + "js/",
+            skipMin: true
         },
         aceModeCss: {
             scripts: [
                 "bower_components/ace-builds/src/mode-css.js"
             ],
             fileName: "mode-css.js",
-            dest: paths.webroot + "js/"
+            dest: paths.webroot + "js/",
+            skipMin: true
+        },
+        aceWorkerCss: {
+            scripts: [
+                "bower_components/ace-builds/src/worker-css.js"
+            ],
+            fileName: "worker-css.js",
+            dest: paths.webroot + "js/",
+            skipMin: true
         }
     },
     styles: {
@@ -171,10 +182,16 @@ gulp.task("min:js", function (cb) {
     var streams = [];
 
     compiledJs.forEach(function (component) {
-        streams.push(gulp.src(component.dest + component.fileName)
-           .pipe(uglify())
-           .pipe(rename({ suffix: ".min" }))
-           .pipe(gulp.dest(component.dest)));
+        var min = true;
+        if (component.skipMin != "undefined") {
+            min = !component.skipMin;
+        }
+        if (min) {
+            streams.push(gulp.src(component.dest + component.fileName)
+                .pipe(uglify())
+                .pipe(rename({ suffix: ".min" }))
+                .pipe(gulp.dest(component.dest)));
+        }
     });
 
     return merge(streams);
@@ -194,13 +211,19 @@ gulp.task("min:css", function () {
     var streams = [];
 
     compiledCss.forEach(function (component) {
-        streams.push(gulp.src(component.dest + component.fileName)
-           .pipe(cssmin({ keepSpecialComments: "0" }))
-           .pipe(rename({ suffix: ".min" }))
-           .pipe(gulp.dest(component.dest)));
+        var min = true;
+        if (component.skipMin != "undefined") {
+            min = !component.skipMin;
+        }
+        if (min) {
+            streams.push(gulp.src(component.dest + component.fileName)
+                .pipe(cssmin({ keepSpecialComments: "0" }))
+                .pipe(rename({ suffix: ".min" }))
+                .pipe(gulp.dest(component.dest)));
+        }
     });
 
     return merge(streams);
 });
 
-gulp.task("min", ["compile", "min:js", "min:css"]);
+gulp.task("min", ["min:js", "min:css"]);
