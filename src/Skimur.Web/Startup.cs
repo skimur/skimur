@@ -80,15 +80,15 @@ namespace Skimur.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-
-            app.UseMiddleware<IpBlockerMiddleware>();
-
+            
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
 
+            app.UseMiddleware<IpBlockerMiddleware>();
+            app.UseMiddleware<ForceHttpsMiddleware>();
+            app.UseMiddleware<ForceDomainMiddleware>();
+
             app.UseStaticFiles();
-
             app.UseIdentity();
-
             app.UseSession();
 
             var facebookAppId = Configuration["Skimur:Authentication:Facebook:AppId"];
