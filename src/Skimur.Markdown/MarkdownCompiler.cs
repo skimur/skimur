@@ -19,6 +19,7 @@ namespace Skimur.Markdown
         
         public string Compile(string markdown)
         {
+            if (string.IsNullOrEmpty(markdown)) return null;
             var invoke = _nodeServices.InvokeExport<MarkdownCompileResult>(_scriptsDirectory.CompileScriptPath, "compileMarkdown", markdown);
             invoke.Wait();
             return invoke.Result.Result;
@@ -27,6 +28,8 @@ namespace Skimur.Markdown
         public string Compile(string markdown, out List<string> mentions)
         {
             mentions = new List<string>();
+
+            if (string.IsNullOrEmpty(markdown)) return null;
 
             var invoke = _nodeServices.InvokeExport<MarkdownCompileResult>(_scriptsDirectory.CompileScriptPath, "compileMarkdown", markdown);
             invoke.Wait();
