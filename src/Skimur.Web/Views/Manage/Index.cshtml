@@ -1,0 +1,39 @@
+﻿@model ProfileViewModel
+
+@{
+    Layout = "_LayoutManageAccount";
+    ViewData["Title"] = "Profile";
+}
+
+<h2 class="page-header">@ViewData["Title"]</h2>
+
+<form asp-controller="Manage" asp-action="Index" asp-route-returnurl="@ViewData["ReturnUrl"]" method="post" role="form" enctype="multipart/form-data">
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div class="form-group">
+        <label asp-for="AvatarFile" class="control-label"></label>
+        <div class="avatar-edit">
+            @{ await Html.RenderPartialAsync("_Avatar", !string.IsNullOrEmpty(Model.AvatarIdentifier) ? Model.AvatarIdentifier : string.Empty); }
+            <input asp-for="AvatarFile" type="file" class="avatar-file-upload" />
+            <input asp-for="AvatarIdentifier" type="hidden" />
+        </div>
+    </div>
+    <div class="form-group">
+        <label asp-for="FullName" class="control-label"></label>
+        <input asp-for="FullName" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Bio" class="control-label"></label>
+        <input asp-for="Bio" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Url" class="control-label"></label>
+        <input asp-for="Url" class="form-control" />
+    </div>
+    <div class="form-group">
+        <label asp-for="Location" class="control-label"></label>
+        <input asp-for="Location" class="form-control" />
+    </div>
+    <div class="form-group">
+        <input type="submit" value="Update profile" class="btn btn-primary" />
+    </div>
+</form>

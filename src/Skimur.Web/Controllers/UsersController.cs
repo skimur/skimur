@@ -1,17 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
-using Membership.Services;
-using Skimur.Web.Models;
+﻿using Membership.Services;
+using Microsoft.AspNet.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs.ReadModel;
 using Subs.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
-    public class UsersController : Controller
+    public class UsersController : BaseController
     {
         private readonly IMembershipService _membershipService;
         private readonly ISubDao _subDao;
@@ -58,7 +59,7 @@ namespace Skimur.Web.Controllers
                 timeFilter: CommentsTimeFilter.All,
                 skip: 0,
                 take: 3);
-            
+
             model.Comments = new PagedList<CommentWrapped>(
                _commentWrapper.Wrap(latestComments, _userContext.CurrentUser),
                0,
@@ -78,7 +79,7 @@ namespace Skimur.Web.Controllers
                0,
                5,
                true);
-            
+
             return View(model);
         }
 
@@ -187,10 +188,10 @@ namespace Skimur.Web.Controllers
             }
 
             var kudos = _karmaDao.GetKarma(user.Id);
-            
+
             model.CommentKudos = kudos.Keys.Where(x => x.Type == KarmaType.Comment).Sum(x => kudos[x]);
             model.PostKudos = kudos.Keys.Where(x => x.Type == KarmaType.Post).Sum(x => kudos[x]);
-            
+
             return model;
         }
     }

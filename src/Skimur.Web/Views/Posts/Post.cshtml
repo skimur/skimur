@@ -1,0 +1,98 @@
+﻿@using Subs
+@using Subs.ReadModel
+@model PostDetailsModel
+@{
+    Layout = "~/Views/Shared/_LayoutFull.cshtml";
+    ViewBag.Title = Model.Post.Post.Title;
+    var dictionary = new Microsoft.AspNet.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+    dictionary["HidablePostText"] = false;
+}
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        @Html.Partial("_Post", Model.Post, dictionary)
+        @if (User.IsSignedIn())
+        {
+            <div class="row">
+                <div class="form-group">
+                    <textarea id="post-comment"></textarea>
+                </div>
+                <div class="form-group">
+                    <button id="post-comment-submit" type="submit" class="btn btn-primary">Add comment</button>
+                </div>
+            </div>
+        }
+        else
+        {
+            <div class="row">
+                <a href="javascript:skimurui.login.display('You must be logged in to comment.');" class="btn btn-default btn-lg"><span class="fa fa-comment"></span> Add comment</a>
+            </div>
+        }
+        <div class="row">
+            @if (Model.ViewingSpecificComment)
+            {
+                <div class="alert alert-info">
+                    You are viewing the discussion from a single comment thread. <br />
+                    <a href="@Url.Post(Model.Sub.Sub, Model.Post.Post)" class="btn btn-default">View the rest of the comments <i class="fa fa-arrow-circle-right"></i></a>
+                </div>
+            }
+            <div class="page-header comments-header">
+                <div class="comments-text">Comments</div>
+                <div class="comments-sort">
+                    Sort by:
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-default dropdown-toggle" data-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
+                            @Model.Comments.SortBy <span class="caret"></span>
+                        </button>
+                        <ul class="dropdown-menu dropdown-menu-right">
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Best ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "best")">Best</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Top ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "top")">Top</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.New ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "new")">New</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Controversial ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "controversial")">Controversial</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Old ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "old")">Old</a></li>
+                            <li class="@(Model.Comments.SortBy == CommentSortBy.Qa ? "active" : null)"><a href="@Urls.ModifyQuery(Context, "commentsSort", "qa")">Qa</a></li>
+                        </ul>
+                    </div>
+                </div>
+            </div>
+            @if (Model.Comments != null && Model.Comments.CommentNodes.Count > 0)
+            {
+                @Html.Partial("_CommentNodes", Model.Comments)
+            }
+            else
+            {
+                <div class="comments-container empty">
+                    <p>There are no comments yet.</p>
+                </div>
+            }
+        </div>
+
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @Component.SideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null)
+    </div>
+</div>
+@section scripts {
+    <script type="text/javascript">
+        $(function () {
+            $("#post-comment").markdown({ autofocus: false, savable: false, iconlibrary: "fa" });
+
+            var addCommentButton = $("#post-comment-submit").click(function (e) {
+                e.preventDefault();
+                addCommentButton.buttonStartLoading();
+                skimur.createComment("@Model.Post.Post.Id", null, $("#post-comment").val(), function (result) {
+                    addCommentButton.buttonStopLoading();
+                    if (result.success) {
+                        var $commentsContainer = $(".comments-container");
+                        if ($commentsContainer.hasClass("empty"))
+                            $commentsContainer.empty();
+                        $(result.html).prependTo($commentsContainer);
+                        $("#post-comment").val("");
+                    } else {
+                        skimurui.displayError(result.error);
+                    }
+                });
+            });
+
+        });
+    </script>
+}

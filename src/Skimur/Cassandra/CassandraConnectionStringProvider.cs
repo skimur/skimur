@@ -1,4 +1,4 @@
-﻿using System;
+﻿using Microsoft.Extensions.Configuration;
 
 namespace Skimur.Cassandra
 {
@@ -11,17 +11,17 @@ namespace Skimur.Cassandra
         #endregion
 
         #region Ctor
-        
-        public CassandraConnectionStringProvider()
+
+        public CassandraConnectionStringProvider(IConfiguration configuration)
         {
-            var connection = System.Configuration.ConfigurationManager.AppSettings["Cassandra"];
+            var connection = configuration.Get<string>("Data:Cassandra", null);
 
             if (connection == null) return;
 
             if (string.IsNullOrEmpty(connection))
                 return;
 
-            _connectionString = connection == "registry" ? GetConnectionStringFromRegistry() : connection;
+            _connectionString = connection;
         }
 
         #endregion
@@ -42,15 +42,6 @@ namespace Skimur.Cassandra
         public string ConnectionString
         {
             get { return _connectionString; }
-        }
-
-        #endregion
-
-        #region Methods
-
-        private string GetConnectionStringFromRegistry()
-        {
-            throw new NotImplementedException();
         }
 
         #endregion

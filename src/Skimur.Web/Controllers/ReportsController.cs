@@ -1,16 +1,16 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data.Odbc;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Logging;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs.Commands;
 using Subs.ReadModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
@@ -50,7 +50,7 @@ namespace Skimur.Web.Controllers
             _commentWrapper = commentWrapper;
         }
 
-        [Ajax, SkimurAuthorize]
+        [Ajax, Authorize]
         public ActionResult ReportComment(Guid commentId, ReasonType type, string reason)
         {
             try
@@ -61,7 +61,7 @@ namespace Skimur.Web.Controllers
             {
                 return CommonJsonResult(false, ex.Message);
             }
-            
+
             _commandBus.Send(new ReportComment
             {
                 ReportBy = _userContext.CurrentUser.Id,
@@ -72,7 +72,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [Ajax, SkimurAuthorize]
+        [Ajax, Authorize]
         public ActionResult ReportPost(Guid postId, ReasonType type, string reason)
         {
             try
@@ -83,7 +83,7 @@ namespace Skimur.Web.Controllers
             {
                 return CommonJsonResult(false, ex.Message);
             }
-            
+
             _commandBus.Send(new ReportPost
             {
                 ReportBy = _userContext.CurrentUser.Id,
@@ -94,7 +94,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [Ajax, SkimurAuthorize]
+        [Ajax, Authorize]
         public ActionResult Clear(Guid? postId, Guid? commentId)
         {
             _commandBus.Send(new ClearReports
@@ -107,7 +107,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [Ajax, SkimurAuthorize]
+        [Ajax, Authorize]
         public ActionResult Ignore(Guid? postId, Guid? commentId)
         {
             _commandBus.Send(new ConfigureReportIgnoring
@@ -121,7 +121,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [Ajax, SkimurAuthorize]
+        [Ajax, Authorize]
         public ActionResult Unignore(Guid? postId, Guid? commentId)
         {
             _commandBus.Send(new ConfigureReportIgnoring
@@ -135,7 +135,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult ReportedPosts(string subName)
         {
             ViewBag.ManageNavigationKey = "reportedposts";
@@ -160,7 +160,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult ReportedComments(string subName)
         {
             ViewBag.ManageNavigationKey = "reportedcomments";

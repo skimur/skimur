@@ -1,0 +1,21 @@
+﻿@model UserPreferencesViewModel
+@using Microsoft.AspNet.Http.Authentication
+@{
+    Layout = "_LayoutManageAccount";
+    ViewData["Title"] = "Preferences";
+}
+
+<h2 class="page-header">@ViewData["Title"]</h2>
+
+<form asp-controller="Manage" asp-action="Preferences" method="post" role="form">
+    <div asp-validation-summary="ValidationSummary.All" class="text-danger"></div>
+    <div class="checkbox">
+            <label><input asp-for="ShowNsfw" type="checkbox" /> @Html.DisplayNameFor(x => x.ShowNsfw)</label>
+    </div>
+    <div class="checkbox">
+             <label><input asp-for="EnableStyles" type="checkbox" /> @Html.DisplayNameFor(x => x.EnableStyles)</label>
+    </div>
+    <div class="form-group">
+        <button type="submit" class="btn btn-primary">Save</button>
+    </div>
+</form>

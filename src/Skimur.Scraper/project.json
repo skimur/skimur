@@ -1,0 +1,21 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Skimur.Scraper Class Library",
+  "authors": [ "Paul" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "frameworks": {
+    "dnx451": {
+      "frameworkAssemblies": {
+        "System.Drawing": "4.0.0.0" 
+      }
+    }
+  },
+
+  "dependencies": {
+    "Skimur": "",
+    "HtmlAgilityPack": "1.4.9"
+  }
+}

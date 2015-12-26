@@ -1,5 +1,5 @@
-﻿using NUnit.Framework;
-using SimpleInjector;
+﻿using Microsoft.Extensions.DependencyInjection;
+using NUnit.Framework;
 using System;
 using System.Collections.Generic;
 using System.Linq;
@@ -10,7 +10,7 @@ namespace Skimur.Tests
 {
     public abstract class TestBase
     {
-        protected Container _container;
+        protected IServiceProvider _serviceProvider;
 
         protected virtual List<IRegistrar> GetRegistrars()
         {
@@ -20,10 +20,10 @@ namespace Skimur.Tests
         [SetUp]
         protected virtual void Setup()
         {
-            _container = new Container();
-            _container.Options.AllowOverridingRegistrations = true;
+            var serviceCollection = new ServiceCollection();
             foreach (var registrar in GetRegistrars().OrderBy(x => x.Order))
-                registrar.Register(_container);
+                registrar.Register(serviceCollection);
+            _serviceProvider = serviceCollection.BuildServiceProvider();
         }
     }
 }

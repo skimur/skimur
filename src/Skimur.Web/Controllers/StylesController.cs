@@ -1,14 +1,18 @@
-﻿using System;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs;
-using Subs.Commands;
 using Subs.ReadModel;
-using Subs.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using Microsoft.AspNet.Session;
+using Microsoft.AspNet.Http;
+using Skimur.Web.Infrastructure;
+using Subs.Commands;
+using Microsoft.AspNet.Authorization;
 
 namespace Skimur.Web.Controllers
 {
@@ -36,7 +40,7 @@ namespace Skimur.Web.Controllers
             _commandBus = commandBus;
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Edit(string subName)
         {
             var sub = _subDao.GetSubByName(subName);
@@ -47,10 +51,10 @@ namespace Skimur.Web.Controllers
             var model = new StylesEditModel();
             model.Sub = sub;
             model.StyledEnabledForUser = _userContext.CurrentUser.EnableStyles;
-
-            if (Request.Cookies.AllKeys.Contains("preview-" + sub.Name.ToLower()))
+            
+            if (Request.Cookies.ContainsKey("preview-" + sub.Name.ToLower()))
             {
-                var preview = Session["preview-" + sub.Name.ToLower()] as StylesPreviewModel;
+                var preview = HttpContext.Session.Get<StylesPreviewModel>("preview-" + sub.Name.ToLower());
                 if (preview != null)
                 {
                     _mapper.Map(preview, model);
@@ -64,17 +68,17 @@ namespace Skimur.Web.Controllers
                 styles = new SubCss();
                 styles.CssType = CssType.None;
             }
-            
+
             _mapper.Map(styles, model);
 
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        [ParameterBasedOnFormName("save", "save"), ParameterBasedOnFormName("preview", "preview")]
-        public ActionResult Edit(string subName, StylesEditModel model, bool save, bool preview)
+        [ParameterBasedOnFormName("save", "shouldSave"), ParameterBasedOnFormName("preview", "shouldPreview")]
+        public ActionResult Edit(string subName, StylesEditModel model, bool shouldSave, bool shouldPreview)
         {
             var sub = _subDao.GetSubByName(subName);
             if (sub == null) throw new NotFoundException();
@@ -87,7 +91,7 @@ namespace Skimur.Web.Controllers
 
             if (!_permissionDao.CanUserManageSubStyles(_userContext.CurrentUser, sub.Id)) throw new UnauthorizedException();
 
-            if (save)
+            if (shouldSave)
             {
                 var response = _commandBus.Send<EditSubStylesCommand, EditSubStylesCommandResponse>(new EditSubStylesCommand
                 {
@@ -112,55 +116,53 @@ namespace Skimur.Web.Controllers
                     AddErrorMessage(response.Error);
                 }
             }
-            else if (preview)
+            else if (shouldPreview)
             {
-                Session["preview-" + sub.Name.ToLower()] = _mapper.Map<StylesEditModel, StylesPreviewModel>(model);
-                Response.Cookies.Add(new HttpCookie("preview-" + sub.Name.ToLower()));
+                HttpContext.Session.Set("preview-" + sub.Name.ToLower(), _mapper.Map<StylesEditModel, StylesPreviewModel>(model));
+                Response.Cookies.Append("preview-" + sub.Name.ToLower(), string.Empty);
             }
 
             return View(model);
         }
-        
+
         public ActionResult CancelPreview(string subName, string returnUrl)
         {
             if (!string.IsNullOrEmpty(subName))
             {
                 subName = subName.ToLower();
-                Session["preview-" + subName] = null;
-                Response.Cookies.Add(new HttpCookie("preview-" + subName)
-                {
-                    Expires = DateTime.Now.AddDays(-1)
-                });
+                HttpContext.Session.Set<StylesPreviewModel>("preview-" + subName.ToLower(), null);
+                Response.Cookies.Delete("preview-" + subName.ToLower());
             }
-            
+
             return RedirectToLocal(returnUrl);
         }
 
-        [ChildActionOnly]
-        public ActionResult SubStyles(string subName)
-        {
-            // the user doesn't want to see any styles!
-            if (_userContext.CurrentUser != null && !_userContext.CurrentUser.EnableStyles) return Content("");
+        //[ChildActionOnly]
+        //public ActionResult SubStyles(string subName)
+        //{
+        //    // the user doesn't want to see any styles!
+        //    if (_userContext.CurrentUser != null && !_userContext.CurrentUser.EnableStyles) return Content("");
 
-            var sub = _subDao.GetSubByName(subName);
-            if (sub == null) return Content("");
+        //    var sub = _subDao.GetSubByName(subName);
+        //    if (sub == null) return Content("");
 
-            if (Request.Cookies.AllKeys.Contains("preview-" + sub.Name.ToLower()))
-            {
-                var preview = Session["preview-" + sub.Name.ToLower()] as StylesPreviewModel;
-                if (preview != null)
-                {
-                    ViewBag.IsPreview = true;
-                    ViewBag.PreviewStylesSubName = sub.Name;
-                    return PartialView("RenderStyles", _mapper.Map<StylesPreviewModel, SubCss>(preview));
-                }
-            }
-            
-            var styles = _subStylesDao.GetStylesForSub(sub.Id);
-            if (styles == null) return Content("");
+        //    if (Request.Cookies.AllKeys.Contains("preview-" + sub.Name.ToLower()))
+        //    {
+        //        HttpContext.Session.GetInt("");
+        //        var preview = HttpContext.Session["preview-" + sub.Name.ToLower()] as StylesPreviewModel;
+        //        if (preview != null)
+        //        {
+        //            ViewBag.IsPreview = true;
+        //            ViewBag.PreviewStylesSubName = sub.Name;
+        //            return PartialView("RenderStyles", _mapper.Map<StylesPreviewModel, SubCss>(preview));
+        //        }
+        //    }
 
-            ViewBag.IsPreview = false;
-            return PartialView("RenderStyles", styles);
-        }
+        //    var styles = _subStylesDao.GetStylesForSub(sub.Id);
+        //    if (styles == null) return Content("");
+
+        //    ViewBag.IsPreview = false;
+        //    return PartialView("RenderStyles", styles);
+        //}
     }
 }

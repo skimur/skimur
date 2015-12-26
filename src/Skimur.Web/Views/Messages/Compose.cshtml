@@ -1,0 +1,32 @@
+﻿@model ComposeMessageViewModel
+
+@{
+    ViewBag.Title = "Send a message";
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <h2 class="page-header">@ViewBag.Title</h2>
+        <form asp-antiforgery="true" action="@Url.Compose()" method="post" role="form">
+            <div class="form-group">
+                <label asp-for="To" class="control-label"></label>
+                <input asp-for="To" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Subject" class="control-label"></label>
+                <input asp-for="Subject" type="text" class="form-control" />
+            </div>
+            <div class="form-group">
+                <label asp-for="Message" class="control-label"></label>
+                <textarea asp-for="Message" class="form-control"></textarea>
+            </div>
+            <div class="form-group">
+                <input type="submit" class="btn btn-primary" value="Send" />
+            </div>
+        </form>
+    </div>
+</div>
+
+@section header {
+    @{ await Html.RenderPartialAsync("_HeaderNav", Model.IsModerator); }
+}

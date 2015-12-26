@@ -5,13 +5,13 @@ using System.Linq;
 using Membership.Services;
 using Skimur;
 using Skimur.Logging;
-using Skimur.Markdown;
 using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Utils;
 using Subs.Commands;
 using Subs.Events;
 using Subs.Services;
+using Skimur.Markdown;
 
 namespace Subs.Worker.Commands
 {

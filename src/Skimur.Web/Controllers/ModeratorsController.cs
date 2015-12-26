@@ -1,12 +1,17 @@
-﻿using System;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Logging;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
@@ -50,7 +55,7 @@ namespace Skimur.Web.Controllers
 
             if (sub == null)
                 throw new NotFoundException();
-            
+
             var model = new ModeratorsViewModel();
 
             model.Sub = sub;
@@ -73,7 +78,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult RemoveModFromSub(string subName, Guid? subId, Guid? userId, string userName)
         {
             var response = _commandBus.Send<RemoveModFromSub, RemoveModFromSubResponse>(new RemoveModFromSub
@@ -88,7 +93,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult ChangeModPermissions(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
         {
             var response = _commandBus.Send<ChangeModPermissionsForSub, ChangeModPermissionsForSubResponse>(new ChangeModPermissionsForSub
@@ -104,7 +109,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult InviteMod(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
         {
             var response = _commandBus.Send<InviteModToSub, InviteModToSubResponse>(new InviteModToSub
@@ -120,20 +125,20 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult AcceptInvite(string subName, Guid? subId)
         {
-           var response = _commandBus.Send<AcceptModInvitation, AcceptModInvitationResponse>(new AcceptModInvitation
-           {
-               UserId = _userContext.CurrentUser.Id,
-               SubName = subName,
-               SubId = subId
-           });
+            var response = _commandBus.Send<AcceptModInvitation, AcceptModInvitationResponse>(new AcceptModInvitation
+            {
+                UserId = _userContext.CurrentUser.Id,
+                SubName = subName,
+                SubId = subId
+            });
 
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult DenyInvite(string subName, Guid? subId)
         {
             var response = _commandBus.Send<RemoveModInviteFromSub, RemoveModInviteFromSubResponse>(new RemoveModInviteFromSub
@@ -147,7 +152,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult RemoveInvite(string subName, Guid? subId, string userName, Guid? userId)
         {
             var response = _commandBus.Send<RemoveModInviteFromSub, RemoveModInviteFromSubResponse>(new RemoveModInviteFromSub
@@ -162,7 +167,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult ChangeInvite(string subName, Guid? subId, string userName, Guid? userId, ModeratorPermissions permissions)
         {
             var response = _commandBus.Send<ChangeModInvitePermissions, ChangeModInvitePermissionsResponse>(new ChangeModInvitePermissions

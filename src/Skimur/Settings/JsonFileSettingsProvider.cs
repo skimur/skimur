@@ -1,5 +1,6 @@
 ﻿using System.IO;
 using ServiceStack.Text;
+using Microsoft.Extensions.Configuration;
 
 namespace Skimur.Settings
 {
@@ -8,9 +9,11 @@ namespace Skimur.Settings
         private FileSystemWatcher _watcher;
         private string _file;
 
-        public JsonFileSettingsProvider(IPathResolver pathResolver)
+        public JsonFileSettingsProvider(IConfiguration configuration, IPathResolver pathResolver)
         {
-            _file = Path.Combine(pathResolver.Resolve("~/Settings/"), typeof(T).Name + ".json");
+            var settingsPath = configuration.Get("SettingsLocation", Path.Combine("~", "Settings"));
+
+            _file = Path.Combine(pathResolver.Resolve(settingsPath), typeof(T).Name + ".json");
             Settings = File.Exists(_file) ? JsonSerializer.DeserializeFromString<T>(File.ReadAllText(_file)) : new T();
             if(Settings == null)
                 Settings = new T();

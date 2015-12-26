@@ -1,0 +1,70 @@
+﻿{
+  "userSecretsId": "aspnet5-Skimur.Web-30e20b04-0a04-48d0-bf31-4e803e287245",
+  "version": "1.0.0-*",
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+  "webroot": "wwwroot",
+
+  "dependencies": {
+    "EntityFramework.Commands": "7.0.0-rc1-final",
+    "EntityFramework.MicrosoftSqlServer": "7.0.0-rc1-final",
+    "Microsoft.AspNet.Authentication.Cookies": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Diagnostics.Entity": "7.0.0-rc1-final",
+    "Microsoft.AspNet.Identity": "3.0.0-rc1-final",
+    "Microsoft.AspNet.IISPlatformHandler": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Server.WebListener":"1.0.0-rc1-final", 
+    "Microsoft.AspNet.Mvc": "6.0.0-rc1-final",
+    "Microsoft.AspNet.Mvc.TagHelpers": "6.0.0-rc1-final",
+    "Microsoft.AspNet.Server.Kestrel": "1.0.0-rc1-final",
+    "Microsoft.AspNet.StaticFiles": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Tooling.Razor": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Session": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Authentication.Facebook": "1.0.0-rc1-final",
+    "Microsoft.AspNet.Authentication.Google": "1.0.0-rc1-final",
+    "Microsoft.Extensions.CodeGenerators.Mvc": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.FileProviderExtensions": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.UserSecrets": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Console": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
+    "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final",
+    "Skimur": "",
+    "Subs": "",
+    "Subs.Worker": "",
+    "Skimur.Markdown": "",
+    "Skimur.Scraper": "",
+    "Migrations": "",
+    "Membership": "",
+    "Emails": "",
+    "Emails.Handlers": "",
+    "ImageResizer": "4.0.4",
+    "FluentValidation": "5.6.2"
+  },
+
+  "commands": {
+    "web": "Microsoft.AspNet.Server.Kestrel"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  },
+
+  "exclude": [
+    "wwwroot",
+    "node_modules",
+    "bower_components"
+  ],
+
+  "publishExclude": [
+    "**.user",
+    "**.vspscc",
+    "Scripts/",
+    "Styles/"
+  ],
+
+  "scripts": {
+    "prepublish": [ "npm install", "bower install", "gulp clean", "gulp compile", "gulp min" ]
+  }
+}

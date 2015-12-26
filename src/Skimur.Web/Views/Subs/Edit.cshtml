@@ -1,0 +1,20 @@
+﻿@model CreateEditSubModel
+@{
+    ViewBag.Title = "Sub settings";
+}
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        <h2 class="page-header">@ViewBag.Title</h2>
+        <form asp-route="SubEdit" asp-route-subName="@Model.Name" class="form-horizontal">
+            @{ await Html.RenderPartialAsync("_SubCreateEdit", Model); }
+            <div class="form-group">
+                <div class="col-md-offset-2 col-md-10">
+                    <input type="submit" class="btn btn-primary" value="Save" />
+                </div>
+            </div>
+        </form>
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @Component.SideBar(subName: Model.Name)
+    </div>
+</div>

@@ -1,0 +1,60 @@
+﻿@model ManageLoginsViewModel
+@using Microsoft.AspNet.Http.Authentication
+@{
+    Layout = "_LayoutManageAccount";
+    ViewData["Title"] = "Manage your external logins";
+}
+
+<h2 class="page-header">@ViewData["Title"]</h2>
+
+@if (Model.CurrentLogins.Count > 0)
+{
+    <h4>Current logins</h4>
+    <table class="table">
+        <tbody>
+            @foreach (var account in Model.CurrentLogins)
+            {
+                <tr>
+                    <td>
+                        @if (Model.IsPasswordSet || Model.CurrentLogins.Count > 1)
+                        {
+                            <form asp-controller="Manage" asp-action="RemoveLogin" method="post" role="form" style="display:inline-block;">
+                                <div>
+                                    <input asp-for="@account.LoginProvider" type="hidden" />
+                                    <input asp-for="@account.ProviderKey" type="hidden" />
+                                    <input type="submit" class="btn btn-default" value="Remove" title="Remove this @account.LoginProvider login from your account" />
+                                </div>
+                            </form>
+                        }
+                        <a class="btn btn-social btn-@account.LoginProvider.ToLower()" href="javascript:void(0);">
+                            <i class="fa fa-@account.LoginProvider.ToLower()"></i> @account.LoginProvider
+                        </a>
+                    </td>
+                </tr>
+            }
+        </tbody>
+    </table>
+}
+@if (Model.OtherLogins.Count > 0)
+{
+    <h4>Add another service to log in.</h4>
+    <form asp-controller="Manage" asp-action="LinkLogin" method="post" class="form-horizontal" role="form">
+        <table class="table">
+            <tbody>
+                @foreach (var otherLogin in Model.OtherLogins)
+                {
+                    <tr>
+                        <td>
+                            <button type="submit" class="btn btn-default" id="@otherLogin.AuthenticationScheme" name="provider" value="@otherLogin.AuthenticationScheme">
+                                Add
+                            </button>
+                            <button type="submit" class="btn btn-social btn-@otherLogin.AuthenticationScheme.ToLower()" id="@otherLogin.AuthenticationScheme" name="provider" value="@otherLogin.AuthenticationScheme" title="Log in using your @otherLogin.DisplayName account">
+                                <i class="fa fa-@otherLogin.AuthenticationScheme.ToLower()"></i> @otherLogin.DisplayName
+                            </button>
+                        </td>
+                    </tr>
+                }
+            </tbody>
+        </table>
+    </form>
+}

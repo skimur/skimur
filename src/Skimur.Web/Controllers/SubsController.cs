@@ -1,16 +1,18 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
-using Membership.Services;
+﻿using Membership.Services;
+using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
 using Skimur.Settings;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
@@ -119,19 +121,19 @@ namespace Skimur.Web.Controllers
             return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(subs, _userContext.CurrentUser), pageNumber.Value, pageSize.Value, subs.HasMore));
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Subscribed()
         {
             ViewBag.NavigationKey = "subscribed";
-            
+
             return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser), 1, int.MaxValue, false));
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Moderating()
         {
             ViewBag.NavigationKey = "moderating";
-            
+
             return View("List", new PagedList<SubWrapped>(_subWrapper.Wrap(_moderationDao.GetSubsModeratoredByUser(_userContext.CurrentUser.Id), _userContext.CurrentUser), 1, int.MaxValue, false));
         }
 
@@ -299,22 +301,21 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult Edit(string id, CreateEditSubModel model)
+        public ActionResult Edit(string subName, CreateEditSubModel model)
         {
-            var name = id;
-            model.IsEditing = true;
-            model.Name = name;
-
-            if (string.IsNullOrEmpty(name))
+            if (string.IsNullOrEmpty(subName))
                 return Redirect(Url.Subs());
 
-            var sub = _subDao.GetSubByName(name);
+            model.IsEditing = true;
+            model.Name = subName;
+            
+            var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                return Redirect(Url.Subs(name));
+                return Redirect(Url.Subs(subName));
 
             if (!_permissionDao.CanUserManageSubConfig(_userContext.CurrentUser, sub.Id))
                 throw new UnauthorizedException();
@@ -322,7 +323,7 @@ namespace Skimur.Web.Controllers
             var response = _commandBus.Send<EditSub, EditSubResponse>(new EditSub
             {
                 EditedByUserId = _userContext.CurrentUser.Id,
-                Name = name,
+                Name = subName,
                 Description = model.Description,
                 SidebarText = model.SidebarText,
                 SubmissionText = model.SubmissionText,
@@ -343,7 +344,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Create()
         {
             var model = new CreateEditSubModel();
@@ -358,7 +359,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreateEditSubModel model)
@@ -387,12 +388,7 @@ namespace Skimur.Web.Controllers
             return Redirect(Url.Sub(response.SubName));
         }
         
-        public ActionResult TopBar()
-        {
-            return PartialView("_TopBar", _subWrapper.Wrap(_contextService.GetSubscribedSubIds(), _userContext.CurrentUser));
-        }
-
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Subscribe(string subName)
         {
             var response = _commandBus.Send<SubcribeToSub, SubcribeToSubResponse>(new SubcribeToSub
@@ -404,7 +400,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Success, response.Error);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult UnSubscribe(string subName)
         {
             var response = _commandBus.Send<UnSubcribeToSub, UnSubcribeToSubResponse>(new UnSubcribeToSub
@@ -416,7 +412,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Success, response.Error);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult VotePost(Guid postId, VoteType type)
         {
             _commandBus.Send(new CastVoteForPost
@@ -424,14 +420,14 @@ namespace Skimur.Web.Controllers
                 UserId = _userContext.CurrentUser.Id,
                 PostId = postId,
                 DateCasted = Common.CurrentTime(),
-                IpAddress = Request.UserHostAddress,
+                IpAddress = HttpContext.RemoteAddress(),
                 VoteType = type
             });
 
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult UnVotePost(Guid postId)
         {
             _commandBus.Send(new CastVoteForPost
@@ -439,14 +435,14 @@ namespace Skimur.Web.Controllers
                 UserId = _userContext.CurrentUser.Id,
                 PostId = postId,
                 DateCasted = Common.CurrentTime(),
-                IpAddress = Request.UserHostAddress,
+                IpAddress = HttpContext.RemoteAddress(),
                 VoteType = null /*no vote*/
             });
 
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult VoteComment(Guid commentId, VoteType type)
         {
             _commandBus.Send(new CastVoteForComment
@@ -454,14 +450,14 @@ namespace Skimur.Web.Controllers
                 UserId = _userContext.CurrentUser.Id,
                 CommentId = commentId,
                 DateCasted = Common.CurrentTime(),
-                IpAddress = Request.UserHostAddress,
+                IpAddress = HttpContext.RemoteAddress(),
                 VoteType = type
             });
 
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult UnVoteComment(Guid commentId)
         {
             _commandBus.Send(new CastVoteForComment
@@ -469,7 +465,7 @@ namespace Skimur.Web.Controllers
                 UserId = _userContext.CurrentUser.Id,
                 CommentId = commentId,
                 DateCasted = Common.CurrentTime(),
-                IpAddress = Request.UserHostAddress,
+                IpAddress = HttpContext.RemoteAddress(),
                 VoteType = null /*no vote*/
             });
 
@@ -487,7 +483,7 @@ namespace Skimur.Web.Controllers
                     submission_text = "",
                     sub_found = false,
                     success = true
-                }, JsonRequestBehavior.AllowGet);
+                });
 
             return Json(new
             {
@@ -495,7 +491,7 @@ namespace Skimur.Web.Controllers
                 sub_found = true,
                 name = sub.Name,
                 success = true
-            }, JsonRequestBehavior.AllowGet);
+            });
         }
     }
 }

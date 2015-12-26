@@ -1,14 +1,15 @@
-﻿using SimpleInjector;
-using Skimur.Data;
+﻿using Skimur.Data;
+using System;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur.Postgres.Migrations
 {
     public static class Migrations
     {
-        public static void Run(Container container)
+        public static void Run(IServiceProvider serviceProvider)
         {
-            var migrations = container.GetInstance<IMigrationResourceFinder>().Find();
-            container.GetInstance<IMigrationEngine>().Execute(container.GetInstance<IDbConnectionProvider>(), migrations);
+            var migrations = serviceProvider.GetService<IMigrationResourceFinder>().Find();
+            serviceProvider.GetService<IMigrationEngine>().Execute(serviceProvider.GetService<IDbConnectionProvider>(), migrations);
         }
     }
 }

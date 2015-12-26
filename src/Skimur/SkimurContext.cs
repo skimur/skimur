@@ -1,14 +1,11 @@
 ﻿using System;
-using System.Collections.Generic;
 using System.Configuration;
 using System.Linq;
-using System.Web.SessionState;
 using Cassandra;
 using Infrastructure.Caching;
 using ServiceStack;
 using ServiceStack.RabbitMq;
 using ServiceStack.Redis;
-using SimpleInjector;
 using Skimur.Data;
 using Skimur.Email;
 using Skimur.Embed;
@@ -17,13 +14,15 @@ using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Messaging.RabbitMQ;
 using Skimur.Settings;
-using Cache = System.Web.Caching.Cache;
+using Microsoft.Extensions.DependencyInjection;
+using Skimur.Cassandra;
+using Microsoft.Extensions.Configuration;
 
 namespace Skimur
 {
     public static class SkimurContext
     {
-        private static Container _container;
+        private static IServiceProvider _serviceProvider;
         private static object _lock = new object();
 
         static SkimurContext()
@@ -36,35 +35,35 @@ namespace Skimur
                 "0=");
         }
 
-        public static event Action<Container> ContainerInitialized = delegate { };
+        public static event Action<IServiceProvider> ContainerInitialized = delegate { };
 
         public static void Initialize(params IRegistrar[] registrars)
         {
             lock (_lock)
             {
-                if (_container != null) throw new Exception("The context was already initialized!");
-                _container = new Container();
-                _container.Options.AllowOverridingRegistrations = true;
+                var collection = new ServiceCollection();
+
+                collection.AddSingleton<IServiceCollection>(provider => collection);
 
                 // all the default services
-                _container.RegisterSingleton<IMapper, Mapper>();
-                _container.RegisterSingleton<IConnectionStringProvider, ConnectionStringProvider>();
-                _container.RegisterSingleton<IDbConnectionProvider, SqlConnectionProvider>();
-                _container.RegisterSingleton<IEmailSender, EmailSender>();
-                _container.RegisterSingleton<IPathResolver, PathResolver>();
+                collection.AddSingleton<IMapper, Mapper>();
+                collection.AddSingleton<IConnectionStringProvider, ConnectionStringProvider>();
+                collection.AddSingleton<IDbConnectionProvider, SqlConnectionProvider>();
+                collection.AddSingleton<IEmailSender, EmailSender>();
+                collection.AddSingleton<IPathResolver, PathResolver>();
 
-                _container.RegisterSingleton<ICache, RedisCache>();
-                _container.RegisterSingleton<IRedisClientsManager>(() =>
-                {
-                    var readWrite = System.Configuration.ConfigurationManager.AppSettings["RedisReadWrite"];
-                    var read = System.Configuration.ConfigurationManager.AppSettings["RedisRead"];
+                collection.AddSingleton<ICache, RedisCache>();
+                collection.AddSingleton<IRedisClientsManager>(provider =>{
+                    var configuration = provider.GetService<IConfiguration>();
+                    var readWrite = configuration.Get<string>("Data:RedisReadWrite");
+                    var read = configuration.Get<string>("Data:RedisRead");
                     return new PooledRedisClientManager(readWrite.Split(';'), read.Split(';'));
                 });
 
-                _container.RegisterSingleton<Cassandra.ICassandraConnectionStringProvider, Cassandra.CassandraConnectionStringProvider>();
-                _container.RegisterSingleton(() =>
+                collection.AddSingleton<ICassandraConnectionStringProvider, CassandraConnectionStringProvider>();
+                collection.AddSingleton(provider =>
                 {
-                    var connectionProvider = _container.GetInstance<Cassandra.ICassandraConnectionStringProvider>();
+                    var connectionProvider = provider.GetService<ICassandraConnectionStringProvider>();
 
                     if (!connectionProvider.HasConnectionString)
                         throw new Exception("No connection string configured for cassandra.");
@@ -74,27 +73,28 @@ namespace Skimur
                         .WithDefaultKeyspace("skimur")
                         .Build();
                 });
-                _container.RegisterSingleton(() =>
+                collection.AddSingleton(provider =>
                 {
-                    var cluster = _container.GetInstance<Cluster>();
+                    var cluster = provider.GetService<Cluster>();
                     return cluster.ConnectAndCreateDefaultKeyspaceIfNotExists();
                 });
-                _container.RegisterSingleton<Cassandra.Migrations.IMigrationEngine, Cassandra.Migrations.MigrationEngine>();
-                _container.RegisterSingleton<Cassandra.Migrations.IMigrationResourceFinder, Cassandra.Migrations.MigrationResourceFinder>();
+                collection.AddSingleton<Cassandra.Migrations.IMigrationEngine, Cassandra.Migrations.MigrationEngine>();
+                collection.AddSingleton<Cassandra.Migrations.IMigrationResourceFinder, Cassandra.Migrations.MigrationResourceFinder>();
 
-                _container.RegisterSingleton(typeof(ILogger<>), typeof(Logger<>));
+                collection.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
 
-                _container.RegisterSingleton<IEventDiscovery, EventDiscovery>();
-                _container.RegisterSingleton<ICommandDiscovery, CommandDiscovery>();
+                collection.AddSingleton<IEventDiscovery, EventDiscovery>();
+                collection.AddSingleton<ICommandDiscovery, CommandDiscovery>();
 
-                _container.RegisterSingleton<Postgres.Migrations.IMigrationEngine, Postgres.Migrations.MigrationEngine>();
-                _container.RegisterSingleton<Postgres.Migrations.IMigrationResourceFinder, Postgres.Migrations.MigrationResourceFinder>();
+                collection.AddSingleton<Postgres.Migrations.IMigrationEngine, Postgres.Migrations.MigrationEngine>();
+                collection.AddSingleton<Postgres.Migrations.IMigrationResourceFinder, Postgres.Migrations.MigrationResourceFinder>();
 
-                _container.RegisterSingleton(typeof(ISettingsProvider<>), typeof(JsonFileSettingsProvider<>));
+                collection.AddSingleton(typeof(ISettingsProvider<>), typeof(JsonFileSettingsProvider<>));
 
-                _container.RegisterSingleton(() =>
+                collection.AddSingleton(provider =>
                 {
-                    var rabbitMqHost = ConfigurationManager.AppSettings["RabbitMQHost"];
+                    var configuration = provider.GetService<IConfiguration>();
+                    var rabbitMqHost = configuration.Get<string>("Data:RabbitMQHost");
                     if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
 
                     return new RabbitMqServer(rabbitMqHost)
@@ -105,27 +105,33 @@ namespace Skimur
                         }
                     };
                 });
-                _container.RegisterSingleton<ICommandBus, CommandBus>();
-                _container.RegisterSingleton<IEventBus, EventBus>();
-                _container.RegisterSingleton<IBusLifetime, BusLifetime>();
+                collection.AddSingleton<ICommandBus, CommandBus>();
+                collection.AddSingleton<IEventBus, EventBus>();
+                collection.AddSingleton<IBusLifetime, BusLifetime>();
 
-                _container.Register<IEmbeddedProvider, ContextualEmbededProvider>();
-
+                collection.AddSingleton<IEmbeddedProvider, ContextualEmbededProvider>();
+                
                 foreach (var registrar in registrars.OrderBy(x => x.Order))
-                    registrar.Register(_container);
-                ContainerInitialized(_container);
+                    registrar.Register(collection);
+                
+                _serviceProvider = collection.BuildServiceProvider();
+                
+                ContainerInitialized(_serviceProvider);
             }
         }
-
-        public static T Resolve<T>() where T : class
+        
+        public static IServiceProvider ServiceProvider
         {
-            EnsureInitialized();
-            return _container.GetInstance<T>();
+            get
+            {
+                EnsureInitialized();
+                return _serviceProvider;
+            }
         }
 
         private static void EnsureInitialized()
         {
-            if (_container == null) throw new Exception("The YenContext has not been initialized.");
+            if (_serviceProvider == null) throw new Exception("The YenContext has not been initialized.");
         }
     }
 }

@@ -1,35 +1,32 @@
 ﻿using System;
 using System.Linq;
 using System.Reflection;
-using SimpleInjector;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur.Messaging.Handling
 {
     public class EventDiscovery : IEventDiscovery
     {
-        private readonly Container _container;
+        private readonly IServiceCollection _services;
 
-        public EventDiscovery(Container container)
+        public EventDiscovery(IServiceCollection services)
         {
-            _container = container;
+            _services = services;
         }
 
         public void Register(IEventRegistrar registrar)
         {
-            var registrations = _container.GetCurrentRegistrations();
-
-            foreach (var registration in registrations)
+            foreach(var registration in _services.Select(x => x.ImplementationType))
             {
-                if (typeof (IEventHandler).IsAssignableFrom(registration.ServiceType))
+                if(typeof(IEventHandler).IsAssignableFrom(registration))
                 {
-                    // get all the implementations on this type
-                    foreach(var intface in registration.ServiceType.GetInterfaces().Where(x => typeof(IEventHandler).IsAssignableFrom(x)))
+                    foreach(var intface in registration.GetInterfaces().Where(x => typeof(IEventHandler).IsAssignableFrom(x)))
                     {
                         var genericArguements = intface.GenericTypeArguments.ToList();
                         if (genericArguements.Count == 0)
                             continue;
-                        
-                        RegisterEventHandler(genericArguements[0], registration.Registration.ImplementationType, registrar);
+
+                        RegisterEventHandler(genericArguements[0], registration, registrar);
                     }
                 }
             }

@@ -1,10 +1,13 @@
-﻿using System;
+﻿using ImageResizer;
+using Skimur.Settings;
+using Skimur.Web.Infrastructure;
+using Subs.Services;
+using System;
+using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
-using ImageResizer;
-using Skimur.Settings;
-using Subs.Services;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Services.Impl
 {
@@ -61,7 +64,8 @@ namespace Skimur.Web.Services.Impl
                             {
                                 // the image is REALLY wide, so, let's just fill, cropping the ends.
                                 instructions.Mode = FitMode.Crop;
-                            }else if (ratio >= 1)
+                            }
+                            else if (ratio >= 1)
                             {
                                 // the image is wide
                                 instructions.Mode = FitMode.Max;

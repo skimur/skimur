@@ -1,0 +1,39 @@
+﻿@model UserViewModel
+@{
+    ViewBag.Title = "Posts for " + Model.User.UserName;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        @Html.Partial("_Sorting")
+        @if (Model.Posts != null && Model.Posts.Count > 0)
+        {
+            foreach (var post in Model.Posts)
+            {
+                <div class="message">
+                    @Html.Partial("_Post", post)
+                </div>
+            }
+            if (Model.Posts.HasPreviousPage || Model.Posts.HasNextPage)
+            {
+                <div class="row">
+                    <div class="list-pager">
+                        @Html.Pager(Model.Posts)
+                    </div>
+                </div>
+            }
+        }
+        else
+        {
+            <p>There are no items to display.</p>
+        }
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @{ await Html.RenderPartialAsync("_SideBar"); }
+        @Component.SideBar()
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

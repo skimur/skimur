@@ -1,27 +1,17 @@
-﻿using System;
+﻿using Microsoft.AspNet.Mvc;
+using Microsoft.AspNet.Mvc.Rendering;
+using Microsoft.AspNet.Mvc.ViewEngines;
+using Microsoft.AspNet.Mvc.ViewFeatures;
+using System;
 using System.Collections.Generic;
 using System.IO;
 using System.Linq;
-using System.Text;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using Skimur.Web.Mvc;
 
 namespace Skimur.Web.Controllers
 {
     public class BaseController : Controller
     {
-        protected override JsonResult Json(object data, string contentType, Encoding contentEncoding, JsonRequestBehavior behavior)
-        {
-            return new JsonNetResult
-            {
-                Data = data,
-                ContentType = contentType,
-                ContentEncoding = contentEncoding,
-                JsonRequestBehavior = behavior
-            };
-        }
-
         protected virtual void AddSuccessMessage(string message)
         {
             if (string.IsNullOrEmpty(message))
@@ -59,15 +49,19 @@ namespace Skimur.Web.Controllers
         public string RenderView(string viewName, object model)
         {
             if (string.IsNullOrEmpty(viewName))
-                viewName = ControllerContext.RouteData.GetRequiredString("action");
+                viewName = ActionContext.ActionDescriptor.Name;
 
-            var viewData = new ViewDataDictionary(model);
+            ViewData.Model = model;
 
             using (StringWriter sw = new StringWriter())
             {
-                var viewResult = ViewEngines.Engines.FindPartialView(ControllerContext, viewName);
-                var viewContext = new ViewContext(ControllerContext, viewResult.View, viewData, new TempDataDictionary(), sw);
-                viewResult.View.Render(viewContext, sw);
+                var engine = Resolver.GetService(typeof(ICompositeViewEngine)) as ICompositeViewEngine;
+                ViewEngineResult viewResult = engine.FindPartialView(ActionContext, viewName);
+
+                ViewContext viewContext = new ViewContext(ActionContext, viewResult.View, ViewData, TempData, sw, new HtmlHelperOptions());
+
+                var t = viewResult.View.RenderAsync(viewContext);
+                t.Wait();
 
                 return sw.GetStringBuilder().ToString();
             }
@@ -83,13 +77,16 @@ namespace Skimur.Web.Controllers
             return !string.IsNullOrEmpty(error) ? CommonJsonResult(false, error) : CommonJsonResult(true);
         }
 
-        protected ActionResult RedirectToLocal(string returnUrl)
+        public ActionResult RedirectToLocal(string returnUrl)
         {
             if (Url.IsLocalUrl(returnUrl))
             {
                 return Redirect(returnUrl);
             }
-            return RedirectToAction("Index", "Home");
+            else
+            {
+                return RedirectToAction(nameof(HomeController.Index), "Home");
+            }
         }
     }
 }

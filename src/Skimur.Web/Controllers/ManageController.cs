@@ -1,49 +1,55 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
-using System.Web.Mvc;
-using Membership.Services;
+using System.Security.Claims;
+using Microsoft.AspNet.Authorization;
 using Microsoft.AspNet.Identity;
-using Microsoft.Owin.Security;
-using Skimur.Utils;
-using Skimur.Web.Avatar;
-using Skimur.Web.Identity;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Microsoft.AspNet.Mvc;
+using Microsoft.Extensions.Logging;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels.Manage;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.ViewModels;
+using Membership.Services;
+using Microsoft.AspNet.Http;
 
 namespace Skimur.Web.Controllers
 {
-    [SkimurAuthorize]
+    [Authorize]
     public class ManageController : BaseController
     {
-        private readonly ApplicationSignInManager _signInManager;
-        private readonly IAuthenticationManager _authenticationManager;
-        private readonly IUserContext _userContext;
-        private readonly IMembershipService _membershipService;
+        private readonly UserManager<Membership.User> _userManager;
+        private readonly SignInManager<Membership.User> _signInManager;
+        private readonly IEmailSender _emailSender;
+        private readonly ISmsSender _smsSender;
+        private readonly ILogger _logger;
         private readonly IAvatarService _avatarService;
-        private readonly ApplicationUserManager _userManager;
+        private readonly IMembershipService _membershipService;
 
-        public ManageController(ApplicationUserManager userManager,
-            ApplicationSignInManager signInManager,
-            IAuthenticationManager authenticationManager,
-            IUserContext userContext,
-            IMembershipService membershipService,
-            IAvatarService avatarService)
+        public ManageController(
+            UserManager<Membership.User> userManager,
+            SignInManager<Membership.User> signInManager,
+            IEmailSender emailSender,
+            ISmsSender smsSender,
+            ILoggerFactory loggerFactory,
+            IAvatarService avatarService,
+            IMembershipService membershipService)
         {
             _userManager = userManager;
             _signInManager = signInManager;
-            _authenticationManager = authenticationManager;
-            _userContext = userContext;
-            _membershipService = membershipService;
+            _emailSender = emailSender;
+            _smsSender = smsSender;
+            _logger = loggerFactory.CreateLogger<ManageController>();
             _avatarService = avatarService;
+            _membershipService = membershipService;
         }
-
-        [ActionName("Index")]
-        public async Task<ActionResult> ManageProfile()
+        
+        public async Task<ActionResult> Index()
         {
             ViewBag.ManageNavigationKey = "Profile";
 
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
 
             return View(new ProfileViewModel
             {
@@ -54,18 +60,17 @@ namespace Skimur.Web.Controllers
                 Location = user.Location
             });
         }
-
-        [ActionName("Index")]
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public ActionResult ManageProfile(ProfileViewModel model)
+        public async Task<ActionResult> Index(ProfileViewModel model, IEnumerable<IFormFile> files)
         {
             ViewBag.ManageNavigationKey = "Profile";
 
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = _membershipService.GetUserById(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
 
             if (model.AvatarFile != null)
             {
@@ -82,20 +87,22 @@ namespace Skimur.Web.Controllers
                 }
             }
 
-            _membershipService.UpdateUserProfile(User.Identity.GetUserId().ParseGuid(), model.FullName, model.Bio, model.Url, model.Location);
+            _membershipService.UpdateUserProfile(user.Id, model.FullName, model.Bio, model.Url, model.Location);
 
             AddSuccessMessage("Your profile has been updated.");
 
             return View(model);
         }
 
+        #region Preferences
+
         public async Task<ActionResult> Preferences()
         {
             ViewBag.ManageNavigationKey = "Preferences";
 
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
 
-            return View(new UserPreferencesModel
+            return View(new UserPreferencesViewModel
             {
                 ShowNsfw = user.ShowNsfw,
                 EnableStyles = user.EnableStyles
@@ -104,12 +111,14 @@ namespace Skimur.Web.Controllers
 
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> Preferences(UserPreferencesModel model)
+        public async Task<ActionResult> Preferences(UserPreferencesViewModel model)
         {
+            ViewBag.ManageNavigationKey = "Preferences";
+
             if (!ModelState.IsValid)
                 return View(model);
 
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
             user.ShowNsfw = model.ShowNsfw;
             user.EnableStyles = model.EnableStyles;
             await _userManager.UpdateAsync(user);
@@ -119,13 +128,244 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        #region Email
+        #endregion
+
+        #region External logins
+
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> RemoveLogin(RemoveLoginViewModel account)
+        {
+            ViewBag.ManageNavigationKey = "Logins";
+
+            var user = await GetCurrentUserAsync();
+            if (user != null)
+            {
+                var result = await _userManager.RemoveLoginAsync(user, account.LoginProvider, account.ProviderKey);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    AddSuccessMessage("The external login was removed.");
+                }
+                else
+                {
+                    AddErrorMessage("An error has occurred.");
+                }
+            }
+            return RedirectToAction(nameof(ManageLogins));
+        }
+
+        #endregion
+
+        #region Two factor authentication
+
+        // TODO: Add two-factor authentication support
+
+        //public IActionResult AddPhoneNumber()
+        //{
+        //    return View();
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> AddPhoneNumber(AddPhoneNumberViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+        //    // Generate the token and send it
+        //    var user = await GetCurrentUserAsync();
+        //    var code = await _userManager.GenerateChangePhoneNumberTokenAsync(user, model.PhoneNumber);
+        //    await _smsSender.SendSmsAsync(model.PhoneNumber, "Your security code is: " + code);
+        //    return RedirectToAction(nameof(VerifyPhoneNumber), new { PhoneNumber = model.PhoneNumber });
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> VerifyPhoneNumber(string phoneNumber)
+        //{
+        //    var code = await _userManager.GenerateChangePhoneNumberTokenAsync(await GetCurrentUserAsync(), phoneNumber);
+        //    // Send an SMS to verify the phone number
+        //    return phoneNumber == null ? View("Error") : View(new VerifyPhoneNumberViewModel { PhoneNumber = phoneNumber });
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> VerifyPhoneNumber(VerifyPhoneNumberViewModel model)
+        //{
+        //    if (!ModelState.IsValid)
+        //    {
+        //        return View(model);
+        //    }
+        //    var user = await GetCurrentUserAsync();
+        //    if (user != null)
+        //    {
+        //        var result = await _userManager.ChangePhoneNumberAsync(user, model.PhoneNumber, model.Code);
+        //        if (result.Succeeded)
+        //        {
+        //            await _signInManager.SignInAsync(user, isPersistent: false);
+        //            AddSuccessMessage("Your phone number was added.");
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //    }
+        //    // If we got this far, something failed, redisplay the form
+        //    ModelState.AddModelError(string.Empty, "Failed to verify phone number");
+        //    return View(model);
+        //}
+
+        //[HttpGet]
+        //public async Task<IActionResult> RemovePhoneNumber()
+        //{
+        //    var user = await GetCurrentUserAsync();
+        //    if (user != null)
+        //    {
+        //        var result = await _userManager.SetPhoneNumberAsync(user, null);
+        //        if (result.Succeeded)
+        //        {
+        //            await _signInManager.SignInAsync(user, isPersistent: false);
+        //            AddSuccessMessage("Your phone number was removed.");
+        //            return RedirectToAction(nameof(Index));
+        //        }
+        //        else
+        //        {
+        //            foreach (var error in result.Errors)
+        //            {
+        //                AddErrorMessage(error.Description);
+        //            }
+        //        }
+        //    }
+        //    else
+        //    {
+        //        AddErrorMessage("An error has occurred.");
+        //    }
+
+        //    return RedirectToAction(nameof(Index));
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> EnableTwoFactorAuthentication()
+        //{
+        //    var user = await GetCurrentUserAsync();
+        //    if (user != null)
+        //    {
+        //        await _userManager.SetTwoFactorEnabledAsync(user, true);
+        //        await _signInManager.SignInAsync(user, isPersistent: false);
+        //        _logger.LogInformation(1, "User enabled two-factor authentication.");
+        //    }
+        //    return RedirectToAction(nameof(Index), "Manage");
+        //}
+
+        //[HttpPost]
+        //[ValidateAntiForgeryToken]
+        //public async Task<IActionResult> DisableTwoFactorAuthentication()
+        //{
+        //    var user = await GetCurrentUserAsync();
+        //    if (user != null)
+        //    {
+        //        await _userManager.SetTwoFactorEnabledAsync(user, false);
+        //        await _signInManager.SignInAsync(user, isPersistent: false);
+        //        _logger.LogInformation(2, "User disabled two-factor authentication.");
+        //    }
+        //    return RedirectToAction(nameof(Index), "Manage");
+        //}
+
+        #endregion
+
+        #region Password
+
+        [HttpGet]
+        public async Task<ActionResult> Password()
+        {
+            var user = await _userManager.FindByIdAsync(User.GetUserId());
+            return await _userManager.HasPasswordAsync(user)
+                ? RedirectToAction(nameof(ChangePassword))
+                : RedirectToAction(nameof(SetPassword));
+        }
+        
+        [HttpGet]
+        public IActionResult ChangePassword()
+        {
+            ViewBag.ManageNavigationKey = "Password";
+
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> ChangePassword(ChangePasswordViewModel model)
+        {
+            ViewBag.ManageNavigationKey = "Password";
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await GetCurrentUserAsync();
+            if (user != null)
+            {
+                var result = await _userManager.ChangePasswordAsync(user, model.OldPassword, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    _logger.LogInformation(3, "User changed their password successfully.");
+                    AddSuccessMessage("Your password has been changed.");
+                }
+                else
+                    foreach(var error in result.Errors)
+                        AddErrorMessage(error.Description);
+            }
+            else
+                AddErrorMessage("An error has occurred.");
+            
+            return View(model);
+        }
+        
+        [HttpGet]
+        public IActionResult SetPassword()
+        {
+            ViewBag.ManageNavigationKey = "Password";
+
+            return View();
+        }
+        
+        [HttpPost]
+        [ValidateAntiForgeryToken]
+        public async Task<IActionResult> SetPassword(SetPasswordViewModel model)
+        {
+            ViewBag.ManageNavigationKey = "Password";
+
+            if (!ModelState.IsValid)
+                return View(model);
+
+            var user = await GetCurrentUserAsync();
+            if (user != null)
+            {
+                var result = await _userManager.AddPasswordAsync(user, model.NewPassword);
+                if (result.Succeeded)
+                {
+                    await _signInManager.SignInAsync(user, isPersistent: false);
+                    AddSuccessMessage("Your password has been set.");
+                    return RedirectToAction(nameof(ChangePassword));
+                }
+                else
+                    foreach (var error in result.Errors)
+                        AddErrorMessage(error.Description);
+            }
+            else
+                AddErrorMessage("An error has occurred.");
+            
+            return View(model);
+        }
+
+        #endregion
+
+        #region Emails
 
         public async Task<ActionResult> ManageEmail()
         {
             ViewBag.ManageNavigationKey = "Email";
 
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
 
             var model = new ManageEmailViewModel();
             model.CurrentEmail = user.Email;
@@ -141,7 +381,7 @@ namespace Skimur.Web.Controllers
         {
             ViewBag.ManageNavigationKey = "Email";
 
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
             model.CurrentEmail = user.Email;
             model.IsCurrentEmailConfirmed = user.EmailConfirmed;
             model.IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash);
@@ -149,12 +389,12 @@ namespace Skimur.Web.Controllers
             if (!ModelState.IsValid)
                 return View(model);
 
-            if (_userManager.VerifyHashedPassword(user.PasswordHash, model.Password) != PasswordVerificationResult.Success)
+            if(!(await _userManager.CheckPasswordAsync(user, model.Password)))
             {
                 ModelState.AddModelError(string.Empty, "The provided password is invalid.");
                 return View(model);
             }
-
+            
             if (string.Equals(user.Email, model.NewEmail, StringComparison.CurrentCultureIgnoreCase))
             {
                 ModelState.AddModelError(string.Empty, "The email provided is already set for this account.");
@@ -168,16 +408,20 @@ namespace Skimur.Web.Controllers
             if (result.Succeeded)
             {
                 // send a confirmation email
-                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
-                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Url.Scheme);
-                await _userManager.SendEmailAsync(user.Id, "Confirm your email", "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>");
+                var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+                var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+                await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                    "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
+
+                model.CurrentEmail = user.Email;
+                model.IsCurrentEmailConfirmed = false;
 
                 AddSuccessMessage("Your e-mail has been changed. A email has been sent to confirm the email address.");
                 return View(model);
             }
-
-            foreach (var error in result.Errors)
-                ModelState.AddModelError(string.Empty, error);
+            else
+                foreach (var error in result.Errors)
+                    ModelState.AddModelError(string.Empty, error.Description);
 
             return View(model);
         }
@@ -186,12 +430,12 @@ namespace Skimur.Web.Controllers
         [ValidateAntiForgeryToken]
         public async Task<ActionResult> ReSendEmailConfirmation()
         {
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
+            var user = await GetCurrentUserAsync();
 
-            // send a confirmation email
-            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user.Id);
-            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code }, Request.Url.Scheme);
-            await _userManager.SendEmailAsync(user.Id, "Confirm your email", "Please confirm your email by clicking <a href=\"" + callbackUrl + "\">here</a>");
+            var code = await _userManager.GenerateEmailConfirmationTokenAsync(user);
+            var callbackUrl = Url.Action("ConfirmEmail", "Account", new { userId = user.Id, code = code }, protocol: HttpContext.Request.Scheme);
+            await _emailSender.SendEmailAsync(user.Email, "Confirm your account",
+                "Please confirm your account by clicking this link: <a href=\"" + callbackUrl + "\">link</a>");
 
             AddSuccessMessage("A confirmation email has been sent.");
 
@@ -200,155 +444,72 @@ namespace Skimur.Web.Controllers
 
         #endregion
 
-        #region Password
+        #region External logins
 
         [HttpGet]
-        public async Task<ActionResult> Password()
+        public async Task<IActionResult> ManageLogins()
         {
-            return await _userManager.HasPasswordAsync(User.Identity.GetUserId().ParseGuid())
-                ? Redirect(Url.ChangePassword())
-                : Redirect(Url.SetPassword());
+            ViewBag.ManageNavigationKey = "Logins";
+
+            var user = await GetCurrentUserAsync();
+
+            if (user == null)
+                return View("Error");
+
+            var userLogins = await _userManager.GetLoginsAsync(user);
+            var otherLogins = _signInManager.GetExternalAuthenticationSchemes().Where(auth => userLogins.All(ul => auth.AuthenticationScheme != ul.LoginProvider)).ToList();
+
+            return View(new ManageLoginsViewModel
+            {
+                CurrentLogins = userLogins,
+                OtherLogins = otherLogins,
+                IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash)
+            });
         }
-
-        public ActionResult ChangePassword()
-        {
-            ViewBag.ManageNavigationKey = "Password";
-
-            return View(new ChangePasswordViewModel());
-        }
-
+        
         [HttpPost]
         [ValidateAntiForgeryToken]
-        public async Task<ActionResult> ChangePassword(ChangePasswordViewModel model)
+        public IActionResult LinkLogin(string provider)
         {
-            ViewBag.ManageNavigationKey = "Password";
+            // Request a redirect to the external login provider to link a login for the current user
+            var redirectUrl = Url.Action("LinkLoginCallback", "Manage");
+            var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, redirectUrl, User.GetUserId());
+            return new ChallengeResult(provider, properties);
+        }
+        
+        [HttpGet]
+        public async Task<ActionResult> LinkLoginCallback()
+        {
+            var user = await GetCurrentUserAsync();
 
-            if (!ModelState.IsValid)
-                return View(model);
+            if (user == null)
+                return View("Error");
 
-            var result = await _userManager.ChangePasswordAsync(_userContext.CurrentUser.Id, model.OldPassword, model.NewPassword);
+            var info = await _signInManager.GetExternalLoginInfoAsync(User.GetUserId());
+
+            if (info == null)
+            {
+                AddErrorMessage("An error has occurred.");
+                return RedirectToAction(nameof(ManageLogins));
+            }
+
+            var result = await _userManager.AddLoginAsync(user, info);
+
             if (result.Succeeded)
-            {
-                var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
-                if (user != null)
-                    await _signInManager.SignInAsync(user, false, false);
-
-                AddSuccessMessage("Your password was successfully changed.");
-            }
+                AddSuccessMessage("The external login was added.");
             else
-                foreach (var error in result.Errors)
-                    AddErrorMessage(error);
+                AddErrorMessage("An error has occurred.");
 
-            return View(model);
-        }
-
-        public ActionResult SetPassword()
-        {
-            ViewBag.ManageNavigationKey = "Password";
-
-            return View(new SetPasswordViewModel());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> SetPassword(SetPasswordViewModel model)
-        {
-            ViewBag.ManageNavigationKey = "Password";
-
-            if (ModelState.IsValid)
-            {
-                var result = await _userManager.AddPasswordAsync(User.Identity.GetUserId().ParseGuid(), model.NewPassword);
-                if (result.Succeeded)
-                {
-                    var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
-                    if (user != null)
-                        await _signInManager.SignInAsync(user, false, false);
-
-                    AddSuccessMessage("Your password has succesfully been set.");
-
-                    return Redirect(Url.ChangePassword());
-                }
-
-                foreach (var error in result.Errors)
-                    AddErrorMessage(error);
-            }
-
-            return View(model);
+            return RedirectToAction(nameof(ManageLogins));
         }
 
         #endregion
 
-        #region Logins
+        #region Helpers
 
-        public async Task<ActionResult> ManageLogins()
+        private async Task<Membership.User> GetCurrentUserAsync()
         {
-            ViewBag.ManageNavigationKey = "Logins";
-
-            var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
-            var userLogins = await _userManager.GetLoginsAsync(User.Identity.GetUserId().ParseGuid());
-            var otherLogins = _authenticationManager.GetExternalAuthenticationTypes().Where(auth => userLogins.All(ul => auth.AuthenticationType != ul.LoginProvider)).ToList();
-
-            return View(new ManageLoginsViewModel
-            {
-                IsPasswordSet = !string.IsNullOrEmpty(user.PasswordHash),
-                CurrentLogins = userLogins,
-                OtherLogins = otherLogins
-            });
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public ActionResult LinkLogin(string provider)
-        {
-            ViewBag.ManageNavigationKey = "Logins";
-
-            return new AccountController.ChallengeResult(provider, Url.Action("LinkLoginCallback", "Manage"), _authenticationManager, User.Identity.GetUserId());
-        }
-
-        public async Task<ActionResult> LinkLoginCallback()
-        {
-            var loginInfo = await _authenticationManager.GetExternalLoginInfoAsync("XsrfId", User.Identity.GetUserId());
-
-            if (loginInfo == null)
-            {
-                AddErrorMessage("An error has occurred.");
-                return Redirect(Url.ManageLogins());
-            }
-
-            var result = await _userManager.AddLoginAsync(User.Identity.GetUserId().ParseGuid(), loginInfo.Login);
-
-            if (result.Succeeded)
-            {
-                var userName = loginInfo.ExternalIdentity.GetUserName();
-                if (string.IsNullOrEmpty(userName))
-                    userName = loginInfo.Login.ProviderKey;
-                AddSuccessMessage("External login for " + userName + " was created.");
-            }
-            else
-                foreach (var error in result.Errors)
-                    AddErrorMessage(error);
-
-            return Redirect(Url.ManageLogins());
-        }
-
-        [HttpPost]
-        [ValidateAntiForgeryToken]
-        public async Task<ActionResult> RemoveLogin(string loginProvider, string providerKey)
-        {
-            var result = await _userManager.RemoveLoginAsync(User.Identity.GetUserId().ParseGuid(), new UserLoginInfo(loginProvider, providerKey));
-
-            if (result.Succeeded)
-            {
-                var user = await _userManager.FindByIdAsync(User.Identity.GetUserId().ParseGuid());
-                if (user != null)
-                    await _signInManager.SignInAsync(user, false, false);
-
-                AddSuccessMessage("The external login was successfully removed.");
-            }
-            else
-                AddErrorMessage("An error has occurred.");
-
-            return Redirect(Url.ManageLogins());
+            return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }
 
         #endregion

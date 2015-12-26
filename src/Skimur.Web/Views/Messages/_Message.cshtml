@@ -1,0 +1,107 @@
+﻿@using Subs
+@using Subs.ReadModel
+@model MessageWrapped
+@{ 
+    var postViewDataDictionary = new Microsoft.AspNet.Mvc.ViewFeatures.ViewDataDictionary(ViewData);
+    postViewDataDictionary["CanMarkRead"] = false;
+}
+
+<div class="message @(Model.IsUnread.HasValue ? Model.IsUnread.Value ? "message-unread" : "message-read" : "")" data-message-id="@Model.Message.Id" onclick="skimurui.messages.messageClicked(this);">
+    @if (Model.Message.MessageType == MessageType.Private)
+    {
+        <div class="message-header">
+            <span class="type">Private message:</span> <a class="subject" href="@Url.MessageDetails(Model.Message)">@Model.Message.Subject</a>
+        </div>
+        <div class="disc">
+            <div class="disc-body">
+                <div class="disc-main">
+                    <div class="disc-tagline">
+                        <a href="javascript:void(0)" class="expand" onclick="return skimurui.messages.toggleExpand(this)">[&#8211;]</a> @{ FromLink(Model); }<time class="timestamp">@Html.Age(Model.Message.DateCreated) ago</time>
+                    </div>
+                    <div class="disc-content">
+                        @Html.Raw(Model.Message.BodyFormatted)
+                    </div>
+                    <textarea class="disc-content-unformatted hidden">@Html.Raw(Model.Message.Body)</textarea>
+                    <ul class="disc-options">
+                        <li class="first">
+                            <a href="@Url.MessageDetails(Model.Message)">permalink</a>
+                        </li>
+                        @if (Model.CanReply)
+                        {
+                        <li class="reply">
+                            <a href="javascript:void(0);" onclick="return skimurui.messages.startReply(this)" class="reply">reply</a>
+                        </li>
+                        }
+                        @if (Model.CanMarkRead)
+                        {
+                        <li class="mark-unread">
+                            <a href="javascript:void(0);" onclick="return skimurui.messages.markAsUnread(this)" class="reply">mark unread</a>
+                        </li>
+                        <li class="mark-read">
+                            <a href="javascript:void(0);" onclick="return skimurui.messages.markAsRead(this)" class="reply">mark read</a>
+                        </li>
+                        }
+                    </ul>
+                    <div class="disc-staging hidden"></div>
+                </div>
+            </div>
+        </div>
+    }
+    else if (Model.Message.MessageType == MessageType.CommentReply && Model.Comment != null)
+    {
+        if (Model.Comment.Post != null) // shouldn't happen, but i'm paranoid
+        {
+            <div class="message-header">
+                <span class="type">Comment reply:</span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+            </div>
+        }
+        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead, PermaWithContext = true })
+    }
+    else if (Model.Message.MessageType == MessageType.PostReply && Model.Comment != null)
+    {
+        if (Model.Comment.Post != null) // shouldn't happen, but i'm paranoid
+        {
+            <div class="message-header">
+                <span class="type">Post reply: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+            </div>
+        }
+        @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead, PermaWithContext = true })
+    }
+    else if (Model.Message.MessageType == MessageType.Mention)
+    {
+        if (Model.Comment != null && Model.Comment.Post != null)
+        {
+            <div class="message-header">
+                <span class="type">Mention: </span> <a class="post" href="@Url.Post(Model.Comment.Sub, Model.Comment.Post)">@Model.Comment.Post.Title</a>
+            </div>
+        }
+        else if (Model.Post != null)
+        {
+            <div class="message-header">
+                <span class="type">Mention:</span> <a class="post" href="@Url.Post(Model.Post.Sub, Model.Post.Post)">@Model.Post.Post.Title</a>
+            </div>
+        }
+        if (Model.Comment != null)
+        {
+            @Html.Partial("_CommentNode", new CommentNode(Model.Comment) { CanMarkRead = Model.CanMarkRead, PermaWithContext = true})
+        }
+        else if (Model.Post != null)
+        {
+            @Html.Partial("_Post", Model.Post, postViewDataDictionary)
+        }
+    }
+</div>
+
+@functions {
+    public void FromLink(MessageWrapped message)
+    {
+        if (message.FromSub != null)
+        {
+            ViewContext.Writer.Write($"<a href=\"{Url.Sub(message.FromSub.Name)}\" class=\"author\">{message.FromSub.Name}</a>");
+        }
+        else if (message.Author != null)
+        {
+            ViewContext.Writer.Write($"<a href=\"{Url.User(message.Author.UserName)}\" class=\"author\">{message.Author.UserName}</a>");
+        }
+    }
+}

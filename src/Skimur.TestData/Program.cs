@@ -7,7 +7,6 @@ using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Subs.Commands;
 using Subs.ReadModel;
-using Post = RedditSharp.Things.Post;
 
 namespace Skimur.TestData
 {

@@ -1,16 +1,21 @@
-﻿using System.Collections.Generic;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Net;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
-    [SkimurAuthorize]
+    [Authorize]
     public class SubBansController : BaseController
     {
         private readonly ISubUserBanDao _subUserBanDao;
@@ -20,7 +25,7 @@ namespace Skimur.Web.Controllers
         private readonly ISubUserBanWrapper _subUserBanWrapper;
         private readonly ICommandBus _commandBus;
 
-        public SubBansController(ISubUserBanDao subUserBanDao, 
+        public SubBansController(ISubUserBanDao subUserBanDao,
             IPermissionDao permissionDao,
             ISubDao subDao,
             IUserContext userContext,
@@ -34,7 +39,7 @@ namespace Skimur.Web.Controllers
             _subUserBanWrapper = subUserBanWrapper;
             _commandBus = commandBus;
         }
-        
+
         [HttpGet]
         public ActionResult Bans(string subName, string userName, int? pageNumber)
         {
@@ -44,15 +49,15 @@ namespace Skimur.Web.Controllers
             var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                throw new HttpException(404, "sub not found");
+                throw new BaseHttpException(HttpStatusCode.NotFound, "sub not found");
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
-                throw new HttpException(403, "not allowed to moderate bans");
+                throw new BaseHttpException(HttpStatusCode.Forbidden, "not allowed to moderate bans");
 
             if (!pageNumber.HasValue)
                 pageNumber = 1;
 
-            var bannedUsers = _subUserBanDao.GetBannedUsersInSub(sub.Id, userName, (pageNumber.Value - 1)*5, 5);
+            var bannedUsers = _subUserBanDao.GetBannedUsersInSub(sub.Id, userName, (pageNumber.Value - 1) * 5, 5);
 
             var model = new BannedUsersFromSub();
             model.Sub = sub;
@@ -71,11 +76,11 @@ namespace Skimur.Web.Controllers
             var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                throw new HttpException(404, "sub not found");
+                throw new BaseHttpException(HttpStatusCode.NotFound, "sub not found");
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
-                throw new HttpException(403, "not allowed to moderate bans");
-            
+                throw new BaseHttpException(HttpStatusCode.Forbidden, "not allowed to moderate bans");
+
             var response = _commandBus.Send<BanUserFromSub, BanUserFromSubResponse>(new BanUserFromSub
             {
                 UserName = model.UserName,
@@ -98,11 +103,11 @@ namespace Skimur.Web.Controllers
             var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                throw new HttpException(404, "sub not found");
+                throw new BaseHttpException(HttpStatusCode.NotFound, "sub not found");
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
-                throw new HttpException(403, "not allowed to moderate bans");
-            
+                throw new BaseHttpException(HttpStatusCode.Forbidden, "not allowed to moderate bans");
+
             var response = _commandBus.Send<UnBanUserFromSub, UnBanUserFromSubResponse>(new UnBanUserFromSub
             {
                 SubId = sub.Id,
@@ -122,11 +127,11 @@ namespace Skimur.Web.Controllers
             var sub = _subDao.GetSubByName(subName);
 
             if (sub == null)
-                throw new HttpException(404, "sub not found");
+                throw new BaseHttpException(HttpStatusCode.NotFound, "sub not found");
 
             if (!_permissionDao.CanUserManageSubAccess(_userContext.CurrentUser, sub.Id))
-                throw new HttpException(403, "not allowed to moderate bans");
-            
+                throw new BaseHttpException(HttpStatusCode.Forbidden, "not allowed to moderate bans");
+
             var response = _commandBus.Send<UpdateUserSubBan, UpdateUserSubBanResponse>(new UpdateUserSubBan
             {
                 UserName = userName,
@@ -144,7 +149,7 @@ namespace Skimur.Web.Controllers
             {
                 success = true,
                 error = (string)null,
-                html = RenderView("_Ban", _subUserBanWrapper.Wrap(new List<SubUserBan> {bannedUser})[0])
+                html = RenderView("_Ban", _subUserBanWrapper.Wrap(new List<SubUserBan> { bannedUser })[0])
             });
         }
     }

@@ -1,15 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Web;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
-using Subs.Services;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
+using System.Web;
 
 namespace Skimur.Web.Controllers
 {
@@ -53,7 +55,7 @@ namespace Skimur.Web.Controllers
             _commentNodeHierarchyBuilder = commentNodeHierarchyBuilder;
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Unmoderated(string subName)
         {
             if (string.IsNullOrEmpty(subName))
@@ -74,31 +76,31 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Approve(Guid postId)
         {
             var response = _commandBus.Send<ApprovePost, ApprovePostResponse>(new ApprovePost
-                {
-                    PostId = postId,
-                    ApprovedBy = _userContext.CurrentUser.Id
-                });
-           
+            {
+                PostId = postId,
+                ApprovedBy = _userContext.CurrentUser.Id
+            });
+
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Remove(Guid postId)
         {
             var response = _commandBus.Send<RemovePost, RemovePostResponse>(new RemovePost
-                {
-                    PostId = postId,
-                    RemovedBy = _userContext.CurrentUser.Id
-                });
-           
+            {
+                PostId = postId,
+                RemovedBy = _userContext.CurrentUser.Id
+            });
+
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Edit(EditPostModel model)
         {
             var response = _commandBus.Send<EditPostContent, EditPostContentResponse>(new EditPostContent
@@ -111,7 +113,7 @@ namespace Skimur.Web.Controllers
             if (!string.IsNullOrEmpty(response.Error))
                 return CommonJsonResult(response.Error);
 
-            var html = RenderView("_Post",_postWrapper.Wrap(model.PostId, _userContext.CurrentUser));
+            var html = RenderView("_Post", _postWrapper.Wrap(model.PostId, _userContext.CurrentUser));
 
             return Json(new
             {
@@ -121,7 +123,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult Delete(Guid postId, string reason)
         {
             var response = _commandBus.Send<DeletePost, DeletePostResponse>(new DeletePost
@@ -134,7 +136,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult ToggleNsfw(Guid postId, bool nsfw)
         {
             _commandBus.Send(new TogglePostNsfw
@@ -147,7 +149,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(true);
         }
 
-        [SkimurAuthorize, Ajax]
+        [Authorize, Ajax]
         public ActionResult ToggleSticky(Guid postId, bool sticky)
         {
             var response = _commandBus.Send<ToggleSticky, ToggleStickyResponse>(new ToggleSticky
@@ -160,7 +162,7 @@ namespace Skimur.Web.Controllers
             return CommonJsonResult(response.Error);
         }
 
-        [ChildActionOnly]
+        // TODO: [ChildActionOnly]
         public ActionResult AnnouncementPosts()
         {
             if (!_announcementSubId.HasValue)
@@ -172,7 +174,7 @@ namespace Skimur.Web.Controllers
             if (_announcementSubId == Guid.Empty)
                 return Content("");
 
-            var sticky = _postDao.GetPosts(new List<Guid> {_announcementSubId.Value}, sticky: true);
+            var sticky = _postDao.GetPosts(new List<Guid> { _announcementSubId.Value }, sticky: true);
 
             var posts = _postWrapper.Wrap(sticky, _userContext.CurrentUser);
 
@@ -348,7 +350,7 @@ namespace Skimur.Web.Controllers
             return View(model);
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         public ActionResult Create(string subName = null, string type = null)
         {
             SubWrapped sub = null;
@@ -376,7 +378,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize]
+        [Authorize]
         [HttpPost]
         [ValidateAntiForgeryToken]
         public ActionResult Create(CreatePostModel model, string subName = null)
@@ -394,7 +396,7 @@ namespace Skimur.Web.Controllers
             var response = _commandBus.Send<CreatePost, CreatePostResponse>(new CreatePost
             {
                 CreatedByUserId = _userContext.CurrentUser.Id,
-                IpAddress = Request.UserHostAddress,
+                IpAddress = HttpContext.RemoteAddress(),
                 Title = model.Title,
                 Url = model.Url,
                 Content = model.Content,

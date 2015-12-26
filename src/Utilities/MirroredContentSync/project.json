@@ -1,0 +1,27 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "MirroredContentSync Console Application",
+  "authors": [ "Paul" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "compilationOptions": {
+    "emitEntryPoint": true
+  },
+
+  "dependencies": {
+    "Subs": "",
+    "RedditSharp": "1.0.16",
+    "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final"
+  },
+
+  "commands": {
+    "MirroredContentSync": "MirroredContentSync"
+  },
+
+  "frameworks": {
+    "dnx451": { }
+  }
+}

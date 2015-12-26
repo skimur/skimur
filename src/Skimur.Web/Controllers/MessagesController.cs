@@ -1,20 +1,21 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Logging;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs;
 using Subs.Commands;
 using Subs.ReadModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
-    [SkimurAuthorize]
+    [Authorize]
     public class MessagesController : BaseController
     {
         private readonly ICommandBus _commandBus;
@@ -177,13 +178,13 @@ namespace Skimur.Web.Controllers
         public ActionResult Reply(ReplyMessageViewModel model)
         {
             var response = _commandBus.Send<ReplyMessage, ReplyMessageResponse>(new ReplyMessage
-                {
-                    Author = _userContext.CurrentUser.Id,
-                    AuthorIp = Request.UserHostAddress,
-                    ReplyToMessageId = model.ReplyToMessage,
-                    Body = model.Body
-                });
-            
+            {
+                Author = _userContext.CurrentUser.Id,
+                AuthorIp = HttpContext.RemoteAddress(),
+                ReplyToMessageId = model.ReplyToMessage,
+                Body = model.Body
+            });
+
             return CommonJsonResult(response.Error);
         }
 
@@ -266,8 +267,8 @@ namespace Skimur.Web.Controllers
                 // make the sure that the user is allowed to see this mod mail
                 if (!_userContext.CurrentUser.IsAdmin)
                 {
-                    if(!moderatingSubs.ContainsKey(sub.Id)) throw new UnauthorizedException();
-                    if(!moderatingSubs[sub.Id].HasPermission(ModeratorPermissions.Mail)) throw new UnauthorizedException();
+                    if (!moderatingSubs.ContainsKey(sub.Id)) throw new UnauthorizedException();
+                    if (!moderatingSubs[sub.Id].HasPermission(ModeratorPermissions.Mail)) throw new UnauthorizedException();
                 }
 
                 model.Sub = sub;
@@ -278,11 +279,11 @@ namespace Skimur.Web.Controllers
                 model.ModeratorMailForSubs = new List<Guid>();
                 foreach (var key in moderatingSubs.Keys)
                 {
-                    if(moderatingSubs[key].HasPermission(ModeratorPermissions.Mail))
+                    if (moderatingSubs[key].HasPermission(ModeratorPermissions.Mail))
                         model.ModeratorMailForSubs.Add(key);
                 }
             }
-            
+
             SeekedList<Guid> messages;
             if (moderatingSubs.Count == 0)
                 messages = new SeekedList<Guid>();

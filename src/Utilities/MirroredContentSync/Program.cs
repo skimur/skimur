@@ -2,38 +2,43 @@
 using System.Linq;
 using Membership.Services;
 using MirroredContentSync.Settings;
-using RedditSharp;
 using Skimur;
 using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Settings;
-using Subs;
 using Subs.Commands;
 using Subs.Services;
+using Microsoft.Extensions.DependencyInjection;
+using RedditSharp;
+using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.PlatformAbstractions;
 
 namespace MirroredContentSync
 {
-    public class Program
+    public class Program : IRegistrar
     {
         private static MirrorSettings _mirrorSettings;
         private static ISubService _subService;
         private static IPostService _postService;
         private static IMembershipService _membershipService;
+        private static ICommandBus _commandBus;
+
+
 
         static void Main(string[] args)
         {
             try
             {
-                SkimurContext.Initialize(new Membership.Registrar(),
-                    new Subs.Registrar(),
-                    new Subs.Worker.Registrar(),
-                    new Skimur.Markdown.Registrar(),
-                    new Skimur.Scraper.Registrar());
+                SkimurContext.Initialize(
+                    new Program(),
+                    new Membership.Registrar(),
+                    new Subs.Registrar());
 
-                _mirrorSettings = SkimurContext.Resolve<ISettingsProvider<MirrorSettings>>().Settings;
-                _subService = SkimurContext.Resolve<ISubService>();
-                _postService = SkimurContext.Resolve<IPostService>();
-                _membershipService = SkimurContext.Resolve<IMembershipService>();
+                _mirrorSettings = SkimurContext.ServiceProvider.GetRequiredService<ISettingsProvider<MirrorSettings>>().Settings;
+                _subService = SkimurContext.ServiceProvider.GetRequiredService<ISubService>();
+                _postService = SkimurContext.ServiceProvider.GetRequiredService<IPostService>();
+                _membershipService = SkimurContext.ServiceProvider.GetRequiredService<IMembershipService>();
+                _commandBus = SkimurContext.ServiceProvider.GetRequiredService<ICommandBus>();
 
                 if (_mirrorSettings.SubsToMirror == null || _mirrorSettings.SubsToMirror.Count == 0)
                     return;
@@ -81,14 +86,14 @@ namespace MirroredContentSync
                             continue;
                         }
 
-                        var createPostResponse = SkimurContext.Resolve<ICommandBus>().Send<CreatePost, CreatePostResponse>(
+                        var createPostResponse = _commandBus.Send<CreatePost, CreatePostResponse>(
                             new CreatePost
                             {
                                 CreatedByUserId = botUser.Id,
                                 Title = redditPost.Title,
                                 Url = redditPost.Url.ToString(),
                                 Content = redditPost.SelfText,
-                                PostType = redditPost.IsSelfPost ? PostType.Text : PostType.Link,
+                                PostType = redditPost.IsSelfPost ? Subs.PostType.Text : Subs.PostType.Link,
                                 SubName = subToMirror,
                                 NotifyReplies = false,
                                 Mirror = "reddit",
@@ -107,7 +112,7 @@ namespace MirroredContentSync
                             continue;
                         }
 
-                        var createCommentResponse = SkimurContext.Resolve<ICommandBus>().Send<CreateComment, CreateCommentResponse>(
+                        var createCommentResponse = _commandBus.Send<CreateComment, CreateCommentResponse>(
                            new CreateComment
                            {
                                PostId = createPostResponse.PostId.Value,
@@ -128,6 +133,17 @@ namespace MirroredContentSync
             {
                 Console.WriteLine(ex.Message);
             }
+        }
+
+        public int Order => 0;
+
+        public void Register(IServiceCollection serviceCollection)
+        {
+            // Set up configuration sources.
+            var builder = new ConfigurationBuilder().AddJsonFile("appsettings.json");
+            builder.AddEnvironmentVariables();
+
+            serviceCollection.AddInstance<IConfiguration>(builder.Build());
         }
     }
 }

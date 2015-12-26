@@ -1,0 +1,71 @@
+﻿@using Skimur
+@using Subs.ReadModel
+@model UserViewModel
+@{
+    ViewBag.Title = Model.User.UserName;
+}
+
+<div class="row">
+    <div class="col-lg-9 col-sm-8">
+        <h3 class="page-header visible-xs visible-sm">@ViewBag.Title</h3>
+        <div class="row">
+            <div class="col-md-6">
+                <h3>
+                    Posts
+                </h3>
+                @if (Model.Posts != null && Model.Posts.Count > 0)
+                {
+                    foreach (var post in Model.Posts)
+                    {
+                        <div class="message">
+                            @Html.Partial("_Post", post)
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>There are no items to display.</p>
+                }
+                <div class="row">
+                    <div class="list-pager">
+                        <a class="btn btn-default" href="@Url.UserPosts(Model.User.UserName)">View more</a>
+                    </div>
+                </div>
+            </div>
+            <div class="col-md-6">
+                <h3>
+                    Comments
+                </h3>
+                @if (Model.Comments != null && Model.Comments.Count > 0)
+                {
+                    foreach (var comment in Model.Comments)
+                    {
+                        <div class="message">
+                            <div class="message-header">
+                                <a class="post" href="@Url.Post(comment.Sub, comment.Post)">@comment.Post.Title</a> in <a class="sub" href="@Url.Sub(comment.Sub.Name)">@comment.Sub.Name</a>
+                            </div>
+                            @Html.Partial("_CommentNode", new CommentNode(comment))
+                        </div>
+                    }
+                }
+                else
+                {
+                    <p>There are no items to display.</p>
+                }
+                <div class="row">
+                    <div class="list-pager">
+                        <a class="btn btn-default" href="@Url.UserComments(Model.User.UserName)">View more</a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+    <div class="col-lg-3 col-sm-4">
+        @{ await Html.RenderPartialAsync("_SideBar"); }
+        @Component.SideBar()
+    </div>
+</div>
+
+@section header {
+    @Html.Partial("_HeaderNav")
+}

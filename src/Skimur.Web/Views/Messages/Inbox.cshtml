@@ -1,0 +1,67 @@
+﻿@model InboxViewModel
+
+@{
+    switch (Model.InboxType)
+    {
+        case InboxType.All:
+            ViewBag.Title = "All messages";
+            break;
+        case InboxType.Unread:
+            ViewBag.Title = "Unread messages";
+            break;
+        case InboxType.Messages:
+            ViewBag.Title = "Private messages";
+            break;
+        case InboxType.CommentReplies:
+            ViewBag.Title = "Comment replies";
+            break;
+        case InboxType.PostReplies:
+            ViewBag.Title = "Post replies";
+            break;
+        case InboxType.Mentions:
+            ViewBag.Title = "Mentions";
+            break;
+        case InboxType.ModeratorMail:
+            ViewBag.Title = "Moderator mail";
+            break;
+        case InboxType.ModeratorMailSent:
+            ViewBag.Title = "Sent moderator mail";
+            break;
+        case InboxType.ModeratorMailUnread:
+            ViewBag.Title = "Unread moderator mail";
+            break;
+    }
+}
+
+<div class="row">
+    <div class="col-sm-12">
+        <div class="form-group">
+            <ul class="nav nav-tabs" role="tablist">
+                <li class="@(Model.InboxType == InboxType.All ? "active" : "")"><a href="@Url.MessagesAll()">All</a></li>
+                <li class="@(Model.InboxType == InboxType.Unread ? "active" : "")"><a href="@Url.MessagesUnread()">Unread</a></li>
+                <li class="@(Model.InboxType == InboxType.Messages ? "active" : "")"><a href="@Url.MessagesPrivate()">Messages</a></li>
+                <li class="@(Model.InboxType == InboxType.CommentReplies ? "active" : "")"><a href="@Url.MessagesCommentReplies()">Comments replies</a></li>
+                <li class="@(Model.InboxType == InboxType.PostReplies ? "active" : "")"><a href="@Url.MessagesPostReplies()">Post replies</a></li>
+                <li class="@(Model.InboxType == InboxType.Mentions ? "active" : "")"><a href="@Url.MessagesMentions()">Mentions</a></li>
+            </ul>
+        </div>
+        <div class="messages-container">
+            @foreach (var message in Model.Messages)
+            {
+                @Html.Partial("_Message", message)
+            }
+        </div>
+        @if (Model.Messages.HasPreviousPage || Model.Messages.HasNextPage)
+        {
+            <div class="row">
+                <div class="list-pager">
+                    @Html.Pager(Model.Messages)
+                </div>
+            </div>
+        }
+    </div>
+</div>
+
+@section header {
+    @{ await Html.RenderPartialAsync("_HeaderNav", Model.IsModerator); }
+}

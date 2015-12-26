@@ -6,6 +6,7 @@ using System.Threading.Tasks;
 using NUnit.Framework;
 using Skimur.Tests;
 using Subs.Services;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Subs.Tests
 {
@@ -91,7 +92,7 @@ namespace Subs.Tests
         protected override void Setup()
         {
             base.Setup();
-            _karmaService = _container.GetInstance<IKarmaService>();
+            _karmaService = _serviceProvider.GetService<IKarmaService>();
         }
     }
 }

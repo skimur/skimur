@@ -1,14 +1,15 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using System.Web.Mvc;
+﻿using Microsoft.AspNet.Authorization;
+using Microsoft.AspNet.Mvc;
 using Skimur.Messaging;
-using Skimur.Web.Models;
-using Skimur.Web.Mvc;
+using Skimur.Web.Infrastructure;
+using Skimur.Web.Services;
+using Skimur.Web.ViewModels;
 using Subs.Commands;
 using Subs.ReadModel;
+using System;
+using System.Collections.Generic;
+using System.Linq;
+using System.Threading.Tasks;
 
 namespace Skimur.Web.Controllers
 {
@@ -36,7 +37,7 @@ namespace Skimur.Web.Controllers
             _commentDao = commentDao;
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Create(CreateCommentModel model)
         {
             var dateCreated = Common.CurrentTime();
@@ -45,7 +46,7 @@ namespace Skimur.Web.Controllers
                 PostId = model.PostId,
                 ParentId = model.ParentId,
                 DateCreated = dateCreated,
-                AuthorIpAddress = Request.UserHostAddress,
+                AuthorIpAddress = HttpContext.RemoteAddress(),
                 AuthorUserName = _userContext.CurrentUser.UserName,
                 Body = model.Body,
                 SendReplies = model.SendReplies
@@ -67,7 +68,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Edit(EditCommentModel model)
         {
             var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
@@ -92,7 +93,7 @@ namespace Skimur.Web.Controllers
             });
         }
 
-        [SkimurAuthorize, Ajax, HttpPost]
+        [Authorize, Ajax, HttpPost]
         public ActionResult Delete(Guid commentId)
         {
             var response = _commandBus.Send<DeleteComment, DeleteCommentResponse>(new DeleteComment

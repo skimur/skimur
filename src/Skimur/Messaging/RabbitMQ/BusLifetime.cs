@@ -3,29 +3,29 @@ using RabbitMQ.Client;
 using ServiceStack;
 using ServiceStack.Messaging;
 using ServiceStack.RabbitMq;
-using SimpleInjector;
 using Skimur.Logging;
 using Skimur.Messaging.Handling;
+using Microsoft.Extensions.DependencyInjection;
 
 namespace Skimur.Messaging.RabbitMQ
 {
     public class BusLifetime : IBusLifetime
     {
-        private readonly Container _container;
+        private readonly IServiceProvider _serviceProvider;
         private readonly RabbitMqServer _server;
         private readonly Registrar _registrar;
         private readonly ILogger<BusLifetime> _logger;
          
-        public BusLifetime(Container container, 
+        public BusLifetime(IServiceProvider serviceProvider, 
             RabbitMqServer server, 
             ICommandDiscovery commandDiscovery, 
             IEventDiscovery eventDiscovery,
             ILogger<BusLifetime> logger)
         {
-            _container = container;
+            _serviceProvider = serviceProvider;
             _server = server;
             _logger = logger;
-            _registrar = new Registrar(_server, _container, _logger);
+            _registrar = new Registrar(_server, _serviceProvider, _logger);
 
             commandDiscovery.Register(_registrar);
             eventDiscovery.Register(_registrar);
@@ -46,13 +46,13 @@ namespace Skimur.Messaging.RabbitMQ
         class Registrar : ICommandRegistrar, IEventRegistrar
         {
             private readonly RabbitMqServer _server;
-            private readonly Container _container;
+            private readonly IServiceProvider _serviceProvider;
             private readonly ILogger<BusLifetime> _logger;
 
-            public Registrar(RabbitMqServer server, Container container, ILogger<BusLifetime> logger)
+            public Registrar(RabbitMqServer server, IServiceProvider serviceProvider, ILogger<BusLifetime> logger)
             {
                 _server = server;
-                _container = container;
+                _serviceProvider = serviceProvider;
                 _logger = logger;
             }
 
@@ -89,7 +89,7 @@ namespace Skimur.Messaging.RabbitMQ
                 new RabbitMqWorker((RabbitMqMessageFactory)_server.MessageFactory, 
                     new MessageHandler<T>(_server, message =>
                     {
-                        _container.GetInstance<TEventHandler>().Handle(message.GetBody());
+                        _serviceProvider.GetService<TEventHandler>().Handle(message.GetBody());
                         return null;
                     })
                     {
@@ -109,7 +109,7 @@ namespace Skimur.Messaging.RabbitMQ
                 {
                     try
                     {
-                        _container.GetInstance<ICommandHandler<T>>().Handle(message.GetBody());
+                        _serviceProvider.GetService<ICommandHandler<T>>().Handle(message.GetBody());
                         return null;
                     }
                     catch (Exception ex)
@@ -127,7 +127,7 @@ namespace Skimur.Messaging.RabbitMQ
                 {
                     try
                     {
-                        return  _container.GetInstance<ICommandHandlerResponse<TRequest, TResponse>>().Handle(message.GetBody());
+                        return _serviceProvider.GetService<ICommandHandlerResponse<TRequest, TResponse>>().Handle(message.GetBody());
                     }
                     catch (Exception ex)
                     {

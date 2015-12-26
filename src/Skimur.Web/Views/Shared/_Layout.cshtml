@@ -1,0 +1,69 @@
+﻿<!DOCTYPE html>
+<html>
+<head>
+    <meta charset="utf-8" />
+    <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+    <meta name="keywords" content="skimur, skimur.com, comment, post, link, submit, share" />
+    <meta name="description" content="Skimur: Speak, be heard." />
+    <title>@ViewData["Title"] - Skimur</title>
+    <environment names="Development">
+        <link rel="stylesheet" href="~/css/site.css" asp-append-version="true" />
+    </environment>
+    <environment names="Production">
+        <link rel="stylesheet" href="~/css/site.min.css" asp-append-version="true" />
+    </environment>
+    @Component.Invoke("Styles", ViewContext.RouteData.Values["subName"])
+    <script type="text/javascript">
+        window.q = [];
+        window.$ = function (f) {
+            q.push(f);
+        };
+        window.jQuery = function (f) {
+            q.push(f);
+        };
+    </script>
+</head>
+@{
+    var controller = ViewContext.RouteData.Values["controller"].ToString().ToLower();
+    var action = ViewContext.RouteData.Values["action"].ToString().ToLower();
+}
+<body class="@(controller)-@(action)">
+    @if (!string.IsNullOrEmpty(ViewBag.Announcement))
+    {
+        <div class="layout-announcement">
+            @Html.Raw(ViewBag.Announcement)
+        </div>
+    }
+    @Component.Invoke("Topbar")
+    <div class="layout-header">
+        <div class="layout-header-banner">
+            <a href="/" class="banner"><img src="/img/logo.png" /></a>
+        </div>
+        @if (IsSectionDefined("header"))
+        {
+            <div class="layout-header-content">
+                @RenderSection("header")
+            </div>
+        }
+        <div class="layout-header-account">
+            @Component.Invoke("AccountHeader")
+        </div>
+    </div>
+    @RenderBody()
+    <environment names="Development">
+        <script src="~/js/site.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Production">
+        <script src="~/js/site.min.js" asp-append-version="true"></script>
+    </environment>
+    @RenderSection("scripts", required: false)
+    <script type="text/javascript">
+        skimurui.isLoggedIn = @User.IsSignedIn().ToString().ToLower();
+        $.each(q, function(index, f) {
+            $(f);
+        });
+    </script>
+    @{ await Html.RenderPartialAsync("_Analytics"); }
+    @{ await Html.RenderPartialAsync("_LoginModal", new LoginViewModel()); }
+</body>
+</html>
