@@ -3,7 +3,7 @@ Microsoft Visual Studio Solution File, Format Version 12.00
 # Visual Studio 14
 VisualStudioVersion = 14.0.24720.0
 MinimumVisualStudioVersion = 10.0.40219.1
-Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Global", "_Global", "{D81A4076-1A21-4825-AC47-EBF05860676F}"
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "_Solution Items", "_Solution Items", "{D81A4076-1A21-4825-AC47-EBF05860676F}"
 	ProjectSection(SolutionItems) = preProject
 		global.json = global.json
 	EndProjectSection
@@ -41,6 +41,11 @@ EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "MirroredContentSync", "src\Utilities\MirroredContentSync\MirroredContentSync.xproj", "{834F7598-1126-4DCD-BF92-882F5A8A293E}"
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Tasks", "src\Utilities\Tasks\Tasks.xproj", "{0A9B8219-5D8C-407E-983F-7BDB8E64DF84}"
+EndProject
+Project("{2150E333-8FDC-42A3-9474-1A3956D46DE8}") = "docs", "docs", "{C793FAD1-122F-42B1-9154-FC08617E33EC}"
+	ProjectSection(SolutionItems) = preProject
+		docs\DEVELOPMENT.md = docs\DEVELOPMENT.md
+	EndProjectSection
 EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
@@ -112,5 +117,6 @@ Global
 		{B0FA4175-8B29-4904-9780-28B3C24B0567} = {C33F77C7-8FE5-4276-B6F3-26D61FC01E1B}
 		{834F7598-1126-4DCD-BF92-882F5A8A293E} = {B9E1D1F3-BD21-403F-AA30-8FA43E473BA2}
 		{0A9B8219-5D8C-407E-983F-7BDB8E64DF84} = {B9E1D1F3-BD21-403F-AA30-8FA43E473BA2}
+		{C793FAD1-122F-42B1-9154-FC08617E33EC} = {D81A4076-1A21-4825-AC47-EBF05860676F}
 	EndGlobalSection
 EndGlobal
