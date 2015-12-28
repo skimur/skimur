@@ -18,6 +18,7 @@ using System.Linq;
 using System.IO;
 using Skimur.Markdown;
 using Microsoft.AspNet.StaticFiles;
+using System.Security.Claims;
 
 namespace Skimur.Web
 {
@@ -145,6 +146,7 @@ namespace Skimur.Web
             serviceCollection.AddScoped<ApplicationUserStore>();
             serviceCollection.AddScoped<IUserStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IRoleStore<Membership.Role>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IUserRoleStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IPasswordHasher<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<IUserValidator<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<ILookupNormalizer, ApplicationLookupNormalizer>();
@@ -169,6 +171,14 @@ namespace Skimur.Web
             {
                 options.LowercaseUrls = true;
             });
+            serviceCollection.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, "Admin");
+                });
+            });
+            
 
             serviceCollection.AddOptions();
             serviceCollection.Configure<IdentityOptions>(options =>

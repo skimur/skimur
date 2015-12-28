@@ -13,6 +13,7 @@ namespace Skimur.Web.Infrastructure.Identity
     public class ApplicationUserStore :
         IUserStore<User>,
         IRoleStore<Role>,
+        IUserRoleStore<User>,
         IUserPasswordStore<User>,
         IPasswordHasher<User>,
         IUserValidator<User>,
@@ -131,52 +132,92 @@ namespace Skimur.Web.Infrastructure.Identity
 
         public Task<IdentityResult> CreateAsync(Role role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<IdentityResult> UpdateAsync(Role role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<IdentityResult> DeleteAsync(Role role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<string> GetRoleIdAsync(Role role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<string> GetRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task SetRoleNameAsync(Role role, string roleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<string> GetNormalizedRoleNameAsync(Role role, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task SetNormalizedRoleNameAsync(Role role, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<Role> FindByIdAsync(string roleId, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
         }
 
         public Task<Role> FindByNameAsync(string normalizedRoleName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            throw new NotSupportedException();
+        }
+
+        #endregion
+
+        #region IUserRoleStore
+
+        public Task AddToRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task RemoveFromRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
+        }
+
+        public Task<IList<string>> GetRolesAsync(User user, CancellationToken cancellationToken)
+        {
+            var result = new List<string>();
+            if(user.IsAdmin)
+                result.Add("Admin");
+            return Task.FromResult((IList<string>)result);
+        }
+
+        public Task<bool> IsInRoleAsync(User user, string roleName, CancellationToken cancellationToken)
+        {
+            if (string.IsNullOrEmpty(roleName))
+                throw new ArgumentNullException(nameof(roleName));
+            if (user == null)
+                throw new ArgumentNullException(nameof(user));
+
+            if (string.Equals(roleName, "Admin", StringComparison.OrdinalIgnoreCase))
+                return Task.FromResult(user.IsAdmin);
+
+            return Task.FromResult(false);
+        }
+
+        public Task<IList<User>> GetUsersInRoleAsync(string roleName, CancellationToken cancellationToken)
+        {
+            throw new NotSupportedException();
         }
 
         #endregion
