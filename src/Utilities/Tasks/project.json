@@ -11,8 +11,7 @@
   },
 
   "dependencies": {
-    "Subs": "",
-    "Membership": "",
+    "Skimur.App": "",
     "PowerArgs": "2.7.0.0",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final"

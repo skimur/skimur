@@ -21,8 +21,7 @@ namespace Tasks
         static void Main(string[] args)
         {
             SkimurContext.Initialize(new Program(),
-                new Subs.Registrar(),
-                new Membership.Registrar());
+                new Subs.Registrar());
 
             Args.InvokeAction<Tasks>(args);
         }

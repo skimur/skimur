@@ -1,6 +1,6 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "Subs.Worker Class Library",
+  "description": "Skimur.App.Handlers Class Library",
   "authors": [ "Paul" ],
   "tags": [ "" ],
   "projectUrl": "",
@@ -11,9 +11,7 @@
   },
 
   "dependencies": {
-    "Skimur": "",
-    "Subs": "",
-    "Membership": "",
+    "Skimur.App": "",
     "Skimur.Markdown": "",
     "Skimur.Scraper": ""
   }

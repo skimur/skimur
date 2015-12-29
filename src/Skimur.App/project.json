@@ -1,11 +1,10 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "Membership Class Library",
-  "authors": [ "Skimur" ],
+  "description": "Skimur.App Class Library",
+  "authors": [ "Paul" ],
   "tags": [ "" ],
   "projectUrl": "",
   "licenseUrl": "",
-  "compile": [ "../../GlobalAssemblyInfo.cs" ],
 
   "frameworks": {
     "dnx451": { }

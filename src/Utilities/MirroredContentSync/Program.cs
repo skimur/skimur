@@ -31,7 +31,6 @@ namespace MirroredContentSync
             {
                 SkimurContext.Initialize(
                     new Program(),
-                    new Membership.Registrar(),
                     new Subs.Registrar());
 
                 _mirrorSettings = SkimurContext.ServiceProvider.GetRequiredService<ISettingsProvider<MirrorSettings>>().Settings;

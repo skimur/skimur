@@ -51,7 +51,6 @@ namespace Skimur.Web
             SkimurContext.Initialize(
                 new ServiceCollectionRegistrar(services, 0),
                 this,
-                new Membership.Registrar(),
                 new Emails.Handlers.Registrar(),
                 new Subs.Registrar(),
                 new Subs.Worker.Registrar(),

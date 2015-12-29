@@ -9,6 +9,10 @@ using Subs.ReadModel.Impl;
 using Subs.Services;
 using Subs.Services.Impl;
 using Microsoft.Extensions.DependencyInjection;
+using Membership.Services;
+using Membership.Services.Impl;
+using Membership.ReadModel;
+using Membership.ReadModel.Impl;
 
 namespace Subs
 {
@@ -16,6 +20,9 @@ namespace Subs
     {
         public void Register(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddSingleton<IMembershipService, MembershipService>();
+            serviceCollection.AddSingleton<IMembershipDao, MembershipDao>();
+            serviceCollection.AddSingleton<IPasswordManager, PasswordManager>();
             serviceCollection.AddSingleton<IModeratorInviteWrapper, ModeratorInviteWrapper>();
             serviceCollection.AddSingleton<IModerationInviteService, ModerationInviteService>();
             serviceCollection.AddSingleton<IModerationInviteDao, ModerationInviteDao>();
