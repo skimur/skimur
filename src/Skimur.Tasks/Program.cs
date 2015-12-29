@@ -1,18 +1,17 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
+﻿using Microsoft.Extensions.Configuration;
+using Microsoft.Extensions.DependencyInjection;
 using PowerArgs;
 using ServiceStack.OrmLite;
-using Skimur;
-using Skimur.Data;
-using Skimur.Messaging;
-using Microsoft.Extensions.DependencyInjection;
-using Microsoft.Extensions.Configuration;
 using Skimur.App;
 using Skimur.App.Commands;
 using Skimur.App.Services;
+using Skimur.Data;
+using Skimur.Messaging;
+using System;
+using System.Collections.Generic;
+using System.Linq;
 
-namespace Tasks
+namespace Skimur.Tasks
 {
     class Program : IRegistrar
     {
@@ -280,14 +279,14 @@ namespace Tasks
             var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
 
             var posts = connectionProvider.Perform(
-                conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int) PostType.Link)));
+                conn => conn.Select(conn.From<Post>().Where(x => x.Type == (int)PostType.Link)));
 
             foreach (var post in posts)
             {
                 if (post.PostType == PostType.Link && !string.IsNullOrEmpty(post.Url))
                 {
                     post.Url = post.Url.RemoveBOM();
-                    connectionProvider.Perform(conn => conn.Update<Post>(new {post.Url}, x => x.Id == post.Id));
+                    connectionProvider.Perform(conn => conn.Update<Post>(new { post.Url }, x => x.Id == post.Id));
                 }
             }
         }

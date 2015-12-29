@@ -1,6 +1,6 @@
 ﻿{
   "version": "1.0.0-*",
-  "description": "Tasks Console Application",
+  "description": "Skimur.Tasks Console Application",
   "authors": [ "Paul" ],
   "tags": [ "" ],
   "projectUrl": "",
@@ -11,14 +11,14 @@
   },
 
   "dependencies": {
-    "Skimur.App": "",
-    "PowerArgs": "2.7.0.0",
+    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final",
     "Microsoft.Extensions.Configuration.Json": "1.0.0-rc1-final",
-    "Microsoft.Extensions.Configuration.EnvironmentVariables": "1.0.0-rc1-final"
+    "PowerArgs": "2.7.0",
+    "Skimur.App": ""
   },
 
   "commands": {
-    "Tasks": "Tasks"
+    "Skimur.Tasks": "Skimur.Tasks"
   },
 
   "frameworks": {
