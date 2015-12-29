@@ -10,6 +10,8 @@ namespace Skimur.App.Handlers
     {
         public void Register(IServiceCollection serviceCollection)
         {
+            serviceCollection.AddTransient<ICommandHandler<SendEmail>, EmailHandler>();
+
             serviceCollection.AddTransient<ICommandHandlerResponse<CreateSub, CreateSubResponse>, SubHandler>();
             serviceCollection.AddTransient<ICommandHandlerResponse<EditSub, EditSubResponse>, SubHandler>();
             serviceCollection.AddTransient<ICommandHandlerResponse<SubcribeToSub, SubcribeToSubResponse>, SubHandler>();

@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Emails.Commands;
-using Skimur.Email;
+﻿using Skimur.Email;
 using Skimur.Messaging.Handling;
 using Skimur.Settings;
+using Skimur.App.Commands;
 
-namespace Emails.Handlers.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class EmailHandler : ICommandHandler<SendEmail>
     {

@@ -1,6 +1,6 @@
 ﻿using Skimur.Messaging;
 
-namespace Emails.Commands
+namespace Skimur.App.Commands
 {
     public class SendEmail : ICommand
     {

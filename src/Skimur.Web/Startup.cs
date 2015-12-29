@@ -53,7 +53,6 @@ namespace Skimur.Web
             SkimurContext.Initialize(
                 new ServiceCollectionRegistrar(services, 0),
                 this,
-                new Emails.Handlers.Registrar(),
                 new Registrar(),
                 new App.Handlers.Registrar(),
                 new Skimur.Markdown.Registrar(),
