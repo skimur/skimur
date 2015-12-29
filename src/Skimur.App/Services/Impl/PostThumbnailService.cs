@@ -4,7 +4,7 @@ using System.Drawing.Imaging;
 using System.IO;
 using Skimur.FileSystem;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class PostThumbnailService : IPostThumbnailService
     {

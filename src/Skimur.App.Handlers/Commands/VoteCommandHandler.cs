@@ -1,11 +1,10 @@
-﻿using Membership.Services;
+﻿using Skimur.App.Commands;
+using Skimur.App.Events;
+using Skimur.App.Services;
 using Skimur.Messaging;
 using Skimur.Messaging.Handling;
-using Subs.Commands;
-using Subs.Events;
-using Subs.Services;
 
-namespace Subs.Worker.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class VoteCommandHandler : 
         ICommandHandler<CastVoteForPost>,

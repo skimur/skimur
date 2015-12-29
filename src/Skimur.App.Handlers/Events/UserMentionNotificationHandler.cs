@@ -1,14 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Membership.Services;
+﻿using System.Linq;
+using Skimur.App.Events;
+using Skimur.App.Services;
 using Skimur.Messaging.Handling;
-using Subs.Events;
-using Subs.Services;
 
-namespace Subs.Worker.Events
+namespace Skimur.App.Handlers.Events
 {
     public class UserMentionNotificationHandler :
         IEventHandler<UsersMentioned>,

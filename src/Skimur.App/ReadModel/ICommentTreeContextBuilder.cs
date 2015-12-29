@@ -1,8 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Subs.Services;
+using Skimur.App.Services;
 
-namespace Subs.ReadModel
+namespace Skimur.App.ReadModel
 {
     public interface ICommentTreeContextBuilder
     {

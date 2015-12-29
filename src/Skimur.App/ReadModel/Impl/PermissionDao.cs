@@ -1,7 +1,7 @@
-﻿using Subs.Services;
-using Subs.Services.Impl;
+﻿using Skimur.App.Services;
+using Skimur.App.Services.Impl;
 
-namespace Subs.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class PermissionDao
         // this class temporarily implements the service, until we implement the proper read-only layer

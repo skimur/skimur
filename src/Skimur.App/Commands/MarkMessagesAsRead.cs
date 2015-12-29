@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Skimur.Messaging;
 
-namespace Subs.Commands
+namespace Skimur.App.Commands
 {
     public class MarkMessagesAsRead : ICommand
     {

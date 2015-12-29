@@ -1,8 +1,8 @@
-﻿using Membership.Services;
-using Membership.Services.Impl;
+﻿using Skimur.App.Services;
+using Skimur.App.Services.Impl;
 using Skimur.Data;
 
-namespace Membership.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class MembershipDao : 
         MembershipService,

@@ -1,13 +1,9 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceStack.OrmLite;
 using Skimur.Data;
 using Skimur.Utils;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class SubCssService : ISubCssService
     {

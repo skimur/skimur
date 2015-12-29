@@ -1,11 +1,10 @@
 ﻿using System;
 using Cassandra;
 using Infrastructure.Caching;
-using Skimur;
+using Skimur.App.Services.Impl;
 using Skimur.Settings;
-using Subs.Services.Impl;
 
-namespace Subs.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class SubActivityDao : SubActivityService, ISubActivityDao
     {

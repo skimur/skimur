@@ -1,7 +1,7 @@
-﻿using Skimur.Data;
-using Subs.Services.Impl;
+﻿using Skimur.App.Services.Impl;
+using Skimur.Data;
 
-namespace Subs.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class SubCssDao : 
         SubCssService, ISubCssDao

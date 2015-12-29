@@ -1,12 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Net.Configuration;
-using System.Text;
-using System.Threading.Tasks;
-using Membership;
-
-namespace Subs.ReadModel
+﻿namespace Skimur.App.ReadModel
 {
     public class ModeratorWrapped
     {

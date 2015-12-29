@@ -1,11 +1,6 @@
 ﻿using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
-using Microsoft.AspNet.Mvc.ViewComponents;
-using Subs.ReadModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
 
 namespace Skimur.Web.ViewComponents
 {

@@ -1,14 +1,12 @@
 ﻿using System;
 using System.Collections.Generic;
-using System.ComponentModel;
 using System.Linq;
 using Newtonsoft.Json;
 using ServiceStack.OrmLite;
-using Skimur;
 using Skimur.Data;
-using Subs.ReadModel;
+using Skimur.App.ReadModel;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class PostService : IPostService
     {

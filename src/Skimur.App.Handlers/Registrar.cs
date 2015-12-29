@@ -1,12 +1,10 @@
-﻿using Skimur;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Skimur.App.Commands;
+using Skimur.App.Handlers.Commands;
+using Skimur.App.Handlers.Events;
 using Skimur.Messaging.Handling;
-using Subs.Commands;
-using Subs.Events;
-using Subs.Worker.Commands;
-using Subs.Worker.Events;
-using Microsoft.Extensions.DependencyInjection;
 
-namespace Subs.Worker
+namespace Skimur.App.Handlers
 {
     public class Registrar : IRegistrar
     {

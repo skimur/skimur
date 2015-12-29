@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using System.Linq;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class CommentTreeBuilder : ICommentTreeBuilder
     {

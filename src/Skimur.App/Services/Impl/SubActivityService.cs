@@ -3,7 +3,7 @@ using System.Linq;
 using Cassandra;
 using Skimur.Settings;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class SubActivityService : ISubActivityService
     {

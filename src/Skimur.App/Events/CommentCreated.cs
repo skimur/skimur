@@ -1,7 +1,7 @@
 ﻿using System;
 using Skimur.Messaging;
 
-namespace Subs.Events
+namespace Skimur.App.Events
 {
     public class CommentCreated : IEvent
     {

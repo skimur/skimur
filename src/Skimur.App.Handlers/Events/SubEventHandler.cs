@@ -1,8 +1,8 @@
-﻿using Skimur.Messaging.Handling;
-using Subs.Events;
-using Subs.Services;
+﻿using Skimur.App.Events;
+using Skimur.App.Services;
+using Skimur.Messaging.Handling;
 
-namespace Subs.Worker.Events
+namespace Skimur.App.Handlers.Events
 {
     public class SubEventHandler : IEventHandler<SubScriptionChanged>
     {

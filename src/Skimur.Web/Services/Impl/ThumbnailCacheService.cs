@@ -1,13 +1,13 @@
 ﻿using ImageResizer;
 using Skimur.Settings;
 using Skimur.Web.Infrastructure;
-using Subs.Services;
 using System;
 using System.Collections.Generic;
 using System.Drawing;
 using System.IO;
 using System.Linq;
 using System.Threading.Tasks;
+using Skimur.App.Services;
 
 namespace Skimur.Web.Services.Impl
 {

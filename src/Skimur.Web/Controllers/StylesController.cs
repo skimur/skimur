@@ -2,17 +2,11 @@
 using Skimur.Messaging;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels;
-using Subs;
-using Subs.ReadModel;
-using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
-using Microsoft.AspNet.Session;
-using Microsoft.AspNet.Http;
 using Skimur.Web.Infrastructure;
-using Subs.Commands;
 using Microsoft.AspNet.Authorization;
+using Skimur.App;
+using Skimur.App.Commands;
+using Skimur.App.ReadModel;
 
 namespace Skimur.Web.Controllers
 {

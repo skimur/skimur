@@ -1,12 +1,7 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Globalization;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
 using ServiceStack.DataAnnotations;
 
-namespace Subs
+namespace Skimur.App
 {
     public class Report
     {

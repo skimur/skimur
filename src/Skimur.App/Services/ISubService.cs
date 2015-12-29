@@ -1,9 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
-using Skimur;
-using Subs.ReadModel;
+using Skimur.App.ReadModel;
 
-namespace Subs.Services
+namespace Skimur.App.Services
 {
     public interface ISubService
     {

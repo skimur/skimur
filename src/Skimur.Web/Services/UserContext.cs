@@ -1,12 +1,12 @@
-﻿using Membership;
-using Membership.Services;
-using Microsoft.AspNet.Http;
+﻿using Microsoft.AspNet.Http;
 using Skimur.Utils;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Security.Claims;
 using System.Threading.Tasks;
+using Skimur.App;
+using Skimur.App.Services;
 
 namespace Skimur.Web.Services
 {

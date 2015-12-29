@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Skimur;
+﻿using Skimur.App.Commands;
+using Skimur.App.Services;
 using Skimur.Embed;
 using Skimur.Messaging.Handling;
-using Subs.Commands;
-using Subs.Services;
 
-namespace Subs.Worker.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class EmbededHandler : ICommandHandler<GenerateEmbeddedMediaObject>
     {

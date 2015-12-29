@@ -1,8 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
-using Skimur;
 
-namespace Membership.Services
+namespace Skimur.App.Services
 {
     public interface IMembershipService
     {

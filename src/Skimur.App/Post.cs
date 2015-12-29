@@ -1,13 +1,8 @@
 ﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Infrastructure;
 using ServiceStack.DataAnnotations;
 using Skimur.Embed;
 
-namespace Subs
+namespace Skimur.App
 {
     [Alias("Posts")]
     public class Post

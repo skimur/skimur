@@ -1,5 +1,4 @@
-﻿@using Subs
-@model Subs.ReadModel.CommentNode
+﻿@model CommentNode
 <div class="disc-body">
     <div class="disc-left">
         <div class="disc-voting @(Model.Comment.CurrentUserVote != null ? Model.Comment.CurrentUserVote == VoteType.Down ? "voted-down" : "voted-up" : "")">

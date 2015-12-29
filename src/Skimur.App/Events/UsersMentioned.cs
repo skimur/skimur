@@ -2,7 +2,7 @@
 using System.Collections.Generic;
 using Skimur.Messaging;
 
-namespace Subs.Events
+namespace Skimur.App.Events
 {
     public class UsersMentioned : IEvent
     {

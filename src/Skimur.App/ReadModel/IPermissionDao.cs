@@ -1,7 +1,6 @@
 ﻿using System;
-using Membership;
 
-namespace Subs.ReadModel
+namespace Skimur.App.ReadModel
 {
     public interface IPermissionDao
     {

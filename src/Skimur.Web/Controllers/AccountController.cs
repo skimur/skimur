@@ -9,6 +9,7 @@ using Microsoft.AspNet.Mvc;
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.Data.Entity;
 using Microsoft.Extensions.Logging;
+using Skimur.App;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels.Account;
 using Skimur.Web.Infrastructure;
@@ -18,15 +19,15 @@ namespace Skimur.Web.Controllers
     [Authorize]
     public class AccountController : BaseController
     {
-        private readonly UserManager<Membership.User> _userManager;
-        private readonly SignInManager<Membership.User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
 
         public AccountController(
-            UserManager<Membership.User> userManager,
-            SignInManager<Membership.User> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory)
@@ -113,7 +114,7 @@ namespace Skimur.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new Membership.User { UserName = model.UserName, Email = model.Email };
+                var user = new User { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -209,7 +210,7 @@ namespace Skimur.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new Membership.User { UserName = model.UserName, Email = model.Email };
+                var user = new User { UserName = model.UserName, Email = model.Email };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
@@ -454,7 +455,7 @@ namespace Skimur.Web.Controllers
             }
         }
 
-        private async Task<Membership.User> GetCurrentUserAsync()
+        private async Task<User> GetCurrentUserAsync()
         {
             return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }

@@ -1,9 +1,7 @@
-﻿using Skimur;
+﻿using Skimur.App.Services.Impl;
 using Skimur.Data;
-using Subs.Services;
-using Subs.Services.Impl;
 
-namespace Subs.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class SubDao 
         // this class temporarily implements the service, until we implement the proper read-only layer

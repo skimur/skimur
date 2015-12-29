@@ -1,7 +1,6 @@
 ﻿using System.Collections.Generic;
-using Membership;
 
-namespace Subs.ReadModel
+namespace Skimur.App.ReadModel
 {
     public class CommentWrapped
     {

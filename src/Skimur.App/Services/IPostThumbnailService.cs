@@ -1,7 +1,7 @@
 ﻿using System.Drawing;
 using System.IO;
 
-namespace Subs.Services
+namespace Skimur.App.Services
 {
     public interface IPostThumbnailService
     {

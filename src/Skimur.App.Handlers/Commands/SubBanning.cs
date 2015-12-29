@@ -1,10 +1,9 @@
 ﻿using System;
-using Membership.Services;
+using Skimur.App.Commands;
+using Skimur.App.Services;
 using Skimur.Messaging.Handling;
-using Subs.Commands;
-using Subs.Services;
 
-namespace Subs.Worker.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class SubBanning :
         ICommandHandlerResponse<BanUserFromSub, BanUserFromSubResponse>,

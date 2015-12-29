@@ -1,11 +1,9 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Membership;
-using Membership.Services;
-using Newtonsoft.Json;
+using Skimur.App.Services;
 
-namespace Subs.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class PostWrapper : IPostWrapper
     {

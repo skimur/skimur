@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Text.RegularExpressions;
 using ServiceStack.OrmLite;
-using Skimur;
 using Skimur.Data;
 using Skimur.Utils;
 
-namespace Membership.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class MembershipService : IMembershipService
     {

@@ -1,12 +1,12 @@
 ﻿using System;
 using System.Drawing;
+using Skimur.App.Commands;
+using Skimur.App.Services;
 using Skimur.Logging;
 using Skimur.Messaging.Handling;
 using Skimur.Scraper;
-using Subs.Commands;
-using Subs.Services;
 
-namespace Subs.Worker.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class ThumbnailHandler : ICommandHandler<GenerateThumbnailForPost>
     {

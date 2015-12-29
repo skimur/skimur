@@ -1,10 +1,10 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
+using Skimur.App.Services;
 using Skimur.PriorityQueue;
-using Subs.Services;
 
-namespace Subs.ReadModel
+namespace Skimur.App.ReadModel
 {
     public class CommentTreeContextBuilder : ICommentTreeContextBuilder
     {

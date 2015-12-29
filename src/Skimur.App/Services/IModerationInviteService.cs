@@ -1,7 +1,7 @@
 ﻿using System;
 using System.Collections.Generic;
 
-namespace Subs.Services
+namespace Skimur.App.Services
 {
     public interface IModerationInviteService
     {

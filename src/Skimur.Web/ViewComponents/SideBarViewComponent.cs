@@ -1,14 +1,13 @@
-﻿using Membership.ReadModel;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Mvc;
 using Skimur.Settings;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels;
-using Subs;
-using Subs.ReadModel;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Skimur.App;
+using Skimur.App.ReadModel;
 
 namespace Skimur.Web.ViewComponents
 {

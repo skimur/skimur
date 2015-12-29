@@ -1,18 +1,16 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using Membership;
-using Membership.Services;
 using PowerArgs;
 using ServiceStack.OrmLite;
 using Skimur;
 using Skimur.Data;
 using Skimur.Messaging;
-using Subs;
-using Subs.Commands;
-using Subs.Services;
 using Microsoft.Extensions.DependencyInjection;
 using Microsoft.Extensions.Configuration;
+using Skimur.App;
+using Skimur.App.Commands;
+using Skimur.App.Services;
 
 namespace Tasks
 {
@@ -21,7 +19,7 @@ namespace Tasks
         static void Main(string[] args)
         {
             SkimurContext.Initialize(new Program(),
-                new Subs.Registrar());
+                new Skimur.App.Registrar());
 
             Args.InvokeAction<Tasks>(args);
         }

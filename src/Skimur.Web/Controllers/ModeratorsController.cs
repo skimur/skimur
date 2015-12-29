@@ -5,13 +5,10 @@ using Skimur.Messaging;
 using Skimur.Web.Infrastructure;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels;
-using Subs;
-using Subs.Commands;
-using Subs.ReadModel;
 using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Threading.Tasks;
+using Skimur.App;
+using Skimur.App.Commands;
+using Skimur.App.ReadModel;
 
 namespace Skimur.Web.Controllers
 {

@@ -1,6 +1,4 @@
-﻿using Membership;
-
-namespace Subs.ReadModel
+﻿namespace Skimur.App.ReadModel
 {
     public class SubUserBanWrapped
     {

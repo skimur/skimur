@@ -2,11 +2,10 @@
 using System.Collections.Generic;
 using System.Linq;
 using ServiceStack.OrmLite;
-using Skimur;
 using Skimur.Data;
 using Skimur.Utils;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class VoteService : IVoteService
     {

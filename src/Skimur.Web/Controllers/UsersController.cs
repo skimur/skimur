@@ -1,14 +1,13 @@
-﻿using Membership.Services;
-using Microsoft.AspNet.Mvc;
+﻿using Microsoft.AspNet.Mvc;
 using Skimur.Web.Infrastructure;
 using Skimur.Web.Services;
 using Skimur.Web.ViewModels;
-using Subs.ReadModel;
-using Subs.Services;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Skimur.App.ReadModel;
+using Skimur.App.Services;
 
 namespace Skimur.Web.Controllers
 {

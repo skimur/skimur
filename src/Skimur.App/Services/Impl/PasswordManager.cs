@@ -3,7 +3,7 @@ using System.Runtime.CompilerServices;
 using System.Security.Cryptography;
 using System.Text.RegularExpressions;
 
-namespace Membership.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     /// <summary>
     /// The password manager

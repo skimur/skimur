@@ -1,17 +1,14 @@
 ﻿using System;
 using System.Collections.Generic;
-using Membership;
-using Membership.Services;
-using Skimur;
+using Skimur.App.Commands;
+using Skimur.App.ReadModel;
+using Skimur.App.Services;
 using Skimur.Logging;
 using Skimur.Markdown;
 using Skimur.Messaging.Handling;
 using Skimur.Utils;
-using Subs.Commands;
-using Subs.ReadModel;
-using Subs.Services;
 
-namespace Subs.Worker.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class MessagesHandler : 
         ICommandHandlerResponse<SendMessage, SendMessageResponse>,

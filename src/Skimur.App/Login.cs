@@ -1,6 +1,6 @@
 ﻿using System;
 
-namespace Membership
+namespace Skimur.App
 {
     public class Login
     {

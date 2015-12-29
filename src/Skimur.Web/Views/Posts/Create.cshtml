@@ -1,5 +1,4 @@
-﻿@using Subs
-@model CreatePostModel
+﻿@model CreatePostModel
 @{
     ViewBag.Title = "Submit a post";
 }
@@ -89,10 +88,10 @@
 <script type="text/javascript">
     $(function () {
         $("#linkpost-tab").click(function (e) {
-            $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Link");
+            $("#@Html.IdFor(m => m.PostType)").val("@PostType.Link");
         });
         $("#textpost-tab").click(function (e) {
-            $("#@Html.IdFor(m => m.PostType)").val("@Subs.PostType.Text");
+            $("#@Html.IdFor(m => m.PostType)").val("@PostType.Text");
         });
 
         var startSubmissionTextLoading = function() {

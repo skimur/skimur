@@ -1,5 +1,5 @@
 ﻿@model ExternalLoginListViewModel
-@inject SignInManager<Membership.User> SignInManager
+@inject SignInManager<User> SignInManager
 
 @*@{
     var loginProviders = Context.GetOwinContext().Authentication.GetExternalAuthenticationTypes();

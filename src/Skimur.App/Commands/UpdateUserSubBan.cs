@@ -1,7 +1,7 @@
 ﻿using System;
 using Skimur.Messaging;
 
-namespace Subs.Commands
+namespace Skimur.App.Commands
 {
     public class UpdateUserSubBan : ICommandReturns<UpdateUserSubBanResponse>
     {

@@ -1,20 +1,10 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Skimur;
-using Subs.ReadModel;
-using Subs.ReadModel.Impl;
-using Subs.Services;
-using Subs.Services.Impl;
-using Microsoft.Extensions.DependencyInjection;
-using Membership.Services;
-using Membership.Services.Impl;
-using Membership.ReadModel;
-using Membership.ReadModel.Impl;
+﻿using Microsoft.Extensions.DependencyInjection;
+using Skimur.App.ReadModel;
+using Skimur.App.ReadModel.Impl;
+using Skimur.App.Services;
+using Skimur.App.Services.Impl;
 
-namespace Subs
+namespace Skimur.App
 {
     public class Registrar : IRegistrar
     {

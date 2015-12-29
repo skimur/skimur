@@ -2,7 +2,6 @@
 using Microsoft.AspNet.Mvc.Rendering;
 using Microsoft.AspNet.Mvc.ViewFeatures;
 using Skimur.Web.ViewModels;
-using Subs;
 using System;
 using System.Collections.Generic;
 using System.ComponentModel;
@@ -10,6 +9,7 @@ using System.Linq;
 using System.Linq.Expressions;
 using System.Text;
 using System.Threading.Tasks;
+using Skimur.App;
 
 namespace Skimur.Web.Infrastructure
 {

@@ -1,7 +1,7 @@
 ﻿using System;
 using ServiceStack.DataAnnotations;
 
-namespace Membership
+namespace Skimur.App
 {
     [Alias("Roles")]
     public class Role

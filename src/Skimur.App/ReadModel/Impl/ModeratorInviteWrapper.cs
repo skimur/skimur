@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Membership;
-using Membership.ReadModel;
-using Membership.Services;
 
-namespace Subs.ReadModel.Impl
+namespace Skimur.App.ReadModel.Impl
 {
     public class ModeratorInviteWrapper : IModeratorInviteWrapper
     {

@@ -19,6 +19,8 @@ using System.IO;
 using Skimur.Markdown;
 using Microsoft.AspNet.StaticFiles;
 using System.Security.Claims;
+using Skimur.App;
+using Registrar = Skimur.App.Registrar;
 
 namespace Skimur.Web
 {
@@ -52,8 +54,8 @@ namespace Skimur.Web
                 new ServiceCollectionRegistrar(services, 0),
                 this,
                 new Emails.Handlers.Registrar(),
-                new Subs.Registrar(),
-                new Subs.Worker.Registrar(),
+                new Registrar(),
+                new App.Handlers.Registrar(),
                 new Skimur.Markdown.Registrar(),
                 new Skimur.Scraper.Registrar());
 
@@ -143,13 +145,13 @@ namespace Skimur.Web
             });
 
             serviceCollection.AddScoped<ApplicationUserStore>();
-            serviceCollection.AddScoped<IUserStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IRoleStore<Membership.Role>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IUserRoleStore<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IPasswordHasher<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
-            serviceCollection.AddScoped<IUserValidator<Membership.User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IUserStore<User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IRoleStore<Role>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IUserRoleStore<User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IPasswordHasher<User>>(provider => provider.GetService<ApplicationUserStore>());
+            serviceCollection.AddScoped<IUserValidator<User>>(provider => provider.GetService<ApplicationUserStore>());
             serviceCollection.AddScoped<ILookupNormalizer, ApplicationLookupNormalizer>();
-            serviceCollection.AddIdentity<Membership.User, Membership.Role>(options =>
+            serviceCollection.AddIdentity<User, Role>(options =>
             {
                 options.Password.RequireNonLetterOrDigit = false;
                 options.Password.RequireUppercase = false;

@@ -1,7 +1,6 @@
 ﻿using System;
-using Membership;
 
-namespace Subs.Services.Impl
+namespace Skimur.App.Services.Impl
 {
     public class PermissionService : IPermissionService
     {

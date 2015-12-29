@@ -1,7 +1,6 @@
 ﻿using Microsoft.AspNet.Mvc;
-using Microsoft.AspNet.Mvc.Routing;
-using Subs;
 using System;
+using Skimur.App;
 
 namespace Skimur.Web.Infrastructure
 {

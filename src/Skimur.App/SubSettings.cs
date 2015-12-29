@@ -1,7 +1,6 @@
 ﻿using System;
-using Skimur;
 
-namespace Subs
+namespace Skimur.App
 {
     public class SubSettings : ISettings
     {

@@ -1,17 +1,15 @@
 ﻿using System;
 using System.Text.RegularExpressions;
-using Membership.Services;
-using Skimur;
+using Skimur.App.Commands;
+using Skimur.App.Events;
+using Skimur.App.Services;
 using Skimur.Markdown;
 using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Settings;
 using Skimur.Utils;
-using Subs.Commands;
-using Subs.Events;
-using Subs.Services;
 
-namespace Subs.Worker.Commands
+namespace Skimur.App.Handlers.Commands
 {
     public class SubHandler :
         ICommandHandlerResponse<CreateSub, CreateSubResponse>,

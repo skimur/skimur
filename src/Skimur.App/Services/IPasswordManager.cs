@@ -1,4 +1,4 @@
-﻿namespace Membership.Services
+﻿namespace Skimur.App.Services
 {
     /// <summary>
     /// Manages everything with passwords
