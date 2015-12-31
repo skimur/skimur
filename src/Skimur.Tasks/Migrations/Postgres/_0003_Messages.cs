@@ -2,7 +2,7 @@
 using Skimur.Data;
 using Skimur.Postgres.Migrations;
 
-namespace Migrations.Postgres
+namespace Skimur.Tasks.Migrations.Postgres
 {
     // ReSharper disable once InconsistentNaming
     public class _0003_Messages : Migration

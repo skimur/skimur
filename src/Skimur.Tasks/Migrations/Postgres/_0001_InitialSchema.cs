@@ -1,15 +1,9 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Data;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cassandra;
+﻿using System.Data;
 using ServiceStack.OrmLite.Dapper;
 using Skimur.Data;
 using Skimur.Postgres.Migrations;
 
-namespace Migrations.Postgres
+namespace Skimur.Tasks.Migrations.Postgres
 {
     // ReSharper disable once InconsistentNaming
     public class _0001_InitialSchema : Migration

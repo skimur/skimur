@@ -1,7 +1,7 @@
 ﻿using Cassandra;
 using Skimur.Cassandra.Migrations;
 
-namespace Migrations.Casandra
+namespace Skimur.Tasks.Migrations.Casandra
 {
     // ReSharper disable once InconsistentNaming
     internal class _0001_SubActivityMigration : Migration

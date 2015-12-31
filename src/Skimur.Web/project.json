@@ -34,7 +34,6 @@
     "Skimur.App": "",
     "Skimur.App.Handlers": "",
     "Skimur.Tasks": "",
-    "Migrations": "",
     "ImageResizer": "4.0.4",
     "FluentValidation": "5.6.2"
   },

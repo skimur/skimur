@@ -1,13 +1,8 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using ServiceStack.OrmLite.Dapper;
+﻿using ServiceStack.OrmLite.Dapper;
 using Skimur.Data;
 using Skimur.Postgres.Migrations;
 
-namespace Migrations.Postgres
+namespace Skimur.Tasks.Migrations.Postgres
 {
     public class _0015_SubInAll : Migration
     {

@@ -1,12 +1,7 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-using Cassandra;
+﻿using Cassandra;
 using Skimur.Cassandra.Migrations;
 
-namespace Migrations.Casandra
+namespace Skimur.Tasks.Migrations.Casandra
 {
     public class _0002_KarmaActivity : Migration
     {

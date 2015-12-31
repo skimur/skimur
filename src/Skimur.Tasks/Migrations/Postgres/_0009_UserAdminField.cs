@@ -2,7 +2,7 @@
 using Skimur.Data;
 using Skimur.Postgres.Migrations;
 
-namespace Migrations.Postgres
+namespace Skimur.Tasks.Migrations.Postgres
 {
     // ReSharper disable once InconsistentNaming
     class _0009_UserAdminField : Migration

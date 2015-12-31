@@ -41,6 +41,13 @@ namespace Skimur.Tasks
         [HelpHook, ArgShortcut("-?"), ArgDescription("Shows this help")]
         public bool Help { get; set; }
 
+        [ArgActionMethod, ArgDescription("Migration the database (postgres/cassandra) to their latest versions.")]
+        public void MigrateDatabase()
+        {
+            Cassandra.Migrations.Migrations.Run(SkimurContext.ServiceProvider);
+            Postgres.Migrations.Migrations.Run(SkimurContext.ServiceProvider);
+        }
+
         [ArgActionMethod, ArgDescription("Update kudos for all users")]
         public void UpdateKudos()
         {

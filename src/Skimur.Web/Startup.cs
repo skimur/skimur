@@ -48,8 +48,6 @@ namespace Skimur.Web
         // This method gets called by the runtime. Use this method to add services to the container.
         public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            SkimurContext.ContainerInitialized += Cassandra.Migrations.Migrations.Run;
-            SkimurContext.ContainerInitialized += Postgres.Migrations.Migrations.Run;
             SkimurContext.Initialize(
                 new ServiceCollectionRegistrar(services, 0),
                 this,
