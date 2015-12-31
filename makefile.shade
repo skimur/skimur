@@ -54,7 +54,6 @@ log info="Distribution directory: ${DIST_DIR}"
 	dnu dnuCommand='restore "src"'
 	dnu dnuCommand='publish "src/Skimur.Web/project.json" --configuration ${CONFIGURATION} -o "build/Web"'
 	dnu dnuCommand='publish "src/Utilities/MirroredContentSync/project.json" --configuration ${CONFIGURATION} -o "build/MirroredContentSync"'
-	dnu dnuCommand='publish "src/Utilities/Tasks/project.json" --configuration ${CONFIGURATION} -o "build/Tasks"'
 
 #test
 	@{
@@ -79,13 +78,6 @@ log info="Distribution directory: ${DIST_DIR}"
 			Directory.CreateDirectory(destination);
 
 		DirectoryCopy(Path.Combine(BUILD_DIR, "MirroredContentSync"), destination, true);
-
-		destination =  Path.Combine(DIST_DIR, "Tasks");
-
-		if(!Directory.Exists(destination))
-			Directory.CreateDirectory(destination);
-
-		DirectoryCopy(Path.Combine(BUILD_DIR, "Tasks"), destination, true);
 	}
 
 functions @{
