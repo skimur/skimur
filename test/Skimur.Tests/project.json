@@ -14,9 +14,13 @@
     "Skimur": "",
     "Skimur.Markdown": "",
     "Skimur.Scraper": "",
+    "Skimur.App": "",
+    "Skimur.App.Handlers": "",
+    "Skimur.Tasks": "",
     "xunit": "2.1.0-*",
     "xunit.runner.dnx": "2.1.0-*",
-    "FluentAssertions": "4.1.1"
+    "FluentAssertions": "4.1.1",
+    "Moq": "4.2.1408.619"
   },
 
   "commands": {

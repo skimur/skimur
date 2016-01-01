@@ -1,13 +1,8 @@
 ﻿using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Runtime.InteropServices.WindowsRuntime;
-using System.Text;
-using System.Threading.Tasks;
 using FluentAssertions;
 using Moq;
-using Skimur;
-using Skimur.App;
 using Skimur.App.ReadModel;
 using Skimur.App.ReadModel.Impl;
 using Skimur.App.Services;
@@ -15,7 +10,7 @@ using Skimur.App.Services.Impl;
 using Skimur.Utils;
 using Xunit;
 
-namespace Subs.Tests
+namespace Skimur.App.Tests
 {
     public class CommentBuilderTests
     {
