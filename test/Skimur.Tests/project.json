@@ -1,0 +1,25 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Skimur.Tests Class Library",
+  "authors": [ "Paul" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "frameworks": {
+    "dnx451": { }
+  },
+
+  "dependencies": {
+    "Skimur": "",
+    "Skimur.Markdown": "",
+    "Skimur.Scraper": "",
+    "xunit": "2.1.0-*",
+    "xunit.runner.dnx": "2.1.0-*",
+    "FluentAssertions": "4.1.1"
+  },
+
+  "commands": {
+    "test": "xunit.runner.dnx"
+  }
+}

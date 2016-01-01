@@ -3,6 +3,7 @@ using System;
 using System.Collections.Generic;
 using System.Dynamic;
 using System.IO;
+using System.Threading;
 
 namespace Skimur.Markdown
 {
@@ -42,6 +43,15 @@ namespace Skimur.Markdown
 
         public void Dispose()
         {
+            if (_nodeServices != null)
+            {
+                _nodeServices.Dispose();
+                _nodeServices = null;
+                // the node services doesn't "WaitForExit". it should though.
+                // this should be enough time for the process to fully exit.
+                Thread.Sleep(TimeSpan.FromSeconds(.5));
+            }
+
             if(_scriptsDirectory != null)
             {
                 _scriptsDirectory.Dispose();

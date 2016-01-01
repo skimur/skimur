@@ -61,7 +61,7 @@ namespace Skimur.Scraper
             if (!string.IsNullOrEmpty(html))
             {
                 var openGraphData = ExtractOpenGraphData(html);
-                if (openGraphData.ContainsKey("image"))
+                if (openGraphData.ContainsKey("image") && !openGraphData["image"].Equals("default", StringComparison.OrdinalIgnoreCase))
                 {
                     return FromUrl(WebUtility.HtmlDecode(openGraphData["image"]));
                 }
