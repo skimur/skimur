@@ -61,7 +61,6 @@ Task("Build")
 });
 
 Task("Test")
-    .WithCriteria(() => !isRunningOnAppVeyor)
     .Does(() =>
 {
     ExecuteCommand("dnx -p \"test/Skimur.Tests/project.json\" test");
