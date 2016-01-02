@@ -1,32 +1,63 @@
-#!/usr/bin/env bash
+#!/bin/bash
+###############################################################
+# This is the Cake bootstrapper script that is responsible for
+# downloading Cake and all specified tools from NuGet.
+###############################################################
 
-if test `uname` = Darwin; then
-    cachedir=~/Library/Caches/SakeBuild
-else
-    if [ -z $XDG_DATA_HOME ]; then
-        cachedir=$HOME/.local/share
-    else
-        cachedir=$XDG_DATA_HOME;
+# Define directories.
+SCRIPT_DIR=$( cd "$( dirname "${BASH_SOURCE[0]}" )" && pwd )
+TOOLS_DIR=$SCRIPT_DIR/tools
+NUGET_EXE=$TOOLS_DIR/nuget.exe
+CAKE_EXE=$TOOLS_DIR/Cake/Cake.exe
+
+# Define default arguments.
+SCRIPT="build.cake"
+TARGET="Default"
+CONFIGURATION="Release"
+VERBOSITY="verbose"
+DRYRUN=false
+SHOW_VERSION=false
+
+# Parse arguments.
+for i in "$@"; do
+    case $1 in
+        -s|--script) SCRIPT="$2"; shift ;;
+        -t|--target) TARGET="$2"; shift ;;
+        -c|--configuration) CONFIGURATION="$2"; shift ;;
+        -v|--verbosity) VERBOSITY="$2"; shift ;;
+        -d|--dryrun) DRYRUN=true ;;
+        --version) SHOW_VERSION=true ;;
+    esac
+    shift
+done
+
+# Download NuGet if it does not exist.
+if [ ! -f $NUGET_EXE ]; then
+    echo "Downloading NuGet..."
+    curl -Lsfo $NUGET_EXE https://www.nuget.org/nuget.exe
+    if [ $? -ne 0 ]; then
+        echo "An error occured while downloading nuget.exe."
+        exit 1
     fi
 fi
-mkdir -p $cachedir
-nugetVersion=latest
-cachePath=$cachedir/nuget.$nugetVersion.exe
 
-url=https://dist.nuget.org/win-x86-commandline/$nugetVersion/nuget.exe
+# Restore tools from NuGet.
+pushd $TOOLS_DIR >/dev/null
+mono $NUGET_EXE install -ExcludeVersion
+popd >/dev/null
 
-if test ! -f $cachePath; then
-    wget -O $cachePath $url 2>/dev/null || curl -o $cachePath --location $url /dev/null
+# Make sure that Cake has been installed.
+if [ ! -f $CAKE_EXE ]; then
+    echo "Could not find Cake.exe."
+    exit 1
 fi
 
-if test ! -e .nuget; then
-    mkdir .nuget
-    cp $cachePath .nuget/nuget.exe
+# Start Cake
+if $SHOW_VERSION; then
+    mono $CAKE_EXE -version
+elif $DRYRUN; then
+    mono $CAKE_EXE $SCRIPT -verbosity=$VERBOSITY -configuration=$CONFIGURATION -target=$TARGET -dryrun
+else
+    mono $CAKE_EXE $SCRIPT -verbosity=$VERBOSITY -configuration=$CONFIGURATION -target=$TARGET
 fi
-
-if test ! -d packages/Sake; then
-    mono .nuget/nuget.exe install SakeExtensions -ExcludeVersion -o packages -nocache -pre
-    mono .nuget/nuget.exe install Sake -ExcludeVersion -Source https://www.nuget.org/api/v2/ -Out packages
-fi
-
-mono packages/Sake/tools/Sake.exe -I packages/SakeExtensions/build -f makefile.shade "$@"
+exit $?
