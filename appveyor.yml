@@ -1,7 +1,13 @@
+services:
+  - postgresql94
+
 init:
   - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - cmd: npm install bower -g
   - cmd: npm install gulp -g
+  - cmd: choco install datastax.community
+  - cmd: SET PGUSER=postgres && SET PGPASSWORD=Password12! && PATH=C:\Program Files\PostgreSQL\9.3\bin\;%PATH% && createdb skimur
+  - cmd: SET Data:Postgres=Server=localhost;Port=5432;User Id=postgres; Password=Password12!; Database=skimur,
 
 build_script:
   - cmd: git submodule update --init --recursive
