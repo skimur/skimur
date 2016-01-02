@@ -1,5 +1,6 @@
 ﻿using System;
 using System.Collections.Generic;
+using System.Threading;
 using Cassandra;
 using ServiceStack.DataAnnotations;
 using ServiceStack.OrmLite;
@@ -9,11 +10,12 @@ using Skimur.Cassandra;
 
 namespace Skimur.Tests
 {
-    public abstract class DataTestBase : ServiceProviderTestBase
+    public abstract class DataTestBase : ServiceProviderTestBase, IDisposable
     {
         // ReSharper disable InconsistentNaming
         protected IDbConnectionProvider _conn;
         // ReSharper restore InconsistentNaming
+        private static object _sync = new object();
 
         protected DataTestBase()
             : base(new Skimur.App.Registrar(),
@@ -21,6 +23,8 @@ namespace Skimur.Tests
                 new Skimur.Markdown.Registrar(),
                 new Skimur.Scraper.Registrar())
         {
+            Monitor.Enter(_sync);
+
             _conn = _serviceProvider.GetService<IDbConnectionProvider>();
 
             // recreate the entire postgres database
@@ -33,11 +37,21 @@ namespace Skimur.Tests
             using (var cassandraCluster = Cluster.Builder()
                 .AddContactPoint(_serviceProvider.GetService<ICassandraConnectionStringProvider>().ConnectionString)
                 .Build())
+            {
                 using (var cassandraConnection = cassandraCluster.Connect())
-                    cassandraConnection.Execute("DROP KEYSPACE skimur");
-            
+                {
+                    cassandraConnection.DeleteKeyspaceIfExists("skimur");
+                    cassandraConnection.CreateKeyspace("skimur");
+                }
+            }
+
             Cassandra.Migrations.Migrations.Run(_serviceProvider);
             Postgres.Migrations.Migrations.Run(_serviceProvider);
+        }
+
+        public void Dispose()
+        {
+            Monitor.Exit(_sync);
         }
     }
 }

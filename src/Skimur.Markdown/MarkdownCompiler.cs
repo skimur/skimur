@@ -52,7 +52,7 @@ namespace Skimur.Markdown
                 Thread.Sleep(TimeSpan.FromSeconds(.5));
             }
 
-            if(_scriptsDirectory != null)
+            if (_scriptsDirectory != null)
             {
                 _scriptsDirectory.Dispose();
                 _scriptsDirectory = null;
@@ -96,11 +96,13 @@ namespace Skimur.Markdown
 
             private void DisposeImpl(bool disposing)
             {
-                if (!_disposedValue)
+                if (disposing)
                 {
-                    Directory.Delete(TempDirectory, true);
-
-                    _disposedValue = true;
+                    if (!_disposedValue)
+                    {
+                        _disposedValue = true;
+                        Directory.Delete(TempDirectory, true);
+                    }
                 }
             }
 
