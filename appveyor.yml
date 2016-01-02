@@ -1,0 +1,16 @@
+init:
+
+build_script:
+  - ps: .\build.ps1 -Target "CI"
+
+test: off
+
+branches:
+  only:
+    - develop
+    - main
+
+cache:
+- node_modules
+- %APPDATA%\npm-cache
+- %APPDATA%\bower
