@@ -8,7 +8,7 @@ environment:
   PATH: C:/Program Files/PostgreSQL/9.3/bin/;%PATH%
 
 init:
-  # - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
+  - ps: $blockRdp = $true; iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - cmd: npm install bower -g
   - cmd: npm install gulp -g
   - cmd: choco install datastax.community
