@@ -19,3 +19,4 @@ cache:
 - '%APPDATA%\bower'
 - 'src\Skimur.Web\node_modules'
 - 'src\Skimur.Web\bower_components'
+- '%HOMEPATH%\.dnx\packages'
