@@ -1,4 +1,5 @@
 init:
+  - ps: iex ((new-object net.webclient).DownloadString('https://raw.githubusercontent.com/appveyor/ci/master/scripts/enable-rdp.ps1'))
   - cmd: npm install bower -g
   - cmd: npm install gulp -g
 
@@ -14,12 +15,6 @@ artifacts:
 
   - path: tools/cassandra.log
     name: cassandra-install-log
-
-  - path: 'C:/Program Files/DataStax Community/utils/cassandra.logdir_IS_UNDEFINED/debug.log'
-    name: cassandra-service-debug-log
-
-  - path: 'C:/Program Files/DataStax Community/utils/cassandra.logdir_IS_UNDEFINED/system.log'
-    name: cassandra-service-system-log
 
 cache:
 - '%APPDATA%\npm-cache'
