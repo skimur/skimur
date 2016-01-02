@@ -35,6 +35,7 @@ Task("InstallCassandra")
     .Does(() =>
 {
     ExecuteCommand("start /wait msiexec /i \"" + cassandraMsiLocation + "\" /passive /qb /l*v \"" +  System.IO.Path.Combine(baseDir, "tools", "cassandra.log") + "\"");
+    ExecuteCommand("sc query \"DataStax_Cassandra_Community_Server\"");
 });
 
 //////////////////////////////////////////////////////////////////////
