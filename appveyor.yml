@@ -1,9 +1,10 @@
 init:
-
-build_script:
   - cmd: npm install bower -g
   - cmd: npm install gulp -g
+
+build_script:
   - cmd: git submodule update --init --recursive
+  - ps: .\build.ps1 -Target "InstallCassandra" -Script "environment.cake"
   - ps: .\build.ps1 -Target "CI"
 
 test: off
