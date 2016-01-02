@@ -9,11 +9,6 @@ build_script:
 
 test: off
 
-branches:
-  only:
-    - develop
-    - main
-
 cache:
 - '%APPDATA%\npm-cache'
 - 'src\Skimur.Web\node_modules'
