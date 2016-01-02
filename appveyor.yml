@@ -15,10 +15,10 @@ artifacts:
   - path: tools/cassandra.log
     name: cassandra-install-log
 
-  - path: '%PROGRAMFILES%\DataStax Community\utils\cassandra.logdir_IS_UNDEFINED\debug.log'
+  - path: C:\Program Files\DataStax Community\utils\cassandra.logdir_IS_UNDEFINED\debug.log
     name: cassandra-service-debug-log
 
-  - path: '%PROGRAMFILES%\DataStax Community\utils\cassandra.logdir_IS_UNDEFINED\system.log'
+  - path: C:\Program Files\DataStax Community\utils\cassandra.logdir_IS_UNDEFINED\system.log
     name: cassandra-service-system-log
 
 cache:
