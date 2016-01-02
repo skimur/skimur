@@ -12,5 +12,5 @@ branches:
 
 cache:
 - node_modules
-- %APPDATA%\npm-cache
-- %APPDATA%\bower
+- '%APPDATA%\npm-cache'
+- '%APPDATA%\bower'
