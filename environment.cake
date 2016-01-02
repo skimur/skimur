@@ -38,6 +38,10 @@ Task("InstallCassandra")
     ExecuteCommand("start /wait msiexec /i \"" + cassandraMsiLocation + "\" /passive /qb /l*v \"" +  System.IO.Path.Combine(baseDir, "tools", "cassandra.log") + "\"");
     System.Threading.Thread.Sleep(10000);
     ExecuteCommand("sc query \"DataStax_Cassandra_Community_Server\"");
+    System.Threading.Thread.Sleep(10000);
+    ExecuteCommand("sc start \"DataStax_Cassandra_Community_Server\"");
+    System.Threading.Thread.Sleep(10000);
+    ExecuteCommand("sc query \"DataStax_Cassandra_Community_Server\"");
 });
 
 //////////////////////////////////////////////////////////////////////
