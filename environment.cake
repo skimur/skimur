@@ -11,8 +11,9 @@ var target = Argument("target", "Default");
 //////////////////////////////////////////////////////////////////////
 
 var baseDir=System.IO.Directory.GetCurrentDirectory();
-var cassandraMsiUrl = "http://downloads.datastax.com/community/datastax-community-64bit_2.2.4.msi";
-var cassandraMsiLocation = System.IO.Path.Combine(baseDir, "tools", "cassandra.msi");
+var cassandraVersion = "2.2.4";
+var cassandraMsiUrl = "http://downloads.datastax.com/community/datastax-community-64bit_" + cassandraVersion + ".msi";
+var cassandraMsiLocation = System.IO.Path.Combine(baseDir, "tools", "cassandra-" + cassandraVersion + ".msi");
 
 //////////////////////////////////////////////////////////////////////
 // TASKS
@@ -35,6 +36,7 @@ Task("InstallCassandra")
     .Does(() =>
 {
     ExecuteCommand("start /wait msiexec /i \"" + cassandraMsiLocation + "\" /passive /qb /l*v \"" +  System.IO.Path.Combine(baseDir, "tools", "cassandra.log") + "\"");
+    System.Threading.Thread.Sleep(10000);
     ExecuteCommand("sc query \"DataStax_Cassandra_Community_Server\"");
 });
 

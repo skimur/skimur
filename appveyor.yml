@@ -13,3 +13,4 @@ cache:
 - 'src\Skimur.Web\node_modules'
 - 'src\Skimur.Web\bower_components'
 - '%HOMEDRIVE%%HOMEPATH%\.dnx\packages'
+- 'tools\cassandra-*.msi'
