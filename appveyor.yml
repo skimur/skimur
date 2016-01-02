@@ -17,3 +17,5 @@ cache:
 - node_modules
 - '%APPDATA%\npm-cache'
 - '%APPDATA%\bower'
+- 'src\Skimur.Web\node_modules'
+- 'src\Skimur.Web\bower_components'
