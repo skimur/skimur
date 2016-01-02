@@ -8,7 +8,7 @@ namespace Skimur.Cassandra.Migrations
         {
             var resources = new MigrationResources();
 
-            var ensureLoaded = Type.GetType("Migrations.Empty, Migrations");
+            var ensureLoaded = Type.GetType("Skimur.Tasks.Migrations.Empty, Skimur.Tasks");
 
             if (ensureLoaded == null)
                 throw new Exception("Couldn't find the Migrations.dll");

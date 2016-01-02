@@ -34,92 +34,93 @@ namespace Skimur
                 "lTVRndFBORzBuREZ0WGJUdzdRMi80K09lQ2tZPSxFeHBpcnk6MjAxNi0wMi0xOX" +
                 "0=");
         }
-
-        public static event Action<IServiceProvider> ContainerInitialized = delegate { };
-
+        
         public static void Initialize(params IRegistrar[] registrars)
         {
             lock (_lock)
             {
-                var collection = new ServiceCollection();
-
-                collection.AddSingleton<IServiceCollection>(provider => collection);
-
-                // all the default services
-                collection.AddSingleton<IMapper, Mapper>();
-                collection.AddSingleton<IConnectionStringProvider, ConnectionStringProvider>();
-                collection.AddSingleton<IDbConnectionProvider, SqlConnectionProvider>();
-                collection.AddSingleton<IEmailSender, EmailSender>();
-                collection.AddSingleton<IPathResolver, PathResolver>();
-
-                collection.AddSingleton<ICache, RedisCache>();
-                collection.AddSingleton<IRedisClientsManager>(provider =>{
-                    var configuration = provider.GetService<IConfiguration>();
-                    var readWrite = configuration.Get<string>("Data:RedisReadWrite");
-                    var read = configuration.Get<string>("Data:RedisRead");
-                    return new PooledRedisClientManager(readWrite.Split(';'), read.Split(';'));
-                });
-
-                collection.AddSingleton<ICassandraConnectionStringProvider, CassandraConnectionStringProvider>();
-                collection.AddSingleton(provider =>
-                {
-                    var connectionProvider = provider.GetService<ICassandraConnectionStringProvider>();
-
-                    if (!connectionProvider.HasConnectionString)
-                        throw new Exception("No connection string configured for cassandra.");
-
-                    return Cluster.Builder()
-                        .AddContactPoint(connectionProvider.ConnectionString)
-                        .WithDefaultKeyspace("skimur")
-                        .Build();
-                });
-                collection.AddSingleton(provider =>
-                {
-                    var cluster = provider.GetService<Cluster>();
-                    return cluster.ConnectAndCreateDefaultKeyspaceIfNotExists();
-                });
-                collection.AddSingleton<Cassandra.Migrations.IMigrationEngine, Cassandra.Migrations.MigrationEngine>();
-                collection.AddSingleton<Cassandra.Migrations.IMigrationResourceFinder, Cassandra.Migrations.MigrationResourceFinder>();
-
-                collection.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
-
-                collection.AddSingleton<IEventDiscovery, EventDiscovery>();
-                collection.AddSingleton<ICommandDiscovery, CommandDiscovery>();
-
-                collection.AddSingleton<Postgres.Migrations.IMigrationEngine, Postgres.Migrations.MigrationEngine>();
-                collection.AddSingleton<Postgres.Migrations.IMigrationResourceFinder, Postgres.Migrations.MigrationResourceFinder>();
-
-                collection.AddSingleton(typeof(ISettingsProvider<>), typeof(JsonFileSettingsProvider<>));
-
-                collection.AddSingleton(provider =>
-                {
-                    var configuration = provider.GetService<IConfiguration>();
-                    var rabbitMqHost = configuration.Get<string>("Data:RabbitMQHost");
-                    if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
-
-                    return new RabbitMqServer(rabbitMqHost)
-                    {
-                        ErrorHandler = exception =>
-                        {
-                            Logging.Logger.For<RabbitMqServer>().Error("There was an error processing a message.", exception);
-                        }
-                    };
-                });
-                collection.AddSingleton<ICommandBus, CommandBus>();
-                collection.AddSingleton<IEventBus, EventBus>();
-                collection.AddSingleton<IBusLifetime, BusLifetime>();
-
-                collection.AddSingleton<IEmbeddedProvider, ContextualEmbededProvider>();
-                
-                foreach (var registrar in registrars.OrderBy(x => x.Order))
-                    registrar.Register(collection);
-                
-                _serviceProvider = collection.BuildServiceProvider();
-                
-                ContainerInitialized(_serviceProvider);
+                _serviceProvider = BuildServiceProvider(registrars);
             }
         }
-        
+
+        public static IServiceProvider BuildServiceProvider(params IRegistrar[] registrars)
+        {
+            var collection = new ServiceCollection();
+
+            collection.AddSingleton<IServiceCollection>(provider => collection);
+
+            // all the default services
+            collection.AddSingleton<IMapper, Mapper>();
+            collection.AddSingleton<IConnectionStringProvider, ConnectionStringProvider>();
+            collection.AddSingleton<IDbConnectionProvider, SqlConnectionProvider>();
+            collection.AddSingleton<IEmailSender, EmailSender>();
+            collection.AddSingleton<IPathResolver, PathResolver>();
+
+            collection.AddSingleton<ICache, RedisCache>();
+            collection.AddSingleton<IRedisClientsManager>(provider => {
+                var configuration = provider.GetService<IConfiguration>();
+                var readWrite = configuration.Get<string>("Data:RedisReadWrite");
+                var read = configuration.Get<string>("Data:RedisRead");
+                return new PooledRedisClientManager(readWrite.Split(';'), read.Split(';'));
+            });
+
+            collection.AddSingleton<ICassandraConnectionStringProvider, CassandraConnectionStringProvider>();
+            collection.AddSingleton(provider =>
+            {
+                var connectionProvider = provider.GetService<ICassandraConnectionStringProvider>();
+
+                if (!connectionProvider.HasConnectionString)
+                    throw new Exception("No connection string configured for cassandra.");
+
+                return Cluster.Builder()
+                    .AddContactPoint(connectionProvider.ConnectionString)
+                    .WithDefaultKeyspace("skimur")
+                    .Build();
+            });
+            collection.AddSingleton(provider =>
+            {
+                var cluster = provider.GetService<Cluster>();
+                return cluster.ConnectAndCreateDefaultKeyspaceIfNotExists();
+            });
+            collection.AddSingleton<Cassandra.Migrations.IMigrationEngine, Cassandra.Migrations.MigrationEngine>();
+            collection.AddSingleton<Cassandra.Migrations.IMigrationResourceFinder, Cassandra.Migrations.MigrationResourceFinder>();
+
+            collection.AddSingleton(typeof(ILogger<>), typeof(Logger<>));
+
+            collection.AddSingleton<IEventDiscovery, EventDiscovery>();
+            collection.AddSingleton<ICommandDiscovery, CommandDiscovery>();
+
+            collection.AddSingleton<Postgres.Migrations.IMigrationEngine, Postgres.Migrations.MigrationEngine>();
+            collection.AddSingleton<Postgres.Migrations.IMigrationResourceFinder, Postgres.Migrations.MigrationResourceFinder>();
+
+            collection.AddSingleton(typeof(ISettingsProvider<>), typeof(JsonFileSettingsProvider<>));
+
+            collection.AddSingleton(provider =>
+            {
+                var configuration = provider.GetService<IConfiguration>();
+                var rabbitMqHost = configuration.Get<string>("Data:RabbitMQHost");
+                if (string.IsNullOrEmpty(rabbitMqHost)) throw new Exception("You must provide a 'RabbitMQHost' app setting.");
+
+                return new RabbitMqServer(rabbitMqHost)
+                {
+                    ErrorHandler = exception =>
+                    {
+                        Logging.Logger.For<RabbitMqServer>().Error("There was an error processing a message.", exception);
+                    }
+                };
+            });
+            collection.AddSingleton<ICommandBus, CommandBus>();
+            collection.AddSingleton<IEventBus, EventBus>();
+            collection.AddSingleton<IBusLifetime, BusLifetime>();
+
+            collection.AddSingleton<IEmbeddedProvider, ContextualEmbededProvider>();
+
+            foreach (var registrar in registrars.OrderBy(x => x.Order))
+                registrar.Register(collection);
+
+            return collection.BuildServiceProvider();
+        }
+
         public static IServiceProvider ServiceProvider
         {
             get

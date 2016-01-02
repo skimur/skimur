@@ -1,0 +1,18 @@
+﻿{
+  "version": "1.0.0-*",
+  "description": "Skimur.App.Handlers Class Library",
+  "authors": [ "Paul" ],
+  "tags": [ "" ],
+  "projectUrl": "",
+  "licenseUrl": "",
+
+  "frameworks": {
+    "dnx451": { }
+  },
+
+  "dependencies": {
+    "Skimur.App": "",
+    "Skimur.Markdown": "",
+    "Skimur.Scraper": ""
+  }
+}

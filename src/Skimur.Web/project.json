@@ -29,20 +29,18 @@
     "Microsoft.Extensions.Logging.Debug": "1.0.0-rc1-final",
     "Microsoft.VisualStudio.Web.BrowserLink.Loader": "14.0.0-rc1-final",
     "Skimur": "",
-    "Subs": "",
-    "Subs.Worker": "",
     "Skimur.Markdown": "",
     "Skimur.Scraper": "",
-    "Migrations": "",
-    "Membership": "",
-    "Emails": "",
-    "Emails.Handlers": "",
+    "Skimur.App": "",
+    "Skimur.App.Handlers": "",
+    "Skimur.Tasks": "",
     "ImageResizer": "4.0.4",
     "FluentValidation": "5.6.2"
   },
 
   "commands": {
-    "web": "Microsoft.AspNet.Server.Kestrel"
+    "web": "Microsoft.AspNet.Server.Kestrel",
+    "tasks": "Skimur.Tasks"
   },
 
   "frameworks": {

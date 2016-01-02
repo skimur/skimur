@@ -1,12 +1,12 @@
-﻿using Membership;
-using Microsoft.AspNet.Identity;
+﻿using Microsoft.AspNet.Identity;
 using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
-using Membership.Services;
 using System.ComponentModel;
+using Skimur.App;
+using Skimur.App.Services;
 
 namespace Skimur.Web.Infrastructure.Identity
 {

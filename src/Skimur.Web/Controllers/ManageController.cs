@@ -11,16 +11,17 @@ using Skimur.Web.Services;
 using Skimur.Web.ViewModels.Manage;
 using Skimur.Web.Infrastructure;
 using Skimur.Web.ViewModels;
-using Membership.Services;
 using Microsoft.AspNet.Http;
+using Skimur.App;
+using Skimur.App.Services;
 
 namespace Skimur.Web.Controllers
 {
     [Authorize]
     public class ManageController : BaseController
     {
-        private readonly UserManager<Membership.User> _userManager;
-        private readonly SignInManager<Membership.User> _signInManager;
+        private readonly UserManager<User> _userManager;
+        private readonly SignInManager<User> _signInManager;
         private readonly IEmailSender _emailSender;
         private readonly ISmsSender _smsSender;
         private readonly ILogger _logger;
@@ -28,8 +29,8 @@ namespace Skimur.Web.Controllers
         private readonly IMembershipService _membershipService;
 
         public ManageController(
-            UserManager<Membership.User> userManager,
-            SignInManager<Membership.User> signInManager,
+            UserManager<User> userManager,
+            SignInManager<User> signInManager,
             IEmailSender emailSender,
             ISmsSender smsSender,
             ILoggerFactory loggerFactory,
@@ -507,7 +508,7 @@ namespace Skimur.Web.Controllers
 
         #region Helpers
 
-        private async Task<Membership.User> GetCurrentUserAsync()
+        private async Task<User> GetCurrentUserAsync()
         {
             return await _userManager.FindByIdAsync(HttpContext.User.GetUserId());
         }

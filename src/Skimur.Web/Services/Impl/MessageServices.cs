@@ -1,8 +1,5 @@
-﻿using Emails.Commands;
+﻿using Skimur.App.Commands;
 using Skimur.Messaging;
-using System;
-using System.Collections.Generic;
-using System.Linq;
 using System.Threading.Tasks;
 
 namespace Skimur.Web.Services.Impl

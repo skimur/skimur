@@ -8,7 +8,7 @@ namespace Skimur
 {
     public static class CommentExtensions
     {
-        public static T As<T>(this object o)
+        public static T As<T>(object o)
         {
             return (T) o;
         }

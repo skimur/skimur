@@ -1,5 +1,4 @@
-﻿@using Subs.ReadModel
-@model ICommentNode
+﻿@model ICommentNode
 <div class="disc comment @IgnoreUnignoredClass(Model)" @if (Model.NodeType == NodeType.Comment) { var comment = ((CommentNode)Model).Comment; @("data-comment-id=" + comment.Comment.Id + " data-post-id=" + comment.Comment.PostId + "")   }>
     @if (Model.NodeType == NodeType.Comment)
     {

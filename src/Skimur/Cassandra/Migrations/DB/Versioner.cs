@@ -1,7 +1,9 @@
 ﻿using System;
+using System.Linq;
 using Cassandra;
 using Cassandra.Data.Linq;
 using Cassandra.Mapping;
+using NLog;
 using Skimur.Logging;
 
 namespace Skimur.Cassandra.Migrations.DB
@@ -9,6 +11,7 @@ namespace Skimur.Cassandra.Migrations.DB
     internal class Versioner : IVersioner
     {
         private global::Cassandra.Mapping.IMapper _mapper;
+        private global::Cassandra.ISession _session;
         private readonly ILogger<Version> _logger;
         private static bool _didRegisterMapping = false;
         private static object _registrationLock = new object();
@@ -16,6 +19,7 @@ namespace Skimur.Cassandra.Migrations.DB
         public Versioner(ISession session, ILogger<Version> logger)
         {
             _logger = logger;
+            _session = session;
 
             _logger.Debug("Define global mappings");
             lock (_registrationLock)
@@ -28,22 +32,20 @@ namespace Skimur.Cassandra.Migrations.DB
             }
             
             _logger.Debug("Create mapper and table instances");
-            _mapper = new global::Cassandra.Mapping.Mapper(session);
-            var table = new Table<DatabaseVersion>(session);
+            _mapper = new global::Cassandra.Mapping.Mapper(_session);
+
+            var table = new Table<DatabaseVersion>(_session);
             table.CreateIfNotExists();
         }
 
         public int CurrentVersion(MigrationType type)
         {
-            var dbVersion = _mapper.FirstOrDefault<DatabaseVersion>("WHERE type = ?", (int)type);
+            var versions = _mapper.Fetch<DatabaseVersion>("where type = ?", (int) type).ToList();
 
-            if (dbVersion == null)
-            {
-                _logger.Info("No entries in database version table. Defaulting version value to 0.");
+            if (versions.Count == 0)
                 return 0;
-            }
 
-            return dbVersion.Version;
+            return versions.Max(x => x.Version);
         }
 
         public bool SetVersion(Migration migration)

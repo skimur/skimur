@@ -1,7 +1,7 @@
-﻿using Subs;
-using Subs.ReadModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
+using Skimur.App;
+using Skimur.App.ReadModel;
 
 namespace Skimur.Web.ViewModels
 {

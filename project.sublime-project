@@ -2,7 +2,8 @@
 	"folders":
 	[
 		{
-			"path": "."
+			"path": ".",
+			"folder_exclude_patterns": ["node_modules", "bower_components", ".nuget", ".vagrant", ".vs", "bin", "obj", "build", "dist", "tools", "artifacts"],
 		}
 	]
 }

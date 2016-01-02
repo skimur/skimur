@@ -1,17 +1,17 @@
 ﻿using System;
 using System.Linq;
-using Membership.Services;
 using MirroredContentSync.Settings;
 using Skimur;
 using Skimur.Messaging;
 using Skimur.Messaging.Handling;
 using Skimur.Settings;
-using Subs.Commands;
-using Subs.Services;
 using Microsoft.Extensions.DependencyInjection;
 using RedditSharp;
 using Microsoft.Extensions.Configuration;
 using Microsoft.Extensions.PlatformAbstractions;
+using Skimur.App;
+using Skimur.App.Commands;
+using Skimur.App.Services;
 
 namespace MirroredContentSync
 {
@@ -31,8 +31,7 @@ namespace MirroredContentSync
             {
                 SkimurContext.Initialize(
                     new Program(),
-                    new Membership.Registrar(),
-                    new Subs.Registrar());
+                    new Skimur.App.Registrar());
 
                 _mirrorSettings = SkimurContext.ServiceProvider.GetRequiredService<ISettingsProvider<MirrorSettings>>().Settings;
                 _subService = SkimurContext.ServiceProvider.GetRequiredService<ISubService>();
@@ -93,7 +92,7 @@ namespace MirroredContentSync
                                 Title = redditPost.Title,
                                 Url = redditPost.Url.ToString(),
                                 Content = redditPost.SelfText,
-                                PostType = redditPost.IsSelfPost ? Subs.PostType.Text : Subs.PostType.Link,
+                                PostType = redditPost.IsSelfPost ? PostType.Text : PostType.Link,
                                 SubName = subToMirror,
                                 NotifyReplies = false,
                                 Mirror = "reddit",

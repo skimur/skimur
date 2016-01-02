@@ -1,9 +1,9 @@
-﻿using Membership;
-using Subs.ReadModel;
-using System;
+﻿using System;
 using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
+using Skimur.App;
+using Skimur.App.ReadModel;
 
 namespace Skimur.Web.ViewModels
 {
