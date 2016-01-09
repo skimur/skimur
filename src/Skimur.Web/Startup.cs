@@ -79,7 +79,8 @@ namespace Skimur.Web
             {
                 app.UseExceptionHandler("/Home/Error");
             }
-            
+
+            app.UseMiddleware<IISIntegrationHackMiddlerware>();
             app.UseIISPlatformHandler(options => options.AuthenticationDescriptions.Clear());
 
             app.UseMiddleware<IpBlockerMiddleware>();
