@@ -56,8 +56,8 @@ Task("Build")
     .Does(() =>
 {
     ExecuteCommand("dnu restore");
-    ExecuteCommand(string.Format("dnu publish \"src/Skimur.Web/project.json\" --configuration \"{0}\" -o \"{1}\"", configuration, System.IO.Path.Combine(buildDir, "Web")));
-    ExecuteCommand(string.Format("dnu publish \"src/Utilities/MirroredContentSync/project.json\" --configuration \"{0}\" -o \"{1}\"", configuration, System.IO.Path.Combine(buildDir, "MirroredContentSync")));
+    ExecuteCommand(string.Format("dnu publish \"src/Skimur.Web/project.json\" --configuration \"{0}\" --no-source -o \"{1}\"", configuration, System.IO.Path.Combine(buildDir, "Web")));
+    ExecuteCommand(string.Format("dnu publish \"src/Utilities/MirroredContentSync/project.json\" --configuration \"{0}\" --no-source -o \"{1}\"", configuration, System.IO.Path.Combine(buildDir, "MirroredContentSync")));
 });
 
 Task("Test")
