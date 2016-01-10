@@ -1,4 +1,5 @@
-﻿@if (ViewBag.IsPreview)
+﻿@model SubCss
+@if (ViewBag.IsPreview)
 {
     <form asp-action="CancelPreview" asp-controller="Styles" asp-route-subName="@ViewBag.PreviewStylesSubName" asp-route-returnUrl="@ViewContext.HttpContext.Request.RawUrl()">
         <div class="preview-alert">
