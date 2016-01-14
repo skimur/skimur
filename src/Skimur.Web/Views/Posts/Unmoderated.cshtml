@@ -26,6 +26,6 @@
         </div>
     </div>
     <div class="col-lg-3 col-sm-4">
-        @{Html.RenderSideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null);}
+        @Component.SideBar(subId: Model.Sub != null ? Model.Sub.Sub.Id : (Guid?)null)
     </div>
 </div>
