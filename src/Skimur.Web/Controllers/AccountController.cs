@@ -114,7 +114,7 @@ namespace Skimur.Web.Controllers
         {
             if (ModelState.IsValid)
             {
-                var user = new User { UserName = model.UserName, Email = model.Email };
+                var user = new User { UserName = model.UserName, Email = model.Email, Ip = HttpContext.RemoteAddress() };
                 var result = await _userManager.CreateAsync(user, model.Password);
                 if (result.Succeeded)
                 {
@@ -210,7 +210,7 @@ namespace Skimur.Web.Controllers
                 {
                     return View("ExternalLoginFailure");
                 }
-                var user = new User { UserName = model.UserName, Email = model.Email };
+                var user = new User { UserName = model.UserName, Email = model.Email, Ip = HttpContext.RemoteAddress() };
                 var result = await _userManager.CreateAsync(user);
                 if (result.Succeeded)
                 {
