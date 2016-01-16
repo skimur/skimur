@@ -313,5 +313,24 @@ namespace Skimur.Tasks
                 }
             }
         }
+
+        [ArgActionMethod, ArgDescription("Toggle admin status for a user")]
+        public void ToggleUserAdmin(string userName, bool isAdmin)
+        {
+            var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
+
+            var user = connectionProvider.Perform(conn => conn.Single<User>(x => x.UserName.ToLower() == userName.ToLower()));
+            if (user == null)
+            {
+                Console.WriteLine("No user with that name.");
+                return;
+            }
+
+            Console.WriteLine($"Found the user {user.UserName}.");
+
+            connectionProvider.Perform(conn => conn.Update<User>(new { IsAdmin = isAdmin }, x => x.Id == user.Id));
+
+            Console.WriteLine("Updated the user.");
+        }
     }
 }
