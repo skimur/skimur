@@ -132,7 +132,7 @@ namespace Skimur.Tasks
             connectionProvider.Perform(conn => conn.Delete<Sub>(x => x.Id == sub.Id));
         }
 
-        [ArgActionMethod, ArgDescription("Delete a user")]
+        [ArgActionMethod, ArgDescription("Delete (hard) a user")]
         public void DeleteUser(string userName)
         {
             var connectionProvider = SkimurContext.ServiceProvider.GetRequiredService<IDbConnectionProvider>();
@@ -144,6 +144,8 @@ namespace Skimur.Tasks
                 return;
             }
 
+            Console.WriteLine("Found the user " + user.UserName);
+
             // delete the users comments
             foreach (var comment in connectionProvider.Perform(conn => conn.Select<Comment>(x => x.AuthorUserId == user.Id)))
                 DeleteComment(comment.Id);
@@ -152,8 +154,22 @@ namespace Skimur.Tasks
             foreach (var post in connectionProvider.Perform(conn => conn.Select<Post>(x => x.UserId == user.Id)))
                 DeletePost(post.Id);
 
+            // delete the users messages
             connectionProvider.Perform(conn => conn.Delete<Message>(x => x.ToUser == user.Id));
             connectionProvider.Perform(conn => conn.Delete<Message>(x => x.AuthorId == user.Id));
+
+            // TODO: Delete the user's...
+            // notifications
+            // logins
+            // invites
+            // moderations
+            // reports
+            // bans
+            // roles
+            // votes
+
+            // delete the user
+            connectionProvider.Perform(conn => conn.DeleteById<User>(user.Id));
         }
 
         [ArgActionMethod, ArgDescription("Delete comment")]
