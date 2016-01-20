@@ -6,7 +6,7 @@
         <div class="messages-container">
             @foreach (var message in Model.Messages)
             {
-                @{ await Html.RenderPartialAsync("_Message", message); }
+                await Html.RenderPartialAsync("_Message", message);
             }
         </div>
     </div>
