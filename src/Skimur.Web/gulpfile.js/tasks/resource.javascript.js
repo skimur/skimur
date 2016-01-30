@@ -140,12 +140,18 @@ var clean = function() {
         }))
 };
 
+var watch = function() {
+    return gulp.watch("./Scripts/**/*.js", ["compile:js"]);
+};
+
 gulp.task("compile:js", compile);
 gulp.task("min:js", min);
 gulp.task("clean:js", clean);
+gulp.task("watch:js", watch);
 
 module.exports = {
     compile: compile,
     min: min,
-    clean: clean
+    clean: clean,
+    watch: watch
 }

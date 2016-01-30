@@ -85,12 +85,18 @@ var clean = function()
         .pipe(rimraf({ force: true }))
 }
 
+var watch = function () {
+    return gulp.watch("./Styles/**/*.*", ["compile:css"]);
+};
+
 gulp.task("compile:css", compile);
 gulp.task("min:css", min);
 gulp.task("clean:css", clean);
+gulp.task("watch:css", watch);
 
 module.exports = {
     compile: compile,
     min: min,
-    clean: clean
+    clean: clean,
+    watch: watch
 }
