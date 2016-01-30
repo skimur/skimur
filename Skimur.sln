@@ -41,6 +41,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.Tests", "test\Skimur
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.App.Tests", "test\Skimur.App.Tests\Skimur.App.Tests.xproj", "{F3CB6DA9-B406-49AD-A109-9D8A5A06E863}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.Web.Tests", "test\Skimur.Web.Tests\Skimur.Web.Tests.xproj", "{8F146B54-92AF-4570-93B2-0411F08388E1}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -91,6 +93,10 @@ Global
 		{F3CB6DA9-B406-49AD-A109-9D8A5A06E863}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{F3CB6DA9-B406-49AD-A109-9D8A5A06E863}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{F3CB6DA9-B406-49AD-A109-9D8A5A06E863}.Release|Any CPU.Build.0 = Release|Any CPU
+		{8F146B54-92AF-4570-93B2-0411F08388E1}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{8F146B54-92AF-4570-93B2-0411F08388E1}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{8F146B54-92AF-4570-93B2-0411F08388E1}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{8F146B54-92AF-4570-93B2-0411F08388E1}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -108,5 +114,6 @@ Global
 		{834F7598-1126-4DCD-BF92-882F5A8A293E} = {0364BA7D-4958-455D-AFC9-55F755B58A49}
 		{93AD278F-EA05-4FC3-BDE7-86709D0391D3} = {EDD1B593-AB32-413F-A067-B1488EE9AC01}
 		{F3CB6DA9-B406-49AD-A109-9D8A5A06E863} = {EDD1B593-AB32-413F-A067-B1488EE9AC01}
+		{8F146B54-92AF-4570-93B2-0411F08388E1} = {EDD1B593-AB32-413F-A067-B1488EE9AC01}
 	EndGlobalSection
 EndGlobal

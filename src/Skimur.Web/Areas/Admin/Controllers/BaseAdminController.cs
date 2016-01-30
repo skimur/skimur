@@ -1,20 +1,16 @@
 ﻿using Microsoft.AspNet.Authorization;
-using Microsoft.AspNet.Identity;
 using Microsoft.AspNet.Mvc;
-using Skimur.Web.Services;
+using Skimur.Web.Controllers;
 using System;
 using System.Collections.Generic;
 using System.Linq;
-using System.Threading;
 using System.Threading.Tasks;
 
 namespace Skimur.Web.Areas.Admin.Controllers
 {
-    public class HomeController : BaseAdminController
+    [Authorize(Roles = "Admin")]
+    [Area("Admin")]
+    public class BaseAdminController : BaseController
     {
-        public ActionResult Index()
-        {
-            return View();
-        }
     }
 }

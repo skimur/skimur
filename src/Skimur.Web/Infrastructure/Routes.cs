@@ -367,8 +367,8 @@ namespace Skimur.Web.Infrastructure
                 url: "thumbnail/{type}/{thumbnail}",
                 defaults: new { controller = "Thumbnail", action = "Thumbnail" });
 
-            routes.MapRoute(name: "areaRoute",
-                template: "{area:exists}/{controller}/{action}",
+            routes.MapRoute(name: "DefaultArea",
+                template: "{area:exists}/{controller}/{action}/{id?}",
                 defaults: new { controller = "Home", action = "Index" });
 
             routes.MapRouteShim(

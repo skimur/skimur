@@ -8,7 +8,14 @@ var gulp = require("gulp"),
     less = require("gulp-less"),
     rename = require("gulp-rename"),
     fs = require('fs'),
-    merge = require('merge-stream');
+    merge = require('merge-stream'),
+    reactify = require('reactify'),
+    browserify = require('browserify'),
+    source = require('vinyl-source-stream'),
+    buffer = require('vinyl-buffer'),
+    through = require('through2'),
+    async = require("async"),
+    watch = require('gulp-watch');
 
 var project = require('./project.json');
 
@@ -54,7 +61,7 @@ var components = {
             ],
             fileName: "ace.js",
             dest: paths.webroot + "js/",
-            skipMin:true
+            skipMin: true
         },
         aceThemeGitHub: {
             scripts: [
@@ -81,6 +88,24 @@ var components = {
             skipMin: true
         }
     },
+    app: {
+        shared: {
+            fileName: "shared.app.js",
+            dest: paths.webroot + "js/",
+        },
+        scripts: [
+            {
+                src: "./React/app.react.jsx",
+                fileName: "app.react.js",
+                dest: paths.webroot + "js/"
+            },
+            {
+                src: "./React/screenedIps.react.jsx",
+                fileName: "screenedIps.react.js",
+                dest: paths.webroot + "js/"
+            }
+        ]
+    },
     styles: {
         site: {
             styleSheets: [
@@ -102,7 +127,41 @@ gulp.task("clean:js", function () {
     return gulp.src(compiledJs, { read: false })
         .pipe(rimraf({ force: true }))
         .pipe(rename({ suffix: ".min" }))
+        .pipe(rimraf({ force: true }));
+});
+
+function getDependencies(file, cb) {
+    var dependencies = [];
+    var dependencyCollector = through.obj(function (row, enc, next) {
+        dependencies.push(row.file);
+        console.log(row);
+        next();
+    });
+    var b = browserify({
+        entries: file,
+        debug: true,
+        transform: [reactify]
+    });
+    b.pipeline.get('deps').push(dependencyCollector);
+    b.bundle(function () {
+        console.log(dependencies);
+        cb(dependencies);
+    });
+}
+
+gulp.task("clean:js:app", function () {
+    var scripts = [];
+
+    scripts.push(components.app.shared.dest + components.app.shared.fileName);
+
+    components.app.scripts.forEach(function (script) {
+        scripts.push(script.dest + script.fileName);
+    });
+
+    return gulp.src(scripts, { read: false })
         .pipe(rimraf({ force: true }))
+        .pipe(rename({ suffix: ".min" }))
+        .pipe(rimraf({ force: true }));
 });
 
 gulp.task("clean:css", function (cb) {
@@ -118,15 +177,14 @@ gulp.task("clean:css", function (cb) {
         .pipe(rimraf({ force: true }))
 });
 
-gulp.task("clean", ["clean:js", "clean:css"]);
+gulp.task("clean", ["clean:js", "clean:js:app", "clean:css"]);
 
 gulp.task("compile:font", function (cb) {
     return gulp.src("bower_components/font-awesome/fonts/*.*")
         .pipe(gulp.dest(paths.webroot + "fonts"));
-})
+});
 
 gulp.task("compile:js", function (cb) {
-
     var compiledJs = [];
     for (var componentKey in components.scripts) {
         if (components.scripts.hasOwnProperty(componentKey)) {
@@ -143,6 +201,69 @@ gulp.task("compile:js", function (cb) {
     });
 
     return merge(streams);
+});
+
+gulp.task("compile:js:app", function (cb) {
+    var dependencies = [];
+    var dependenciesDuplicate = [];
+
+    async.each(components.app.scripts,
+        function (item, forEachCallback) {
+            getDependencies(item.src, function (scriptDeps) {
+                scriptDeps.forEach(function (item) {
+                    if (dependencies.indexOf(item) > -1) {
+                        // this module is duplicated, used in multiple scripts at a time.
+                        dependenciesDuplicate.push(item);
+                    } else {
+                        dependencies.push(item);
+                    }
+                });
+                forEachCallback(null);
+            });
+        },
+        function (err) {
+
+            // Now that we have all the modules that are shared throughout the scripts, let's build a bundle with all of them.
+
+            var sharedBundle = browserify({
+                debug: true,
+                transform: [reactify]
+            });
+
+            dependenciesDuplicate.forEach(function (item) {
+                sharedBundle.require(item);
+            });
+
+            sharedBundle.bundle()
+                .pipe(source(components.app.shared.fileName))
+                .pipe(buffer())
+                .pipe(gulp.dest(components.app.shared.dest))
+                .on("end", function () {
+                    async.each(components.app.scripts,
+                        function (item, forEachCallback) {
+                            var componentBundle = browserify({
+                                entries: item.src,
+                                debug: true,
+                                transform: [reactify]
+                            });
+
+                            dependenciesDuplicate.forEach(function (item) {
+                                componentBundle.external(item);
+                            });
+
+                            componentBundle.bundle()
+                                .pipe(source(item.fileName))
+                                .pipe(buffer())
+                                .pipe(gulp.dest(item.dest))
+                                .on("end", function () {
+                                    forEachCallback();
+                                });
+                        },
+                        function (err) {
+                            cb();
+                        });
+                });
+        });
 });
 
 gulp.task("compile:css", function (cb) {
@@ -167,7 +288,7 @@ gulp.task("compile:css", function (cb) {
     return merge(streams);
 });
 
-gulp.task("compile", ["compile:js", "compile:js", "compile:css", "compile:font"]);
+gulp.task("compile", ["compile:js", "compile:js", "compile:js:app", "compile:css", "compile:font"]);
 
 gulp.task("min:js", function (cb) {
 
@@ -198,6 +319,29 @@ gulp.task("min:js", function (cb) {
 
 });
 
+gulp.task("min:js:app", function () {
+    var scripts = [];
+    var streams = [];
+
+    scripts.push({
+        fileName: components.app.shared.fileName,
+        dest: components.app.shared.dest
+    });
+
+    components.app.scripts.forEach(function (script) {
+        scripts.push(script);
+    });
+
+    scripts.forEach(function (script) {
+        streams.push(gulp.src(script.dest + script.fileName)
+            .pipe(uglify())
+            .pipe(rename({ suffix: ".min" }))
+            .pipe(gulp.dest(script.dest)));
+    });
+
+    return merge(streams);
+});
+
 gulp.task("min:css", function () {
 
     var compiledCss = [];
@@ -226,4 +370,28 @@ gulp.task("min:css", function () {
     return merge(streams);
 });
 
-gulp.task("min", ["min:js", "min:css"]);
+gulp.task("min", ["min:js", "min:js:app", "min:css"]);
+
+gulp.task("watch", function () {
+    var appScripts = [];
+    async.each(components.app.scripts, function (script, cb) {
+        getDependencies(script.src, function (dependencies) {
+            dependencies.forEach(function (dependency) {
+                appScripts.push(dependency);
+            });
+            cb();
+        });
+    }, function () {
+        gulp.watch(appScripts, ["compile:js:app"]);
+    });
+ 
+    var clientScripts = [];
+    for (var componentKey in components.scripts) {
+        if (components.scripts.hasOwnProperty(componentKey)) {
+            components.scripts[componentKey].scripts.forEach(function (script) {
+                clientScripts.push(script);
+            });
+        }
+    }
+    gulp.watch(clientScripts, ["compile:js"]);
+})

@@ -9,8 +9,17 @@
     "gulp-less": "3.0.5",
     "gulp-rimraf": "0.2.0",
     "gulp-rename": "1.2.2",
+    "gulp-watch": "4.3.5",
     "merge-stream": "1.0.0",
-    "less": "2.5.3"
+    "less": "2.5.3",
+    "reactify": "1.1.1",
+    "react": "0.14.6",
+    "react-dom": "0.14.6",
+    "browserify": "13.0.0",
+    "vinyl-source-stream": "1.1.0",
+    "vinyl-buffer": "1.0.0",
+    "through2": "2.0.0",
+    "async": "1.5.2"
   },
   "private": true
 }

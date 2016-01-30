@@ -1,0 +1,15 @@
+﻿
+@section scripts {
+    <environment names="Development">
+        <script src="~/js/shared.app.js" asp-append-version="true"></script>
+        <script src="~/js/screenedIps.react.js" asp-append-version="true"></script>
+    </environment>
+    <environment names="Production">
+        <script src="~/js/shared.app.min.js" asp-append-version="true"></script>
+        <script src="~/js/screenedIps.react.min.js" asp-append-version="true"></script>
+    </environment>
+}
+
+<div id="screened-ips">
+
+</div>
