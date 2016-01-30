@@ -10,7 +10,8 @@
     "gulp-rimraf": "0.2.0",
     "gulp-rename": "1.2.2",
     "merge-stream": "1.0.0",
-    "less": "2.5.3"
+    "less": "2.5.3",
+    "require-dir": "0.3.0"
   },
   "private": true
 }
