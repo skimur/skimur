@@ -141,7 +141,7 @@ var clean = function() {
 };
 
 var watch = function() {
-    return gulp.watch("./Scripts/**/*.js", ["compile:js"]);
+    return gulp.watch("./Scripts/**/*.*", ["compile:js"]);
 };
 
 gulp.task("compile:js", compile);

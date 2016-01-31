@@ -28,7 +28,8 @@ var app = {
     }]
 };
 
-var compileVendor = function() {
+var compileVendor = function () {
+
     var bundle = browserify({
         debug: false // Don't provide source maps for vendor libs
     })
@@ -42,28 +43,24 @@ var compileVendor = function() {
         .pipe(gulp.dest(app.vendor.dest));
 };
 
-var compileScript = function(script) {
-    var bundle = browserify({
-        entries: script.src,
-        transform: [reactify]
-    })
-
-    app.vendor.libs.forEach(function(lib) {
-        bundle.external(lib);
-    });
-
-    return bundle.bundle()
-        .pipe(source(script.fileName))
-        .pipe(gulp.dest(script.dest));
-};
-
-var compile = function(cb) {
+var compileScripts = function (script) {
 
     var streams = [];
-    streams.push(compileVendor());
 
-    app.scripts.forEach(function(script) {
-        streams.push(compileScript(script));
+    app.scripts.forEach(function (script) {
+
+        var bundle = browserify({
+            entries: script.src,
+            transform: [reactify]
+        })
+
+        app.vendor.libs.forEach(function (lib) {
+            bundle.external(lib);
+        });
+
+        streams.push(bundle.bundle()
+            .pipe(source(script.fileName))
+            .pipe(gulp.dest(script.dest)));
     });
 
     return merge(streams);
@@ -122,16 +119,19 @@ var clean = function() {
 };
 
 var watch = function() {
-
+    return gulp.watch("./React/**/*.*", ["compile:app:scripts"]);
 };
 
-gulp.task("compile:app", compile);
+gulp.task("compile:app:vendor", compileVendor);
+gulp.task("compile:app:scripts", compileScripts);
+gulp.task("compile:app", ["compile:app:vendor", "compile:app:scripts"]);
 gulp.task("min:app", min);
 gulp.task("clean:app", clean);
 gulp.task("watch:app", watch);
 
 module.exports = {
-    compile: compile,
+    compileScripts: compileScripts,
+    compileVendor: compileVendor,
     min: min,
     clean: clean,
     watch: watch
