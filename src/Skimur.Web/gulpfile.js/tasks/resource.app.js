@@ -14,7 +14,9 @@ var app = {
         dest: paths.webroot + "js/",
         libs: [
             "react",
-            "react-dom"
+            "react-dom",
+            "formsy-react",
+            "formsy-react-components"
         ]
     },
     scripts: [{

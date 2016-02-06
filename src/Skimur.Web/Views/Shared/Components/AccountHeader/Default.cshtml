@@ -27,6 +27,15 @@
                 </a>
             </li>
             <li class="divider"></li>
+            @if (User.IsInRole("Admin"))
+            {
+                <li class="admin">
+                    <a href="@Url.Admin()">
+                        <i class="fa fa-cog"></i>
+                    </a>
+                </li>
+                <li class="divider"></li>
+            }
             <li class="logoff"><a href="javascript:document.getElementById('logoutForm').submit()">log off</a></li>
         </ul>
     }

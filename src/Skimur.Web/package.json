@@ -12,7 +12,13 @@
     "merge-stream": "1.0.0",
     "less": "2.5.3",
     "require-dir": "0.3.0",
-    "watchify": "3.7.0"
+    "watchify": "3.7.0",
+    "formsy-react": "0.17.0",
+    "formsy-react-components": "0.6.6"
   },
-  "private": true
+  "private": true,
+  "dependencies": {
+    "babelify": "^7.2.0",
+    "formsy-react": "^0.17.0"
+  }
 }

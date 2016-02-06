@@ -244,6 +244,11 @@ namespace Skimur.Web.Infrastructure
             return urlHelper.RouteUrl("Thumbnail", new { thumbnail = thumb, type });
         }
 
+        public static string Admin(this IUrlHelper urlHelper)
+        {
+            return "/admin";
+        }
+
         public static string RouteUrl(this IUrlHelper urlHelper, string routeName)
         {
             return urlHelper.RouteUrl(new UrlRouteContext { RouteName = routeName });
