@@ -7,6 +7,7 @@ var reactify = require('reactify');
 var uglify = require("gulp-uglify");
 var rimraf = require("gulp-rimraf");
 var paths = require("../paths");
+var babel = require('babelify');
 
 var app = {
     vendor: {
@@ -14,9 +15,7 @@ var app = {
         dest: paths.webroot + "js/",
         libs: [
             "react",
-            "react-dom",
-            "formsy-react",
-            "formsy-react-components"
+            "react-dom"
         ]
     },
     scripts: [{
@@ -34,7 +33,7 @@ var compileVendor = function () {
 
     var bundle = browserify({
         debug: false // Don't provide source maps for vendor libs
-    })
+    }).transform("babelify", { presets: ["es2015", "react"] });
 
     app.vendor.libs.forEach(function(lib) {
         bundle.require(lib);
@@ -52,9 +51,8 @@ var compileScripts = function (script) {
     app.scripts.forEach(function (script) {
 
         var bundle = browserify({
-            entries: script.src,
-            transform: [reactify]
-        })
+            entries: script.src
+        }).transform("babelify", { presets: ["es2015", "react"] });
 
         app.vendor.libs.forEach(function (lib) {
             bundle.external(lib);

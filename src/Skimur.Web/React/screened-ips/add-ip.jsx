@@ -4,7 +4,7 @@ var Formsy = require("formsy-react");
 var FormsyComponents = require('formsy-react-components');
 
 var AddIp = React.createClass({
-    render: function () {
+    render() {
         return (
             <Formsy.Form className="form-inline">
                 <FormsyComponents.Input name="text1"

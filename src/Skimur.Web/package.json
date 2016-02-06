@@ -13,8 +13,9 @@
     "less": "2.5.3",
     "require-dir": "0.3.0",
     "watchify": "3.7.0",
-    "formsy-react": "0.17.0",
-    "formsy-react-components": "0.6.6"
+    "babelify": "7.2.0",
+    "babel-preset-es2015": "6.3.13",
+    "babel-preset-react": "6.3.13"
   },
   "private": true,
   "dependencies": {
