@@ -1,0 +1,28 @@
+var path = require('path');
+
+module.exports = {
+  entry: [
+    './client/web/server'
+  ],
+  module: {
+    loaders: [{
+      test: /\.jsx?$/,
+      loaders: ['babel-loader']
+    }]
+  },
+  output: {
+    path: path.join(__dirname, 'server', 'src', 'Skimur.Web', 'App'),
+    filename: 'server.js',
+    // this is important for webpack modules that will be require('')'d from node.
+    libraryTarget: 'this',
+    publicPath: '/dist/'
+  },
+  resolve: {
+    extensions: ['', '.js', '.jsx'],
+    modulesDirectories: [
+      path.join(__dirname, 'node_modules'),
+      path.join(__dirname, 'client', 'common'),
+      path.join(__dirname, 'client', 'web')
+    ]
+  }
+};

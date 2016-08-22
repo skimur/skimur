@@ -42,7 +42,7 @@ namespace Skimur.Web
                 builder.UseNodeRenderEngine(options =>
                 {
                     options.GetModuleName += (path, model, viewBag, routeValues, area, viewType) => "server.js";
-                    options.ProjectDirectory = Path.Combine(_hostingEnvironment.ContentRootPath, "App", "dist");
+                    options.ProjectDirectory = Path.Combine(_hostingEnvironment.ContentRootPath, "App");
                 });
                 builder.UseSingletonEngineFactory();
             });
@@ -64,10 +64,12 @@ namespace Skimur.Web
                 app.UseDeveloperExceptionPage();
             }
 
+            app.UseStatusCodePagesWithReExecute("/Status/Status/{0}");
+
             app.UseStaticFiles();
 
             app.UseJsEngine();
-
+            
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

@@ -7,8 +7,7 @@ module.exports = {
   module: {
     loaders: [{
       test: /\.jsx?$/,
-      loaders: ['babel-loader'],
-      exclude: /node_modules/
+      loaders: ['babel-loader']
     }]
   },
   output: {
@@ -17,7 +16,8 @@ module.exports = {
     libraryTarget: 'commonjs2'
   },
   resolve: {
-    extensions: ['', '.js', '.jsx']
+    extensions: ['', '.js', '.jsx'],
+    modulesDirectories: [path.join(__dirname, 'client')]
   },
   target: 'electron-renderer'
 };
