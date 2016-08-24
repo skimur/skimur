@@ -5,7 +5,8 @@ import { match } from 'react-router';
 import getRoutes from './routes';
 import createHistory from 'react-router/lib/createMemoryHistory';
 import RouterContext from 'react-router/lib/RouterContext';
-import isEmpty from 'utils/isEmpty.js';
+import { Provider } from 'mobx-react';
+import AppStore from 'stores/app';
 
 export function renderView(callback, path, model, viewBag) {
   const history = createHistory(path);
@@ -30,7 +31,9 @@ export function renderView(callback, path, model, viewBag) {
         });
         const component =
         (
-          <RouterContext {...renderProps} />
+          <Provider store={new AppStore()}>
+            <RouterContext {...renderProps} />
+          </Provider>
         );
         result.html = ReactDOM.renderToString(<Html component={component} />);
       } else {

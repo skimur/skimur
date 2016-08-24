@@ -13,7 +13,6 @@ module.exports = {
   output: {
     path: path.join(__dirname, 'server', 'src', 'Skimur.Web', 'App'),
     filename: 'server.js',
-    // this is important for webpack modules that will be require('')'d from node.
     libraryTarget: 'this',
     publicPath: '/dist/'
   },

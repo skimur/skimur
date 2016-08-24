@@ -2,7 +2,7 @@ var path = require('path');
 
 module.exports = {
   entry: [
-    './electron/app'
+    './client/web/client'
   ],
   module: {
     loaders: [{
@@ -11,13 +11,17 @@ module.exports = {
     }]
   },
   output: {
-    path: path.join(__dirname, 'electron', 'dist'),
-    filename: 'app.js',
-    libraryTarget: 'commonjs2'
+    path: path.join(__dirname, 'server', 'src', 'Skimur.Web', 'wwwroot', 'dist'),
+    filename: 'client.js',
+    libraryTarget: 'this',
+    publicPath: '/dist/'
   },
   resolve: {
     extensions: ['', '.js', '.jsx'],
-    modulesDirectories: [path.join(__dirname, 'client')]
-  },
-  target: 'electron-renderer'
+    modulesDirectories: [
+      path.join(__dirname, 'node_modules'),
+      path.join(__dirname, 'client', 'common'),
+      path.join(__dirname, 'client', 'web')
+    ]
+  }
 };
