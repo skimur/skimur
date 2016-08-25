@@ -1,2 +1,4 @@
 node_modules/
 src/electron/dist/
+src/server/src/Skimur.Web/wwwroot/dist
+src/server/src/Skimur.Web/App/server.js

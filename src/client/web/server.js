@@ -23,7 +23,6 @@ export function renderView(callback, path, model, viewBag) {
       } else if (error) {
         result.status = 500;
       } else if (renderProps) {
-        console.log(renderProps.routes);
         result.status = 200;
         renderProps.routes.forEach(function(route) {
           if(route.status)

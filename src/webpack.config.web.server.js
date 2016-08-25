@@ -5,10 +5,13 @@ module.exports = {
     './client/web/server'
   ],
   module: {
-    loaders: [{
-      test: /\.jsx?$/,
-      loaders: ['babel-loader']
-    }]
+    loaders: [
+      { test: /\.jsx?$/, loaders: ['babel-loader'] },
+      { test: /\.css$/, loader: 'css/locals?module' },
+      { test: /\.scss$/, loader: 'css/locals?module!sass' },
+      { test: /\.(woff2?|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' },
+      { test: /\.(jpeg|jpeg|gif|png|tiff)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' }
+    ]
   },
   output: {
     path: path.join(__dirname, 'server', 'src', 'Skimur.Web', 'App'),
