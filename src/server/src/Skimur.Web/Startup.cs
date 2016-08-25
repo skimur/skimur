@@ -7,6 +7,8 @@ using Microsoft.Extensions.Configuration;
 using System.IO;
 using Skimur.App;
 using Skimur.Web.Services;
+using System;
+using System.Collections.Generic;
 
 namespace Skimur.Web
 {
@@ -57,7 +59,24 @@ namespace Skimur.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole();
+            var hide = new List<string>
+            {
+                "Microsoft.AspNetCore.Server.Kestrel",
+                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
+                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
+                "Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker",
+                "Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor",
+                "Microsoft.Extensions.DependencyInjection.DataProtectionServices",
+                "Microsoft.AspNetCore.Routing.RouteBase",
+                "Microsoft.AspNetCore.Routing.Tree.TreeRouter"
+            };
+            loggerFactory.AddConsole((category, loglevel) => {
+                if(!hide.Contains(category))
+                {
+                    Console.WriteLine("CATEOGRY: " + category);
+                }
+                return !hide.Contains(category);
+            });
 
             if (env.IsDevelopment())
             {
