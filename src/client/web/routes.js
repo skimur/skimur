@@ -3,14 +3,21 @@ import { IndexRoute, Route } from 'react-router';
 import {
   App,
   Home,
-  NotFound
+  NotFound,
+  Login
 } from './containers';
+
+console.log(Login);
 
 export default () => {
   return (
     <Route path="/" component={App}>
       { /* Home (main) route */ }
       <IndexRoute component={Home} />
+
+      { /* Routes */ }
+      <Route path="login" components={Login} />
+
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />
     </Route>

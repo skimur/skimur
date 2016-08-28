@@ -9,11 +9,46 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 import { IndexLink } from 'react-router';
 import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 
+require('./App.scss');
+
 export default class App extends Component {
   static propTypes = {
     children: PropTypes.object.isRequired
   };
+  renderLoggedInLinks(user) {
+    return (
+      <Nav navbar pullRight>
+        <LinkContainer to="/manage">
+          <NavItem>Hello {user.userName}!</NavItem>
+        </LinkContainer>
+        <NavItem onSelect={this.logoffClick}>
+          Log off
+        </NavItem>
+      </Nav>
+    );
+  }
+  renderAnonymousLinks() {
+    return (
+      <Nav navbar pullRight>
+        <LinkContainer to="/register">
+          <NavItem>Register</NavItem>
+        </LinkContainer>
+        <LinkContainer to="/login">
+          <NavItem>Login</NavItem>
+        </LinkContainer>
+      </Nav>
+    );
+  }
   render() {
+    const {
+      user
+    } = this.props;
+    let loginLinks;
+    if (user) {
+      loginLinks = this.renderLoggedInLinks(user);
+    } else {
+      loginLinks = this.renderAnonymousLinks();
+    }
     return (
       <div>
         <Navbar inverse fixedTop>
@@ -37,6 +72,7 @@ export default class App extends Component {
                 <NavItem>Contact</NavItem>
               </LinkContainer>
             </Nav>
+            {loginLinks}
           </Navbar.Collapse>
         </Navbar>
         {this.props.children}

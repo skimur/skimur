@@ -1,5 +1,6 @@
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
+var extractCSS = new ExtractTextPlugin('styles.css');
 
 module.exports = {
   entry: [
@@ -9,8 +10,8 @@ module.exports = {
   module: {
     loaders: [
       { test: /\.jsx?$/, loaders: ['babel-loader'] },
-      { test: /\.css$/, loader: 'css/locals?module' },
-      { test: /\.scss$/, loader: 'css/locals?module!sass' },
+      { test: /\.css$/, loader: extractCSS.extract('style', 'css?modules') },
+      { test: /\.scss$/, loader: extractCSS.extract('style', 'css?modules!sass') },
       { test: /\.(woff2?|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' },
       { test: /\.(jpeg|jpeg|gif|png|tiff)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' }
     ]
@@ -22,7 +23,7 @@ module.exports = {
     publicPath: '/dist/'
   },
   plugins: [
-     new ExtractTextPlugin("styles.css")
+     extractCSS
   ],
   resolve: {
     extensions: ['', '.js', '.jsx'],
