@@ -13,7 +13,9 @@
     "bootstrap-sass": "^3.3.7",
     "classnames": "^2.2.5",
     "css-loader": "^0.24.0",
+    "es6-promise": "^3.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
+    "fetch": "^1.1.0",
     "file-loader": "^0.9.0",
     "mobx": "^2.4.3",
     "mobx-react": "^3.5.5",
@@ -31,6 +33,8 @@
     "style": "0.0.3",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
-    "webpack-target-electron-renderer": "^0.4.0"
+    "webpack-node-externals": "^1.3.3",
+    "webpack-target-electron-renderer": "^0.4.0",
+    "whatwg-fetch": "^1.0.0"
   }
 }

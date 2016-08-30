@@ -7,8 +7,6 @@ import {
   Login
 } from './containers';
 
-console.log(Login);
-
 export default () => {
   return (
     <Route path="/" component={App}>

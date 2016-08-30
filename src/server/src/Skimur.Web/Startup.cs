@@ -9,6 +9,8 @@ using Skimur.App;
 using Skimur.Web.Services;
 using System;
 using System.Collections.Generic;
+using Skimur.Email;
+using Skimur.Sms;
 
 namespace Skimur.Web
 {
@@ -54,6 +56,9 @@ namespace Skimur.Web
                 .AddUserStore<MembershipStore>()
                 .AddRoleStore<MembershipStore>()
                 .AddDefaultTokenProviders();
+
+            services.AddSingleton<IEmailSender, EmailSender>();
+            services.AddSingleton<ISmsSender, Sms.NoSmsSender>();
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.

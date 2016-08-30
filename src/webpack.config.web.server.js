@@ -1,4 +1,5 @@
 var path = require('path');
+var nodeExternals = require('webpack-node-externals');
 
 module.exports = {
   entry: [
@@ -13,6 +14,9 @@ module.exports = {
       { test: /\.(jpeg|jpeg|gif|png|tiff)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' }
     ]
   },
+  externals: [nodeExternals({
+    modulesFromFile: true
+  })],
   output: {
     path: path.join(__dirname, 'server', 'src', 'Skimur.Web', 'App'),
     filename: 'server.js',
