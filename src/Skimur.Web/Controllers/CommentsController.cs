@@ -73,6 +73,7 @@ namespace Skimur.Web.Controllers
         {
             var response = _commandBus.Send<EditComment, EditCommentResponse>(new EditComment
             {
+                EditedBy = _userContext.CurrentUser.Id
                 DateEdited = Common.CurrentTime(),
                 CommentId = model.CommentId,
                 Body = model.Body

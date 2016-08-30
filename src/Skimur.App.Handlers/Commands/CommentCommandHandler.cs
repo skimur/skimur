@@ -155,11 +155,25 @@ namespace Skimur.App.Handlers.Commands
 
             try
             {
+                var user = _membershipService.GetUserById(command.EditedBy);
+
+                if (user == null)
+                {
+                    response.Error = "Invalid user.";
+                    return response;
+                }
+
                 var comment = _commentService.GetCommentById(command.CommentId);
                 
                 if (comment == null)
                 {
                     response.Error = "Invalid comment.";
+                    return response;
+                }
+
+                if (comment.AuthorUserId != user.Id)
+                {
+                    response.Error = "You are not allowed to edit another user's comment.";
                     return response;
                 }
 
