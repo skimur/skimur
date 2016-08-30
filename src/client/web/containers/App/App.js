@@ -75,7 +75,13 @@ export default class App extends Component {
             {loginLinks}
           </Navbar.Collapse>
         </Navbar>
-        {this.props.children}
+        <div className="container body-content">
+          {this.props.children}
+          <hr />
+          <footer>
+            <p>&copy; 2016 - Skimur</p>
+          </footer>
+        </div>
         <DevTools />
       </div>
     );

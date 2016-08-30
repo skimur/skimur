@@ -2,6 +2,7 @@ import React from 'react';
 import { observable, action, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import cx from 'classnames';
+import { Glyphicon } from 'react-bootstrap';
 
 const InputText = observer(({ field }) => {
   return <input
@@ -45,6 +46,20 @@ export default observer(({ field, name, label, type }) => {
       <label className="col-md-2 control-label" htmlFor={name}>{label}</label>
       <div className="col-md-10">
         {input}
+        {field.errors.length > 0 &&
+          <div>
+            {field.errors.map((err, i) =>
+            (
+              <p
+                className="help-block"
+                key={i}>
+                <Glyphicon glyph="exclamation-sign" />
+                {' '}
+                {err}
+              </p>
+            ))}
+          </div>  
+        }
       </div>
     </div>
   );

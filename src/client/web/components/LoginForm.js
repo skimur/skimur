@@ -30,13 +30,13 @@ export default class LoginForm extends Component {
 
   render() {
     return (
-      <form className="form-horizontal">
+      <form onSubmit={this.onClick.bind(this)} className="form-horizontal">
         <ErrorList errors={this.store.errors} />
         <Input field={this.store.userName} name="userName" label="User name" />
         <Input field={this.store.password} name="password" label="Password" />
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
-            <button type="submit" className="btn btn-default" onClick={this.onClick.bind(this)}>Login</button>
+            <button type="submit" className="btn btn-default">Login</button>
           </div>
         </div>
       </form>
