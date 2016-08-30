@@ -7,10 +7,6 @@ import Form, { obvervableFormField } from 'state/Form';
 
 class LoginFormState extends Form {
 
-  @observable _fields = [];
-
-  @observable errors = [];
-
   @obvervableFormField userName = '';
   @obvervableFormField password = '';
 

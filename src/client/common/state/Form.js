@@ -9,7 +9,7 @@ class Field {
 
   @observable errors = [];
 
-  @computed 
+  @computed
   get isValid() {
     return this.errors.length == 0;
   }
@@ -25,6 +25,8 @@ const obvervableFormField = function(target, key, descripter) {
   descripter.initializer = function() {
     let field = new Field();
     field.value = initialValue;
+    if(!target._fields)
+      target._fields = [];
     target._fields.push({ key, field });
     return field;
   }
@@ -34,8 +36,6 @@ const obvervableFormField = function(target, key, descripter) {
 export { obvervableFormField }
 
 export default class Form {
-
-  @observable _fields = [];
 
   @observable errors = [];
 
