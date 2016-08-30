@@ -1,14 +1,18 @@
 import React, { Component } from 'react';
-import Field from 'state/Field';
-import { Input } from 'components';
-import { action, observable, reaction } from 'mobx';
+import { Input, ErrorList } from 'components';
+import { action, observable, reaction, computed } from 'mobx';
 import { observer } from 'mobx-react';
 import api from 'helpers/api';
-import Form, { obvervableFormField } from 'state/Form'
+import Form, { obvervableFormField } from 'state/Form';
 
 class LoginFormState extends Form {
-  @obvervableFormField userName = ''
-  @obvervableFormField password = ''
+
+  @observable _fields = [];
+
+  @observable errors = [];
+
+  @obvervableFormField userName = '';
+  @obvervableFormField password = '';
 
   @action
   login() {
@@ -16,17 +20,12 @@ class LoginFormState extends Form {
       this.updateModelState(result);
     });
   }
-}
+} 
 
 @observer
 export default class LoginForm extends Component {
 
-  @observable store = new LoginFormState();
-
-  constructor(props) {
-    super(props);
-    this.store = new LoginFormState();
-  }
+  store = new LoginFormState();
 
   onClick(event) {
     event.preventDefault();
@@ -36,6 +35,7 @@ export default class LoginForm extends Component {
   render() {
     return (
       <form className="form-horizontal">
+        <ErrorList errors={this.store.errors} />
         <Input field={this.store.userName} name="userName" label="User name" />
         <Input field={this.store.password} name="password" label="Password" />
         <div className="form-group">
