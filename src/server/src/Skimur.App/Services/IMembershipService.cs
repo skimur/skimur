@@ -7,65 +7,65 @@ namespace Skimur.App.Services
 {
     public interface IMembershipService
     {
-        bool UpdateUser(User user);
+        Task<bool> UpdateUser(User user);
         
-        bool InsertUser(User user);
+        Task<bool> InsertUser(User user);
         
-        bool DeleteUser(Guid userId);
+        Task<bool> DeleteUser(Guid userId);
         
-        User GetUserById(Guid userId);
+        Task<User> GetUserById(Guid userId);
         
-        User GetUserByUserName(string userName);
+        Task<User> GetUserByUserName(string userName);
+
+        Task<User> GetUserByEmail(string emailAddress);
+
+        Task<List<User>> GetUsersByIds(List<Guid> ids);
+
+        Task<SeekedList<User>> GetAllUsers(int? skip = null, int? take = null);
+
+        Task<bool> IsUserNameValid(string userName);
+
+        Task<bool> IsEmailValid(string email);
+
+        Task<bool> IsPasswordValid(string password);
+
+        Task<bool> CanChangedEmail(Guid userId, string email);
+
+        Task<Role> GetRoleById(Guid id);
+
+        Task<Role> GetRoleByName(string roleName);
+
+        Task<bool> UpdateRole(Role role);
+
+        Task<bool> InsertRole(Role role);
+
+        Task<bool> DeleteRole(Guid roleId);
+
+        Task<IList<Role>> GetRoles();
+
+        Task<bool> AddUserToRole(Guid userId, Guid roleId);
+
+        Task<bool> RemoveUserFromRole(Guid userId, Guid roleId);
+
+        Task<bool> IsInRole(Guid userId, Guid roleId);
+
+        Task<IList<Role>> GetUserRoles(Guid userId);
+
+        Task<UserValidationResult> ValidateUser(User user);
+
+        Task ResetAccessFailedCount(Guid userId);
+
+        Task AddRemoteLogin(Guid userId, string loginProvider, string loginKey);
+
+        Task RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey);
+
+        Task<IList<UserLogin>> GetRemoteLoginsForUser(Guid userId);
+
+        Task<User> FindUserByExternalLogin(string loginProvider, string loginKey);
+
+        Task UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location);
         
-        User GetUserByEmail(string emailAddress);
-        
-        List<User> GetUsersByIds(List<Guid> ids);
-        
-        SeekedList<User> GetAllUsers(int? skip = null, int? take = null);
-        
-        bool IsUserNameValid(string userName);
-        
-        bool IsEmailValid(string email);
-        
-        bool IsPasswordValid(string password);
-        
-        bool CanChangedEmail(Guid userId, string email);
-        
-        Role GetRoleById(Guid id);
-        
-        Role GetRoleByName(string roleName);
-        
-        bool UpdateRole(Role role);
-        
-        bool InsertRole(Role role);
-        
-        bool DeleteRole(Guid roleId);
-        
-        IList<Role> GetRoles();
-        
-        bool AddUserToRole(Guid userId, Guid roleId);
-        
-        bool RemoveUserFromRole(Guid userId, Guid roleId);
-        
-        bool IsInRole(Guid userId, Guid roleId);
-        
-        IList<Role> GetUserRoles(Guid userId);
-        
-        UserValidationResult ValidateUser(User user);
-        
-        void ResetAccessFailedCount(Guid userId);
-        
-        void AddRemoteLogin(Guid userId, string loginProvider, string loginKey);
-        
-        void RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey);
-        
-        IList<UserLogin> GetRemoteLoginsForUser(Guid userId);
-        
-        User FindUserByExternalLogin(string loginProvider, string loginKey);
-        
-        void UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location);
-        
-        void UpdateUserAvatar(Guid userId, string avatarIdentifier);
+        Task UpdateUserAvatar(Guid userId, string avatarIdentifier);
     }
 
     [Flags]

@@ -11,10 +11,11 @@ using System;
 using System.Collections.Generic;
 using Skimur.Email;
 using Skimur.Sms;
+using Skimur.Utils;
 
 namespace Skimur.Web
 {
-    public class Startup
+    public class Startup : IRegistrar
     {
         IHostingEnvironment _hostingEnvironment;
 
@@ -39,26 +40,14 @@ namespace Skimur.Web
 
         public IConfigurationRoot Configuration { get; set; }
 
-        public void ConfigureServices(IServiceCollection services)
+        public IServiceProvider ConfigureServices(IServiceCollection services)
         {
-            services.AddJsEngine(builder =>
-            {
-                builder.UseNodeRenderEngine(options =>
-                {
-                    options.GetModuleName += (path, model, viewBag, routeValues, area, viewType) => "server.js";
-                    options.ProjectDirectory = Path.Combine(_hostingEnvironment.ContentRootPath, "App");
-                });
-                builder.UseSingletonEngineFactory();
-            });
-            services.AddMvc();
-
-            services.AddIdentity<User, Role>()
-                .AddUserStore<MembershipStore>()
-                .AddRoleStore<MembershipStore>()
-                .AddDefaultTokenProviders();
-
-            services.AddSingleton<IEmailSender, EmailSender>();
-            services.AddSingleton<ISmsSender, Sms.NoSmsSender>();
+            SkimurContext.Initialize(
+                new ServiceCollectionRegistrar(services, 0),
+                new Skimur.App.Registrar(),
+                this);
+            
+            return SkimurContext.ServiceProvider;
         }
 
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
@@ -100,6 +89,27 @@ namespace Skimur.Web
                     name: "default",
                     template: "{controller=Home}/{action=Index}/{id?}");
             });
+        }
+
+        public int Order => 0;
+
+        public void Register(IServiceCollection services)
+        {
+            services.AddJsEngine(builder =>
+            {
+                builder.UseNodeRenderEngine(options =>
+                {
+                    options.GetModuleName += (path, model, viewBag, routeValues, area, viewType) => "server.js";
+                    options.ProjectDirectory = Path.Combine(_hostingEnvironment.ContentRootPath, "App");
+                });
+                builder.UseSingletonEngineFactory();
+            });
+            services.AddMvc();
+
+            services.AddIdentity<User, Role>()
+                .AddUserStore<MembershipStore>()
+                .AddRoleStore<MembershipStore>()
+                .AddDefaultTokenProviders();
         }
     }
 }

@@ -5,11 +5,19 @@ using System.Linq;
 using System.Threading.Tasks;
 using System.Threading;
 using Skimur.App;
+using Skimur.App.Services;
 
 namespace Skimur.Web.Services
 {
     public class MembershipStore : IUserStore<User>, IRoleStore<Role>
     {
+        IMembershipService _membershipService;
+
+        public MembershipStore(IMembershipService membershipService)
+        {
+            _membershipService = membershipService;
+        }
+
         #region IUserStore
 
         public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
@@ -29,7 +37,7 @@ namespace Skimur.Web.Services
 
         public Task<User> FindByNameAsync(string normalizedUserName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return _membershipService.GetUserByUserName(normalizedUserName);
         }
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)

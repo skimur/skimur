@@ -7,152 +7,152 @@ namespace Skimur.App.Services.Impl
 {
     public class MembershipService : IMembershipService
     {
-        public bool UpdateUser(User user)
+        public Task AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
             throw new NotImplementedException();
         }
 
-        public bool InsertUser(User user)
+        public Task<bool> AddUserToRole(Guid userId, Guid roleId)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteUser(Guid userId)
+        public Task<bool> CanChangedEmail(Guid userId, string email)
         {
             throw new NotImplementedException();
         }
 
-        public User GetUserById(Guid userId)
+        public Task<bool> DeleteRole(Guid roleId)
         {
             throw new NotImplementedException();
         }
 
-        public User GetUserByUserName(string userName)
+        public Task<bool> DeleteUser(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public User GetUserByEmail(string emailAddress)
+        public Task<User> FindUserByExternalLogin(string loginProvider, string loginKey)
         {
             throw new NotImplementedException();
         }
 
-        public List<User> GetUsersByIds(List<Guid> ids)
+        public Task<SeekedList<User>> GetAllUsers(int? skip = default(int?), int? take = default(int?))
         {
             throw new NotImplementedException();
         }
 
-        public SeekedList<User> GetAllUsers(int? skip = null, int? take = null)
+        public Task<IList<UserLogin>> GetRemoteLoginsForUser(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsUserNameValid(string userName)
+        public Task<Role> GetRoleById(Guid id)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsEmailValid(string email)
+        public Task<Role> GetRoleByName(string roleName)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsPasswordValid(string password)
+        public Task<IList<Role>> GetRoles()
         {
             throw new NotImplementedException();
         }
 
-        public bool CanChangedEmail(Guid userId, string email)
+        public Task<User> GetUserByEmail(string emailAddress)
         {
             throw new NotImplementedException();
         }
 
-        public Role GetRoleById(Guid id)
+        public Task<User> GetUserById(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public Role GetRoleByName(string roleName)
+        public Task<User> GetUserByUserName(string userName)
+        {
+            return Task.FromResult<User>(null);
+        }
+
+        public Task<IList<Role>> GetUserRoles(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public bool UpdateRole(Role role)
+        public Task<List<User>> GetUsersByIds(List<Guid> ids)
         {
             throw new NotImplementedException();
         }
 
-        public bool InsertRole(Role role)
+        public Task<bool> InsertRole(Role role)
         {
             throw new NotImplementedException();
         }
 
-        public bool DeleteRole(Guid roleId)
+        public Task<bool> InsertUser(User user)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Role> GetRoles()
+        public Task<bool> IsEmailValid(string email)
         {
             throw new NotImplementedException();
         }
 
-        public bool AddUserToRole(Guid userId, Guid roleId)
+        public Task<bool> IsInRole(Guid userId, Guid roleId)
         {
             throw new NotImplementedException();
         }
 
-        public bool RemoveUserFromRole(Guid userId, Guid roleId)
+        public Task<bool> IsPasswordValid(string password)
         {
             throw new NotImplementedException();
         }
 
-        public bool IsInRole(Guid userId, Guid roleId)
+        public Task<bool> IsUserNameValid(string userName)
         {
             throw new NotImplementedException();
         }
 
-        public IList<Role> GetUserRoles(Guid userId)
+        public Task RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
             throw new NotImplementedException();
         }
 
-        public UserValidationResult ValidateUser(User user)
+        public Task<bool> RemoveUserFromRole(Guid userId, Guid roleId)
         {
             throw new NotImplementedException();
         }
 
-        public void ResetAccessFailedCount(Guid userId)
+        public Task ResetAccessFailedCount(Guid userId)
         {
             throw new NotImplementedException();
         }
 
-        public void AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
+        public Task<bool> UpdateRole(Role role)
         {
             throw new NotImplementedException();
         }
 
-        public void RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey)
+        public Task<bool> UpdateUser(User user)
         {
             throw new NotImplementedException();
         }
 
-        public IList<UserLogin> GetRemoteLoginsForUser(Guid userId)
+        public Task UpdateUserAvatar(Guid userId, string avatarIdentifier)
         {
             throw new NotImplementedException();
         }
 
-        public User FindUserByExternalLogin(string loginProvider, string loginKey)
+        public Task UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
         {
             throw new NotImplementedException();
         }
 
-        public void UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
-        {
-            throw new NotImplementedException();
-        }
-
-        public void UpdateUserAvatar(Guid userId, string avatarIdentifier)
+        public Task<UserValidationResult> ValidateUser(User user)
         {
             throw new NotImplementedException();
         }
