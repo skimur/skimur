@@ -16,6 +16,8 @@ Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur", "src\Skimur\Skimur
 EndProject
 Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.App", "src\Skimur.App\Skimur.App.xproj", "{33AF01DC-8481-4363-A40D-97D1F719C064}"
 EndProject
+Project("{8BB2217D-0F2D-49D1-97BC-3654ED321F3B}") = "Skimur.Tools", "src\Skimur.Tools\Skimur.Tools.xproj", "{FA410545-2E20-4B67-88A9-FA178009C571}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -34,6 +36,10 @@ Global
 		{33AF01DC-8481-4363-A40D-97D1F719C064}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{33AF01DC-8481-4363-A40D-97D1F719C064}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{33AF01DC-8481-4363-A40D-97D1F719C064}.Release|Any CPU.Build.0 = Release|Any CPU
+		{FA410545-2E20-4B67-88A9-FA178009C571}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{FA410545-2E20-4B67-88A9-FA178009C571}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{FA410545-2E20-4B67-88A9-FA178009C571}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{FA410545-2E20-4B67-88A9-FA178009C571}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE
@@ -42,5 +48,6 @@ Global
 		{8AEE3EC1-E03D-4EE0-830B-496015A27B1E} = {4244A0F5-3640-44A6-BA23-548D75766BC3}
 		{51860415-2192-4666-9202-9D9ADB1D63FE} = {4244A0F5-3640-44A6-BA23-548D75766BC3}
 		{33AF01DC-8481-4363-A40D-97D1F719C064} = {4244A0F5-3640-44A6-BA23-548D75766BC3}
+		{FA410545-2E20-4B67-88A9-FA178009C571} = {4244A0F5-3640-44A6-BA23-548D75766BC3}
 	EndGlobalSection
 EndGlobal

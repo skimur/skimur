@@ -9,7 +9,14 @@
     "Microsoft.Extensions.Options": "1.0.0",
     "Microsoft.Extensions.Configuration.Abstractions": "1.0.0",
     "Microsoft.Extensions.Caching.Abstractions": "1.0.0",
-    "Microsoft.Extensions.DependencyInjection": "1.0.0"
+    "Microsoft.Extensions.DependencyInjection": "1.0.0",
+    "Microsoft.Extensions.DependencyModel": "1.0.0",
+    "System.Collections": "4.0.11",
+    "System.Reflection": "4.1.0",
+    "Microsoft.Extensions.Logging.Abstractions": "1.0.0",
+    "System.Linq": "4.1.0",
+    "ServiceStack.Text.Core": "1.0.3",
+    "Microsoft.Extensions.Logging": "1.0.0"
   },
 
   "frameworks": {

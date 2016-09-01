@@ -31,8 +31,10 @@ namespace Skimur
         public static IServiceProvider BuildServiceProvider(params IRegistrar[] registrars)
         {
             var collection = new ServiceCollection();
-
+            
             collection.AddSingleton<IServiceCollection>(provider => collection);
+
+            collection.AddLogging();
 
             // all the default services
             collection.AddSingleton<IConnectionStringProvider, ConnectionStringProvider>();
@@ -40,6 +42,10 @@ namespace Skimur
             collection.AddSingleton<IEmailSender, EmailSender>();
             collection.AddSingleton<ISmsSender, NoSmsSender>();
 
+            // migration services
+            collection.AddSingleton<Data.Postgres.IMigrationEngine, Data.Postgres.MigrationEngine>();
+            collection.AddSingleton<Data.Postgres.IMigrationResourceFinder, Data.Postgres.MigrationResourceFinder>();
+            
             foreach (var registrar in registrars.OrderBy(x => x.Order))
                 registrar.Register(collection);
 
