@@ -4,7 +4,8 @@ import {
   App,
   Home,
   NotFound,
-  Login
+  Login,
+  Register
 } from './containers';
 
 export default () => {
@@ -15,6 +16,7 @@ export default () => {
 
       { /* Routes */ }
       <Route path="login" components={Login} />
+      <Route path="register" components={Register} />
 
       { /* Catch all route */ }
       <Route path="*" component={NotFound} status={404} />

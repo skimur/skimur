@@ -5,6 +5,7 @@ using System.Threading.Tasks;
 using Microsoft.Extensions.DependencyInjection;
 using Skimur.App.Services;
 using Skimur.App.Services.Impl;
+using Skimur.App.ClassMappers;
 
 namespace Skimur.App
 {
@@ -15,6 +16,11 @@ namespace Skimur.App
         public void Register(IServiceCollection services)
         {
             services.AddSingleton<IMembershipService, MembershipService>();
+
+            services.Configure<Data.Mapper.ClassMapperOptions>(options =>
+            {
+                options.Add<UserMapper>();
+            });
         }
     }
 }

@@ -53,6 +53,22 @@ class Api {
       })
     });
   }
+  @modelStatePromise
+  register(userName, email, password, passwordConfirm) {
+    return fetch('/api/account/register', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        userName,
+        email,
+        password,
+        passwordConfirm
+      })
+    });
+  }
 }
 
 export default new Api();

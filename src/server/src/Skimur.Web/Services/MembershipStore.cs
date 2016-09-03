@@ -9,7 +9,7 @@ using Skimur.App.Services;
 
 namespace Skimur.Web.Services
 {
-    public class MembershipStore : IUserStore<User>, IRoleStore<Role>
+    public class MembershipStore : IUserStore<User>, IRoleStore<Role>, IUserPasswordStore<User>
     {
         IMembershipService _membershipService;
 
@@ -20,9 +20,17 @@ namespace Skimur.Web.Services
 
         #region IUserStore
 
-        public Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
+        public async Task<IdentityResult> CreateAsync(User user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(IdentityResult.Success);
+            var result = await _membershipService.InsertUser(user);
+
+            if (!result)
+                return IdentityResult.Failed(new IdentityError
+                {
+                    Description = "Couldn't create user."
+                });
+
+            return IdentityResult.Success;
         }
 
         public Task<IdentityResult> DeleteAsync(User user, CancellationToken cancellationToken)
@@ -42,27 +50,32 @@ namespace Skimur.Web.Services
 
         public Task<string> GetNormalizedUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.UserName);
         }
 
         public Task<string> GetUserIdAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            if (user.Id == null) return Task.FromResult((string)null);
+
+            if (user.Id == Guid.Empty) return Task.FromResult((string)null);
+
+            return Task.FromResult(user.Id.ToString());
         }
 
         public Task<string> GetUserNameAsync(User user, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(user.UserName);
         }
 
         public Task SetNormalizedUserNameAsync(User user, string normalizedName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(0);
         }
 
         public Task SetUserNameAsync(User user, string userName, CancellationToken cancellationToken)
         {
-            throw new NotImplementedException();
+            user.UserName = userName;
+            return Task.FromResult(0);
         }
 
         public Task<IdentityResult> UpdateAsync(User user, CancellationToken cancellationToken)
@@ -130,5 +143,25 @@ namespace Skimur.Web.Services
         {
 
         }
+
+        #region IUserPassword
+
+        public Task SetPasswordHashAsync(User user, string passwordHash, CancellationToken cancellationToken)
+        {
+            user.PasswordHash = passwordHash;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetPasswordHashAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.PasswordHash);
+        }
+
+        public Task<bool> HasPasswordAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(!string.IsNullOrEmpty(user.PasswordHash));
+        }
+
+        #endregion
     }
 }

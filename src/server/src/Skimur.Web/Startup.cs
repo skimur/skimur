@@ -95,6 +95,8 @@ namespace Skimur.Web
 
         public void Register(IServiceCollection services)
         {
+            services.AddSingleton<IConfiguration>(Configuration);
+
             services.AddJsEngine(builder =>
             {
                 builder.UseNodeRenderEngine(options =>

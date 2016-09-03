@@ -1,5 +1,8 @@
-﻿using System;
+﻿using Dapper;
+using Skimur.Data;
+using System;
 using System.Collections.Generic;
+using System.Data;
 using System.Linq;
 using System.Threading.Tasks;
 
@@ -7,6 +10,15 @@ namespace Skimur.App.Services.Impl
 {
     public class MembershipService : IMembershipService
     {
+        private IDbConnectionProvider _conn;
+        private IEntityService _entityService;
+
+        public MembershipService(IDbConnectionProvider conn, IEntityService entityService)
+        {
+            _conn = conn;
+            _entityService = entityService;
+        }
+
         public Task AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
             throw new NotImplementedException();
@@ -91,10 +103,19 @@ namespace Skimur.App.Services.Impl
         {
             throw new NotImplementedException();
         }
-
+        
         public Task<bool> InsertUser(User user)
         {
-            throw new NotImplementedException();
+            if (user.Id != Guid.Empty)
+                throw new Exception("You cannot insert a user with an existing user id");
+
+            user.Id = GuidUtil.NewSequentialId();
+            user.CreatedDate = Common.CurrentTime();
+
+            return _conn.Perform(async conn =>
+            {
+                return (await _entityService.Insert(user, conn)) == 1;
+            });
         }
 
         public Task<bool> IsEmailValid(string email)

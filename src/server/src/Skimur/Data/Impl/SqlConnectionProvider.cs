@@ -27,11 +27,17 @@ namespace Skimur.Data.Impl
             using (var connection = await OpenConnection())
                 action(connection);
         }
-
+        
         public async Task<T> Perform<T>(Func<IDbConnection, T> func)
         {
             using (var connection = await OpenConnection())
                 return func(connection);
+        }
+
+        public async Task<T> Perform<T>(Func<IDbConnection, Task<T>> func)
+        {
+            using (var connection = await OpenConnection())
+                return await func(connection);
         }
     }
 }
