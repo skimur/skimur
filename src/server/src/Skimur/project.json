@@ -17,7 +17,13 @@
     "System.Linq": "4.1.0",
     "ServiceStack.Text.Core": "1.0.3",
     "Microsoft.Extensions.Logging": "1.0.0",
-    "RT.Comb": "1.4.0"
+    "RT.Comb": "1.4.0",
+    "ServiceStack.OrmLite.Core": {
+      "target": "project"
+    },
+    "ServiceStack.OrmLite.PostgresSQL.Core": {
+      "target": "project"
+    }
   },
 
   "frameworks": {

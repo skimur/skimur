@@ -53,24 +53,7 @@ namespace Skimur.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            var hide = new List<string>
-            {
-                "Microsoft.AspNetCore.Server.Kestrel",
-                "Microsoft.AspNetCore.StaticFiles.StaticFileMiddleware",
-                "Microsoft.AspNetCore.Hosting.Internal.WebHost",
-                "Microsoft.AspNetCore.Mvc.Internal.ControllerActionInvoker",
-                "Microsoft.AspNetCore.Mvc.ViewFeatures.Internal.ViewResultExecutor",
-                "Microsoft.Extensions.DependencyInjection.DataProtectionServices",
-                "Microsoft.AspNetCore.Routing.RouteBase",
-                "Microsoft.AspNetCore.Routing.Tree.TreeRouter"
-            };
-            loggerFactory.AddConsole((category, loglevel) => {
-                if(!hide.Contains(category))
-                {
-                    Console.WriteLine("CATEOGRY: " + category);
-                }
-                return !hide.Contains(category);
-            });
+            loggerFactory.AddConsole((category, loglevel) => loglevel >= LogLevel.Warning);
 
             if (env.IsDevelopment())
             {
@@ -80,6 +63,8 @@ namespace Skimur.Web
             app.UseStatusCodePagesWithReExecute("/Status/Status/{0}");
 
             app.UseStaticFiles();
+            app.UseIdentity();
+            app.UseSession();
 
             app.UseJsEngine();
             
@@ -108,10 +93,16 @@ namespace Skimur.Web
             });
             services.AddMvc();
 
-            services.AddIdentity<User, Role>()
+            services.AddIdentity<User, Role>(options =>
+                {
+                    options.Password.RequireNonAlphanumeric = false;
+                    options.Password.RequireUppercase = false;
+                })
                 .AddUserStore<MembershipStore>()
                 .AddRoleStore<MembershipStore>()
                 .AddDefaultTokenProviders();
+
+            services.AddSession();
         }
     }
 }

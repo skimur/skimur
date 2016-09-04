@@ -12,7 +12,7 @@ namespace Skimur.Email
             FromEmail = "noreply@domain.com";
             FromName = "No Reply";
             Host = "localhost";
-            Port = 25;
+            Port = 1025;
         }
         
         public string FromName { get; set; }

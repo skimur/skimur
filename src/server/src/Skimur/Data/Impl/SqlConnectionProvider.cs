@@ -1,4 +1,5 @@
-﻿using System;
+﻿using ServiceStack.OrmLite;
+using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
@@ -13,6 +14,7 @@ namespace Skimur.Data.Impl
         public SqlConnectionProvider(IConnectionStringProvider connectionStringProvider)
         {
             _connectionStringProvider = connectionStringProvider;
+            OrmLiteConfig.DialectProvider = PostgreSqlDialect.Provider;
         }
 
         public async Task<IDbConnection> OpenConnection()

@@ -1,0 +1,29 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "buildOptions": {
+    "define": [ "ASYNC", "TRACE", "NETSTANDARD1_3", "COREFX" ],
+    "compile": [
+      "../../../vendor/ServiceStack.OrmLite/src/ServiceStack.OrmLite/**/*.cs"
+    ]
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "ServiceStack.Interfaces.Core": "1.0.3",
+    "ServiceStack.Text.Core": "1.0.3",
+    "ServiceStack.Common.Core": "1.0.3",
+    "System.Data.Common": "4.1.0",
+    "System.Data.SqlClient": "4.1.0",
+    "System.Xml.XmlDocument": "4.0.1",
+    "System.Collections.NonGeneric": "4.0.1",
+    "System.Reflection.TypeExtensions": "4.1.0",
+    "System.ComponentModel.Annotations": "4.1.0"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

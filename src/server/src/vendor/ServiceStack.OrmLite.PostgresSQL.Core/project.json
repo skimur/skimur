@@ -1,0 +1,23 @@
+﻿{
+  "version": "1.0.0-*",
+
+  "buildOptions": {
+    "compile": [
+      "../../../vendor/ServiceStack.OrmLite/src/ServiceStack.OrmLite.PostgreSQL/**/*.cs"
+    ]
+  },
+
+  "dependencies": {
+    "NETStandard.Library": "1.6.0",
+    "ServiceStack.OrmLite.Core": {
+      "target": "project"
+    },
+    "Npgsql": "3.1.7"
+  },
+
+  "frameworks": {
+    "netstandard1.6": {
+      "imports": "dnxcore50"
+    }
+  }
+}

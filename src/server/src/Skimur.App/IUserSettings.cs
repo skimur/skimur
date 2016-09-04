@@ -3,11 +3,10 @@ using System.Collections.Generic;
 using System.Linq;
 using System.Threading.Tasks;
 
-namespace Skimur.Data.Mapper
+namespace Skimur.App
 {
-    public enum KeyType
+    public interface IUserSettings
     {
-        NotAKey,
-        Guid
+        bool ShowNsfw { get; set; }
     }
 }

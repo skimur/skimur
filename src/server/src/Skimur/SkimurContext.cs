@@ -41,8 +41,6 @@ namespace Skimur
             collection.AddSingleton<IDbConnectionProvider, SqlConnectionProvider>();
             collection.AddSingleton<IEmailSender, EmailSender>();
             collection.AddSingleton<ISmsSender, NoSmsSender>();
-            collection.AddSingleton<Data.Mapper.IMapperConfiguration, Data.Mapper.MapperConfiguration>();
-            collection.AddSingleton<IEntityService, EntityService>();
 
             // migration services
             collection.AddSingleton<Data.Postgres.IMigrationEngine, Data.Postgres.MigrationEngine>();

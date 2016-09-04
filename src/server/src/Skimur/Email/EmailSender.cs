@@ -44,10 +44,11 @@ namespace Skimur.Email
 
                 smtpClient.AuthenticationMechanisms.Remove("XOATH2");
 
-                if (!options.UseDefaultCredentials)
-                    throw new NotSupportedException("You must use default credentials, for now.");
+                if (options.UseDefaultCredentials)
+                {
+                    await smtpClient.AuthenticateAsync(options.UserName, options.Password);
+                }
 
-                await smtpClient.AuthenticateAsync(options.UserName, options.Password);
                 await smtpClient.SendAsync(message);
                 await smtpClient.DisconnectAsync(true);
             }

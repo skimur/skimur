@@ -1,9 +1,11 @@
 ﻿using Dapper;
+using ServiceStack.OrmLite;
 using Skimur.Data;
 using System;
 using System.Collections.Generic;
 using System.Data;
 using System.Linq;
+using System.Text.RegularExpressions;
 using System.Threading.Tasks;
 
 namespace Skimur.App.Services.Impl
@@ -11,97 +13,172 @@ namespace Skimur.App.Services.Impl
     public class MembershipService : IMembershipService
     {
         private IDbConnectionProvider _conn;
-        private IEntityService _entityService;
+        private IPasswordManager _passwordManager;
+        private Regex _emailRegex = new Regex(@"^(?("")("".+?(?<!\\)""@)|(([0-9a-z]((\.(?!\.))|[-!#\$%&'\*\+/=\?\^`\{\}\|~\w])*)(?<=[0-9a-z])@))(?(\[)(\[(\d{1,3}\.){3}\d{1,3}\])|(([0-9a-z][-\w]*[0-9a-z]*\.)+[a-z0-9][\-a-z0-9]{0,22}[a-z0-9]))$");
+        private Regex _usernameRegex = new Regex(@"^[a-zA-Z0-9]{1}[A-Za-z0-9-_]{1,19}$");
 
-        public MembershipService(IDbConnectionProvider conn, IEntityService entityService)
+        public MembershipService(IDbConnectionProvider conn, IPasswordManager passwordManager)
         {
             _conn = conn;
-            _entityService = entityService;
+            _passwordManager = passwordManager;
         }
 
-        public Task AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
+        public async Task AddRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
-            throw new NotImplementedException();
+            await _conn.Perform(async conn =>
+            {
+                if (await conn.CountAsync<UserLogin>(
+                        x => x.UserId == userId && x.LoginProvider == loginProvider && x.LoginKey == loginKey) == 0)
+                {
+                    await conn.InsertAsync(new UserLogin
+                    {
+                        Id = GuidUtil.NewSequentialId(),
+                        UserId = userId,
+                        LoginProvider = loginProvider,
+                        LoginKey = loginKey
+                    });
+                }
+            });
         }
 
-        public Task<bool> AddUserToRole(Guid userId, Guid roleId)
+        public async Task<bool> AddUserToRole(Guid userId, Guid roleId)
         {
-            throw new NotImplementedException();
+            long dbResult = 0;
+            await _conn.Perform(async conn =>
+            {
+                if (await conn.CountAsync(conn.From<UserRole>().Where(x => x.UserId == userId && x.RoleId == roleId)) == 0)
+                    dbResult = await conn.InsertAsync(new UserRole { RoleId = roleId, UserId = userId });
+            });
+            return dbResult == 1;
         }
 
-        public Task<bool> CanChangedEmail(Guid userId, string email)
+        public async Task<bool> CanChangedEmail(Guid userId, string email)
         {
-            throw new NotImplementedException();
+            // Verify passing of regular expression test.
+            if (!await IsEmailValid(email)) return false;
+
+            if (userId != Guid.Empty)
+            {
+                // Verify the email isn't taken by another user.
+                return await _conn.Perform(async conn => (await conn.CountAsync<User>(user =>
+                    (user.Id != userId)
+                    && user.Email.ToLower() == email.ToLower())) == 0);
+            }
+
+            return await _conn.Perform(async conn => (await conn.CountAsync<User>(user =>
+                user.Email.ToLower() == email.ToLower()) == 0));
         }
 
-        public Task<bool> DeleteRole(Guid roleId)
+        public async Task<bool> DeleteRole(Guid roleId)
         {
-            throw new NotImplementedException();
+            var dbResult = 0;
+            if (roleId == Guid.Empty) throw new ArgumentNullException("roleId");
+            await _conn.Perform(async conn =>
+            {
+                await conn.DeleteAsync<UserRole>(x => x.RoleId == roleId);
+                dbResult = await conn.DeleteByIdAsync<Role>(roleId);
+            });
+            return dbResult == 1;
         }
 
-        public Task<bool> DeleteUser(Guid userId)
+        public async Task<bool> DeleteUser(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn =>
+            {
+                await conn.DeleteAsync<UserRole>(x => x.UserId == userId);
+                return await conn.DeleteAsync<User>(user => user.Id == userId) == 1;
+            });
         }
 
-        public Task<User> FindUserByExternalLogin(string loginProvider, string loginKey)
+        public async Task<User> FindUserByExternalLogin(string loginProvider, string loginKey)
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn =>
+                await conn.SingleAsync(conn.From<User>()
+                    .LeftJoin<UserLogin>((user, login) => user.Id == login.UserId)
+                    .Where<UserLogin>(x => x.LoginProvider == loginProvider && x.LoginKey == loginKey)));
         }
 
-        public Task<SeekedList<User>> GetAllUsers(int? skip = default(int?), int? take = default(int?))
+        public async Task<SeekedList<User>> GetAllUsers(int? skip = default(int?), int? take = default(int?))
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn =>
+            {
+                var query = conn.From<User>();
+
+                var totalCount = await conn.CountAsync(query);
+
+                query.Skip(skip).Take(take);
+
+                return new SeekedList<User>(await conn.SelectAsync(query), skip ?? 0, take, totalCount);
+            });
         }
 
-        public Task<IList<UserLogin>> GetRemoteLoginsForUser(Guid userId)
+        public async Task<IList<UserLogin>> GetRemoteLoginsForUser(Guid userId)
         {
-            throw new NotImplementedException();
+            return userId == Guid.Empty 
+                ? new List<UserLogin>() 
+                : await _conn.Perform(async conn => await conn.SelectAsync<UserLogin>(x => x.UserId == userId));
         }
 
-        public Task<Role> GetRoleById(Guid id)
+        public async Task<Role> GetRoleById(Guid id)
         {
-            throw new NotImplementedException();
+            return id == Guid.Empty 
+                ? null 
+                : await _conn.Perform(async conn => await conn.SingleByIdAsync<Role>(id));
         }
 
-        public Task<Role> GetRoleByName(string roleName)
+        public async Task<Role> GetRoleByName(string roleName)
         {
-            throw new NotImplementedException();
+            return string.IsNullOrEmpty(roleName) 
+                ? null 
+                : await _conn.Perform(async conn => await conn.SingleAsync<Role>(x => x.Name == roleName));
         }
 
-        public Task<IList<Role>> GetRoles()
+        public async Task<IList<Role>> GetRoles()
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn => await conn.SelectAsync<Role>());
         }
 
-        public Task<User> GetUserByEmail(string emailAddress)
+        public async Task<User> GetUserByEmail(string emailAddress)
         {
-            throw new NotImplementedException();
+            return string.IsNullOrEmpty(emailAddress)
+                ? null
+                : await _conn.Perform(async con => await con.SingleAsync<User>(x => x.Email.ToLower() == emailAddress.ToLower()));
         }
 
-        public Task<User> GetUserById(Guid userId)
+        public async Task<User> GetUserById(Guid userId)
         {
-            throw new NotImplementedException();
+            return userId == Guid.Empty
+               ? null
+               : await _conn.Perform(async conn => await conn.SingleByIdAsync<User>(userId));
         }
 
-        public Task<User> GetUserByUserName(string userName)
+        public async Task<User> GetUserByUserName(string userName)
         {
-            return Task.FromResult<User>(null);
+            return string.IsNullOrEmpty(userName)
+              ? null
+              : await _conn.Perform(async conn => await conn.SingleAsync<User>(x => x.UserName.ToLower() == userName.ToLower()));
         }
 
-        public Task<IList<Role>> GetUserRoles(Guid userId)
+        public async Task<IList<Role>> GetUserRoles(Guid userId)
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn => await conn.SelectAsync<Role>(conn.From<UserRole>()
+                .LeftJoin<Role, UserRole>((role, userRole) => role.Id == userRole.RoleId)
+                .Where(x => x.UserId == userId)));
         }
 
-        public Task<List<User>> GetUsersByIds(List<Guid> ids)
+        public async Task<List<User>> GetUsersByIds(List<Guid> ids)
         {
-            throw new NotImplementedException();
+            if (ids == null || ids.Count == 0)
+                return new List<User>();
+
+            return await _conn.Perform(async conn => await conn.SelectAsync(conn.From<User>().Where(x => ids.Contains(x.Id))));
         }
 
-        public Task<bool> InsertRole(Role role)
+        public async Task<bool> InsertRole(Role role)
         {
-            throw new NotImplementedException();
+            if (role.Id != Guid.Empty) throw new Exception("A role with a predetermined unique ID can not be created. The Id will be generated automatically.");
+            role.Id = GuidUtil.NewSequentialId();
+            return await _conn.Perform(async conn => await conn.InsertAsync(role)) == 1;
         }
         
         public Task<bool> InsertUser(User user)
@@ -114,68 +191,123 @@ namespace Skimur.App.Services.Impl
 
             return _conn.Perform(async conn =>
             {
-                return (await _entityService.Insert(user, conn)) == 1;
+                return (await conn.InsertAsync(user)) == 1;
             });
         }
 
         public Task<bool> IsEmailValid(string email)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(email)) return Task.FromResult(false);
+            return Task.FromResult(_emailRegex.IsMatch(email));
         }
 
-        public Task<bool> IsInRole(Guid userId, Guid roleId)
+        public async Task<bool> IsInRole(Guid userId, Guid roleId)
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn => await conn.CountAsync(conn.From<UserRole>().Where(x => x.UserId == userId && x.RoleId == roleId)) > 0);
         }
 
         public Task<bool> IsPasswordValid(string password)
         {
-            throw new NotImplementedException();
+            return Task.FromResult(_passwordManager.PasswordStrength(password) > PasswordScore.VeryWeak);
         }
 
         public Task<bool> IsUserNameValid(string userName)
         {
-            throw new NotImplementedException();
+            if (string.IsNullOrEmpty(userName)) return Task.FromResult(false);
+            return Task.FromResult(_usernameRegex.IsMatch(userName));
         }
 
-        public Task RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey)
+        public async Task RemoveRemoteLogin(Guid userId, string loginProvider, string loginKey)
         {
-            throw new NotImplementedException();
+            await _conn.Perform(async conn => await conn.DeleteAsync<UserLogin>(x => x.UserId == userId && x.LoginProvider == loginProvider && x.LoginKey == loginKey));
         }
 
-        public Task<bool> RemoveUserFromRole(Guid userId, Guid roleId)
+        public async Task<bool> RemoveUserFromRole(Guid userId, Guid roleId)
         {
-            throw new NotImplementedException();
+            return await _conn.Perform(async conn =>
+                await conn.DeleteAsync(conn.From<UserRole>()
+                    .Where(x => x.RoleId == roleId && x.UserId == userId))) == 1;
         }
 
-        public Task ResetAccessFailedCount(Guid userId)
+        public async Task ResetAccessFailedCount(Guid userId)
         {
-            throw new NotImplementedException();
+            if (userId == Guid.Empty)
+                return;
+            await _conn.Perform(async conn => await conn.UpdateAsync<User>(new { AccessFailedCount = 0 }, user => user.Id == userId));
         }
 
-        public Task<bool> UpdateRole(Role role)
+        public async Task<bool> UpdateRole(Role role)
         {
-            throw new NotImplementedException();
+            if (role.Id == Guid.Empty) throw new Exception("Invalid role.");
+            if (string.IsNullOrEmpty(role.Name)) throw new Exception("Invalid role name.");
+            return await _conn.Perform(async conn => await conn.UpdateAsync(role)) == 1;
         }
 
-        public Task<bool> UpdateUser(User user)
+        public async Task<bool> UpdateUser(User user)
         {
-            throw new NotImplementedException();
+            if (user.Id == Guid.Empty)
+                throw new Exception("You cannot update a user that doesn't have a user id");
+
+            return await _conn.Perform(async conn => await conn.UpdateAsync(user) == 1);
         }
 
-        public Task UpdateUserAvatar(Guid userId, string avatarIdentifier)
+        public async Task UpdateUserAvatar(Guid userId, string avatarIdentifier)
         {
-            throw new NotImplementedException();
+            await _conn.Perform(async conn =>
+            {
+                await conn.UpdateAsync<User>(new
+                {
+                    AvatarIdentifier = avatarIdentifier
+                },
+                x => x.Id == userId);
+            });
         }
 
-        public Task UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
+        public async Task UpdateUserProfile(Guid userId, string fullName, string bio, string url, string location)
         {
-            throw new NotImplementedException();
+            await _conn.Perform(async conn =>
+            {
+                await conn.UpdateAsync<User>(new
+                {
+                    FullName = fullName,
+                    Bio = bio,
+                    Url = url,
+                    Location = location
+                },
+                x => x.Id == userId);
+            });
         }
 
-        public Task<UserValidationResult> ValidateUser(User user)
+        public async Task<UserValidationResult> ValidateUser(User user)
         {
-            throw new NotImplementedException();
+            var result = UserValidationResult.Success;
+
+            if (!await IsUserNameValid(user.UserName))
+                result |= result | UserValidationResult.InvalidUserName;
+            if (!string.IsNullOrEmpty(user.Email) && !await IsEmailValid(user.Email))
+                result |= UserValidationResult.InvalidEmail;
+
+            if (result != UserValidationResult.Success) return result;
+
+            if (!string.IsNullOrEmpty(user.Email) && !await CanChangedEmail(user.Id, user.Email))
+                result |= UserValidationResult.EmailInUse;
+
+            if (user.Id == Guid.Empty)
+            {
+                // we are inserting this user, let's see if any user has this username
+                if (await GetUserByUserName(user.UserName) != null)
+                    result |= UserValidationResult.UserNameInUse;
+            }
+            else
+            {
+                // we are updating the user, make sure the user name wasn't changed
+                var dbUser = await GetUserByUserName(user.UserName);
+                if (dbUser != null)
+                    if (dbUser.Id != user.Id)
+                        result |= UserValidationResult.CantChangeUsername;
+            }
+
+            return result;
         }
     }
 }
