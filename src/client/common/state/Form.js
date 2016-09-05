@@ -1,4 +1,4 @@
-import { observable, computed, action } from 'mobx';
+import { observable, computed, action, runInAction } from 'mobx';
 
 class Field {
   constructor() {
@@ -23,12 +23,14 @@ class Field {
 const obvervableFormField = function(target, key, descripter) {
   let initialValue = descripter.initializer();
   descripter.initializer = function() {
-    let field = new Field();
-    field.value = initialValue;
-    if(!target._fields)
-      target._fields = [];
-    target._fields.push({ key, field });
-    return field;
+    return runInAction(() => {
+      let field = new Field();
+      field.value = initialValue;
+      if(!target._fields)
+        target._fields = [];
+      target._fields.push({ key, field });
+      return field;
+    });
   }
   return descripter;
 }

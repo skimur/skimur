@@ -29,7 +29,6 @@ namespace Skimur.Web.Controllers
             if (user != null)
             {
                 state.Auth.User = ApiUser.From(user);
-                state.Auth.LoggedIn = true;
             }
 
             state.ExternalLogin.LoginProviders

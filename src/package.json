@@ -13,6 +13,7 @@
     "bootstrap-sass": "^3.3.7",
     "classnames": "^2.2.5",
     "css-loader": "^0.24.0",
+    "deep-assign": "^2.0.0",
     "es6-promise": "^3.2.1",
     "extract-text-webpack-plugin": "^1.0.1",
     "fetch": "^1.1.0",

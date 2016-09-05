@@ -1,5 +1,7 @@
 import { observable } from 'mobx';
 
-export default class AppStore {
+class AppStore {
     @observable test = 'all';
 }
+
+export default AppStore;

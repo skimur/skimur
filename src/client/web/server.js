@@ -5,8 +5,9 @@ import { match } from 'react-router';
 import getRoutes from './routes';
 import createHistory from 'react-router/lib/createMemoryHistory';
 import RouterContext from 'react-router/lib/RouterContext';
+import { toJS } from 'mobx';
 import { Provider } from 'mobx-react';
-import AppStore from 'stores/app';
+import Store from 'store';
 
 export function renderView(callback, path, model, viewBag) {
   const history = createHistory(path);
@@ -28,13 +29,15 @@ export function renderView(callback, path, model, viewBag) {
           if(route.status)
             result.status = route.status;
         });
+        const store = new Store();
+        store.initialize(model);
         const component =
         (
-          <Provider store={new AppStore()}>
+          <Provider store={store}>
             <RouterContext {...renderProps} />
           </Provider>
         );
-        result.html = ReactDOM.renderToString(<Html component={component} />);
+        result.html = ReactDOM.renderToString(<Html component={component} state={toJS(store)} />);
       } else {
         result.status = 404;
       }

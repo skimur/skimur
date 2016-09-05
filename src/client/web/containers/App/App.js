@@ -1,5 +1,6 @@
 import React, { Component, PropTypes } from 'react';
 import Helmet from 'react-helmet';
+import { inject, observer } from 'mobx-react';
 import DevTools from 'mobx-react-devtools';
 
 import Navbar from 'react-bootstrap/lib/Navbar';
@@ -8,13 +9,19 @@ import NavItem from 'react-bootstrap/lib/NavItem';
 
 import { IndexLink } from 'react-router';
 import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
+import { logOff } from 'actions';
 
 require('./App.scss');
 
+@inject("store") @observer
 export default class App extends Component {
-  static propTypes = {
-    children: PropTypes.object.isRequired
-  };
+  constructor(props) {
+    super(props);
+    this.logOff = logOff(props.store);
+  }
+  logoffClick = () => {
+    this.logOff();
+  }
   renderLoggedInLinks(user) {
     return (
       <Nav navbar pullRight>
@@ -42,7 +49,7 @@ export default class App extends Component {
   render() {
     const {
       user
-    } = this.props;
+    } = this.props.store.auth;
     let loginLinks;
     if (user) {
       loginLinks = this.renderLoggedInLinks(user);

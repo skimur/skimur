@@ -1,13 +1,21 @@
-import { observable } from 'mobx';
+import { observable, computed, action } from 'mobx';
 import api from 'helpers/api';
 
-export default class AuthStore {
+class AuthStore {
     @observable user = null;
 
-    @action
-    login(username, password) {
-        api.login(username, password).then(result => {
-            console.log(result);
-        });
+    @computed
+    get isLoggedIn() {
+      return this.user != null;
+    }
+
+    @action logOff() {
+      this.user = null;
+    }
+
+    @action logIn(newUser) {
+      this.user = newUser;
     }
 }
+
+export default AuthStore;

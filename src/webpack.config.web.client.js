@@ -35,5 +35,6 @@ module.exports = {
       path.join(__dirname, 'client', 'common'),
       path.join(__dirname, 'client', 'web')
     ]
-  }
+  },
+  devtool: 'source-map'
 };

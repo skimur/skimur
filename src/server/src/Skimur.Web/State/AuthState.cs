@@ -7,8 +7,5 @@ namespace Skimur.Web.State
     {
         [JsonProperty("user")]
         public ApiUser User { get; set; }
-
-        [JsonProperty("loggedIn")]
-        public bool LoggedIn { get; set; }
     }
 }
