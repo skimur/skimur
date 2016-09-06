@@ -1,3 +1,4 @@
+import React, { Component } from 'react';
 import { observable, computed, action, runInAction } from 'mobx';
 
 class Field {
@@ -20,7 +21,7 @@ class Field {
   }
 }
 
-const obvervableFormField = function(target, key, descripter) {
+const observableFormField = function(target, key, descripter) {
   let initialValue = descripter.initializer();
   descripter.initializer = function() {
     return runInAction(() => {
@@ -35,21 +36,19 @@ const obvervableFormField = function(target, key, descripter) {
   return descripter;
 }
 
-export { obvervableFormField }
+class Form extends Component {
 
-export default class Form {
+  @observable modelStateErrors = [];
 
-  @observable errors = [];
-
-  @computed 
-  get isValid() {
-    return this._fields.filter(field => field.isValid).count == 0 && this.errors.length == 0;
+  @computed
+  get isModelStateValid() {
+    return this._fields.filter(field => field.isValid).count == 0 && this.modelStateErrors.length == 0;
   }
 
   @action
   updateModelState(modelState) {
     // clear all the errors on the form
-    this.errors.replace([]);
+    this.modelStateErrors.replace([]);
     this._fields.forEach(field => {
       field.field.errors.replace([]);
     });
@@ -61,7 +60,7 @@ export default class Form {
       // update the global errors
       if(key == '_global') {
         modelState.errors[key].forEach(error => {
-          this.errors.push(error);
+          this.modelStateErrors.push(error);
         });
         continue;
       }
@@ -84,3 +83,7 @@ export default class Form {
     }
   }
 }
+
+Form.observableFormField = observableFormField;
+
+export default Form;

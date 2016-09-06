@@ -1,39 +1,35 @@
 import React, { Component } from 'react';
-import { Input, ErrorList } from 'components';
 import { action, observable, reaction, computed } from 'mobx';
-import { observer } from 'mobx-react';
-import api from 'helpers/api';
-import Form, { obvervableFormField } from 'state/Form';
+import { inject, observer } from 'mobx-react';
+import { logIn } from 'actions';
+import Form from 'components/Form';
+import Input from 'components/Input';
+import ErrorList from 'components/ErrorList';
 
-class LoginFormState extends Form {
+@inject("store") @observer
+export default class LoginForm extends Form {
 
-  @obvervableFormField userName = '';
-  @obvervableFormField password = '';
+  constructor(props) {
+    super(props);
+    this.logIn = logIn(props.store)
+  }
 
-  @action
-  login() {
-    api.login(this.userName.value, this.password.value).then(result => {
+  @Form.observableFormField userName = '';
+  @Form.observableFormField password = '';
+
+  onClick = (event) => {
+    event.preventDefault();
+    this.logIn(this.userName.value, this.password.value).then(result => {
       this.updateModelState(result);
     });
-  }
-} 
-
-@observer
-export default class LoginForm extends Component {
-
-  store = new LoginFormState();
-
-  onClick(event) {
-    event.preventDefault();
-    this.store.login();
   }
 
   render() {
     return (
-      <form onSubmit={this.onClick.bind(this)} className="form-horizontal">
-        <ErrorList errors={this.store.errors} />
-        <Input field={this.store.userName} name="userName" label="User name" />
-        <Input field={this.store.password} name="password" label="Password" />
+      <form onSubmit={this.onClick} className="form-horizontal">
+        <ErrorList errors={this.modelStateErrors} /> 
+        <Input field={this.userName} name="userName" label="User name" /> 
+        <Input field={this.password} name="password" label="Password" /> 
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
             <button type="submit" className="btn btn-default">Login</button>

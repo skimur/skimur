@@ -3,7 +3,7 @@ import deepAssign from 'deep-assign';
 import AppStore from './stores/app';
 import AuthStore from './stores/auth';
 
-//useStrict(true);
+useStrict(true);
 
 class Store {
   constructor() {

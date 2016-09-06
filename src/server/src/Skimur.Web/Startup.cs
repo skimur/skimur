@@ -12,6 +12,7 @@ using System.Collections.Generic;
 using Skimur.Email;
 using Skimur.Sms;
 using Skimur.Utils;
+using System.Security.Claims;
 
 namespace Skimur.Web
 {
@@ -103,6 +104,14 @@ namespace Skimur.Web
                 .AddDefaultTokenProviders();
 
             services.AddSession();
+
+            services.AddAuthorization(options =>
+            {
+                options.AddPolicy("Admin", policy =>
+                {
+                    policy.RequireClaim(ClaimTypes.Role, "Admin");
+                });
+            });
         }
     }
 }

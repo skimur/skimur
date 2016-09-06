@@ -5,7 +5,8 @@ export function logIn(store)  {
   return (userName, password) => {
     return api.logIn(userName, password)
       .then(result => {
-        if(result.success) {
+        if(result.user) {
+          // the user was logged in
           store.auth.logIn(result.user);
         }
         return result;
