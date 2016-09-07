@@ -33,9 +33,9 @@ export default class RegisterForm extends Form {
       <form onSubmit={this.onClick} className="form-horizontal">
         <ErrorList errors={this.modelStateErrors} />
         <Input field={this.userName} name="userName" label="User name" />
-        <Input field={this.email} name="userName" label="Email" />
-        <Input field={this.password} name="userName" label="Password" />
-        <Input field={this.passwordConfirm} name="userName" label="Confirm" />
+        <Input field={this.email} name="email" label="Email" />
+        <Input field={this.password} name="password" type="password" label="Password" />
+        <Input field={this.passwordConfirm} name="passwordConfirm" type="password" label="Confirm" />
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
             <button type="submit" className="btn btn-default">Register</button>

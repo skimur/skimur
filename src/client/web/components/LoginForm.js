@@ -33,7 +33,7 @@ export default class LoginForm extends Form {
       <form onSubmit={this.onClick} className="form-horizontal">
         <ErrorList errors={this.modelStateErrors} /> 
         <Input field={this.userName} name="userName" label="User name" /> 
-        <Input field={this.password} name="password" label="Password" /> 
+        <Input field={this.password} name="password" type="password" label="Password" /> 
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
             <button type="submit" className="btn btn-default">Login</button>
