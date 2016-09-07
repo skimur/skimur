@@ -4,15 +4,14 @@ import Form from 'components/Form';
 import { action, observable, reaction, computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
 import { register, navigateTo } from 'actions';
+import { injectActions } from 'helpers/decorators';
 
-@inject("store") @observer
+console.log(injectActions);
+
+@inject("store")
+@injectActions({ register, navigateTo }, "store")
+@observer
 export default class RegisterForm extends Form {
-
-  constructor(props) {
-    super(props);
-    this.register = register(props.store);
-    this.navigateTo = navigateTo(props.store);
-  }
 
   @Form.observableFormField userName = '';
   @Form.observableFormField email = '';
@@ -21,10 +20,10 @@ export default class RegisterForm extends Form {
 
   onClick = (event) => {
     event.preventDefault();
-    this.register(this.userName.value, this.email.value, this.password.value, this.passwordConfirm.value).then(result => {
+    this.props.register(this.userName.value, this.email.value, this.password.value, this.passwordConfirm.value).then(result => {
       this.updateModelState(result);
       if(result.success) {
-        this.navigateTo('/');
+        this.props.navigateTo('/');
       }
     });
   }

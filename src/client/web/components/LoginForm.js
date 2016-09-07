@@ -5,25 +5,25 @@ import { logIn, navigateTo } from 'actions';
 import Form from 'components/Form';
 import Input from 'components/Input';
 import ErrorList from 'components/ErrorList';
+import { injectActions } from 'helpers/decorators';
 
-@inject("store") @observer
+console.log(injectActions);
+
+@inject("store")
+@injectActions({ logIn, navigateTo }, "store")
+@observer
 export default class LoginForm extends Form {
 
-  constructor(props) {
-    super(props);
-    this.logIn = logIn(props.store);
-    this.navigateTo = navigateTo(props.store);
-  }
 
   @Form.observableFormField userName = '';
   @Form.observableFormField password = '';
 
   onClick = (event) => {
     event.preventDefault();
-    this.logIn(this.userName.value, this.password.value).then(result => {
+    this.props.logIn(this.userName.value, this.password.value).then(result => {
       this.updateModelState(result);
       if(result.success) {
-        this.navigateTo('/');
+        this.props.navigateTo('/');
       }
     });
   }
