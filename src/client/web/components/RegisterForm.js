@@ -3,7 +3,7 @@ import { Input, ErrorList } from 'components';
 import Form from 'components/Form';
 import { action, observable, reaction, computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { register } from 'actions';
+import { register, navigateTo } from 'actions';
 
 @inject("store") @observer
 export default class RegisterForm extends Form {
@@ -11,6 +11,7 @@ export default class RegisterForm extends Form {
   constructor(props) {
     super(props);
     this.register = register(props.store);
+    this.navigateTo = navigateTo(props.store);
   }
 
   @Form.observableFormField userName = '';
@@ -22,6 +23,9 @@ export default class RegisterForm extends Form {
     event.preventDefault();
     this.register(this.userName.value, this.email.value, this.password.value, this.passwordConfirm.value).then(result => {
       this.updateModelState(result);
+      if(result.success) {
+        this.navigateTo('/');
+      }
     });
   }
 

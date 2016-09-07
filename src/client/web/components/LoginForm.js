@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable, reaction, computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { logIn } from 'actions';
+import { logIn, navigateTo } from 'actions';
 import Form from 'components/Form';
 import Input from 'components/Input';
 import ErrorList from 'components/ErrorList';
@@ -11,7 +11,8 @@ export default class LoginForm extends Form {
 
   constructor(props) {
     super(props);
-    this.logIn = logIn(props.store)
+    this.logIn = logIn(props.store);
+    this.navigateTo = navigateTo(props.store);
   }
 
   @Form.observableFormField userName = '';
@@ -21,6 +22,9 @@ export default class LoginForm extends Form {
     event.preventDefault();
     this.logIn(this.userName.value, this.password.value).then(result => {
       this.updateModelState(result);
+      if(result.success) {
+        this.navigateTo('/');
+      }
     });
   }
 

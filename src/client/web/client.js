@@ -6,7 +6,7 @@ import Store from 'store';
 import { Provider } from 'mobx-react';
 import getRoutes from './routes';
 
-let store = new Store();
+let store = new Store(browserHistory);
 
 store.initialize(window.__data);
 

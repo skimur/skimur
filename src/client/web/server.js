@@ -29,7 +29,7 @@ export function renderView(callback, path, model, viewBag) {
           if(route.status)
             result.status = route.status;
         });
-        const store = new Store();
+        const store = new Store(history);
         store.initialize(model);
         const component =
         (
