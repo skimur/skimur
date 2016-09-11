@@ -22,18 +22,33 @@ const InputPassword = observer(({ field }) => {
   />
 });
 
-export default observer(({ field, name, label, type }) => {
+const InputOption = observer(({ field, options }) => {
+  return(
+    <select
+      onChange={field.onChanged}
+      value={field.value}
+      className="form-control">
+      {options.map((option, i) =>
+        (
+          <option key={i} value={option.value}>{option.display}</option>
+        )
+      )}
+    </select>
+  );
+});
+
+export default observer(({ field, name, label, type, options }) => {
   if(!type) {
     type = 'text'
   }
-
-  //console.log(field);
 
   let input;
   if(type == 'text') {
     input = <InputText field={field} />
   } else if (type == 'password') {
     input = <InputPassword field={field} />
+  } else if (type == 'option') {
+    input = <InputOption field={field} options={options} />
   } else {
     throw 'Invalid input type';
   }

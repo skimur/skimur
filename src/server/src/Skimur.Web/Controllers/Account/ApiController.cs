@@ -34,6 +34,7 @@ namespace Skimur.Web.Controllers.Account
         [HttpPost]
         public async Task<object> Register([FromBody]RegisterModel model)
         {
+            
             ExternalLoginInfo externalLoginInfo = null;
             if (model.LinkExternalLogin)
             {

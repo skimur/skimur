@@ -6,8 +6,6 @@ import { inject, observer } from 'mobx-react';
 import { register, navigateTo } from 'actions';
 import { injectActions } from 'helpers/decorators';
 
-console.log(injectActions);
-
 @inject("store")
 @injectActions({ register, navigateTo }, "store")
 @observer

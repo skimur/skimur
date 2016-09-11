@@ -20,7 +20,9 @@ namespace Skimur.Web.Services
         IUserTwoFactorStore<User>,
         IUserValidator<User>,
         IPasswordHasher<User>,
-        IUserLoginStore<User>
+        IUserLoginStore<User>,
+        IUserSecurityStampStore<User>,
+        IUserLockoutStore<User>
     {
         IMembershipService _membershipService;
         IPasswordManager _passwordManager;
@@ -286,12 +288,12 @@ namespace Skimur.Web.Services
 
         public Task<bool> GetPhoneNumberConfirmedAsync(User user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.EmailConfirmed);
+            return Task.FromResult(user.PhoneNumberConfirmed);
         }
 
         public Task SetPhoneNumberConfirmedAsync(User user, bool confirmed, CancellationToken cancellationToken)
         {
-            user.EmailConfirmed = confirmed;
+            user.PhoneNumberConfirmed = confirmed;
             return Task.FromResult(0);
         }
 
@@ -307,7 +309,7 @@ namespace Skimur.Web.Services
 
         public Task<bool> GetTwoFactorEnabledAsync(User user, CancellationToken cancellationToken)
         {
-            return Task.FromResult(user.EmailConfirmed);
+            return Task.FromResult(user.TwoFactorEnabled);
         }
 
         #endregion
@@ -367,22 +369,6 @@ namespace Skimur.Web.Services
 
         #endregion
 
-        #region Methods
-
-        public virtual Guid ConvertIdFromString(string id)
-        {
-            if (string.IsNullOrEmpty(id))
-                throw new Exception("Invalid id");
-            return (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFromInvariantString(id);
-        }
-
-        public void Dispose()
-        {
-
-        }
-
-        #endregion
-
         #region IUserLoginStore
 
         public Task AddLoginAsync(User user, UserLoginInfo login, CancellationToken cancellationToken)
@@ -406,6 +392,85 @@ namespace Skimur.Web.Services
         public Task<User> FindByLoginAsync(string loginProvider, string providerKey, CancellationToken cancellationToken)
         {
             return _membershipService.FindUserByExternalLogin(loginProvider, providerKey);
+        }
+
+        #endregion
+
+        #region IUserSecurityStampStore
+
+        public Task SetSecurityStampAsync(User user, string stamp, CancellationToken cancellationToken)
+        {
+            user.SecurityStamp = stamp;
+            return Task.FromResult(0);
+        }
+
+        public Task<string> GetSecurityStampAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.SecurityStamp ?? "");
+        }
+
+        #endregion
+
+        #region IUserLockoutStore
+
+        public Task<DateTimeOffset?> GetLockoutEndDateAsync(User user, CancellationToken cancellationToken)
+        {
+            var endDate = user.LockoutEndDate;
+
+            if (endDate == null)
+                return Task.FromResult((DateTimeOffset?)null);
+
+            return Task.FromResult((DateTimeOffset?)new DateTimeOffset(endDate.Value));
+        }
+
+        public Task SetLockoutEndDateAsync(User user, DateTimeOffset? lockoutEnd, CancellationToken cancellationToken)
+        {
+            user.LockoutEndDate = lockoutEnd?.DateTime;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> IncrementAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            user.AccessFailedCount++;
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task ResetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            user.AccessFailedCount = 0;
+            return Task.FromResult(0);
+        }
+
+        public Task<int> GetAccessFailedCountAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.AccessFailedCount);
+        }
+
+        public Task<bool> GetLockoutEnabledAsync(User user, CancellationToken cancellationToken)
+        {
+            return Task.FromResult(user.LockoutEnabled);
+        }
+
+        public Task SetLockoutEnabledAsync(User user, bool enabled, CancellationToken cancellationToken)
+        {
+            user.LockoutEnabled = enabled;
+            return Task.FromResult(0);
+        }
+
+        #endregion
+
+        #region Methods
+
+        public virtual Guid ConvertIdFromString(string id)
+        {
+            if (string.IsNullOrEmpty(id))
+                throw new Exception("Invalid id");
+            return (Guid)TypeDescriptor.GetConverter(typeof(Guid)).ConvertFromInvariantString(id);
+        }
+
+        public void Dispose()
+        {
+
         }
 
         #endregion

@@ -82,6 +82,38 @@ class Api {
       credentials: 'include'
     });
   }
+  @modelStatePromise
+  sendCode(provider, remember) {
+    return fetch('/api/account/sendcode', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        provider,
+        remember
+      }),
+      credentials: 'include'
+    });
+  }
+  @modelStatePromise
+  verifyCode(provider, code, rememberBrowser, rememberMe) {
+    return fetch('/api/account/verifycode', {
+      method: 'POST',
+      headers: {
+        'Accept': 'application/json',
+        'Content-Type': 'application/json'
+      },
+      body: JSON.stringify({
+        provider,
+        code,
+        rememberBrowser,
+        rememberMe
+      }),
+      credentials: 'include'
+    });
+  }
 }
 
 export default new Api();

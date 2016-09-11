@@ -1,14 +1,23 @@
 import React, { Component } from 'react';
 import { LoginForm } from 'components';
 import { Link } from 'react-router';
+import { inject, observer } from 'mobx-react';
+import { navigateTo } from 'actions';
+import { injectActions } from 'helpers/decorators';
 
+@inject('store')
+@injectActions({ navigateTo }, 'store')
+@observer
 export default class Login extends Component {
+  onLoggedIn = () => {
+    this.props.navigateTo('/');
+  }
   render() {
     return (
       <div>
         <h2>Login</h2>
         <hr />
-        <LoginForm />
+        <LoginForm onLoggedIn={this.onLoggedIn} />
         <p>
           <Link to="/register">Register as a new user?</Link>
         </p>
