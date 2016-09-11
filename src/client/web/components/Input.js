@@ -4,6 +4,23 @@ import { observer } from 'mobx-react';
 import cx from 'classnames';
 import { Glyphicon } from 'react-bootstrap';
 
+const Errors = observer(({ errors }) => {
+  return (
+    <div>
+      {errors.map((err, i) =>
+      (
+        <p
+          className="help-block"
+          key={i}>
+          <Glyphicon glyph="exclamation-sign" />
+          {' '}
+          {err}
+        </p>
+      ))}
+    </div>
+  );
+});
+
 const InputText = observer(({ field }) => {
   return <input
     onChange={field.onChanged}
@@ -37,6 +54,12 @@ const InputOption = observer(({ field, options }) => {
   );
 });
 
+const InputCheckbox = observer(({ field, name }) => {
+  return(
+    <input id={name} type="checkbox" checked={field.value} onChange={field.onChanged} />
+  );
+});
+
 export default observer(({ field, name, label, type, options }) => {
   if(!type) {
     type = 'text'
@@ -44,38 +67,50 @@ export default observer(({ field, name, label, type, options }) => {
 
   let input;
   if(type == 'text') {
-    input = <InputText field={field} />
+    input = <InputText field={field} name={name} />
   } else if (type == 'password') {
-    input = <InputPassword field={field} />
+    input = <InputPassword field={field} name={name} />
   } else if (type == 'option') {
-    input = <InputOption field={field} options={options} />
+    input = <InputOption field={field} name={name} options={options} />
+  } else if (type == 'checkbox') {
+    input = <InputCheckbox field={field} name={name} />
   } else {
     throw 'Invalid input type';
   }
 
-  return (
-    <div className={cx({
-      'form-group': true,
-      'has-error': !field.isValid,
-    })}>
-      <label className="col-md-2 control-label" htmlFor={name}>{label}</label>
-      <div className="col-md-10">
-        {input}
-        {field.errors.length > 0 &&
-          <div>
-            {field.errors.map((err, i) =>
-            (
-              <p
-                className="help-block"
-                key={i}>
-                <Glyphicon glyph="exclamation-sign" />
-                {' '}
-                {err}
-              </p>
-            ))}
-          </div>  
-        }
+  let template;
+
+  if(type != 'checkbox') {
+    template = (
+      <div className={cx({
+        'form-group': true,
+        'has-error': !field.isValid,
+      })}>
+        <label className="col-md-2 control-label" htmlFor={name}>{label}</label>
+        <div className="col-md-10">
+          {input}
+          <Errors errors={field.errors} />
+        </div>
       </div>
-    </div>
-  );
+    );
+  } else {
+    template = (
+      <div className={cx({
+        'form-group': true,
+        'has-error': !field.isValid,
+      })}>
+        <div className='col-md-offset-2 col-md-10'>
+          <div className="checkbox">
+            <label htmlFor={name}>
+              {input}
+              {' ' + label}
+            </label>
+          </div>
+          <Errors errors={field.errors} />
+        </div>
+      </div>
+    );
+  }
+
+  return template;
 });

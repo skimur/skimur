@@ -40,7 +40,7 @@ const modelStatePromise = function(target, key, descriptor) {
 
 class Api {
   @modelStatePromise
-  logIn(userName, password) {
+  logIn(userName, password, rememberMe) {
     return fetch('/api/account/login', {
       method: 'POST',
       headers: {
@@ -49,13 +49,14 @@ class Api {
       },
       body: JSON.stringify({
         userName,
-        password
+        password,
+        rememberMe
       }),
       credentials: 'include'
     });
   }
   @modelStatePromise
-  logOff(userName, password) {
+  logOff() {
     return fetch('/api/account/logoff', {
       method: 'POST',
       headers: {
@@ -83,7 +84,7 @@ class Api {
     });
   }
   @modelStatePromise
-  sendCode(provider, remember) {
+  sendCode(provider) {
     return fetch('/api/account/sendcode', {
       method: 'POST',
       headers: {
@@ -91,14 +92,13 @@ class Api {
         'Content-Type': 'application/json'
       },
       body: JSON.stringify({
-        provider,
-        remember
+        provider
       }),
       credentials: 'include'
     });
   }
   @modelStatePromise
-  verifyCode(provider, code, rememberBrowser, rememberMe) {
+  verifyCode(provider, code, rememberMe, rememberBrowser) {
     return fetch('/api/account/verifycode', {
       method: 'POST',
       headers: {
@@ -108,8 +108,8 @@ class Api {
       body: JSON.stringify({
         provider,
         code,
-        rememberBrowser,
-        rememberMe
+        rememberMe,
+        rememberBrowser
       }),
       credentials: 'include'
     });

@@ -1,8 +1,8 @@
 import api from 'helpers/api';
 
 export function logIn(store)  {
-  return (userName, password) => {
-    return api.logIn(userName, password)
+  return (userName, password, rememberMe) => {
+    return api.logIn(userName, password, rememberMe)
       .then(result => {
         if(result.user) {
           // the user was logged in
@@ -38,15 +38,15 @@ export function register(store)  {
   }
 };
 
-export function sendCode(provider, remember) {
-  return (provider, remember) => {
-    return api.sendCode(provider, remember);
+export function sendCode(store) {
+  return (provider) => {
+    return api.sendCode(provider);
   };
 }
 
 export function verifyCode(store) {
-  return (provider, code, rememberBrowser, rememberMe) => {
-    return api.verifyCode(provider, code, rememberBrowser, rememberMe)
+  return (provider, code, rememberMe, rememberBrowser) => {
+    return api.verifyCode(provider, code, rememberMe, rememberBrowser)
       .then(result => {
         if(result.user) {
           // the user verified the code and is now logged in

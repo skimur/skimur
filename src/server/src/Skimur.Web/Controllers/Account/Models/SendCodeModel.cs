@@ -8,8 +8,5 @@ namespace Skimur.Web.Controllers.Account.Models
         [Required]
         [JsonProperty("provider")]
         public string Provider { get; set; }
-
-        [JsonProperty("remember")]
-        public bool Remember { get; set; }
     }
 }

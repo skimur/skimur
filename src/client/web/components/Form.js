@@ -17,7 +17,11 @@ class Field {
 
   @action
   onChanged(event) {
-    this.value = event.target.value;
+    if(event.target.type === 'checkbox') {
+      this.value = event.target.checked;
+    } else {
+      this.value = event.target.value;
+    }
   }
 }
 

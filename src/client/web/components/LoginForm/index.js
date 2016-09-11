@@ -13,6 +13,7 @@ class LoginForm extends Form {
 
   @Form.observableFormField userName = '';
   @Form.observableFormField password = '';
+  @Form.observableFormField rememberMe = true;
 
   @action
   handleLogin(result) {
@@ -22,7 +23,7 @@ class LoginForm extends Form {
 
   onClick = (event) => {
     event.preventDefault();
-    this.props.logIn(this.userName.value, this.password.value).then(result => {
+    this.props.logIn(this.userName.value, this.password.value, this.rememberMe.value).then(result => {
       this.handleLogin(result);
     });
   }
@@ -32,7 +33,8 @@ class LoginForm extends Form {
       <form onSubmit={this.onClick} className="form-horizontal">
         <ErrorList errors={this.modelStateErrors} /> 
         <Input field={this.userName} name="userName" label="User name" /> 
-        <Input field={this.password} name="password" type="password" label="Password" /> 
+        <Input field={this.password} name="password" type="password" label="Password" />
+        <Input field={this.rememberMe} name="rememberMe" type="checkbox" label="Remember me" />
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
             <button type="submit" className="btn btn-default">Login</button>
@@ -47,7 +49,6 @@ class LoginForm extends Form {
 class SendCodeForm extends Form {
 
   @Form.observableFormField provider = ''
-  @Form.observableFormField remember = true;
 
   @action
   handleSendCode(result) {
@@ -64,7 +65,7 @@ class SendCodeForm extends Form {
       provider = this.props.userFactors[0];
     }
 
-    this.props.sendCode(provider, this.remember.value).then(result => {
+    this.props.sendCode(provider).then(result => {
       this.handleSendCode(result);
     });
   }
@@ -77,7 +78,7 @@ class SendCodeForm extends Form {
           type="option"
           options={this.props.userFactors.map((userFactor) => ({ value: userFactor, display: userFactor }))}
           name="provider"
-          label="Provider" /> 
+          label="Provider" />
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
             <button type="submit" className="btn btn-default">Send</button>
@@ -92,6 +93,8 @@ class SendCodeForm extends Form {
 class VerifiyCodeForm extends Form {
 
   @Form.observableFormField code = ''
+  @Form.observableFormField rememberMe = true
+  @Form.observableFormField rememberBrowser = true
 
   @action
   handleVerifyCode(result) {
@@ -101,7 +104,7 @@ class VerifiyCodeForm extends Form {
 
   onClick = (event) => {
     event.preventDefault();
-    this.props.verifyCode(this.props.provider, this.code.value).then(result => {
+    this.props.verifyCode(this.props.provider, this.code.value, this.rememberMe.value, this.rememberBrowser.value).then(result => {
       this.handleVerifyCode(result);
     });
   }
@@ -113,6 +116,14 @@ class VerifiyCodeForm extends Form {
         <Input field={this.code}
           name="code"
           label="Code" /> 
+        <Input field={this.rememberMe}
+          type='checkbox'
+          name="rememberMe"
+          label="Remember me" />
+        <Input field={this.rememberBrowser}
+          type='checkbox'
+          name="rememberBrowser"
+          label="Remember browser" /> 
         <div className="form-group">
           <div className="col-md-offset-2 col-md-10">
             <button type="submit" className="btn btn-default">Verify</button>
