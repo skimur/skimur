@@ -99,6 +99,20 @@ class Api {
       enabled
     };
   }
+  @apiCall('/api/manage/email')
+  getEmail() {
+  }
+  @apiCall('/api/manage/changeemail')
+  changeEmail(email, emailConfirm, currentPassword) {
+    return {
+      email,
+      emailConfirm,
+      currentPassword
+    };
+  }
+  @apiCall('/api/manage/verifyemail')
+  verifyEmail() {
+  }
 }
 
 export default new Api();
