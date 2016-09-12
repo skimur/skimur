@@ -1,14 +1,28 @@
 
 // this decorator converts a fetch promise into another promise
 // that plays well with model state
-const modelStatePromise = function(target, key, descriptor) {
+const apiCall = function(url) {
+  return (target, key, descriptor) => {
     return {
       enumerable: false,
       configurable: true,
       value: function(...args) {
         var result = descriptor.value(...args);
+        var fetchOptions = {
+          method: 'POST',
+          headers: {
+            'Accept': 'application/json',
+            'Content-Type': 'application/json'
+          },
+          credentials: 'include'
+        };
+        if(result) {
+          fetchOptions.body = JSON.stringify(result);
+        }
+        var fetchPromise = fetch(url, fetchOptions);
+
         return new Promise(function(resolve, reject) {
-          result
+          fetchPromise
             .then(function(response) {
               // non-20x responses are errors
               if (response.status >= 200 && response.status < 300) {
@@ -37,82 +51,53 @@ const modelStatePromise = function(target, key, descriptor) {
       }
     }
 }
+}
 
 class Api {
-  @modelStatePromise
+  @apiCall('/api/account/login')
   logIn(userName, password, rememberMe) {
-    return fetch('/api/account/login', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userName,
-        password,
-        rememberMe
-      }),
-      credentials: 'include'
-    });
+    return {
+      userName,
+      password,
+      rememberMe
+    };
   }
-  @modelStatePromise
+  @apiCall('/api/account/logoff')
   logOff() {
-    return fetch('/api/account/logoff', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      credentials: 'include'
-    });
+    
   }
-  @modelStatePromise
+  @apiCall('/api/account/register')
   register(userName, email, password, passwordConfirm) {
-    return fetch('/api/account/register', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        userName,
-        email,
-        password,
-        passwordConfirm
-      }),
-      credentials: 'include'
-    });
+    return {
+      userName,
+      email,
+      password,
+      passwordConfirm
+    }
   }
-  @modelStatePromise
+  @apiCall('/api/account/sendcode')
   sendCode(provider) {
-    return fetch('/api/account/sendcode', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        provider
-      }),
-      credentials: 'include'
-    });
+    return {
+      provider
+    };
   }
-  @modelStatePromise
+  @apiCall('/api/account/verifycode')
   verifyCode(provider, code, rememberMe, rememberBrowser) {
-    return fetch('/api/account/verifycode', {
-      method: 'POST',
-      headers: {
-        'Accept': 'application/json',
-        'Content-Type': 'application/json'
-      },
-      body: JSON.stringify({
-        provider,
-        code,
-        rememberMe,
-        rememberBrowser
-      }),
-      credentials: 'include'
-    });
+    return {
+      provider,
+      code,
+      rememberMe,
+      rememberBrowser
+    };
+  }
+  @apiCall('/api/manage/security')
+  getSecurity(provider, code, rememberMe, rememberBrowser) {
+  }
+  @apiCall('/api/manage/settwofactor')
+  setTwoFactor(enabled) {
+    return {
+      enabled
+    };
   }
 }
 
