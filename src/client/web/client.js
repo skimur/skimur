@@ -13,7 +13,7 @@ store.initialize(window.__data);
 ReactDOM.render(
   <Provider store={store}>
     <Router history={browserHistory}>
-      {getRoutes()}
+      {getRoutes(store)}
     </Router>
   </Provider>,
   document.getElementById('content')

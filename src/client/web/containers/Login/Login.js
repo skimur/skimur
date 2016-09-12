@@ -10,7 +10,11 @@ import { injectActions } from 'helpers/decorators';
 @observer
 export default class Login extends Component {
   onLoggedIn = () => {
-    this.props.navigateTo('/');
+    if(this.props.store.nav.query.returnUrl) {
+      this.props.navigateTo(this.props.store.nav.query.returnUrl);
+    } else {
+      this.props.navigateTo('/');
+    }
   }
   render() {
     return (

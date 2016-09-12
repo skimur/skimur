@@ -16,8 +16,10 @@ export function renderView(callback, path, model, viewBag) {
     status: 404,
     redirect: null
   };
+  const store = new Store(history);
+  store.initialize(model);
   match(
-    { history, routes: getRoutes(), location: path },
+    { history, routes: getRoutes(store), location: path },
     (error, redirectLocation, renderProps) => {
       if (redirectLocation) {
         result.redirect = redirectLocation.pathname + redirectLocation.search;
@@ -29,8 +31,6 @@ export function renderView(callback, path, model, viewBag) {
           if(route.status)
             result.status = route.status;
         });
-        const store = new Store(history);
-        store.initialize(model);
         const component =
         (
           <Provider store={store}>
