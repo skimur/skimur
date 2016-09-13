@@ -6,6 +6,7 @@ import {
   NotFound,
   Login,
   Register,
+  ConfirmEmail,
   Manage,
   ManageIndex,
   ManageSecurity,
@@ -32,6 +33,7 @@ export default (store) => {
       { /* Routes */ }
       <Route path="login" components={Login} />
       <Route path="register" components={Register} />
+      <Route path="confirmemail" components={ConfirmEmail} />
 
       { /* Manage */ }
       <Route path="manage" component={Manage} onEnter={requireLogin}>

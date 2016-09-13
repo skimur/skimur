@@ -17,6 +17,13 @@ export function renderView(callback, path, model, viewBag) {
     redirect: null
   };
   const store = new Store(history);
+  if(viewBag) {
+    if(!model)
+      model = {};
+    // the store, during intialization, will use
+    // use this viewBag appropriately.
+    model.viewBag = viewBag;
+  }
   store.initialize(model);
   match(
     { history, routes: getRoutes(store), location: path },

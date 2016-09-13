@@ -20,6 +20,9 @@ class NavStore {
   @computed get query() {
     return parseQueryString(this.search);
   }
+  @computed get fullPath() {
+    return this.path + this.hash + this.search;
+  }
 
   constructor(history) {
     this.history = history;
@@ -43,6 +46,7 @@ class NavStore {
     this.search = newPath.search;
   }
 
+  @nonenumerable
   onPathChanged = () => {
     // this is so that we are registered to fire again if these values change
     var path = this.path;

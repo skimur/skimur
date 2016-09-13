@@ -45,7 +45,7 @@ export default class ChangeEmailForm extends Form {
     this.processing = false;
     this.updateModelState(result);
     if(result.success)
-    this.changeEmailSent = true;
+      this.changeEmailSent = true;
   }
 
   render() {

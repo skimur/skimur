@@ -3,6 +3,7 @@ export Home from './Home/Home';
 export NotFound from './NotFound/NotFound';
 export Login from './Login/Login';
 export Register from './Register/Register';
+export ConfirmEmail from './ConfirmEmail/ConfirmEmail';
 export Manage from './Manage/Manage';
 export ManageIndex from './Manage/Index/Index';
 export ManageSecurity from './Manage/Security/Security';
