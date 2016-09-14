@@ -56,21 +56,3 @@ export function verifyCode(store) {
       });
   };
 }
-
-export function getEmail(store) {
-  return () => {
-    return api.getEmail();
-  };
-}
-
-export function changeEmail(store) {
-  return (email, emailConfirm, currentPassword) => {
-    return api.changeEmail(email, emailConfirm, currentPassword);
-  };
-}
-
-export function verifyEmail(store) {
-  return () => {
-    return api.verifyEmail();
-  };
-}

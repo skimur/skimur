@@ -113,6 +113,14 @@ class Api {
   @apiCall('/api/manage/verifyemail')
   verifyEmail() {
   }
+  @apiCall('/api/manage/changepassword')
+  changePassword(oldPassword, newPassword, newPasswordConfirm) {
+    return {
+      oldPassword,
+      newPassword,
+      newPasswordConfirm
+    };
+  }
 }
 
 export default new Api();
