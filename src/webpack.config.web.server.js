@@ -1,5 +1,6 @@
 var path = require('path');
 var nodeExternals = require('webpack-node-externals');
+var webpack = require('webpack');
 
 module.exports = {
   entry: [
@@ -30,5 +31,9 @@ module.exports = {
       path.join(__dirname, 'client', 'common'),
       path.join(__dirname, 'client', 'web')
     ]
-  }
+  },
+  plugins: [
+    new webpack.BannerPlugin('require("source-map-support").install();', { raw: true, entryOnly: false })
+  ],
+  devtool: 'source-map'
 };
