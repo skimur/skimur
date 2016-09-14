@@ -35,3 +35,9 @@ export function changePassword(store)  {
     return api.changePassword(oldPassword, newPassword, newPasswordConfirm);
   }
 };
+
+export function getExternalLogins(store) {
+  return () => {
+    return api.getExternalLogins();
+  }
+}

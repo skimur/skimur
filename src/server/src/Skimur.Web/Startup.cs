@@ -68,7 +68,31 @@ namespace Skimur.Web
             app.UseSession();
 
             app.UseJsEngine();
-            
+
+            var facebookAppId = Configuration["Skimur:Authentication:Facebook:AppId"];
+            var facebookAppSecret = Configuration["Skimur:Authentication:Facebook:AppSecret"];
+            if (!string.IsNullOrEmpty(facebookAppId) && !string.IsNullOrEmpty(facebookAppSecret))
+            {
+                app.UseFacebookAuthentication(new FacebookOptions
+                {
+                    AppId = facebookAppId,
+                    AppSecret = facebookAppSecret
+                });
+            }
+
+            var googleClientId = Configuration["Skimur:Authentication:Google:ClientId"];
+            var googleClientSecret = Configuration["Skimur:Authentication:Google:ClientSecret"];
+            if (!string.IsNullOrEmpty(googleClientId) && !string.IsNullOrEmpty(googleClientSecret))
+            {
+                var options = new GoogleOptions
+                {
+                    ClientId = googleClientId,
+                    ClientSecret = googleClientSecret
+                };
+                options.Scope.Add("https://www.googleapis.com/auth/plus.profile.emails.read");
+                app.UseGoogleAuthentication(options);
+            }
+
             app.UseMvc(routes =>
             {
                 routes.MapRoute(

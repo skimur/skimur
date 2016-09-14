@@ -121,6 +121,9 @@ class Api {
       newPasswordConfirm
     };
   }
+  @apiCall('/api/manage/externallogins')
+  getExternalLogins() {
+  }
 }
 
 export default new Api();

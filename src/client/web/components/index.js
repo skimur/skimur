@@ -5,6 +5,7 @@ import ChangePasswordForm from './ChangePasswordForm';
 import Input from './Input';
 import ErrorList from './ErrorList';
 import Form from './Form';
+import ExternalLoginButton from './ExternalLoginButton';
 
 export { LoginForm }
 export { RegisterForm }
@@ -13,3 +14,4 @@ export { ChangePasswordForm }
 export { Input }
 export { ErrorList }
 export { Form }
+export { ExternalLoginButton }

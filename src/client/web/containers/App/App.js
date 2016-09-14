@@ -12,6 +12,7 @@ import { LinkContainer, IndexLinkContainer } from 'react-router-bootstrap';
 import { logOff } from 'actions';
 
 require('./App.scss');
+require('font-awesome/scss/font-awesome.scss');
 
 @inject("store") @observer
 export default class App extends Component {
