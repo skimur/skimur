@@ -124,6 +124,16 @@ class Api {
   @apiCall('/api/manage/externallogins')
   getExternalLogins() {
   }
+  @apiCall('/api/manage/addexternallogin')
+  addExternalLogin() {
+  }
+  @apiCall('/api/manage/removeexternallogin')
+  removeExternalLogin(loginProvider, providerKey) {
+    return {
+      loginProvider,
+      providerKey
+    }
+  }
 }
 
 export default new Api();

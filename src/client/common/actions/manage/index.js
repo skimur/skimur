@@ -41,3 +41,15 @@ export function getExternalLogins(store) {
     return api.getExternalLogins();
   }
 }
+
+export function addExternalLogin(store) {
+  return () => {
+    return api.addExternalLogin();
+  }
+}
+
+export function removeExternalLogin(store) {
+  return (loginProvider, providerKey) => {
+    return api.removeExternalLogin(loginProvider, providerKey);
+  }
+}

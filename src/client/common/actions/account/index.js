@@ -1,4 +1,5 @@
 import api from 'helpers/api';
+import { authentication as authenticationPopup } from 'helpers/oauth';
 
 export function logIn(store)  {
   return (userName, password, rememberMe) => {
@@ -50,6 +51,19 @@ export function verifyCode(store) {
       .then(result => {
         if(result.user) {
           // the user verified the code and is now logged in
+          store.auth.logIn(result.user);
+        }
+        return result;
+      });
+  };
+}
+
+export function externalAuthentication(store) {
+  return (provider, autoLogin = true) => {
+    return authenticationPopup(provider, autoLogin)
+      .then(result => {
+        if(result.user) {
+          // the user was signed in with this request
           store.auth.logIn(result.user);
         }
         return result;

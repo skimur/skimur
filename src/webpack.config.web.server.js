@@ -11,7 +11,8 @@ module.exports = {
       { test: /\.css$/, loader: 'css/locals?module' },
       { test: /\.scss$/, loader: 'css/locals?module!sass' },
       { test: /\.(woff2?|ttf|eot|svg)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' },
-      { test: /\.(jpeg|jpeg|gif|png|tiff)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' }
+      { test: /\.(jpeg|jpeg|gif|png|tiff)(\?v=[0-9]\.[0-9]\.[0-9])?$/, loader: 'file' },
+      { test: /\promise-window/, loader: 'null' }
     ]
   },
   output: {

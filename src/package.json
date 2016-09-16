@@ -24,6 +24,8 @@
     "mobx-react": "^3.5.5",
     "mobx-react-devtools": "^4.2.4",
     "node-sass": "^3.8.0",
+    "null-loader": "^0.1.1",
+    "promise-window": "^1.1.0",
     "react": "^15.3.0",
     "react-bootstrap": "^0.30.3",
     "react-dom": "^15.3.0",

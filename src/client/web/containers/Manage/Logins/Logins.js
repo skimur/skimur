@@ -1,12 +1,13 @@
 import React, { Component } from 'react';
 import { observable, action } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { getExternalLogins } from 'actions';
+import { getExternalLogins, externalAuthentication, addExternalLogin, removeExternalLogin } from 'actions';
 import { injectActions } from 'helpers/decorators';
 import { ExternalLoginButton } from 'components';
+import { Button } from 'react-bootstrap';
 
 @inject('store')
-@injectActions({ getExternalLogins }, 'store')
+@injectActions({ getExternalLogins, externalAuthentication, addExternalLogin, removeExternalLogin }, 'store')
 @observer
 export default class Logins extends Component {
 
@@ -31,6 +32,48 @@ export default class Logins extends Component {
     this.otherLogins = result.externalLogins.otherLogins;
   }
 
+  addButtonClick(scheme) {
+    return (event) => {
+      event.preventDefault();
+      this.props.externalAuthentication(scheme, false /*don't log in, just externally authenticate*/)
+        .then(result => this.handleExternalAuthentication(result));
+    };
+  }
+  removeButtonClick(loginProvider, providerKey) {
+    return (event) => {
+      event.preventDefault();
+      this.props.removeExternalLogin(loginProvider, providerKey)
+        .then(result => this.handleRemoveExternalLogin(result));
+    };
+  }
+
+  @action
+  handleExternalAuthentication(result) {
+    if(result.externalAuthenticated) {
+      // the user succesfully authenticated with the service.
+      this.props.addExternalLogin()
+        .then(r => this.handleAddExternalLogin(r));
+    }
+  }
+
+  @action
+  handleAddExternalLogin(result) {
+    if(!result.success) {
+      // TODO: let the user now
+    }
+    this.currentLogins = result.externalLogins.currentLogins;
+    this.otherLogins = result.externalLogins.otherLogins;
+  }
+
+  @action
+  handleRemoveExternalLogin(result) {
+    if(!result.success) {
+      // TODO: let the user now
+    }
+    this.currentLogins = result.externalLogins.currentLogins;
+    this.otherLogins = result.externalLogins.otherLogins;
+  }
+
   render() {
     if(!this.loginsLoaded)
       return <div>Loading</div>;
@@ -44,10 +87,18 @@ export default class Logins extends Component {
               <tbody>
                 {this.currentLogins.map((currentLogin, i) =>
                 (
-                  <ExternalLoginButton
-                    key={i}
-                    scheme={currentLogin.loginProvider}
-                    text={currentLogin.loginProviderDisplayName} />
+                  <tr key={i}>
+                    <td>
+                      <Button onClick={this.removeButtonClick(currentLogin.loginProvider, currentLogin.providerKey)}>
+                        Remove
+                      </Button>
+                      {' '}
+                      <ExternalLoginButton
+                        scheme={currentLogin.loginProvider}
+                        text={currentLogin.loginProviderDisplayName} />
+                    </td>
+                  </tr>
+                  
                 ))}
               </tbody>
             </table>
@@ -60,10 +111,17 @@ export default class Logins extends Component {
               <tbody>
                 {this.otherLogins.map((otherLogin, i) =>
                 (
-                  <ExternalLoginButton
-                    key={i}
-                    scheme={otherLogin.scheme}
-                    text={otherLogin.displayName} />
+                  <tr key={i}>
+                    <td>
+                      <Button onClick={this.addButtonClick(otherLogin.scheme)}>
+                        Add
+                      </Button>
+                      {' '}
+                      <ExternalLoginButton
+                        scheme={otherLogin.scheme}
+                        text={otherLogin.displayName} />
+                    </td>
+                  </tr>
                 ))}
               </tbody>
             </table>
