@@ -11,6 +11,7 @@ using Skimur.Web.Models;
 using Microsoft.Extensions.DependencyInjection;
 using Skimur.App;
 using Skimur.Web.Models.Api;
+using Microsoft.AspNetCore.Http;
 
 namespace Skimur.Web.Controllers.Account
 {
@@ -18,14 +19,17 @@ namespace Skimur.Web.Controllers.Account
     {
         UserManager<User> _userManager;
         SignInManager<User> _signInManager;
+        string _externalCookieScheme;
 
         public ServerController(UserManager<User> userManager,
-            SignInManager<User> signInManager)
+            SignInManager<User> signInManager,
+            IOptions<IdentityCookieOptions> identityCookieOptions)
             : base(userManager,
                  signInManager)
         {
             _userManager = userManager;
             _signInManager = signInManager;
+            _externalCookieScheme = identityCookieOptions.Value.ExternalCookieAuthenticationScheme;
         }
 
         [Route("register")]
@@ -188,8 +192,17 @@ namespace Skimur.Web.Controllers.Account
         }
 
         [Route("externalloginredirect")]
-        public IActionResult ExternalLoginRedirect(string provider, bool autoLogin = true)
+        public async Task<IActionResult> ExternalLoginRedirect(string provider, bool autoLogin = true, bool didRefresh = false)
         {
+            // when we first visit this redirect page, we need delete any previous authentication tokens.
+            // See https://github.com/aspnet/Security/issues/299
+            if (!didRefresh)
+            {
+                await HttpContext.Authentication.SignOutAsync(_externalCookieScheme);
+                var queryString = new QueryString(Request.QueryString.ToString());
+                return Redirect(Request.Path + queryString.Add("didRefresh", "true"));
+            }
+
             var properties = _signInManager.ConfigureExternalAuthenticationProperties(provider, "/externallogincallback?autoLogin=" + autoLogin);
             return new ChallengeResult(provider, properties);
         }
