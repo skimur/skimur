@@ -4,6 +4,7 @@ import deepAssign from 'deep-assign';
 import NavStore from './stores/nav';
 import AppStore from './stores/app';
 import AuthStore from './stores/auth';
+import ExternalLogins from './stores/externalLogins';
 
 useStrict(true);
 
@@ -16,6 +17,7 @@ class Store {
     this.nav = new NavStore(history);
     this.app = new AppStore();
     this.auth = new AuthStore();
+    this.externalLogins = new ExternalLogins();
     // this helps
     this.pathListenerDispose = autorun(() => {
       var path = this.nav.fullPath;

@@ -20,7 +20,7 @@ export default class Security extends Component {
 
   componentDidMount() {
     if(!this.securityLoaded) {
-      this.props.getSecurity()
+      this.props.actions.getSecurity()
         .then(result => {
           this.handleSecurity(result);
         });
@@ -55,7 +55,7 @@ export default class Security extends Component {
   toggleTwoFactorClick = (event) => {
     event.preventDefault();
     this.settingTwoFactor = true;
-    this.props.setTwoFactor(!this.twoFactorEnabled)
+    this.props.actions.setTwoFactor(!this.twoFactorEnabled)
       .then(result => {
         this.handleSetTwoFactor(result);
       });

@@ -1,5 +1,6 @@
 var path = require('path');
 var webpack = require('webpack');
+var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 module.exports = {
   entry: [
@@ -30,7 +31,8 @@ module.exports = {
     ]
   },
   plugins: [
-    new webpack.BannerPlugin('require("source-map-support").install();', { raw: true, entryOnly: false })
+    new webpack.BannerPlugin('require("source-map-support").install();', { raw: true, entryOnly: false }),
+    new WebpackBuildNotifierPlugin()
   ],
   devtool: 'source-map'
 };

@@ -31,7 +31,7 @@ namespace Skimur.Web.Controllers
                 state.Auth.User = ApiUser.From(user);
             }
 
-            state.ExternalLogin.LoginProviders
+            state.ExternalLogins.LoginProviders
                 .AddRange(_signInManager.GetExternalAuthenticationSchemes()
                 .Select(x => new ExternalLoginState.ExternalLoginProvider
                 {

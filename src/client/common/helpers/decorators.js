@@ -25,23 +25,17 @@ function createActionInjector(actions, component, store) {
         }
       }
 
-      let newProps = {};
-
-      // copy over all the old properties
-      for (let key in this.props) if (this.props.hasOwnProperty(key)) {
-        newProps[key] = this.props[key];
-      }
+      let actionsObject = {};
 
       // bind all the actions
       for (let key in actions) {
-        newProps[key] = actions[key](bindingStore);
+        actionsObject[key] = actions[key](bindingStore);
       }
 
-      newProps.ref = instance => {
-        this.wrappedInstance = instance;
-      }
-
-      return React.createElement(component, newProps);
+      return React.createElement(component, {
+        ...this.props,
+        actions: actionsObject
+      });
     }
   });
   Injector.wrappedComponent = component;

@@ -25,7 +25,7 @@ export default class ChangeEmailForm extends Form {
     event.preventDefault();
     if(this.processing) return;
     this.processing = true;
-    this.props.changeEmail(this.email.value, this.emailConfirm.value, this.currentPassword.value)
+    this.props.actions.changeEmail(this.email.value, this.emailConfirm.value, this.currentPassword.value)
       .then(result => {
         this.handleChangeEmail(result);
       });
@@ -49,7 +49,6 @@ export default class ChangeEmailForm extends Form {
   }
 
   render() {
-
     if(this.changeEmailSent) {
       return (<Alert bsStyle={'success'}>
           A link has been sent to your e-mail to finish up changing your e-mail

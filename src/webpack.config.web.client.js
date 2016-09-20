@@ -2,6 +2,7 @@ var webpack = require('webpack');
 var path = require('path');
 var ExtractTextPlugin = require("extract-text-webpack-plugin");
 var extractCSS = new ExtractTextPlugin('styles.css');
+var WebpackBuildNotifierPlugin = require('webpack-build-notifier');
 
 module.exports = {
   entry: [
@@ -26,7 +27,8 @@ module.exports = {
     publicPath: '/dist/'
   },
   plugins: [
-    extractCSS
+    extractCSS,
+    new WebpackBuildNotifierPlugin()
   ],
   resolve: {
     extensions: ['', '.js', '.jsx'],

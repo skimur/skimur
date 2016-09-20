@@ -38,6 +38,8 @@
     "style": "0.0.3",
     "style-loader": "^0.13.1",
     "url-loader": "^0.5.7",
+    "webpack-build-notifier": "^0.1.12",
+    "webpack-dashboard": "^0.1.8",
     "webpack-target-electron-renderer": "^0.4.0",
     "whatwg-fetch": "^1.0.0"
   }

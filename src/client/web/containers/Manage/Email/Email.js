@@ -20,7 +20,7 @@ export default class Email extends Component {
 
   componentDidMount() {
     if(!this.emailLoaded) {
-      this.props.getEmail()
+      this.props.actions.getEmail()
         .then(result => {
           this.handleEmail(result);
         });
@@ -63,7 +63,7 @@ export default class Email extends Component {
   verifyClick = (event) => {
     event.preventDefault();
     this.sendingEmailVerification = true;
-    this.props.verifyEmail()
+    this.props.actions.verifyEmail()
       .then(result => {
         this.handleVerifyEmail(result);
       });

@@ -8,9 +8,9 @@ namespace Skimur.Sms
 {
     public class NoSmsSender : ISmsSender
     {
-        ILogger<NoSmsSender> _logger;
+        ILogger _logger;
 
-        public NoSmsSender(ILogger<NoSmsSender> logger)
+        public NoSmsSender(ILogger<ISmsSender> logger)
         {
             _logger = logger;
         }
@@ -18,6 +18,7 @@ namespace Skimur.Sms
         public Task SendSmsAsync(string number, string message)
         {
             _logger.LogInformation($"Sending '{message}' to '{number}'.");
+            Console.WriteLine($"Sending '{message}' to '{number}'.");
             return Task.FromResult(0);
         }
     }

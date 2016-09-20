@@ -54,7 +54,9 @@ namespace Skimur.Web
         // This method gets called by the runtime. Use this method to configure the HTTP request pipeline.
         public void Configure(IApplicationBuilder app, IHostingEnvironment env, ILoggerFactory loggerFactory)
         {
-            loggerFactory.AddConsole((category, loglevel) => loglevel >= LogLevel.Warning);
+            loggerFactory.AddConsole((category, loglevel) => {
+                return loglevel >= LogLevel.Warning || category == "Microsoft.AspNetCore.NodeServices";
+                });
 
             if (env.IsDevelopment())
             {

@@ -5,8 +5,12 @@ const bootstrapSocial = require('bootstrap-social');
 const fontAwesome = require('font-awesome/scss/font-awesome.scss');
 
 export default (props) => {
+  const {
+    onClick
+  } = props;
   return (
     <Button
+      onClick={onClick}
       className={bootstrapSocial['btn-social'] + ' ' + bootstrapSocial['btn-' + props.scheme.toLowerCase()]}>
       <span className={fontAwesome.fa + ' ' + fontAwesome['fa-' + props.scheme.toLowerCase()]} />
       {props.text}

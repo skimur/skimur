@@ -7,13 +7,13 @@ namespace Skimur.Web.State
         public GlobalState()
         {
             Auth = new AuthState();
-            ExternalLogin = new ExternalLoginState();
+            ExternalLogins = new ExternalLoginState();
         }
 
         [JsonProperty("auth")]
         public AuthState Auth { get; set; }
 
-        [JsonProperty("externalLogin")]
-        public ExternalLoginState ExternalLogin { get; set; }
+        [JsonProperty("externalLogins")]
+        public ExternalLoginState ExternalLogins { get; set; }
     }
 }
