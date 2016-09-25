@@ -1,7 +1,7 @@
 import React, { Component } from 'react';
 import { action, observable, reaction, computed } from 'mobx';
 import { inject, observer } from 'mobx-react';
-import { logIn, sendCode, verifyCode, externalAuthentication } from 'actions';
+import { logIn, sendCode, verifyCode, externalAuthentication, navigateTo } from 'actions';
 import Input from 'components/Input';
 import ExternalLoginButton from 'components/ExternalLoginButton';
 import ErrorList from 'components/ErrorList';
@@ -31,8 +31,9 @@ class VerifyCodeFormState {
 
 class LoginFormContainerState {
 
-  constructor(actions) {
+  constructor(actions, store) {
     this.actions = actions;
+    this.store = store;
   }
 
   loginForm = new LoginFormState();
@@ -43,6 +44,7 @@ class LoginFormContainerState {
   @observable sentCode = false;
   @observable codeSentWithProvider;
   @observable codeVerified = false;
+  @observable externalLoginNeedsRegistration = true;
 
   @action logIn() {
     return this.actions.logIn(this.loginForm.userName.value, this.loginForm.password.value)
@@ -56,6 +58,8 @@ class LoginFormContainerState {
   externalLogIn(scheme) {
     return this.actions.externalAuthentication(scheme)
       .then(result => {
+        if(result.cancelled)
+          return result;
         this.handleExternalLogin(result);
         return result;
       });
@@ -90,6 +94,14 @@ class LoginFormContainerState {
       this.requiresTwoFactor = true;
       this.userFactors = result.userFactors;
     }
+    if(result.user) {
+      // the user succesfully logged in, redirect the user
+      if(this.store.nav.query.returnUrl) {
+        this.actions.navigateTo(this.store.nav.query.returnUrl);
+      } else {
+        this.actions.navigateTo('/');
+      }
+    }
   }
 
   @action
@@ -99,6 +111,21 @@ class LoginFormContainerState {
       this.requiresTwoFactor = true;
       this.userFactors = result.userFactors;
     }
+    if(result.user) {
+      // the user succesfully logged in, redirect the user
+      if(this.store.nav.query.returnUrl) {
+        this.actions.navigateTo(this.store.nav.query.returnUrl);
+      } else {
+        this.actions.navigateTo('/');
+      }
+    } else {
+      if(result.externalAuthenticated) {
+        // we weren't logged in, but were we externally authenticated?
+        // this would indicate we need to go to the register page.
+        this.actions.navigateTo('/register?provider=' + result.loginProvider.scheme + '&proposedUserName=' + result.proposedUserName + '&proposedEmail=' + result.proposedEmail);
+      }
+    }
+
   }
 
   @action
@@ -116,6 +143,14 @@ class LoginFormContainerState {
     if(result.success) {
       this.codeVerified = true;
     }
+    if(result.user) {
+      // the user succesfully logged in, redirect the user
+      if(this.store.nav.query.returnUrl) {
+        this.actions.navigateTo(this.store.nav.query.returnUrl);
+      } else {
+        this.actions.navigateTo('/');
+      }
+    }
   }
 }
 
@@ -125,25 +160,13 @@ class LoginForm extends Component {
 
   onClick = (event) => {
     event.preventDefault();
-    this.props.state.logIn()
-      .then(result => {
-        if(result.user) {
-          this.props.onLoggedIn();
-        }
-        return result;
-      });
+    this.props.state.logIn();
   }
 
   onExternalLoginClick(scheme) {
     return (event) => {
       event.preventDefault();
-      this.props.state.externalLogIn(scheme)
-        .then(result => {
-          if(result.user) {
-            this.props.onLoggedIn();
-          }
-          return result;
-        });
+      this.props.state.externalLogIn(scheme);
     };
   }
 
@@ -216,13 +239,7 @@ class VerifiyCodeForm extends Component {
 
   onClick = (event) => {
     event.preventDefault();
-    this.props.state.verifyCode()
-      .then(result => {
-          if(result.success) {
-            this.props.onLoggedIn();
-          }
-          return result;
-      });
+    this.props.state.verifyCode();
   }
 
   render() {
@@ -251,18 +268,12 @@ class VerifiyCodeForm extends Component {
 }
 
 @inject("store")
-@injectActions({ logIn, sendCode, verifyCode, externalAuthentication }, "store")
+@injectActions({ logIn, sendCode, verifyCode, externalAuthentication, navigateTo }, "store")
 @observer
 export default class LoginFormContainer extends Component {
   constructor(props) {
     super(props);
-    this.state = new LoginFormContainerState(props.actions);
-  }
-
-  onLoggedIn = () => {
-    if(this.props.onLoggedIn) {
-      this.props.onLoggedIn();
-    }
+    this.state = new LoginFormContainerState(props.actions, props.store);
   }
 
   render() {    
@@ -270,7 +281,7 @@ export default class LoginFormContainer extends Component {
       return <div>You have been logged in!</div>
 
     if(this.state.sentCode)
-      return <VerifiyCodeForm onLoggedIn={this.onLoggedIn} state={this.state} />
+      return <VerifiyCodeForm state={this.state} />
 
     if(this.state.requiresTwoFactor)
       return <SendCodeForm state={this.state}  />
@@ -280,6 +291,6 @@ export default class LoginFormContainer extends Component {
         loginProviders
       }
     } = this.props.store;
-    return <LoginForm onLoggedIn={this.onLoggedIn} loginProviders={loginProviders} state={this.state}  />
+    return <LoginForm loginProviders={loginProviders} state={this.state}  />
   }
 }

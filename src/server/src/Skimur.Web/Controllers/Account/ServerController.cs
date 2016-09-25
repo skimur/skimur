@@ -120,15 +120,18 @@ namespace Skimur.Web.Controllers.Account
             data.user = null;
             data.requiresTwoFactor = false;
             data.lockedOut = false;
-            data.signedIn = false;
-            data.signInError = false;
             data.proposedEmail = "";
             data.proposedUserName = "";
+            data.success = false;
 
             var info = await _signInManager.GetExternalLoginInfoAsync();
             if (info == null)
-                // unable to authenticate with an external login
+            // unable to authenticate with an external login
+            {
+                ModelState.AddModelError(string.Empty, "Unable to authenticate against the server.");
+                data.errors = GetModelState();
                 return Content(callbackTemplate(data), "text/html");
+            }
 
             if (string.IsNullOrEmpty(info.ProviderDisplayName))
             {
@@ -162,30 +165,41 @@ namespace Skimur.Web.Controllers.Account
             if (autoLogin)
             {
                 var user = await _userManager.FindByLoginAsync(info.LoginProvider, info.ProviderKey);
-                if (user != null)
+
+                if(user == null)
                 {
-                    var result =
-                        await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
+                    ModelState.AddModelError(string.Empty, "No user registered with this login");
+                    data.errors = GetModelState();
+                    return Content(callbackTemplate(data), "text/html");
+                }
+                
+                var result = await _signInManager.ExternalLoginSignInAsync(info.LoginProvider, info.ProviderKey, false);
 
-                    if (result.Succeeded)
-                    {
-                        data.signedIn = true;
-                        data.user = ApiUser.From(user);
-                        return Content(callbackTemplate(data), "text/html");
-                    }
-
-                    data.signInError = true;
+                if (result.Succeeded)
+                {
+                    data.user = ApiUser.From(user);
+                    data.errors = GetModelState();
+                    data.success = true;
+                } else
+                {
+                    ModelState.AddModelError(string.Empty, "Invalid login attempt.");
 
                     if (result.RequiresTwoFactor)
                     {
                         data.requiresTwoFactor = true;
                         data.userFactors = await _userManager.GetValidTwoFactorProvidersAsync(user);
                     }
+
                     if (result.IsLockedOut)
                         data.lockedOut = true;
 
-                    return Content(callbackTemplate(data), "text/html");
+                    data.errors = GetModelState();
                 }
+            } else
+            {
+                // all we wanted was to externally authenticate, not log in, and we succeeded!
+                data.errors = GetModelState();
+                data.success = true;
             }
 
             return Content(callbackTemplate(data), "text/html");

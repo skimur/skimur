@@ -9,39 +9,12 @@ import { injectActions } from 'helpers/decorators';
 @injectActions({ navigateTo }, 'store')
 @observer
 export default class Login extends Component {
-  onLoggedIn = () => {
-    if(this.props.store.nav.query.returnUrl) {
-      this.props.actions.navigateTo(this.props.store.nav.query.returnUrl);
-    } else {
-      this.props.actions.navigateTo('/');
-    }
-  }
-  componentWillMount() {
-    this.setState({
-      isShowing: true
-    });
-  }
-  onClick = (event) => {
-    event.preventDefault();
-    this.setState({
-      isShowing: false
-    });
-  }
   render() {
-    console.log(this.state);
-    const { isShowing } = this.state
-    if(!isShowing) {
-      setTimeout(() => {
-        this.setState({isShowing: true});
-      }, 1000)
-    }
     return (
       <div>
         <h2>Login</h2>
         <hr />
-        {isShowing && 
-          <LoginForm onLoggedIn={this.onLoggedIn} />
-        }
+        <LoginForm />
         <p>
           <Link to="/register">Register as a new user?</Link>
         </p>

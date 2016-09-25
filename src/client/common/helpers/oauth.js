@@ -28,7 +28,7 @@ export function authentication(provider, autoLogin = true) {
       .then((windowResult) => {
         result(windowResult);
       }, () => {
-        reject({});
+        result({ cancelled: true });
       });
   });
 }

@@ -23,7 +23,7 @@ namespace Skimur.Web.Controllers.Account.Models
         [Compare("Password", ErrorMessage = "The password and confirmation password do not match.")]
         public string PasswordConfirm { get; set; }
 
-        [JsonProperty("linkExternalLogin")]
-        public bool LinkExternalLogin { get; set; }
+        [JsonProperty("ExternalLogin")]
+        public string ExternalLogin { get; set; }
     }
 }

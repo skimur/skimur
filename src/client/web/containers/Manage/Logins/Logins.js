@@ -18,7 +18,7 @@ export default class Logins extends Component {
 
   componentDidMount() {
     if(!this.loginsLoaded) {
-      this.props.getExternalLogins()
+      this.props.actions.getExternalLogins()
         .then(result => {
           this.handleLogins(result);
         });
@@ -35,14 +35,19 @@ export default class Logins extends Component {
   addButtonClick(scheme) {
     return (event) => {
       event.preventDefault();
-      this.props.externalAuthentication(scheme, false /*don't log in, just externally authenticate*/)
-        .then(result => this.handleExternalAuthentication(result));
+      this.props.actions.externalAuthentication(scheme, false /*don't log in, just externally authenticate*/)
+        .then(result => {
+          if(result.cancelled)
+            return result;
+          this.handleExternalAuthentication(result);
+          return result;
+        });
     };
   }
   removeButtonClick(loginProvider, providerKey) {
     return (event) => {
       event.preventDefault();
-      this.props.removeExternalLogin(loginProvider, providerKey)
+      this.props.actions.removeExternalLogin(loginProvider, providerKey)
         .then(result => this.handleRemoveExternalLogin(result));
     };
   }
@@ -51,7 +56,7 @@ export default class Logins extends Component {
   handleExternalAuthentication(result) {
     if(result.externalAuthenticated) {
       // the user succesfully authenticated with the service.
-      this.props.addExternalLogin()
+      this.props.actions.addExternalLogin()
         .then(r => this.handleAddExternalLogin(r));
     }
   }

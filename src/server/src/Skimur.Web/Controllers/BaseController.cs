@@ -5,6 +5,7 @@ using Microsoft.AspNetCore.Mvc;
 using Skimur.Web.State;
 using Skimur.App;
 using Skimur.Web.Models.Api;
+using System.Collections.Generic;
 
 namespace Skimur.Web.Controllers
 {
@@ -65,7 +66,29 @@ namespace Skimur.Web.Controllers
 
         protected object GetModelState()
         {
-            return ModelState.ToDictionary(x => string.IsNullOrEmpty(x.Key) ? "_global" : ToCamelCase(x.Key), x => x.Value.Errors.Select(y => y.ErrorMessage));
+            var result = new Dictionary<string, IList<string>>();
+            foreach(var value in ModelState)
+            {
+                if(value.Value.ValidationState == Microsoft.AspNetCore.Mvc.ModelBinding.ModelValidationState.Invalid)
+                {
+                    var key = ToCamelCase(value.Key);
+                    if(string.IsNullOrEmpty(key))
+                    {
+                        key = "_global";
+                    }
+                    if (result.ContainsKey(key))
+                    {
+                        foreach(var error in value.Value.Errors)
+                        {
+                            result[key].Add(error.ErrorMessage);
+                        }
+                    }else
+                    {
+                        result.Add(key, value.Value.Errors.Select(x => x.ErrorMessage).ToList());
+                    }
+                }
+            }
+            return result;
         }
 
         protected string ToCamelCase(string s)

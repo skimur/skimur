@@ -67,12 +67,13 @@ class Api {
     
   }
   @apiCall('/api/account/register')
-  register(userName, email, password, passwordConfirm) {
+  register(userName, email, password, passwordConfirm, externalLogin) {
     return {
       userName,
       email,
       password,
-      passwordConfirm
+      passwordConfirm,
+      externalLogin
     }
   }
   @apiCall('/api/account/sendcode')

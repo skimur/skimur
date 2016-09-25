@@ -12,6 +12,7 @@
 		"bower_components",
 		"jspm_packages",
 		"tmp",
-		"temp"
+		"temp",
+    "src/node_modules"
 	]
 }

@@ -34,9 +34,8 @@ namespace Skimur.Web.Controllers.Account
         [HttpPost]
         public async Task<object> Register([FromBody]RegisterModel model)
         {
-            
             ExternalLoginInfo externalLoginInfo = null;
-            if (model.LinkExternalLogin)
+            if (!string.IsNullOrEmpty(model.ExternalLogin))
             {
                 externalLoginInfo = await _signInManager.GetExternalLoginInfoAsync();
                 if (externalLoginInfo == null)
@@ -45,10 +44,17 @@ namespace Skimur.Web.Controllers.Account
                 }
                 else
                 {
-                    var existingLogin = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
-                    if (existingLogin != null)
+                    // make sure the requested provider is the one we are currently authenticated with
+                    if(!string.Equals(externalLoginInfo.LoginProvider, model.ExternalLogin))
                     {
-                        ModelState.AddModelError(string.Empty, "An account is already associated with this login server.");
+                        ModelState.AddModelError(string.Empty, "You are not currently authenticated with the selected login provider.");
+                    }else
+                    {
+                        var existingLogin = await _userManager.FindByLoginAsync(externalLoginInfo.LoginProvider, externalLoginInfo.ProviderKey);
+                        if (existingLogin != null)
+                        {
+                            ModelState.AddModelError(string.Empty, "An account is already associated with this login.");
+                        }
                     }
                 }
             }

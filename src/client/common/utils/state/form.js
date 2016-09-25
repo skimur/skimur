@@ -94,8 +94,8 @@ export function makeObservableForm(target) {
 
 export function observableForm(target) {
   return class extends target {
-    constructor() {
-      super();
+    constructor(...args) {
+      super(...args);
       makeObservableForm(this);
     }
   };

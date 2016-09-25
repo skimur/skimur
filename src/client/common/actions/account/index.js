@@ -27,8 +27,8 @@ export function logOff(store)  {
 };
 
 export function register(store)  {
-  return (userName, email, password, passwordConfirm) => {
-    return api.register(userName, email, password, passwordConfirm)
+  return (userName, email, password, passwordConfirm, externalLogin) => {
+    return api.register(userName, email, password, passwordConfirm, externalLogin)
       .then(result => {
         if(result.user) {
           // we registered the user and auto logged them in

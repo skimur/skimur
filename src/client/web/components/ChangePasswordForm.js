@@ -24,7 +24,7 @@ export default class ChangePasswordForm extends Form {
     event.preventDefault();
     if(this.processing) return;
     this.processing = true;
-    this.props.changePassword(this.oldPassword.value, this.newPassword.value, this.newPasswordConfirm.value)
+    this.props.actions.changePassword(this.oldPassword.value, this.newPassword.value, this.newPasswordConfirm.value)
       .then(result => {
         this.handleChangePassword(result);
       });
